@@ -1,16 +1,29 @@
 <script setup lang="ts">
 import { computed, type Component } from 'vue';
-import { translator, type Locale } from '../i18n/footer';
+import { translator, type Locale, type Messages } from '../i18n/footer';
 import LatereLogoMark from './LatereLogoMark.vue';
 
 export type Theme = 'light' | 'dark' | 'auto';
-export type { Locale };
+export type { Locale, Messages };
+
+/** One selectable language in the footer's locale dropdown. */
+export interface LocaleOption {
+  code: string;
+  /** Short label (e.g. "EN", "中"); falls back to `code` if `name` is absent. */
+  label: string;
+  /** Full display name shown in the dropdown (e.g. "English", "中文"). */
+  name?: string;
+}
 
 const props = withDefaults(defineProps<{
   /** Current theme; drives the active state of the theme toggle. */
   theme: Theme;
-  /** Current locale; selects footer copy and drives the language toggle. */
+  /** Current locale; selects footer copy and the active language option. */
   locale: Locale;
+  /** Languages offered in the locale dropdown. Defaults to English + Chinese. */
+  locales?: LocaleOption[];
+  /** Per-locale string overrides, merged over the bundled footer dictionaries. */
+  messages?: Messages;
   /** Origin used for the site's own links (Team, Blog, Legal, home). */
   baseUrl?: string;
   /**
@@ -20,6 +33,11 @@ const props = withDefaults(defineProps<{
    */
   routerLink?: Component;
 }>(), {
+  locales: () => [
+    { code: 'en', label: 'EN', name: 'English' },
+    { code: 'zh', label: '中', name: '中文' },
+  ],
+  messages: undefined,
   baseUrl: 'https://latere.ai',
   routerLink: undefined,
 });
@@ -29,17 +47,17 @@ const emit = defineEmits<{
   'update:locale': [Locale];
 }>();
 
-const t = computed(() => translator(props.locale));
+const t = computed(() => translator(props.locale, props.messages));
 
 const themes: { v: Theme; label: string }[] = [
   { v: 'light', label: '☀' },
   { v: 'dark', label: '☾' },
   { v: 'auto', label: '◐' },
 ];
-const locales: { v: Locale; label: string }[] = [
-  { v: 'en', label: 'EN' },
-  { v: 'zh', label: '中' },
-];
+
+function onLocaleChange(e: Event) {
+  emit('update:locale', (e.target as HTMLSelectElement).value);
+}
 
 // Internal link rendering: relative `to` for routerLink, absolute href otherwise.
 const linkTag = computed<Component | 'a'>(() => props.routerLink ?? 'a');
@@ -109,14 +127,14 @@ function linkProps(path: string) {
               :class="{ 'is-active': theme === opt.v }"
               @click="emit('update:theme', opt.v)">{{ opt.label }}</button>
           </div>
-          <div class="footer-seg" role="group" :aria-label="t('footer.language')">
-            <button
-              v-for="opt in locales"
-              :key="opt.v"
-              type="button"
-              class="footer-seg-btn"
-              :class="{ 'is-active': locale === opt.v }"
-              @click="emit('update:locale', opt.v)">{{ opt.label }}</button>
+          <div class="footer-lang">
+            <select
+              class="footer-lang-select"
+              :value="locale"
+              :aria-label="t('footer.language')"
+              @change="onLocaleChange">
+              <option v-for="opt in locales" :key="opt.code" :value="opt.code">{{ opt.name ?? opt.label }}</option>
+            </select>
           </div>
         </div>
         <div class="footer-social">

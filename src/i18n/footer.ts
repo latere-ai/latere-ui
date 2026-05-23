@@ -1,8 +1,14 @@
 // Self-contained dictionary for the shared footer. Mirrors the footer.* and
 // nav.cat.* keys from the marketing site so consuming apps need not provide them.
-export type Locale = 'en' | 'zh';
+//
+// `Locale` is an open string: the package bundles en + zh, and hosts can support
+// additional locales (e.g. de) by passing a `messages` override to the footer.
+export type Locale = string;
 
 type Dict = Record<string, string>;
+
+/** Per-locale string overrides supplied by the host, merged over the bundled dicts. */
+export type Messages = Record<string, Dict>;
 
 export const en: Dict = {
   'nav.cat.workspace': 'Work surface',
@@ -58,9 +64,13 @@ export const zh: Dict = {
   'footer.rights': '&copy; 2026 Latere. 保留所有权利。',
 };
 
-const dicts: Record<Locale, Dict> = { en, zh };
+const dicts: Record<string, Dict> = { en, zh };
 
-export function translator(locale: Locale) {
-  const active = dicts[locale] || en;
-  return (key: string): string => active[key] ?? en[key] ?? key;
+/**
+ * Resolve footer copy for a locale. Lookup order: host `messages` override →
+ * bundled dictionary for the locale → English → the key itself.
+ */
+export function translator(locale: Locale, messages?: Messages) {
+  return (key: string): string =>
+    messages?.[locale]?.[key] ?? dicts[locale]?.[key] ?? en[key] ?? key;
 }

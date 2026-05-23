@@ -8,7 +8,7 @@ Latere logo mark, used across the marketing site and every product landing page.
 Consumed directly from GitHub (no registry). Pin a tag:
 
 ```sh
-bun add github:latere-ai/latere-ui#v1.0.2
+bun add github:latere-ai/latere-ui#v1.1.0
 ```
 
 Every consumer is a Vite + Vue 3 app, so this package ships **source** (`.vue` /
@@ -53,8 +53,14 @@ const { theme, locale } = storeToRefs(prefs);
 | ------------ | ----------------------------- | --------------------- | --------------------------------------------------------------------- |
 | `theme`      | `'light' \| 'dark' \| 'auto'` | —                     | Drives the active state of the theme toggle.                          |
 | `locale`     | `'en' \| 'zh'`                | —                     | Selects footer copy and the active language toggle.                   |
+| `locales`    | `LocaleOption[]`              | `[en, zh]`            | Languages in the locale dropdown (`{ code, label, name? }`).          |
+| `messages`   | `Record<string, Dict>`        | `undefined`           | Per-locale string overrides, merged over the bundled footer copy.     |
 | `baseUrl`    | `string`                      | `'https://latere.ai'` | Origin for the site's own links (Team, Blog, Legal, home).            |
 | `routerLink` | `Component`                   | `undefined`           | Pass `RouterLink` to keep SPA navigation for internal links on-site.  |
+
+The language switcher is a dropdown built from `locales`. To support a locale the
+package does not bundle (currently en + zh), pass it in `locales` and supply its
+footer strings via `messages`, e.g. `:messages="{ de: { 'footer.tagline': '…' } }"`.
 
 Cross-product links (Wallfacer, Topos, …) are always absolute. Internal links
 resolve against `baseUrl` as plain `<a>` unless `routerLink` is supplied, in
