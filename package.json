@@ -1,6 +1,6 @@
 {
   "name": "latere-ui",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Shared Latere platform UI components (footer, logo).",
   "type": "module",
   "license": "MIT",
@@ -20,6 +20,7 @@
     "vue": "^3.5.0"
   },
   "devDependencies": {
+    "@types/node": "^25.9.1",
     "@vitejs/plugin-vue": "^5.2.0",
     "@vue/test-utils": "^2.4.6",
     "happy-dom": "^15.11.0",

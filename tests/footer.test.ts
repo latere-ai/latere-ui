@@ -103,7 +103,7 @@ describe('SiteFooter', () => {
 
 describe('footer brand styles', () => {
   it('uses background-image so background-clip:text is not reset by the shorthand', () => {
-    const css = readFileSync(resolve(__dirname, '../src/styles/footer.css'), 'utf8');
+    const css = readFileSync(resolve(process.cwd(), 'src/styles/footer.css'), 'utf8');
     // The `background` shorthand resets background-clip to border-box; the brand
     // gradients must use background-image to keep the text-clip effect.
     expect(css).not.toMatch(/-brand\s*\{\s*background:\s*linear-gradient/);

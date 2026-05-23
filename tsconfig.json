@@ -6,7 +6,7 @@
     "strict": true,
     "jsx": "preserve",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "types": ["vitest/globals"],
+    "types": ["vitest/globals", "node"],
     "skipLibCheck": true,
     "noEmit": true,
     "isolatedModules": true,
