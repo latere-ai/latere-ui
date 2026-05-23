@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { defineComponent, h } from 'vue';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { SiteFooter } from '../src';
 
 function render(props: Record<string, unknown> = {}) {
@@ -96,5 +98,15 @@ describe('SiteFooter', () => {
     const active = render({ theme: 'dark', locale: 'zh' })
       .findAll('.footer-seg-btn.is-active').map((b) => b.text());
     expect(active).toContain('☾');
+  });
+});
+
+describe('footer brand styles', () => {
+  it('uses background-image so background-clip:text is not reset by the shorthand', () => {
+    const css = readFileSync(resolve(__dirname, '../src/styles/footer.css'), 'utf8');
+    // The `background` shorthand resets background-clip to border-box; the brand
+    // gradients must use background-image to keep the text-clip effect.
+    expect(css).not.toMatch(/-brand\s*\{\s*background:\s*linear-gradient/);
+    expect(css).toMatch(/\.wallfacer-brand\s*\{\s*background-image:/);
   });
 });

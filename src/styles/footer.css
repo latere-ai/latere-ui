@@ -49,11 +49,13 @@
     -webkit-text-fill-color: transparent;
     padding-right: 0.15em;
 }
-.cella-brand { background: linear-gradient(135deg, #8fb894 0%, #6b9e7c 60%, #4a7558 100%); }
-.wallfacer-brand { background: linear-gradient(135deg, #d97757 0%, #c4623f 60%, #a84e2e 100%); }
-.lux-brand { background: linear-gradient(135deg, #6577d6 0%, #3a4ed1 60%, #2b3fb8 100%); }
-.topos-brand { background: linear-gradient(135deg, #55707a 0%, #6f8a56 58%, #a07045 100%); }
-.agon-brand { background: linear-gradient(135deg, #c0413f 0%, #9a2f30 58%, #74201f 100%); }
+/* Use background-image (not the `background` shorthand, which would reset
+   background-clip back to border-box and break the text clipping above). */
+.cella-brand { background-image: linear-gradient(135deg, #8fb894 0%, #6b9e7c 60%, #4a7558 100%); }
+.wallfacer-brand { background-image: linear-gradient(135deg, #d97757 0%, #c4623f 60%, #a84e2e 100%); }
+.lux-brand { background-image: linear-gradient(135deg, #6577d6 0%, #3a4ed1 60%, #2b3fb8 100%); }
+.topos-brand { background-image: linear-gradient(135deg, #55707a 0%, #6f8a56 58%, #a07045 100%); }
+.agon-brand { background-image: linear-gradient(135deg, #c0413f 0%, #9a2f30 58%, #74201f 100%); }
 
 /* ===== Footer ===== */
 .site-footer {
