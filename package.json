@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "Shared Latere platform UI components (footer, logo).",
   "type": "module",
-  "license": "UNLICENSED",
-  "private": false,
+  "license": "MIT",
   "files": [
     "src"
   ],
