@@ -1,0 +1,20 @@
+/* Fallback design tokens for apps that do not define their own. The footer
+ * only consumes the subset below. Apps with an existing token system should
+ * skip importing this file. */
+:root {
+    --bg-surface: #ffffff;
+    --bg-raised: #f5f5f5;
+    --text: #0a0a0a;
+    --text-secondary: #666666;
+    --text-muted: #a0a0a0;
+    --border: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] {
+    --bg-surface: #111113;
+    --bg-raised: #18181b;
+    --text: #fafafa;
+    --text-secondary: #a1a1aa;
+    --text-muted: #52525b;
+    --border: rgba(255, 255, 255, 0.06);
+}

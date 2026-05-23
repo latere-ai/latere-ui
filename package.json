@@ -1,0 +1,32 @@
+{
+  "name": "latere-ui",
+  "version": "1.0.0",
+  "description": "Shared Latere platform UI components (footer, logo).",
+  "type": "module",
+  "license": "UNLICENSED",
+  "private": false,
+  "files": [
+    "src"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles": "./src/styles/footer.css",
+    "./tokens": "./src/styles/tokens.css"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.0",
+    "@vue/test-utils": "^2.4.6",
+    "happy-dom": "^15.11.0",
+    "typescript": "^5.6.0",
+    "vitest": "^4.0.0",
+    "vue": "^3.5.13",
+    "vue-tsc": "^2.1.0"
+  }
+}
