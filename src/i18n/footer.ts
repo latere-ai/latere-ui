@@ -34,7 +34,7 @@ export const en: Dict = {
   'footer.tagline': 'Human intelligence in the loop.',
   'footer.theme': 'Theme',
   'footer.language': 'Language',
-  'footer.rights': '&copy; 2026 Latere. All rights reserved.',
+  'footer.rights': '&copy; 2026 Latere AI. All rights reserved.',
 };
 
 export const zh: Dict = {
@@ -61,7 +61,7 @@ export const zh: Dict = {
   'footer.tagline': '人类智慧始终在回路中。',
   'footer.theme': '主题',
   'footer.language': '语言',
-  'footer.rights': '&copy; 2026 Latere. 保留所有权利。',
+  'footer.rights': '&copy; 2026 Latere AI. 保留所有权利。',
 };
 
 export const de: Dict = {
@@ -88,7 +88,7 @@ export const de: Dict = {
   'footer.tagline': 'Menschliche Intelligenz im Loop.',
   'footer.theme': 'Design',
   'footer.language': 'Sprache',
-  'footer.rights': '&copy; 2026 Latere. Alle Rechte vorbehalten.',
+  'footer.rights': '&copy; 2026 Latere AI. Alle Rechte vorbehalten.',
 };
 
 const dicts: Record<string, Dict> = { en, zh, de };
