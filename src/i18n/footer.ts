@@ -64,7 +64,34 @@ export const zh: Dict = {
   'footer.rights': '&copy; 2026 Latere. 保留所有权利。',
 };
 
-const dicts: Record<string, Dict> = { en, zh };
+export const de: Dict = {
+  'nav.cat.workspace': 'Arbeitsfläche',
+  'nav.cat.agents': 'Governance',
+  'nav.cat.infrastructure': 'Laufzeit',
+  'footer.products': 'Produkte',
+  'footer.products.wallfacer': 'Wallfacer',
+  'footer.products.topos': 'Topos',
+  'footer.products.agon': 'Agon',
+  'footer.products.cella': 'Cella',
+  'footer.products.lux': 'Lux',
+  'footer.foundation': 'Konto',
+  'footer.identity': 'Identität',
+  'footer.identity.note': 'Eine Anmeldung für alle Latere-Produkte.',
+  'footer.company': 'Unternehmen',
+  'footer.blog': 'Blog',
+  'footer.team': 'Team',
+  'footer.contact': 'Kontakt',
+  'footer.legal': 'Rechtliches',
+  'footer.privacy': 'Datenschutz',
+  'footer.terms': 'AGB',
+  'footer.impressum': 'Impressum',
+  'footer.tagline': 'Menschliche Intelligenz im Loop.',
+  'footer.theme': 'Design',
+  'footer.language': 'Sprache',
+  'footer.rights': '&copy; 2026 Latere. Alle Rechte vorbehalten.',
+};
+
+const dicts: Record<string, Dict> = { en, zh, de };
 
 /**
  * Resolve footer copy for a locale. Lookup order: host `messages` override →

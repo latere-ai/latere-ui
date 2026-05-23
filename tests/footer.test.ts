@@ -74,12 +74,22 @@ describe('SiteFooter', () => {
     expect(render({ locale: 'zh' }).html()).toContain('人类智慧始终在回路中。');
   });
 
+  it('renders bundled German copy without any host messages', () => {
+    const w = render({
+      locale: 'de',
+      locales: [{ code: 'de', label: 'DE', name: 'Deutsch' }],
+    });
+    expect(w.html()).toContain('Menschliche Intelligenz im Loop.'); // footer.tagline (de)
+    expect(w.html()).toContain('Rechtliches'); // footer.legal (de)
+  });
+
   it('applies host messages overrides over the bundled dictionary', () => {
     const w = render({
       locale: 'de',
-      messages: { de: { 'footer.tagline': 'Menschliche Intelligenz im Loop.' } },
+      messages: { de: { 'footer.tagline': 'Überschrieben.' } },
     });
-    expect(w.html()).toContain('Menschliche Intelligenz im Loop.');
+    expect(w.html()).toContain('Überschrieben.');
+    expect(w.html()).not.toContain('Menschliche Intelligenz im Loop.');
   });
 
   it('marks the active theme in the segmented control', () => {
