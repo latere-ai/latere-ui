@@ -94,14 +94,16 @@ describe('SiteFooter', () => {
     expect(w.html()).not.toContain('Menschliche Intelligenz im Loop.');
   });
 
-  it('renders the compact variant: a single links row, no product columns', () => {
+  it('renders the compact variant as a single-line bar, no product columns', () => {
     const full = render();
     expect(full.find('.footer-cols').exists()).toBe(true);
-    expect(full.find('.footer-compact-links').exists()).toBe(false);
+    expect(full.find('.site-footer-compact').exists()).toBe(false);
 
     const w = render({ compact: true });
     expect(w.find('.site-footer-compact').exists()).toBe(true);
     expect(w.find('.footer-cols').exists()).toBe(false);
+    expect(w.find('.footer-bottom').exists()).toBe(false); // copyright lives inline in the bar
+    expect(w.find('.footer-compact-copy').exists()).toBe(true);
     const links = w.find('.footer-compact-links');
     expect(links.exists()).toBe(true);
     const html = links.html();
