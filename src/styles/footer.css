@@ -210,8 +210,8 @@
     display: flex;
     align-items: center;
     gap: 20px;
-    max-width: 1080px;
-    margin: 0 auto;
+    /* full-width app toolbar (matches the host header), not the marketing
+       footer's centered max-width — gives the links row room on wide screens */
     padding: 12px 32px;
 }
 .footer-compact-copy {
