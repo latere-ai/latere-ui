@@ -94,6 +94,25 @@ describe('SiteFooter', () => {
     expect(w.html()).not.toContain('Menschliche Intelligenz im Loop.');
   });
 
+  it('renders the compact variant: a single links row, no product columns', () => {
+    const full = render();
+    expect(full.find('.footer-cols').exists()).toBe(true);
+    expect(full.find('.footer-compact-links').exists()).toBe(false);
+
+    const w = render({ compact: true });
+    expect(w.find('.site-footer-compact').exists()).toBe(true);
+    expect(w.find('.footer-cols').exists()).toBe(false);
+    const links = w.find('.footer-compact-links');
+    expect(links.exists()).toBe(true);
+    const html = links.html();
+    for (const name of ['Wallfacer', 'Topos', 'Agon', 'Cella', 'Lux']) {
+      expect(html).toContain(name);
+    }
+    // still has the theme toggle + locale dropdown
+    expect(w.find('.footer-lang-select').exists()).toBe(true);
+    expect(w.findAll('.footer-seg-btn').length).toBe(3);
+  });
+
   it('marks the active theme in the segmented control', () => {
     const active = render({ theme: 'dark', locale: 'zh' })
       .findAll('.footer-seg-btn.is-active').map((b) => b.text());

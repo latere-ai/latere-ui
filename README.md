@@ -8,7 +8,7 @@ Latere logo mark, used across the marketing site and every product landing page.
 Consumed directly from GitHub (no registry). Pin a tag:
 
 ```sh
-bun add github:latere-ai/latere-ui#v1.2.3
+bun add github:latere-ai/latere-ui#v1.3.0
 ```
 
 Every consumer is a Vite + Vue 3 app, so this package ships **source** (`.vue` /

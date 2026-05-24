@@ -24,6 +24,12 @@ const props = withDefaults(defineProps<{
   locales?: LocaleOption[];
   /** Per-locale string overrides, merged over the bundled footer dictionaries. */
   messages?: Messages;
+  /**
+   * Compact layout: brand + a single wrapped row of links + controls, instead
+   * of the full product-showcase columns. ~1/3 the height; for app surfaces
+   * (auth, dashboards) where the full footer is too tall.
+   */
+  compact?: boolean;
   /** Origin used for the site's own links (Team, Blog, Legal, home). */
   baseUrl?: string;
   /**
@@ -38,6 +44,7 @@ const props = withDefaults(defineProps<{
     { code: 'zh', label: '中', name: '中文' },
   ],
   messages: undefined,
+  compact: false,
   baseUrl: 'https://latere.ai',
   routerLink: undefined,
 });
@@ -67,7 +74,7 @@ function linkProps(path: string) {
 </script>
 
 <template>
-  <footer class="site-footer">
+  <footer class="site-footer" :class="{ 'site-footer-compact': compact }">
     <div class="footer-container">
       <div class="footer-brand">
         <component :is="linkTag" v-bind="linkProps('/')" class="logo-link">
@@ -79,7 +86,7 @@ function linkProps(path: string) {
         <p class="footer-tagline" v-html="t('footer.tagline')" />
       </div>
 
-      <div class="footer-cols">
+      <div v-if="!compact" class="footer-cols">
         <div class="footer-col">
           <h4 class="footer-col-title" v-html="t('footer.products')" />
           <div class="footer-subgroup">
@@ -150,6 +157,21 @@ function linkProps(path: string) {
         </div>
       </div>
     </div>
+
+    <nav v-if="compact" class="footer-compact-links" :aria-label="t('footer.products')">
+      <a href="https://wf.latere.ai/"><span class="wallfacer-brand">{{ t('footer.products.wallfacer') }}</span></a>
+      <a href="https://topos.latere.ai/"><span class="topos-brand">{{ t('footer.products.topos') }}</span></a>
+      <a href="https://agon.latere.ai/"><span class="agon-brand">{{ t('footer.products.agon') }}</span></a>
+      <a href="https://cella.latere.ai/"><span class="cella-brand">{{ t('footer.products.cella') }}</span></a>
+      <a href="https://lux.latere.ai/"><span class="lux-brand">{{ t('footer.products.lux') }}</span></a>
+      <a href="https://auth.latere.ai/" v-html="t('footer.identity')" />
+      <component :is="linkTag" v-bind="linkProps('/about')">{{ t('footer.team') }}</component>
+      <component :is="linkTag" v-bind="linkProps('/blog')">{{ t('footer.blog') }}</component>
+      <a href="mailto:contact@latere.ai" v-html="t('footer.contact')" />
+      <component :is="linkTag" v-bind="linkProps('/legal/privacy')">{{ t('footer.privacy') }}</component>
+      <component :is="linkTag" v-bind="linkProps('/legal/terms')">{{ t('footer.terms') }}</component>
+      <component :is="linkTag" v-bind="linkProps('/legal/impressum')">{{ t('footer.impressum') }}</component>
+    </nav>
 
     <div class="footer-bottom">
       <p v-html="t('footer.rights')" />
