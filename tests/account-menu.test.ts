@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
 import { describe, expect, it } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { h } from 'vue';
@@ -118,5 +121,25 @@ describe('AccountMenu', () => {
     await w.vm.$nextTick();
     expect(w.find('.lu-am-up').exists()).toBe(true);
     expect(w.find('.lu-am-dd-left').exists()).toBe(true);
+  });
+
+  // Regression: the head's `border-bottom` plus the first section's `border-top`
+  // rendered a DOUBLED separator line, because the suppressing rule
+  // `.lu-am-section:first-of-type { border-top: 0 }` is dead — `:first-of-type`
+  // matches the first <div> sibling (the head), never a `.lu-am-section`. The
+  // fix drops the head's border-bottom so the first section's border-top is the
+  // single header separator. Guard the CSS so the doubling can't return.
+  it('does not declare both a head border-bottom and a dead first-of-type guard', () => {
+    const src = readFileSync(
+      resolve(process.cwd(), 'src/components/AccountMenu.vue'),
+      'utf8',
+    );
+    const styleBlock = src.slice(src.indexOf('<style'));
+    const headRule = styleBlock.slice(
+      styleBlock.indexOf('.lu-am-head {'),
+      styleBlock.indexOf('}', styleBlock.indexOf('.lu-am-head {')),
+    );
+    expect(headRule).not.toContain('border-bottom');
+    expect(styleBlock).not.toContain('.lu-am-section:first-of-type');
   });
 });

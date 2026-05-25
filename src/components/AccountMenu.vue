@@ -444,7 +444,6 @@ function onExtraItem(item: AccountMenuItem) {
   align-items: center;
   gap: 9px;
   padding: 10px 12px 12px;
-  border-bottom: 1px solid var(--border, #eee);
   margin-bottom: 6px;
 }
 .lu-am-head-muted {
@@ -495,9 +494,6 @@ function onExtraItem(item: AccountMenuItem) {
 .lu-am-section {
   padding: 4px 0;
   border-top: 1px solid var(--border, #eee);
-}
-.lu-am-section:first-of-type {
-  border-top: 0;
 }
 .lu-am-section-label {
   font-family: var(--font-mono, monospace);

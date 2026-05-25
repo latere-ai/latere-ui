@@ -13,7 +13,9 @@ export { useSessionGate } from './session/gate';
 export type { Reauth, ReauthOptions } from './session/reauth';
 export { useClickOutside } from './composables/useClickOutside';
 export { default as AccountMenu } from './components/AccountMenu.vue';
+export { default as AccountPrefs } from './components/AccountPrefs.vue';
 export type { AccountMenuLabels, AccountMenuItem } from './components/accountMenu';
+export type { AccountPrefsLabels } from './components/accountPrefs';
 export type {
   Principal,
   OrgEntry,
