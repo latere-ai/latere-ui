@@ -1,7 +1,7 @@
 {
   "name": "latere-ui",
-  "version": "1.3.2",
-  "description": "Shared Latere platform UI components (footer, logo).",
+  "version": "1.4.0",
+  "description": "Shared Latere platform UI: footer, logo, and the session/auth client + store + account menu.",
   "type": "module",
   "license": "MIT",
   "files": [
@@ -17,10 +17,12 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "peerDependencies": {
+    "pinia": "^2.2.0 || ^3.0.0",
     "vue": "^3.5.0"
   },
   "devDependencies": {
     "@types/node": "^25.9.1",
+    "pinia": "^2.2.6",
     "@vitejs/plugin-vue": "^5.2.0",
     "@vue/test-utils": "^2.4.6",
     "happy-dom": "^15.11.0",
