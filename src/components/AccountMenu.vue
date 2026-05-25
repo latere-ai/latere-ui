@@ -11,7 +11,7 @@
 // trigger + dropdown with scoped styles, so consumers get consistent layout
 // with no CSS import. Relies on the platform CSS tokens (--text, --bg-raised,
 // --accent, …) that every app already defines.
-import { computed, ref } from 'vue';
+import { computed, ref, useSlots } from 'vue';
 
 import type { Principal } from '../session/types';
 import { useClickOutside } from '../composables/useClickOutside';
@@ -68,6 +68,15 @@ const emit = defineEmits<{
 
 const t = computed<AccountMenuLabels>(() => ({ ...DEFAULT_LABELS, ...props.labels }));
 
+const slots = useSlots();
+// A dropdown is only worth opening when it has content: the signed-in
+// surface (identity + orgs + sign out), or app-provided prefs/extra/items.
+// When logged out with none of those, the trigger is a plain "Log in" button
+// (no dropdown, no chevron) — avoids the empty "Not signed in" panel.
+const hasDropdown = computed(
+  () => !!props.principal || !!slots.prefs || !!slots.extra || props.extraItems.length > 0,
+);
+
 const open = ref(false);
 const root = ref<HTMLElement | null>(null);
 useClickOutside(
@@ -75,6 +84,11 @@ useClickOutside(
   () => open.value,
   () => (open.value = false),
 );
+
+function onTrigger() {
+  if (hasDropdown.value) open.value = !open.value;
+  else emit('login'); // logged out + nothing to show → straight to login
+}
 
 const me = computed(() => props.principal);
 const initials = computed(() => me.value?.initials || '?');
@@ -128,11 +142,11 @@ function onExtraItem(item: AccountMenuItem) {
   >
     <button
       class="lu-am-trigger"
-      @click="open = !open"
-      :aria-expanded="open"
-      :title="t.account"
+      @click="onTrigger"
+      :aria-expanded="hasDropdown ? open : undefined"
+      :title="principal ? t.account : t.signIn"
     >
-      <span class="lu-am-avatar">
+      <span class="lu-am-avatar" v-if="principal">
         <img v-if="avatarUrl" :src="avatarUrl" alt="" referrerpolicy="no-referrer" />
         <span v-else>{{ initials }}</span>
       </span>
@@ -144,6 +158,7 @@ function onExtraItem(item: AccountMenuItem) {
         <span class="lu-am-id-name">{{ t.signIn }}</span>
       </span>
       <svg
+        v-if="hasDropdown"
         class="lu-am-chev"
         width="11"
         height="11"
@@ -159,7 +174,7 @@ function onExtraItem(item: AccountMenuItem) {
       </svg>
     </button>
 
-    <div v-if="open" class="lu-am-dd" :class="placement === 'top-end' ? 'lu-am-dd-right' : 'lu-am-dd-left'">
+    <div v-if="open && hasDropdown" class="lu-am-dd" :class="placement === 'top-end' ? 'lu-am-dd-right' : 'lu-am-dd-left'">
       <!-- Identity header -->
       <div class="lu-am-head" v-if="principal">
         <span class="lu-am-head-avatar">

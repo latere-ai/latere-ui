@@ -91,6 +91,28 @@ describe('AccountMenu', () => {
     expect(w.emitted('navigate')?.some((e) => e[0] === '/admin/decks')).toBe(true);
   });
 
+  it('logged out with no content: trigger is a direct Log in (no dropdown)', async () => {
+    const w = mount(AccountMenu, { props: { principal: null } });
+    await w.find('.lu-am-trigger').trigger('click');
+    await w.vm.$nextTick();
+    // No dropdown panel, no chevron, no avatar — just a Log in button.
+    expect(w.find('.lu-am-dd').exists()).toBe(false);
+    expect(w.find('.lu-am-chev').exists()).toBe(false);
+    expect(w.find('.lu-am-avatar').exists()).toBe(false);
+    expect(w.emitted('login')).toBeTruthy();
+  });
+
+  it('logged out WITH prefs: still opens a dropdown (theme/lang useful)', async () => {
+    const w = mount(AccountMenu, {
+      props: { principal: null },
+      slots: { prefs: () => h('div', { class: 'test-prefs' }, 'PREFS') },
+    });
+    await w.find('.lu-am-trigger').trigger('click');
+    await w.vm.$nextTick();
+    expect(w.find('.lu-am-dd').exists()).toBe(true);
+    expect(w.find('.test-prefs').exists()).toBe(true);
+  });
+
   it('bottom-start variant marks the menu as opening upward (sidebar fit)', async () => {
     const w = mountOpen(base, 'bottom-start');
     await w.vm.$nextTick();
