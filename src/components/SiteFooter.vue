@@ -86,6 +86,7 @@ function linkProps(path: string) {
       <a href="https://agon.latere.ai/"><span class="agon-brand">{{ t('footer.products.agon') }}</span></a>
       <a href="https://cella.latere.ai/"><span class="cella-brand">{{ t('footer.products.cella') }}</span></a>
       <a href="https://lux.latere.ai/"><span class="lux-brand">{{ t('footer.products.lux') }}</span></a>
+      <a href="https://lectio.latere.ai/"><span class="lectio-brand">{{ t('footer.products.lectio') }}</span></a>
       <a href="https://auth.latere.ai/" v-html="t('footer.identity')" />
       <component :is="linkTag" v-bind="linkProps('/about')">{{ t('footer.team') }}</component>
       <component :is="linkTag" v-bind="linkProps('/blog')">{{ t('footer.blog') }}</component>
@@ -157,6 +158,7 @@ function linkProps(path: string) {
             <span class="footer-subgroup-title" v-html="t('nav.cat.infrastructure')" />
             <a href="https://cella.latere.ai/"><span class="cella-brand">{{ t('footer.products.cella') }}</span></a>
             <a href="https://lux.latere.ai/"><span class="lux-brand">{{ t('footer.products.lux') }}</span></a>
+            <a href="https://lectio.latere.ai/"><span class="lectio-brand">{{ t('footer.products.lectio') }}</span></a>
           </div>
         </div>
         <div class="footer-col">
