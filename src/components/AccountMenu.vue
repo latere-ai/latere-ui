@@ -163,11 +163,12 @@ function onSignIn() {
           </button>
         </div>
 
-        <!-- Organizations -->
-        <div class="lu-am-section">
+        <!-- Organizations — only when the principal actually has memberships, so
+             a degraded /api/me (orgs fetch failed) doesn't show a lonely Personal. -->
+        <div v-if="orgs.length" class="lu-am-section">
           <div class="lu-am-section-label">{{ t.organizations }}</div>
 
-          <!-- Personal (no-org): always present so the user can switch back. -->
+          <!-- Personal (no-org): present so the user can switch back. -->
           <button
             class="lu-am-item lu-am-org"
             :class="{ 'is-active': isPersonal }"
@@ -351,6 +352,30 @@ function onSignIn() {
 .lu-am-up .lu-am-dd {
   top: auto;
   bottom: calc(100% + 8px);
+}
+
+/* Sidebar (bottom-start) variant: the trigger fills the rail and the dropdown
+   fills the trigger width instead of a fixed 280px, so it never overflows a
+   narrow rail (and the #prefs theme/language toggles stay on-screen). Scrolls
+   if the org list is long. The top-end (nav) variant above is unaffected. */
+.lu-am-up {
+  width: 100%;
+}
+.lu-am-up .lu-am-trigger {
+  width: 100%;
+  border-radius: 8px;
+}
+.lu-am-up .lu-am-chev {
+  margin-left: auto;
+}
+.lu-am-up .lu-am-dd {
+  left: 0;
+  right: 0;
+  width: auto;
+  min-width: 0;
+  max-height: min(520px, calc(100vh - 96px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .lu-am-head {
