@@ -65,6 +65,32 @@ describe('AccountMenu', () => {
     expect(w.emitted('switch-org')?.[0]).toEqual(['o1']);
   });
 
+  it('renders data-driven extraItems styled as menu items', async () => {
+    const w = mount(AccountMenu, {
+      props: {
+        principal: base,
+        extraItems: [
+          { label: 'Admin Panel', href: 'https://auth.test/admin' },
+          { label: 'Deck access', to: '/admin/decks' },
+          { label: 'Do thing', id: 'thing' },
+        ],
+      },
+    });
+    await w.find('.lu-am-trigger').trigger('click');
+    await w.vm.$nextTick();
+    const items = w.findAll('.lu-am-item');
+    const labels = items.map((i) => i.text());
+    expect(labels).toContain('Admin Panel');
+    expect(labels).toContain('Deck access');
+    // href item is an <a> with the url
+    const a = w.find('a.lu-am-item');
+    expect(a.attributes('href')).toBe('https://auth.test/admin');
+    // `to` item emits navigate; `id` item emits item-select
+    const buttons = w.findAll('button.lu-am-item');
+    await buttons.find((b) => b.text() === 'Deck access')!.trigger('click');
+    expect(w.emitted('navigate')?.some((e) => e[0] === '/admin/decks')).toBe(true);
+  });
+
   it('bottom-start variant marks the menu as opening upward (sidebar fit)', async () => {
     const w = mountOpen(base, 'bottom-start');
     await w.vm.$nextTick();

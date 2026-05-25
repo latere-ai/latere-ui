@@ -2,6 +2,24 @@
 // package entrypoint can re-export them without a consumer's vue-tsc falling
 // back to the default-only `*.vue` shim and losing the named members.
 
+// A per-app custom menu row (e.g. "Admin Panel", "Deck access"). Rendered by
+// AccountMenu in its own scope so it always matches the menu's item style —
+// passing markup through a slot doesn't get the scoped `.lu-am-item` styles.
+export interface AccountMenuItem {
+  /** Row text. */
+  label: string;
+  /** External / full URL → rendered as an <a href>. */
+  href?: string;
+  /** Internal router path → emits `navigate` (host calls router.push). */
+  to?: string;
+  /** Stable id emitted via `item-select` for pure-action rows (no href/to). */
+  id?: string;
+  /** Style as a destructive action. */
+  danger?: boolean;
+  /** `_blank` etc. for href rows. */
+  target?: string;
+}
+
 export interface AccountMenuLabels {
   account: string;
   notSignedIn: string;

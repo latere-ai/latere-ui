@@ -15,9 +15,13 @@ import { computed, ref } from 'vue';
 
 import type { Principal } from '../session/types';
 import { useClickOutside } from '../composables/useClickOutside';
-import { type AccountMenuLabels, DEFAULT_ACCOUNT_MENU_LABELS } from './accountMenu';
+import {
+  type AccountMenuLabels,
+  type AccountMenuItem,
+  DEFAULT_ACCOUNT_MENU_LABELS,
+} from './accountMenu';
 
-export type { AccountMenuLabels };
+export type { AccountMenuLabels, AccountMenuItem };
 
 type Placement = 'top-end' | 'bottom-start';
 
@@ -37,6 +41,12 @@ const props = withDefaults(
     signedInOnly?: boolean;
     /** Per-locale label overrides. */
     labels?: Partial<AccountMenuLabels>;
+    /**
+     * Per-app custom rows (e.g. Admin Panel) rendered in the menu's own style,
+     * between the prefs and Sign out. Prefer this over the #extra slot, whose
+     * slotted markup can't pick up the scoped item styles.
+     */
+    extraItems?: AccountMenuItem[];
   }>(),
   {
     placement: 'top-end',
@@ -44,6 +54,7 @@ const props = withDefaults(
     switchingOrgId: null,
     signedInOnly: false,
     labels: undefined,
+    extraItems: () => [],
   },
 );
 
@@ -52,6 +63,7 @@ const emit = defineEmits<{
   (e: 'navigate', path: string): void;
   (e: 'login'): void;
   (e: 'logout'): void;
+  (e: 'item-select', id: string): void;
 }>();
 
 const t = computed<AccountMenuLabels>(() => ({ ...DEFAULT_LABELS, ...props.labels }));
@@ -98,6 +110,12 @@ function onSignOut() {
 function onSignIn() {
   open.value = false;
   emit('login');
+}
+function onExtraItem(item: AccountMenuItem) {
+  if (item.href) return; // <a> handles navigation natively
+  open.value = false;
+  if (item.to) emit('navigate', item.to);
+  else if (item.id) emit('item-select', item.id);
 }
 </script>
 
@@ -239,7 +257,35 @@ function onSignIn() {
         <slot name="prefs" />
       </div>
 
-      <!-- App-provided extras (e.g. superadmin links). -->
+      <!-- Per-app custom rows (data-driven; styled in this component's scope so
+           they always match). Links render as <a>, router paths emit navigate,
+           pure actions emit item-select. -->
+      <div v-if="extraItems.length" class="lu-am-section">
+        <template v-for="(item, i) in extraItems" :key="item.id || item.href || item.to || i">
+          <a
+            v-if="item.href"
+            class="lu-am-item"
+            :class="{ 'lu-am-danger': item.danger }"
+            :href="item.href"
+            :target="item.target"
+            :rel="item.target === '_blank' ? 'noopener' : undefined"
+            @click="open = false"
+          >
+            <span>{{ item.label }}</span>
+          </a>
+          <button
+            v-else
+            class="lu-am-item"
+            :class="{ 'lu-am-danger': item.danger }"
+            @click="onExtraItem(item)"
+          >
+            <span>{{ item.label }}</span>
+          </button>
+        </template>
+      </div>
+
+      <!-- Escape hatch for fully-custom markup. Slotted content is styled via
+           :slotted(.lu-am-item) below so it still matches the menu. -->
       <div v-if="$slots.extra" class="lu-am-section">
         <slot name="extra" />
       </div>
@@ -459,6 +505,7 @@ function onSignIn() {
   color: var(--text, #111);
   font: inherit;
   text-align: left;
+  text-decoration: none;
   border-radius: 6px;
   transition: background 0.1s;
 }
@@ -474,6 +521,29 @@ function onSignIn() {
 .lu-am-danger:hover {
   background: var(--err-bg, rgba(184, 85, 58, 0.06));
   color: var(--err, #b8553a);
+}
+
+/* Style item markup passed through the #extra / #prefs slots too — slotted
+   content lives in the consumer's scope, so the plain .lu-am-item rules above
+   don't reach it without :slotted(). */
+:slotted(.lu-am-item) {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: var(--text, #111);
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background 0.1s;
+}
+:slotted(.lu-am-item:hover) {
+  background: var(--bg-raised, #f4f4f4);
 }
 
 .lu-am-org {
