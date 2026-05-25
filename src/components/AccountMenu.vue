@@ -15,32 +15,13 @@ import { computed, ref } from 'vue';
 
 import type { Principal } from '../session/types';
 import { useClickOutside } from '../composables/useClickOutside';
+import { type AccountMenuLabels, DEFAULT_ACCOUNT_MENU_LABELS } from './accountMenu';
+
+export type { AccountMenuLabels };
 
 type Placement = 'top-end' | 'bottom-start';
 
-export interface AccountMenuLabels {
-  account: string;
-  notSignedIn: string;
-  openDashboard: string;
-  organizations: string;
-  personal: string;
-  noOrganization: string;
-  owner: string;
-  signOut: string;
-  signIn: string;
-}
-
-const DEFAULT_LABELS: AccountMenuLabels = {
-  account: 'Account',
-  notSignedIn: 'Not signed in',
-  openDashboard: 'Open dashboard',
-  organizations: 'Organizations',
-  personal: 'Personal',
-  noOrganization: 'No organization',
-  owner: 'owner',
-  signOut: 'Sign out',
-  signIn: 'Sign in',
-};
+const DEFAULT_LABELS = DEFAULT_ACCOUNT_MENU_LABELS;
 
 const props = withDefaults(
   defineProps<{

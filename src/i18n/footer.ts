@@ -10,6 +10,18 @@ type Dict = Record<string, string>;
 /** Per-locale string overrides supplied by the host, merged over the bundled dicts. */
 export type Messages = Record<string, Dict>;
 
+/** Theme selection driving the footer's theme toggle. */
+export type Theme = 'light' | 'dark' | 'auto';
+
+/** One selectable language in the footer's locale dropdown. */
+export interface LocaleOption {
+  code: string;
+  /** Short label (e.g. "EN", "中"); falls back to `code` if `name` is absent. */
+  label: string;
+  /** Full display name shown in the dropdown (e.g. "English", "中文"). */
+  name?: string;
+}
+
 export const en: Dict = {
   'nav.cat.workspace': 'Work surface',
   'nav.cat.agents': 'Governance',

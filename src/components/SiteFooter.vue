@@ -1,19 +1,20 @@
 <script setup lang="ts">
 import { computed, type Component } from 'vue';
-import { translator, type Locale, type Messages } from '../i18n/footer';
+import {
+  translator,
+  type Locale,
+  type Messages,
+  type Theme,
+  type LocaleOption,
+} from '../i18n/footer';
 import LatereLogoMark from './LatereLogoMark.vue';
 
-export type Theme = 'light' | 'dark' | 'auto';
-export type { Locale, Messages };
-
-/** One selectable language in the footer's locale dropdown. */
-export interface LocaleOption {
-  code: string;
-  /** Short label (e.g. "EN", "中"); falls back to `code` if `name` is absent. */
-  label: string;
-  /** Full display name shown in the dropdown (e.g. "English", "中文"). */
-  name?: string;
-}
+// Types now live in ../i18n/footer (a .ts module) and the package entrypoint
+// re-exports them from there — never re-export types from a .vue file, since a
+// consumer's `vue-tsc` can fall back to the default-only `*.vue` shim and lose
+// the named members (breaks clean/SSG builds). Re-exported here for any code
+// that still imports them from this SFC.
+export type { Locale, Messages, Theme, LocaleOption };
 
 const props = withDefaults(defineProps<{
   /** Current theme; drives the active state of the theme toggle. */
