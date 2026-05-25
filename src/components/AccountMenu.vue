@@ -146,16 +146,17 @@ function onExtraItem(item: AccountMenuItem) {
       :aria-expanded="hasDropdown ? open : undefined"
       :title="principal ? t.account : t.signIn"
     >
-      <span class="lu-am-avatar" v-if="principal">
+      <!-- Avatar always present so the pill keeps its shape; logged out shows
+           the "?" initials fallback. -->
+      <span class="lu-am-avatar">
         <img v-if="avatarUrl" :src="avatarUrl" alt="" referrerpolicy="no-referrer" />
         <span v-else>{{ initials }}</span>
       </span>
-      <span class="lu-am-id" v-if="principal">
-        <span class="lu-am-id-name">{{ name }}</span>
-        <span class="lu-am-id-sub">{{ orgName || t.personal }}</span>
-      </span>
-      <span class="lu-am-id" v-else>
-        <span class="lu-am-id-name">{{ t.signIn }}</span>
+      <span class="lu-am-id">
+        <span class="lu-am-id-name">{{ principal ? name : t.signIn }}</span>
+        <!-- Sub-label (org / Personal) only when signed in — the logged-out
+             "Sign in" trigger stays a single line. -->
+        <span class="lu-am-id-sub" v-if="principal">{{ orgName || t.personal }}</span>
       </span>
       <svg
         v-if="hasDropdown"

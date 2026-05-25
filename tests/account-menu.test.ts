@@ -94,14 +94,17 @@ describe('AccountMenu', () => {
     expect(w.emitted('navigate')?.some((e) => e[0] === '/admin/decks')).toBe(true);
   });
 
-  it('logged out with no content: trigger is a direct Log in (no dropdown)', async () => {
+  it('logged out with no content: trigger is a direct Sign in (no dropdown)', async () => {
     const w = mount(AccountMenu, { props: { principal: null } });
     await w.find('.lu-am-trigger').trigger('click');
     await w.vm.$nextTick();
-    // No dropdown panel, no chevron, no avatar — just a Log in button.
+    // No dropdown panel, no chevron — clicking signs in directly. The pill
+    // keeps its shape: "?" avatar + a single-line "Sign in" (no org sub-label).
     expect(w.find('.lu-am-dd').exists()).toBe(false);
     expect(w.find('.lu-am-chev').exists()).toBe(false);
-    expect(w.find('.lu-am-avatar').exists()).toBe(false);
+    expect(w.find('.lu-am-avatar').text()).toBe('?');
+    expect(w.find('.lu-am-id-name').text()).toBe('Sign in');
+    expect(w.find('.lu-am-id-sub').exists()).toBe(false);
     expect(w.emitted('login')).toBeTruthy();
   });
 
