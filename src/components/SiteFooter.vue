@@ -145,20 +145,22 @@ function linkProps(path: string) {
       <div class="footer-cols">
         <div class="footer-col">
           <h4 class="footer-col-title" v-html="t('footer.products')" />
-          <div class="footer-subgroup">
-            <span class="footer-subgroup-title" v-html="t('nav.cat.workspace')" />
-            <a href="https://wf.latere.ai/"><span class="wallfacer-brand">{{ t('footer.products.wallfacer') }}</span></a>
-          </div>
-          <div class="footer-subgroup">
-            <span class="footer-subgroup-title" v-html="t('nav.cat.agents')" />
-            <a href="https://topos.latere.ai/"><span class="topos-brand">{{ t('footer.products.topos') }}</span></a>
-            <a href="https://agon.latere.ai/"><span class="agon-brand">{{ t('footer.products.agon') }}</span></a>
-          </div>
-          <div class="footer-subgroup">
-            <span class="footer-subgroup-title" v-html="t('nav.cat.infrastructure')" />
-            <a href="https://cella.latere.ai/"><span class="cella-brand">{{ t('footer.products.cella') }}</span></a>
-            <a href="https://lux.latere.ai/"><span class="lux-brand">{{ t('footer.products.lux') }}</span></a>
-            <a href="https://lectio.latere.ai/"><span class="lectio-brand">{{ t('footer.products.lectio') }}</span></a>
+          <div class="footer-subgroups">
+            <div class="footer-subgroup">
+              <span class="footer-subgroup-title" v-html="t('nav.cat.workspace')" />
+              <a href="https://wf.latere.ai/"><span class="wallfacer-brand">{{ t('footer.products.wallfacer') }}</span></a>
+            </div>
+            <div class="footer-subgroup">
+              <span class="footer-subgroup-title" v-html="t('nav.cat.agents')" />
+              <a href="https://topos.latere.ai/"><span class="topos-brand">{{ t('footer.products.topos') }}</span></a>
+              <a href="https://agon.latere.ai/"><span class="agon-brand">{{ t('footer.products.agon') }}</span></a>
+            </div>
+            <div class="footer-subgroup">
+              <span class="footer-subgroup-title" v-html="t('nav.cat.infrastructure')" />
+              <a href="https://cella.latere.ai/"><span class="cella-brand">{{ t('footer.products.cella') }}</span></a>
+              <a href="https://lux.latere.ai/"><span class="lux-brand">{{ t('footer.products.lux') }}</span></a>
+              <a href="https://lectio.latere.ai/"><span class="lectio-brand">{{ t('footer.products.lectio') }}</span></a>
+            </div>
           </div>
         </div>
         <div class="footer-col">

@@ -65,11 +65,11 @@
     padding: 48px 0 0;
 }
 .footer-container {
-    max-width: 1080px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 32px;
     display: grid;
-    grid-template-columns: minmax(200px, 1fr) minmax(0, 2.4fr) auto;
+    grid-template-columns: minmax(160px, 0.7fr) minmax(0, 3.2fr) auto;
     align-items: start;
     gap: 32px;
 }
@@ -87,13 +87,20 @@
 }
 .footer-cols {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 3fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
     gap: 24px;
 }
 .footer-col {
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+/* Product categories sit side by side so the column stays short instead of
+   stacking every product into one tall list. Wraps on narrow screens. */
+.footer-subgroups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 24px;
 }
 .footer-col-title {
     font-size: 11px;
@@ -200,7 +207,7 @@
 .footer-lang-select:focus-visible { outline: 2px solid var(--border-strong); outline-offset: 1px; }
 .footer-lang-select option { color: var(--text); background: var(--bg-surface); }
 .footer-bottom {
-    max-width: 1080px;
+    max-width: 1200px;
     margin: 24px auto 0;
     padding: 16px 32px;
     border-top: 1px solid var(--border);
@@ -263,6 +270,7 @@
         padding: 0 20px;
     }
     .footer-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 16px; }
+    .footer-subgroups { flex-direction: column; gap: 14px; }
     .footer-extra { align-items: flex-start; }
     .footer-bottom { padding: 16px 20px; }
 }
