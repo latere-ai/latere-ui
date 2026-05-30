@@ -87,7 +87,7 @@
 }
 .footer-cols {
     display: grid;
-    grid-template-columns: minmax(0, 3fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 24px;
 }
 .footer-col {
@@ -95,12 +95,10 @@
     flex-direction: column;
     gap: 10px;
 }
-/* Product categories sit side by side so the column stays short instead of
-   stacking every product into one tall list. Wraps on narrow screens. */
-.footer-subgroups {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px 24px;
+/* External link (Community column): trailing up-right arrow, like the host nav. */
+.footer-external::after {
+    content: " \2197";
+    color: var(--text-muted);
 }
 .footer-col-title {
     font-size: 11px;
@@ -270,7 +268,6 @@
         padding: 0 20px;
     }
     .footer-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 16px; }
-    .footer-subgroups { flex-direction: column; gap: 14px; }
     .footer-extra { align-items: flex-start; }
     .footer-bottom { padding: 16px 20px; }
 }
