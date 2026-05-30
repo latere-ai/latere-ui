@@ -23,9 +23,9 @@ export interface LocaleOption {
 }
 
 export const en: Dict = {
-  'nav.cat.workspace': 'Work surface',
+  'nav.cat.workspace': 'Workspace',
   'nav.cat.agents': 'Governance',
-  'nav.cat.infrastructure': 'Runtime',
+  'nav.cat.infrastructure': 'Infrastructure',
   'footer.products': 'Products',
   'footer.products.wallfacer': 'Wallfacer',
   'footer.products.topos': 'Topos',
@@ -51,9 +51,9 @@ export const en: Dict = {
 };
 
 export const zh: Dict = {
-  'nav.cat.workspace': '工作界面',
+  'nav.cat.workspace': '工作区',
   'nav.cat.agents': '治理',
-  'nav.cat.infrastructure': '运行时',
+  'nav.cat.infrastructure': '基础设施',
   'footer.products': '产品',
   'footer.products.wallfacer': 'Wallfacer',
   'footer.products.topos': 'Topos',
@@ -79,9 +79,9 @@ export const zh: Dict = {
 };
 
 export const de: Dict = {
-  'nav.cat.workspace': 'Arbeitsfläche',
+  'nav.cat.workspace': 'Arbeitsbereich',
   'nav.cat.agents': 'Governance',
-  'nav.cat.infrastructure': 'Laufzeit',
+  'nav.cat.infrastructure': 'Infrastruktur',
   'footer.products': 'Produkte',
   'footer.products.wallfacer': 'Wallfacer',
   'footer.products.topos': 'Topos',
