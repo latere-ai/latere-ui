@@ -4,7 +4,7 @@
 // the documented data attributes (`data-active`, `data-owner`) and the
 // available named slots.
 
-import type { OrgSwitcherItem, OrgSwitcherState } from '../session/orgSwitcher';
+import type { OrgSwitcherState } from '../session/orgSwitcher';
 
 interface Props {
   /** A state returned by `createOrgSwitcher`. */
