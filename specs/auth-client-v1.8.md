@@ -1,6 +1,6 @@
 ---
 title: latere-ui v1.8 — shared auth client (vanilla async core + OrgSwitcher + front-channel logout)
-status: drafted
+status: complete
 depends_on:
   - auth/specs/auth-unification.md
 affects:
