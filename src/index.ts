@@ -11,6 +11,36 @@ export { createSessionStore } from './session/store';
 export { createReauth } from './session/reauth';
 export { useSessionGate } from './session/gate';
 export { useSession } from './session/useSession';
+// Vanilla async core (framework-agnostic).
+export {
+  me,
+  orgs,
+  switchOrg,
+  switchPersonal,
+  logout,
+  login,
+} from './session/me';
+export type {
+  MeOptions,
+  OrgsOptions,
+  SwitchOrgOptions,
+  SwitchOrgNavigation,
+  LogoutOptions,
+} from './session/me';
+// SPA front-channel logout helper.
+export { runFrontChannelLogout } from './session/frontChannel';
+export type {
+  FrontChannelLogoutOptions,
+  FrontChannelLogoutResponse,
+} from './session/frontChannel';
+// Headless org-switcher primitive + Vue adapter.
+export { createOrgSwitcher } from './session/orgSwitcher';
+export type {
+  OrgSwitcherDeps,
+  OrgSwitcherItem,
+  OrgSwitcherState,
+} from './session/orgSwitcher';
+export { default as OrgSwitcher } from './components/OrgSwitcher.vue';
 export type { UseSession, UseSessionOptions } from './session/useSession';
 export type { Reauth, ReauthOptions } from './session/reauth';
 export { useClickOutside } from './composables/useClickOutside';
