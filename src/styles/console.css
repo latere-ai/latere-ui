@@ -140,6 +140,14 @@
     cursor: pointer;
     position: relative;
     transition: color 0.13s, background 0.13s;
+    /* Reset so action rows rendered as <button> match link rows. */
+    appearance: none;
+    width: 100%;
+    box-sizing: border-box;
+    background: transparent;
+    border: 0;
+    font-family: inherit;
+    text-align: left;
 }
 .lu-cs-item:hover {
     background: var(--bg-raised, #f5f5f5);
@@ -185,6 +193,15 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+/* Trailing attention dot (e.g. unread). */
+.lu-cs-dot {
+    flex-shrink: 0;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent, #5b6cf0);
 }
 
 /* ===== Badges ===== */

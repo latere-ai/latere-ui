@@ -99,6 +99,8 @@ function rowActive(item: NavItem): boolean {
 // or a non-interactive span for disabled rows.
 function rowTag(item: NavItem): Component | string {
   if (isItemDisabled(item)) return 'span';
+  // Action rows (no route, side-effect on click) render as buttons.
+  if (item.action && !item.to) return 'button';
   if (props.routerLink && !item.external) return props.routerLink;
   return 'a';
 }
@@ -106,6 +108,7 @@ function rowTag(item: NavItem): Component | string {
 // Bind the right href/to attr for whichever tag we render.
 function rowProps(item: NavItem): Record<string, unknown> {
   if (isItemDisabled(item)) return {};
+  if (item.action && !item.to) return { type: 'button' };
   if (props.routerLink && !item.external) return { to: item.to };
   return item.external
     ? { href: item.to, target: '_blank', rel: 'noreferrer' }
@@ -206,6 +209,7 @@ function letter(label: string): string {
               <slot name="icon" :item="item" :collapsed="collapsed">{{ collapsed ? letter(item.label) : '' }}</slot>
             </span>
             <span v-if="!collapsed" class="lu-cs-item-label">{{ item.label }}</span>
+            <span v-if="item.dot && !collapsed" class="lu-cs-dot" aria-hidden="true" />
             <template v-if="item.badge !== undefined && !collapsed">
               <span v-if="item.badge === 'live'" class="lu-cs-badge lu-cs-badge-live">
                 <span class="lu-cs-badge-dot" aria-hidden="true" />{{ liveLabel }}

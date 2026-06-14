@@ -155,6 +155,22 @@ describe('<ConsoleSidebar />', () => {
     expect(html.indexOf('test-extra')).toBeLessThan(html.indexOf('test-foot2'));
   });
 
+  it('renders an action item (no route) as a clickable button that emits navigate', async () => {
+    const m = { groups: [{ items: [{ id: 'terminal', label: 'Terminal', action: true }] }] };
+    const w = mount(ConsoleSidebar, { props: { model: m } });
+    const row = w.find('.lu-cs-item');
+    expect(row.element.tagName).toBe('BUTTON');
+    expect(row.attributes('data-disabled')).toBe('false');
+    await row.trigger('click');
+    expect(w.emitted('navigate')?.[0]?.[0]).toMatchObject({ id: 'terminal', action: true });
+  });
+
+  it('renders a trailing dot for items with dot:true', () => {
+    const m = { groups: [{ items: [{ id: 'board', label: 'Board', to: '/', dot: true }] }] };
+    const w = mount(ConsoleSidebar, { props: { model: m } });
+    expect(w.find('.lu-cs-dot').exists()).toBe(true);
+  });
+
   it('uses the default brand with a gradient wordmark theme', () => {
     const w = render({ brandName: 'Lux', brandSub: 'Console', brandTheme: 'lux' });
     expect(w.find('.lu-cs-brand-name').classes()).toContain('lux-brand');

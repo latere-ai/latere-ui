@@ -24,6 +24,14 @@ export interface NavItem {
    * renders a pulsing dot + "live" label, undefined renders nothing.
    */
   badge?: number | 'live';
+  /** Small trailing attention dot (e.g. an unread indicator). */
+  dot?: boolean;
+  /**
+   * Action row: interactive without a route (renders as a button). Clicking
+   * emits `navigate`; the host runs the side effect (toggle a panel, open a
+   * modal). Lets non-navigational controls live in the nav.
+   */
+  action?: boolean;
   /** Open `to` in a new tab (external links). */
   external?: boolean;
   /** Force the row disabled even when `to` is present. */
@@ -100,5 +108,7 @@ export function partitionGroups(groups: NavGroup[]): {
 
 /** True when a row should not be interactive. */
 export function isItemDisabled(item: NavItem): boolean {
-  return item.disabled === true || item.to === undefined;
+  if (item.disabled === true) return true;
+  // Action rows are interactive without a route; everything else needs a `to`.
+  return item.to === undefined && item.action !== true;
 }
