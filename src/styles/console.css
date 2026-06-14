@@ -235,3 +235,20 @@
 .lu-cs-foot:empty {
     display: none;
 }
+/* When collapsed, shrink an AccountMenu placed in the foot down to its avatar
+ * so it fits the 64px rail. AccountMenu (`.lu-am-*`) is the sibling latere-ui
+ * component normally dropped here; it is not itself collapse-aware, so the rail
+ * drives the shrink. A non-AccountMenu foot simply won't match these rules. */
+.lu-cs[data-collapsed="true"] .lu-cs-foot {
+    display: flex;
+    justify-content: center;
+}
+.lu-cs[data-collapsed="true"] .lu-cs-foot :is(.lu-am-id, .lu-am-chev) {
+    display: none;
+}
+.lu-cs[data-collapsed="true"] .lu-cs-foot .lu-am-trigger {
+    justify-content: center;
+    gap: 0;
+    padding-left: 4px;
+    padding-right: 4px;
+}

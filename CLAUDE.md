@@ -1,0 +1,8 @@
+- write commit message based on historical commit message style
+- write commit body to describe concisely about the change
+- when work on large task, commit step by step with well scoped changes
+- push once when all commits are in
+- use `make build` to verify changes before committing (lint + govulncheck + test)
+- if you didn't add a test, you didn't fix the bug
+- commit often and one intended diff at a time
+- work on main branch directly
