@@ -325,3 +325,16 @@
     padding: 4px !important;
     border-radius: 999px !important;
 }
+/* The account dropdown's sidebar variant stretches to the trigger width, which
+ * collapses it to ~64px in a folded rail and truncates everything. Pin a usable
+ * width anchored to the rail's left edge so it escapes into the main area. */
+.lu-cs[data-collapsed="true"] .lu-cs-foot .lu-am-dd {
+    left: 0 !important;
+    right: auto !important;
+    width: 248px !important;
+    min-width: 248px !important;
+}
+/* Let the popup escape the narrow rail (the nav scrolls on its own element). */
+.lu-cs-foot {
+    overflow: visible;
+}

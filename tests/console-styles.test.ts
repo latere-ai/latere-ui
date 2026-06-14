@@ -23,4 +23,11 @@ describe('console.css', () => {
     expect(rule).toMatch(/width:\s*auto\s*!important/);
     expect(rule).toMatch(/border-radius:\s*999px\s*!important/);
   });
+
+  it('keeps the collapsed account dropdown a usable width (not clamped to 64px)', () => {
+    // Regression guard: the sidebar dropdown variant is width:auto, which
+    // collapses to the trigger width in a folded rail and truncates the menu.
+    const rule = css.slice(css.indexOf('.lu-cs-foot .lu-am-dd'));
+    expect(rule).toMatch(/min-width:\s*248px\s*!important/);
+  });
 });
