@@ -135,6 +135,15 @@ describe('<ConsoleSidebar />', () => {
     expect(w.find('.lu-cs-brand-mark').exists()).toBe(false);
   });
 
+  it('renders the #top slot between the head and the nav (e.g. command palette)', () => {
+    const w = render({}, { top: () => h('button', { class: 'test-top' }, 'CMDK') });
+    const top = w.find('.test-top');
+    expect(top.exists()).toBe(true);
+    // it precedes the nav in document order
+    const html = w.html();
+    expect(html.indexOf('test-top')).toBeLessThan(html.indexOf('lu-cs-nav'));
+  });
+
   it('uses the default brand with a gradient wordmark theme', () => {
     const w = render({ brandName: 'Lux', brandSub: 'Console', brandTheme: 'lux' });
     expect(w.find('.lu-cs-brand-name').classes()).toContain('lux-brand');

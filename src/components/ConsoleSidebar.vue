@@ -172,6 +172,8 @@ function letter(label: string): string {
       </button>
     </div>
 
+    <slot name="top" :collapsed="collapsed" />
+
     <nav class="lu-cs-nav">
       <div
         v-for="(g, gi) in orderedGroups"
