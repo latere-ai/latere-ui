@@ -9,7 +9,7 @@ Active specs:
 ```
 specs/
   auth-client-v1.8.md      (complete, leaf — v1.8 adds vanilla async core, OrgSwitcher, runFrontChannelLogout)
-  console-shell-v1.9.md    (planned — shared ConsoleSidebar (phase 1) + DocsLayout (phase 2) across the five product consoles)
+  console-shell-v1.9.md    (complete — shared ConsoleSidebar + DocsLayout shipped in v1.9.0; per-product migrations pending)
 ```
 
 ## Dependencies

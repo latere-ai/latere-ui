@@ -1,6 +1,6 @@
 ---
 title: latere-ui v1.9 — shared console shell (ConsoleSidebar) + docs renderer (DocsLayout)
-status: planned
+status: complete
 depends_on:
   - specs/auth-client-v1.8.md
 affects:
@@ -21,6 +21,10 @@ updated: 2026-06-14
 author: changkun
 dispatched_task_id: null
 ---
+
+> **Status: built in latere-ui v1.9.0.** Both phases shipped in-library with
+> tests (125 passing) and typecheck clean; the per-product migrations (rollout
+> steps 2–5) remain. See the Outcome section for what diverged from this plan.
 
 # latere-ui v1.9 — Shared Console Shell + Docs Renderer
 
@@ -340,3 +344,51 @@ Per the repo rule, every behavior ships with a test that fails without it.
 - Does `markdown-it` as an optional peer dep cause friction for the
   docs-free consoles (agents)? Alternative: ship `markdown.ts` as a separate
   subpath so it's only pulled when imported.
+
+## Outcome (built in v1.9.0)
+
+Both phases shipped in-library. 125 tests pass; `vue-tsc` clean. What landed:
+
+| Artifact | File |
+| --- | --- |
+| Headless nav model + collapse | `src/console/nav.ts` |
+| Console sidebar adapter | `src/components/ConsoleSidebar.vue` |
+| Console styles | `src/styles/console.css` (`latere-ui/console`) |
+| Shared brand wordmarks | `src/styles/brand.css` (`latere-ui/brand`) |
+| Headless grouped-docs model | `src/docs/model.ts` |
+| Headless TOC / scroll-spy | `src/docs/toc.ts` |
+| Markdown config helper | `src/docs/markdown.ts` (`latere-ui/markdown`) |
+| Docs layout adapter | `src/components/DocsLayout.vue` |
+| Docs styles | `src/styles/docs.css` (`latere-ui/docs`) |
+
+Decisions that diverged from the plan:
+
+- **Brand gradients extracted.** The `*-brand` wordmark rules moved from
+  `footer.css` into a shared `src/styles/brand.css`, `@import`-ed by both
+  `footer.css` and `console.css` (single source of truth). The footer test was
+  repointed to `brand.css`.
+- **markdown-it is injected, not a peer dependency.** `createMarkdown(MarkdownIt,
+  opts)` takes the host's constructor (the routerLink-injection pattern), so
+  latere-ui has zero markdown runtime dependency and docs-free consoles pay
+  nothing. It is exported only from the `latere-ui/markdown` subpath, never the
+  main barrel, so importing latere-ui never pulls markdown-it types. (Resolves
+  the open question — chose injection over an optional peer dep.) markdown-it is
+  a devDependency for tests only.
+- **Heading ids align with the TOC.** `createMarkdown` assigns heading ids using
+  the exact `slugify` the TOC primitive uses, so anchors and the on-this-page
+  list always agree across apps.
+- **Grouped docs model matches the production example.** The document-intelligence
+  console's `CATEGORIES` shape (`{ id, label, icon?, advanced?, pages: [{ slug,
+  title }] }` + flattened list + search index) is the model `DocsLayout` consumes,
+  so it fits both markdown docs (`articleHtml`) and component-driven docs
+  (`#article` slot).
+- **Collapse control uses a `null` sentinel.** Vue casts an absent Boolean prop to
+  `false`, which masked uncontrolled mode; `collapsed?: boolean | null` defaulting
+  to `null` distinguishes "unset" from "controlled false".
+- **Icons via slot, no bundled set** (resolves that open question): rows take an
+  `icon` name surfaced through the `#icon` slot.
+
+Still open / deferred:
+
+- Per-product migrations (rollout steps 2–5) are not done — this is library-only.
+- **lectio** still not deep-dived; confirm `AppShell`/`Nav` fits before migrating.
