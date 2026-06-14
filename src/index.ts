@@ -1,5 +1,21 @@
 export { default as SiteFooter } from './components/SiteFooter.vue';
 export { default as LatereLogoMark } from './components/LatereLogoMark.vue';
+
+// Console shell: headless nav model + collapse primitive, and the Vue adapter.
+// Styles ship separately as the `latere-ui/console` entrypoint.
+export { default as ConsoleSidebar } from './components/ConsoleSidebar.vue';
+export {
+  createCollapse,
+  partitionGroups,
+  isItemDisabled,
+} from './console/nav';
+export type {
+  NavItem,
+  NavGroup,
+  ConsoleNavModel,
+  CollapseOptions,
+  CollapseState,
+} from './console/nav';
 // Types are re-exported from .ts modules, never from the .vue SFCs: a
 // consumer's vue-tsc can fall back to the default-only `*.vue` shim and drop
 // named members, which breaks clean/SSG builds (e.g. vite-ssg).

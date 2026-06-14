@@ -1,7 +1,7 @@
 {
   "name": "latere-ui",
-  "version": "1.8.0",
-  "description": "Shared Latere platform UI: footer, logo, and the session/auth client + store + account menu.",
+  "version": "1.9.0",
+  "description": "Shared Latere platform UI: footer, logo, console sidebar, docs renderer, and the session/auth client + store + account menu.",
   "type": "module",
   "license": "MIT",
   "files": [
@@ -10,7 +10,9 @@
   "exports": {
     ".": "./src/index.ts",
     "./styles": "./src/styles/footer.css",
-    "./tokens": "./src/styles/tokens.css"
+    "./tokens": "./src/styles/tokens.css",
+    "./brand": "./src/styles/brand.css",
+    "./console": "./src/styles/console.css"
   },
   "scripts": {
     "test": "vitest run",
