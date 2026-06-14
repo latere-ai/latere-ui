@@ -7,6 +7,12 @@
 @import './brand.css';
 
 .lu-cs {
+    /* The rail is a grid/flex item that would otherwise paint UNDER the main
+     * column (later in DOM). Give it a stacking context above main so the
+     * account dropdown — which overlaps the main area when collapsed — overlays
+     * the page instead of bleeding the page content through it. */
+    position: relative;
+    z-index: 30;
     display: flex;
     flex-direction: column;
     height: 100%;
