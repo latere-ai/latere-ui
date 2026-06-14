@@ -30,4 +30,10 @@ describe('console.css', () => {
     const rule = css.slice(css.indexOf('.lu-cs-foot .lu-am-dd'));
     expect(rule).toMatch(/min-width:\s*248px\s*!important/);
   });
+  it("centers collapsed nav items as squares and drops the accent bar", () => {
+    const css2 = readFileSync(resolve(process.cwd(), "src/styles/console.css"), "utf8");
+    const blk = css2.slice(css2.indexOf("[data-collapsed=\"true\"] .lu-cs-item"));
+    expect(blk).toMatch(/margin-left:\s*auto/);
+    expect(blk).toMatch(/\[data-active=\"true\"\]::before\s*\{\s*display:\s*none/);
+  });
 });

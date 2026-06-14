@@ -227,8 +227,19 @@
     pointer-events: none;
 }
 .lu-cs[data-collapsed="true"] .lu-cs-item {
+    /* A centered square button so the icon + its highlight sit dead-center in
+     * the rail (a full-width pill reads as left-weighted next to the accent
+     * bar). */
     justify-content: center;
-    padding: 8px 0;
+    width: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 9px 0;
+}
+/* The left accent bar looks off-center on a centered square — the bg highlight
+ * carries the active state in the collapsed rail. */
+.lu-cs[data-collapsed="true"] .lu-cs-item[data-active="true"]::before {
+    display: none;
 }
 .lu-cs-item-icon {
     flex-shrink: 0;
