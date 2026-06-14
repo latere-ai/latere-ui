@@ -12,7 +12,8 @@
     "./styles": "./src/styles/footer.css",
     "./tokens": "./src/styles/tokens.css",
     "./brand": "./src/styles/brand.css",
-    "./console": "./src/styles/console.css"
+    "./console": "./src/styles/console.css",
+    "./docs": "./src/styles/docs.css"
   },
   "scripts": {
     "test": "vitest run",

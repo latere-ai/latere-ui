@@ -16,6 +16,25 @@ export type {
   CollapseOptions,
   CollapseState,
 } from './console/nav';
+
+// Docs renderer: headless grouped-docs model + TOC primitive, and the Vue
+// adapter. Styles ship separately as the `latere-ui/docs` entrypoint.
+export { default as DocsLayout } from './components/DocsLayout.vue';
+export {
+  flattenDocs,
+  findDoc,
+  adjacentDocs,
+  docPath,
+  buildDocSearchIndex,
+} from './docs/model';
+export type {
+  DocPage,
+  DocGroup,
+  FlatDoc,
+  DocSearchEntry,
+} from './docs/model';
+export { createToc, slugify } from './docs/toc';
+export type { TocItem, TocOptions, TocController } from './docs/toc';
 // Types are re-exported from .ts modules, never from the .vue SFCs: a
 // consumer's vue-tsc can fall back to the default-only `*.vue` shim and drop
 // named members, which breaks clean/SSG builds (e.g. vite-ssg).
