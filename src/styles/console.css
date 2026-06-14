@@ -36,6 +36,13 @@
 .lu-cs[data-collapsed="true"] .lu-cs-head {
     flex-direction: column;
     gap: 10px;
+    justify-content: center;
+}
+/* Hide the fold button when collapsed: stacking it under the logo grows the
+ * head and shifts the logo on every toggle. Clicking the brand expands instead
+ * (the head then stays the same height, so the logo never moves). */
+.lu-cs[data-collapsed="true"] .lu-cs-fold {
+    display: none;
 }
 .lu-cs-brand {
     display: flex;

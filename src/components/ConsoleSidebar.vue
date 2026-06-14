@@ -154,7 +154,10 @@ function onRowClick(item: NavItem, e: MouseEvent) {
 }
 
 function onBrandClick(e: MouseEvent) {
-  if (props.expandOnBrandClick && collapsed.value) {
+  // When collapsed, the fold button is hidden (it would grow the head and shift
+  // the logo), so clicking the brand expands the rail. expandOnBrandClick stays
+  // as an explicit opt-in for hosts that keep their own brand slot.
+  if ((props.expandOnBrandClick || props.collapsible !== false) && collapsed.value) {
     e.preventDefault();
     setCollapsed(false);
   }
@@ -175,6 +178,7 @@ function letter(label: string): string {
           :is="routerLink ?? 'a'"
           v-bind="routerLink ? { to: homeTo } : { href: homeTo }"
           class="lu-cs-brand"
+          :title="collapsed ? expandLabel : undefined"
           @click="onBrandClick"
         >
           <span
