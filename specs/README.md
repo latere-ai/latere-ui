@@ -8,7 +8,8 @@ Active specs:
 
 ```
 specs/
-  auth-client-v1.8.md      (planned, leaf — v1.8 adds vanilla async core, OrgSwitcher, runFrontChannelLogout)
+  auth-client-v1.8.md      (complete, leaf — v1.8 adds vanilla async core, OrgSwitcher, runFrontChannelLogout)
+  console-shell-v1.9.md    (planned — shared ConsoleSidebar (phase 1) + DocsLayout (phase 2) across the five product consoles)
 ```
 
 ## Dependencies
@@ -21,4 +22,7 @@ specs/
 - Frontmatter mirrors the `auth/specs/*.md` model.
 - Vue + Pinia are peerDependencies; React/Svelte adapters are out of scope until a consumer appears in the monorepo.
 - SSR safety: every browser-coupled helper must be a no-op without `window`.
-- CSS-unopinionated: components ship without styles; consumers apply their own.
+- CSS strategy: **headless primitives** ship without styles; **styled adapter SFCs**
+  (`SiteFooter`, and the planned `ConsoleSidebar` / `DocsLayout`) ship token-based CSS
+  as opt-in subpath entrypoints so the consoles can align visually. See
+  `console-shell-v1.9.md`.
