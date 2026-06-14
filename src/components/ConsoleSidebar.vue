@@ -215,6 +215,10 @@ function letter(label: string): string {
           </component>
         </slot>
       </div>
+
+      <!-- App-specific contextual content (recent lists, filters, workspace
+           switcher) flows below the nav groups, within the scroll area. -->
+      <slot name="extra" :collapsed="collapsed" />
     </nav>
 
     <div class="lu-cs-foot">

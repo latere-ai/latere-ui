@@ -144,6 +144,17 @@ describe('<ConsoleSidebar />', () => {
     expect(html.indexOf('test-top')).toBeLessThan(html.indexOf('lu-cs-nav'));
   });
 
+  it('renders the #extra slot below the nav groups, above the foot', () => {
+    const w = render({}, {
+      extra: () => h('div', { class: 'test-extra' }, 'RECENT'),
+      foot: () => h('div', { class: 'test-foot2' }, 'ACCT'),
+    });
+    expect(w.find('.test-extra').exists()).toBe(true);
+    const html = w.html();
+    expect(html.indexOf('lu-cs-nav')).toBeLessThan(html.indexOf('test-extra'));
+    expect(html.indexOf('test-extra')).toBeLessThan(html.indexOf('test-foot2'));
+  });
+
   it('uses the default brand with a gradient wordmark theme', () => {
     const w = render({ brandName: 'Lux', brandSub: 'Console', brandTheme: 'lux' });
     expect(w.find('.lu-cs-brand-name').classes()).toContain('lux-brand');
