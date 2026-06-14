@@ -211,6 +211,9 @@ function letter(label: string): string {
       </button>
     </div>
 
+    <!-- App-specific content above the search bar (e.g. a workspace switcher). -->
+    <slot name="top" :collapsed="collapsed" />
+
     <button
       v-if="search"
       type="button"
@@ -228,8 +231,6 @@ function letter(label: string): string {
       <span v-if="!collapsed" class="lu-cs-search-label">{{ searchLabel }}</span>
       <span v-if="!collapsed && searchHint" class="lu-cs-search-hint">{{ searchHint }}</span>
     </button>
-
-    <slot name="top" :collapsed="collapsed" />
 
     <nav class="lu-cs-nav">
       <div
