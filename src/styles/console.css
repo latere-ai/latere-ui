@@ -318,6 +318,10 @@
 .lu-cs[data-collapsed="true"] .lu-cs-foot .lu-am-trigger {
     justify-content: center;
     gap: 0;
-    padding-left: 4px;
-    padding-right: 4px;
+    /* Shrink the trigger to a tight circle around the avatar (AccountMenu's
+     * sidebar variant forces width:100% + rounded-rect, which reads as a wide
+     * rectangle in the 64px rail). !important beats the scoped .lu-am-up rule. */
+    width: auto !important;
+    padding: 4px !important;
+    border-radius: 999px !important;
 }

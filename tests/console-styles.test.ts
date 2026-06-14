@@ -15,4 +15,12 @@ describe('console.css', () => {
     // collapsed rail into the main content (caught during the lux pilot).
     expect(css).toMatch(/\[data-collapsed="true"\][^}]*\.lu-cs-foot[\s\S]*\.lu-am-id/);
   });
+
+  it('makes the collapsed account trigger a tight circle (not a wide rectangle)', () => {
+    // The trigger rule must override the sidebar variant's width:100% so the
+    // avatar reads as a square/circle, not a stretched rounded rectangle.
+    const rule = css.slice(css.indexOf('.lu-cs-foot .lu-am-trigger'));
+    expect(rule).toMatch(/width:\s*auto\s*!important/);
+    expect(rule).toMatch(/border-radius:\s*999px\s*!important/);
+  });
 });
