@@ -363,10 +363,15 @@ Both phases shipped in-library. 125 tests pass; `vue-tsc` clean. What landed:
 
 Decisions that diverged from the plan:
 
-- **Brand gradients extracted.** The `*-brand` wordmark rules moved from
-  `footer.css` into a shared `src/styles/brand.css`, `@import`-ed by both
-  `footer.css` and `console.css` (single source of truth). The footer test was
-  repointed to `brand.css`.
+- **Brand gradients shared without touching the footer.** `src/styles/brand.css`
+  holds the `*-brand` wordmark rules and is `@import`-ed by the new `console.css`
+  (and exported as `latere-ui/brand`). `footer.css` was deliberately left
+  self-contained — it ships to every marketing/SSG consumer as `latere-ui/styles`,
+  and adding a relative `@import` there risked the wordmarks vanishing site-wide if
+  it failed to resolve in any consumer's CSS pipeline (a failure the unit tests,
+  which only grep the source, could not catch). The ~23 static gradient lines are
+  intentionally duplicated rather than coupling a working shipped artifact. Tests
+  guard the `background-image` rule in both files.
 - **markdown-it is injected, not a peer dependency.** `createMarkdown(MarkdownIt,
   opts)` takes the host's constructor (the routerLink-injection pattern), so
   latere-ui has zero markdown runtime dependency and docs-free consoles pay
