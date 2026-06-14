@@ -4,14 +4,17 @@ export { default as LatereLogoMark } from './components/LatereLogoMark.vue';
 // Console shell: headless nav model + collapse primitive, and the Vue adapter.
 // Styles ship separately as the `latere-ui/console` entrypoint.
 export { default as ConsoleSidebar } from './components/ConsoleSidebar.vue';
+export { default as ConsolePalette } from './components/ConsolePalette.vue';
 export {
   createCollapse,
   partitionGroups,
+  flattenNavItems,
   isItemDisabled,
 } from './console/nav';
 export type {
   NavItem,
   NavGroup,
+  FlatNavItem,
   ConsoleNavModel,
   CollapseOptions,
   CollapseState,

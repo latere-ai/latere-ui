@@ -135,6 +135,33 @@ describe('<ConsoleSidebar />', () => {
     expect(w.find('.lu-cs-brand-mark').exists()).toBe(false);
   });
 
+  it('renders the built-in search bar and emits search on click + ⌘K', async () => {
+    const w = render({ search: true, searchLabel: 'Search & run', searchHint: '⌘K' });
+    const bar = w.find('.lu-cs-search');
+    expect(bar.exists()).toBe(true);
+    expect(bar.text()).toContain('Search & run');
+    await bar.trigger('click');
+    expect(w.emitted('search')?.length).toBe(1);
+    // ⌘K dispatches a global keydown that the mounted listener handles
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }));
+    expect(w.emitted('search')?.length).toBe(2);
+  });
+
+  it('omits the search bar unless search is enabled', () => {
+    expect(render().find('.lu-cs-search').exists()).toBe(false);
+  });
+
+  it('renders a #logo slot and a colored brand box from brandColor', () => {
+    const w = render(
+      { brandName: 'Lux', brandColor: '#3a4ed1' },
+      { logo: () => h('svg', { class: 'test-logo' }) },
+    );
+    const mark = w.find('.lu-cs-brand-mark');
+    expect(w.find('.test-logo').exists()).toBe(true);
+    expect(mark.classes()).toContain('lu-cs-brand-mark--colored');
+    expect(mark.attributes('style')).toContain('3a4ed1');
+  });
+
   it('renders the #top slot between the head and the nav (e.g. command palette)', () => {
     const w = render({}, { top: () => h('button', { class: 'test-top' }, 'CMDK') });
     const top = w.find('.test-top');

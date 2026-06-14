@@ -48,19 +48,24 @@
     cursor: pointer;
 }
 .lu-cs-brand-mark {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     flex-shrink: 0;
     display: grid;
     place-items: center;
-    border-radius: 8px;
-    background: var(--bg-raised, #f5f5f5);
+    border-radius: 7px;
+    overflow: hidden;
+    background: transparent;
     font-family: 'Instrument Serif', Georgia, serif;
     font-style: italic;
-    font-size: 17px;
+    font-size: 16px;
     line-height: 1;
     color: var(--text, #0a0a0a);
 }
+.lu-cs-brand-mark > * { display: block; }
+/* When a brandColor box is set, the mark sits on color — render its mark white
+ * via currentColor (works for stroke- and fill-based marks alike). */
+.lu-cs-brand-mark--colored { color: #fff; }
 .lu-cs-brand-text {
     display: flex;
     flex-direction: column;
@@ -98,6 +103,53 @@
 .lu-cs-fold:hover {
     color: var(--text, #0a0a0a);
     background: var(--bg-raised, #f5f5f5);
+}
+
+/* ===== Built-in search bar (⌘K) ===== */
+.lu-cs-search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 4px 0 2px;
+    padding: 7px 10px;
+    border: 1px solid var(--border, rgba(0, 0, 0, 0.08));
+    border-radius: 8px;
+    background: var(--bg-surface, #fff);
+    color: var(--text-muted, #a0a0a0);
+    font: inherit;
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color 0.13s, background 0.13s, color 0.13s;
+}
+.lu-cs-search:hover {
+    border-color: var(--border-strong, var(--border, rgba(0, 0, 0, 0.16)));
+    background: var(--bg-raised, #f5f5f5);
+    color: var(--text, #0a0a0a);
+}
+.lu-cs-search-ic {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+}
+.lu-cs-search-label {
+    flex: 1 1 auto;
+    text-align: left;
+}
+.lu-cs-search-hint {
+    flex-shrink: 0;
+    font-size: 11px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: var(--bg-raised, #f5f5f5);
+    color: var(--text-muted, #a0a0a0);
+}
+.lu-cs-search[data-collapsed="true"] {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 /* ===== Nav ===== */

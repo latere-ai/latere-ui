@@ -5,7 +5,7 @@
 // hosts can override. The nav model and collapse logic are headless
 // (src/console/nav.ts); this is the thin Vue adapter, mirroring OrgSwitcher.vue.
 
-import { computed, ref, type Component } from 'vue';
+import { computed, onMounted, onUnmounted, ref, type Component } from 'vue';
 
 import {
   partitionGroups,
@@ -41,8 +41,20 @@ interface Props {
   brandName?: string;
   /** Subtitle under the brand (e.g. "Console"). */
   brandSub?: string;
+  /**
+   * Background for the logo box (any CSS color/gradient). Gives each product a
+   * distinct, colored logo mark while keeping one consistent brand layout.
+   * Provide the mark itself via the #logo slot.
+   */
+  brandColor?: string;
   /** When collapsed, clicking the brand expands the rail (wallfacer affordance). */
   expandOnBrandClick?: boolean;
+  /** Show the built-in search bar (emits `search`; ⌘K/Ctrl-K also emits it). */
+  search?: boolean;
+  /** Search bar placeholder label. */
+  searchLabel?: string;
+  /** Keyboard hint shown in the search bar. */
+  searchHint?: string;
   /** Label rendered next to the live-badge dot. */
   liveLabel?: string;
   /** Accessible labels for the fold button. */
@@ -54,6 +66,8 @@ const props = withDefaults(defineProps<Props>(), {
   collapsible: true,
   collapsed: null,
   homeTo: '/',
+  searchLabel: 'Search',
+  searchHint: '⌘K',
   liveLabel: 'Live',
   expandLabel: 'Expand sidebar',
   collapseLabel: 'Collapse sidebar',
@@ -62,7 +76,23 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   'update:collapsed': [boolean];
   navigate: [NavItem];
+  search: [];
 }>();
+
+// Global ⌘K / Ctrl-K opens search, so every console shares the shortcut.
+function onKeydown(e: KeyboardEvent) {
+  if (!props.search) return;
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    emit('search');
+  }
+}
+onMounted(() => {
+  if (typeof document !== 'undefined') document.addEventListener('keydown', onKeydown);
+});
+onUnmounted(() => {
+  if (typeof document !== 'undefined') document.removeEventListener('keydown', onKeydown);
+});
 
 // Controlled when `collapsed` is passed; otherwise the rail owns its state.
 const internalCollapsed = ref(false);
@@ -147,7 +177,13 @@ function letter(label: string): string {
           class="lu-cs-brand"
           @click="onBrandClick"
         >
-          <span class="lu-cs-brand-mark">{{ letter(brandName ?? 'L') }}</span>
+          <span
+            class="lu-cs-brand-mark"
+            :class="{ 'lu-cs-brand-mark--colored': brandColor }"
+            :style="brandColor ? { background: brandColor } : undefined"
+          >
+            <slot name="logo">{{ letter(brandName ?? 'L') }}</slot>
+          </span>
           <span v-if="!collapsed" class="lu-cs-brand-text">
             <span class="lu-cs-brand-name" :class="brandTheme ? `${brandTheme}-brand` : undefined">{{ brandName }}</span>
             <span v-if="brandSub" class="lu-cs-brand-sub">{{ brandSub }}</span>
@@ -174,6 +210,24 @@ function letter(label: string): string {
         </svg>
       </button>
     </div>
+
+    <button
+      v-if="search"
+      type="button"
+      class="lu-cs-search"
+      :data-collapsed="collapsed ? 'true' : 'false'"
+      :title="`${searchLabel} (${searchHint})`"
+      @click="emit('search')"
+    >
+      <span class="lu-cs-search-ic" aria-hidden="true">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7" /><line x1="20" y1="20" x2="16.65" y2="16.65" />
+        </svg>
+      </span>
+      <span v-if="!collapsed" class="lu-cs-search-label">{{ searchLabel }}</span>
+      <span v-if="!collapsed && searchHint" class="lu-cs-search-hint">{{ searchHint }}</span>
+    </button>
 
     <slot name="top" :collapsed="collapsed" />
 

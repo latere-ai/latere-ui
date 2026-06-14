@@ -106,6 +106,20 @@ export function partitionGroups(groups: NavGroup[]): {
   return { top, bottom };
 }
 
+/** A nav item lifted out of its group, tagged with the group's label. */
+export interface FlatNavItem extends NavItem {
+  groupLabel?: string;
+}
+
+/** Flatten the grouped model into one in-order list (for palettes/search). */
+export function flattenNavItems(groups: NavGroup[]): FlatNavItem[] {
+  const out: FlatNavItem[] = [];
+  for (const g of groups) {
+    for (const item of g.items) out.push({ ...item, groupLabel: g.label });
+  }
+  return out;
+}
+
 /** True when a row should not be interactive. */
 export function isItemDisabled(item: NavItem): boolean {
   if (item.disabled === true) return true;
