@@ -41,14 +41,15 @@
 }
 .lu-cs[data-collapsed="true"] .lu-cs-head {
     flex-direction: column;
-    gap: 10px;
-    justify-content: center;
+    gap: 8px;
+    align-items: center;
 }
-/* Hide the fold button when collapsed: stacking it under the logo grows the
- * head and shifts the logo on every toggle. Clicking the brand expands instead
- * (the head then stays the same height, so the logo never moves). */
-.lu-cs[data-collapsed="true"] .lu-cs-fold {
-    display: none;
+/* Keep the logo at the SAME vertical position as expanded (centered in a 38px
+ * box) so it doesn't jump when folding; the fold button sits below it and stays
+ * visible so the rail can always be unfolded. */
+.lu-cs[data-collapsed="true"] .lu-cs-brand {
+    min-height: 38px;
+    flex: 0 0 auto;
 }
 .lu-cs-brand {
     display: flex;
@@ -223,6 +224,15 @@
     background: var(--bg-raised, #f5f5f5);
     color: var(--text, #0a0a0a);
     font-weight: 500;
+}
+/* The active icon is accent-colored — a clear, theme-independent indicator that
+ * reads even where bg-raised barely differs from the rail (e.g. cella's sunken
+ * rail), and it carries the active state in the collapsed rail (no bar there). */
+.lu-cs-item[data-active="true"] .lu-cs-item-icon {
+    color: var(--accent, #5b6cf0);
+}
+.lu-cs[data-collapsed="true"] .lu-cs-item[data-active="true"] {
+    background: color-mix(in srgb, var(--accent, #5b6cf0) 14%, transparent);
 }
 .lu-cs-item[data-active="true"]::before {
     content: "";

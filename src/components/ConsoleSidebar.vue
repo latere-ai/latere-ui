@@ -154,10 +154,9 @@ function onRowClick(item: NavItem, e: MouseEvent) {
 }
 
 function onBrandClick(e: MouseEvent) {
-  // When collapsed, the fold button is hidden (it would grow the head and shift
-  // the logo), so clicking the brand expands the rail. expandOnBrandClick stays
-  // as an explicit opt-in for hosts that keep their own brand slot.
-  if ((props.expandOnBrandClick || props.collapsible !== false) && collapsed.value) {
+  // The fold button is the expand control; brand-click-to-expand is opt-in
+  // (expandOnBrandClick) to avoid fighting the brand's home-link navigation.
+  if (props.expandOnBrandClick && collapsed.value) {
     e.preventDefault();
     setCollapsed(false);
   }
