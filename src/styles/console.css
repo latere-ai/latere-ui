@@ -6,6 +6,15 @@
 
 @import './brand.css';
 
+/* Kill the elastic overscroll "bounce" on the viewport scroller. Console shells
+ * let the document scroll, so over-scrolling past the top rubber-bands the whole
+ * page and the sticky/fixed sidebar bounces along with it. Pinning this here
+ * means every app that mounts the console sidebar (and therefore imports
+ * 'latere-ui/console') gets a sidebar that never drifts on over-scroll. Must
+ * target the documentElement: overscroll-behavior on <body> is not propagated to
+ * the viewport (unlike overflow). */
+html { overscroll-behavior: none; }
+
 .lu-cs {
     /* The rail is a grid/flex item that would otherwise paint UNDER the main
      * column (later in DOM). Give it a stacking context above main so the
