@@ -146,6 +146,31 @@ describe('<OrgSwitcher />', () => {
     expect(buttons[1].text()).toBe('Org One');
   });
 
+  it('binds data-loading to the reactive flag (true mid-refresh, false after)', async () => {
+    let release!: () => void;
+    const gate = new Promise<void>((r) => {
+      release = r;
+    });
+    const state = createOrgSwitcher({
+      getOrgs: async () => {
+        await gate;
+        return ORGS;
+      },
+      getCurrentOrgID: getCurrent,
+      switchOrg: async () => {},
+    });
+
+    const wrapper = mount(OrgSwitcher, { props: { state } });
+    const refreshing = state.refresh();
+    await nextTick();
+    expect(wrapper.find('.latere-org-switcher').attributes('data-loading')).toBe('true');
+
+    release();
+    await refreshing;
+    await nextTick();
+    expect(wrapper.find('.latere-org-switcher').attributes('data-loading')).toBe('false');
+  });
+
   it('clicking a button calls switchOrg with the item id', async () => {
     const calls: string[] = [];
     const state = createOrgSwitcher({

@@ -14,7 +14,7 @@ defineProps<Props>();
 </script>
 
 <template>
-  <div class="latere-org-switcher" data-loading="state.loading.value">
+  <div class="latere-org-switcher" :data-loading="state.loading.value ? 'true' : 'false'">
     <slot name="header" :current-label="state.currentLabel.value" />
     <ul role="menu" class="latere-org-switcher__list">
       <li
