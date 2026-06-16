@@ -10,8 +10,9 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
+import { me as coreMe, switchOrg as coreSwitchOrg } from './me';
 import { createReauth } from './reauth';
-import { ApiError, type Principal, type SessionStoreOptions } from './types';
+import { type Principal, type SessionStoreOptions } from './types';
 
 const hasWindow = () => typeof window !== 'undefined';
 
@@ -42,20 +43,16 @@ export function createSessionStore<Raw = Principal>(opts: SessionStoreOptions<Ra
         return;
       }
       try {
-        const raw = await client.api<Raw>('GET', meEndpoint, undefined, {
-          allowUnauthenticated: true,
-        });
-        me.value = mapMe(raw);
-        error.value = null;
-        reauth.clearRecheck(); // a live session invalidates any prior silent-recheck
-      } catch (e) {
-        // 401 (no session) and 404 (endpoint not deployed) both mean
-        // "logged out" — never surface them as an error.
-        if (e instanceof ApiError && (e.status === 401 || e.status === 404)) {
-          me.value = null;
-        } else {
-          error.value = (e as Error).message;
+        // Core `me()` returns null on 401/404 ("logged out") and throws on any
+        // other non-2xx; the store keeps only the ref bookkeeping + recheck reset.
+        const principal = await coreMe<Raw>(client, { endpoint: meEndpoint, mapMe });
+        me.value = principal;
+        if (principal) {
+          error.value = null;
+          reauth.clearRecheck(); // a live session invalidates any prior silent-recheck
         }
+      } catch (e) {
+        error.value = (e as Error).message;
       } finally {
         loaded.value = true;
       }
@@ -99,27 +96,15 @@ export function createSessionStore<Raw = Principal>(opts: SessionStoreOptions<Ra
     }
 
     // Switch active org: POST then follow the server round-trip so the next
-    // session's token carries the chosen org_id.
+    // session's token carries the chosen org_id. Delegates to the shared core;
+    // the store's defaults match `me.ts` defaults, so behavior is identical.
     async function switchOrg(orgID: string) {
-      if (!hasWindow()) return;
-      const bounce = () => {
-        window.location.href =
-          `${loginPath}?return_to=` +
-          encodeURIComponent(defaultReturnTo) +
-          '&org_id=' +
-          encodeURIComponent(orgID);
-      };
-      try {
-        const res = await client.api<{ redirect?: string }>('POST', switchOrgEndpoint, {
-          org_id: orgID,
-        });
-        if (switchOrgMode === 'login-bounce') bounce();
-        else window.location.href = res?.redirect || defaultReturnTo;
-      } catch {
-        // Endpoint missing/failed — fall back to a login bounce carrying the
-        // org choice, matching sandbox's behavior.
-        bounce();
-      }
+      return coreSwitchOrg(client, orgID, {
+        endpoint: switchOrgEndpoint,
+        mode: switchOrgMode,
+        loginPath,
+        defaultReturnTo,
+      });
     }
 
     return {
