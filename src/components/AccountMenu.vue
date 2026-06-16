@@ -126,7 +126,8 @@ function onSignIn() {
   emit('login');
 }
 function onExtraItem(item: AccountMenuItem) {
-  if (item.href) return; // <a> handles navigation natively
+  // Only reached from the `<button v-else>` branch (rendered when !item.href);
+  // href rows go through the native `<a>` branch, which never calls this.
   open.value = false;
   if (item.to) emit('navigate', item.to);
   else if (item.id) emit('item-select', item.id);
