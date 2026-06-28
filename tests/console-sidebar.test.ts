@@ -88,6 +88,34 @@ describe('<ConsoleSidebar />', () => {
     expect(numeric).toBeTruthy();
   });
 
+  it('renders the brand as a non-navigating button when collapsed with expand-on-brand-click', async () => {
+    const w = render({
+      collapsed: true,
+      expandOnBrandClick: true,
+      routerLink: RouterLinkStub,
+      homeTo: '/home',
+    });
+    const brand = w.find('.lu-cs-brand');
+    // A button cannot navigate, so clicking it to expand can't jump to homeTo.
+    expect(brand.element.tagName).toBe('BUTTON');
+    expect(brand.attributes('data-rl')).toBeUndefined();
+    await brand.trigger('click');
+    // It only expands the rail.
+    expect(w.emitted('update:collapsed')?.[0]).toEqual([false]);
+  });
+
+  it('renders the brand as a home link when expanded', () => {
+    const w = render({
+      collapsed: false,
+      expandOnBrandClick: true,
+      routerLink: RouterLinkStub,
+      homeTo: '/home',
+    });
+    const brand = w.find('.lu-cs-brand');
+    expect(brand.element.tagName).toBe('A');
+    expect(brand.attributes('data-rl')).toBe('/home');
+  });
+
   it('toggles its own collapsed state and emits update:collapsed (uncontrolled)', async () => {
     const w = render();
     expect(w.find('.lu-cs').attributes('data-collapsed')).toBe('false');

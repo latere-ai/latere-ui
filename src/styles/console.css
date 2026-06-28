@@ -69,6 +69,15 @@ html { overscroll-behavior: none; }
     text-decoration: none;
     color: inherit;
     cursor: pointer;
+    /* Normalize the <button> the brand becomes while collapsed (expand
+       affordance) so it renders identically to the <a> home link. */
+    appearance: none;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    text-align: left;
 }
 .lu-cs-brand-mark {
     width: 30px;

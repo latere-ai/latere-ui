@@ -162,6 +162,19 @@ function onBrandClick(e: MouseEvent) {
   }
 }
 
+// While collapsed with expand-on-brand-click, the brand is a non-navigating
+// <button>: clicking it only expands the rail. Rendering it as a router link
+// would navigate home before onBrandClick's preventDefault could run — the
+// router's click handler and ours sit on the same element and the router's
+// fires first — jumping the user off the current page.
+const brandAsButton = computed(() => !!props.expandOnBrandClick && collapsed.value);
+const brandTag = computed(() => (brandAsButton.value ? 'button' : (props.routerLink ?? 'a')));
+const brandProps = computed(() =>
+  brandAsButton.value
+    ? { type: 'button' as const }
+    : (props.routerLink ? { to: props.homeTo } : { href: props.homeTo }),
+);
+
 // First grapheme of the label, used as a fallback mark in collapsed mode when
 // the host supplies no #icon slot.
 function letter(label: string): string {
@@ -174,8 +187,8 @@ function letter(label: string): string {
     <div class="lu-cs-head">
       <slot name="brand" :collapsed="collapsed">
         <component
-          :is="routerLink ?? 'a'"
-          v-bind="routerLink ? { to: homeTo } : { href: homeTo }"
+          :is="brandTag"
+          v-bind="brandProps"
           class="lu-cs-brand"
           :title="collapsed ? expandLabel : undefined"
           @click="onBrandClick"
