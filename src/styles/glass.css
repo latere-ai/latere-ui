@@ -156,7 +156,11 @@
  * style consumes them, honoring the setting is automatic downstream. Mirrors
  * the prefers-reduced-motion handling in tokens.css. */
 
-/* Reduce Transparency → fully opaque surfaces, filter off. */
+/* Reduce Transparency → fully opaque surfaces, filter off. Zeroing the blur +
+ * saturate tokens turns EVERY token-driven backdrop-filter into a no-op, so a
+ * consumer that hand-rolls `backdrop-filter: blur(var(--glass-blur))` on its own
+ * selector (not a .lu-glass* class) also degrades — the fallback is genuinely
+ * automatic, not just for the utility classes. */
 @media (prefers-reduced-transparency: reduce) {
     :root,
     [data-theme="dark"] {
@@ -165,6 +169,12 @@
         --glass-bg-thick: var(--bg-surface, #fff);
         --glass-bg-clear: var(--bg-surface, #fff);
         --glass-border:   var(--border, rgba(0, 0, 0, 0.08));
+        --glass-blur:        0px;
+        --glass-blur-thin:   0px;
+        --glass-blur-thick:  0px;
+        --glass-blur-clear:  0px;
+        --glass-saturate:  100%;
+        --glass-brightness:  1;
     }
     .lu-glass,
     .lu-glass-thin,
@@ -190,9 +200,18 @@
         --glass-bg-thick: rgba(20, 20, 24, 0.97);
         --glass-border:   var(--border-strong, rgba(255, 255, 255, 0.30));
     }
+    /* Kill the blur so no faint frost leaks through the near-opaque fills. */
+    :root,
+    [data-theme="dark"] {
+        --glass-blur:        0px;
+        --glass-blur-thin:   0px;
+        --glass-blur-thick:  0px;
+        --glass-blur-clear:  0px;
+        --glass-saturate:  100%;
+    }
 }
 
-/* No backdrop-filter support → opaque. */
+/* No backdrop-filter support → opaque + no-op filter tokens. */
 @supports not (backdrop-filter: blur(1px)) {
     :root,
     [data-theme="dark"] {
@@ -201,5 +220,10 @@
         --glass-bg-thick: var(--bg-surface, #fff);
         --glass-bg-clear: var(--bg-surface, #fff);
         --glass-border:   var(--border, rgba(0, 0, 0, 0.08));
+        --glass-blur:        0px;
+        --glass-blur-thin:   0px;
+        --glass-blur-thick:  0px;
+        --glass-blur-clear:  0px;
+        --glass-saturate:  100%;
     }
 }

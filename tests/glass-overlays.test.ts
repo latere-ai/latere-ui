@@ -1,12 +1,40 @@
 import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
-import { nextTick } from 'vue';
+import { defineComponent, h, nextTick, ref } from 'vue';
 
 import GlassModal from '../src/components/GlassModal.vue';
 import GlassPopover from '../src/components/GlassPopover.vue';
 import GlassToaster from '../src/components/GlassToaster.vue';
+import { useFocusTrap } from '../src/glass/overlay';
 import { message, toasts, dismissToast } from '../src/glass/message';
 import { confirm, currentConfirm, resolveConfirm } from '../src/glass/confirm';
+
+describe('useFocusTrap initialFocus', () => {
+  it('focuses initialFocus on open instead of the first focusable element', async () => {
+    const Harness = defineComponent({
+      setup() {
+        const active = ref(false);
+        const container = ref<HTMLElement | null>(null);
+        const input = ref<HTMLInputElement | null>(null);
+        useFocusTrap({ active, container, initialFocus: input });
+        return () =>
+          h('div', { ref: container }, [
+            // The button is the first focusable in DOM order...
+            h('button', { class: 'first' }, 'x'),
+            // ...but the input is the requested initialFocus.
+            h('input', { ref: input, class: 'field' }),
+            h('button', { onClick: () => (active.value = true), class: 'toggle' }, 'open'),
+          ]);
+      },
+    });
+    const w = mount(Harness, { attachTo: document.body });
+    await w.get('button.toggle').trigger('click'); // sets active = true
+    await nextTick();
+    await nextTick();
+    expect(document.activeElement).toBe(w.get('input.field').element);
+    w.unmount();
+  });
+});
 
 describe('GlassModal', () => {
   it('renders only when open, teleported, on thick glass with dialog semantics', async () => {

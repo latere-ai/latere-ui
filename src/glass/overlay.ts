@@ -25,6 +25,12 @@ export interface FocusTrapOptions {
   container: Ref<HTMLElement | null | undefined>;
   /** Called on Escape. */
   onEscape?: () => void;
+  /**
+   * Element to focus on open instead of the first focusable one — e.g. a text
+   * input in a prompt dialog, so the user can type immediately. Falls back to
+   * the first focusable element when unset or null.
+   */
+  initialFocus?: Ref<HTMLElement | null | undefined>;
 }
 
 /**
@@ -72,7 +78,7 @@ export function useFocusTrap(opts: FocusTrapOptions): void {
         document.addEventListener('keydown', onKeydown, true);
         await nextTick();
         const el = opts.container.value;
-        if (el) (focusable(el)[0] ?? el).focus();
+        if (el) (opts.initialFocus?.value ?? focusable(el)[0] ?? el).focus();
       } else {
         document.removeEventListener('keydown', onKeydown, true);
         previouslyFocused?.focus?.();

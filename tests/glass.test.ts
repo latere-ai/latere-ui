@@ -55,6 +55,23 @@ describe('glass.css material tokens', () => {
     expect(block).toMatch(/--glass-bg:\s*rgba\([^)]*0\.9/);
   });
 
+  it('zeroes the blur/saturate tokens in every fallback so hand-rolled backdrop-filters degrade too', () => {
+    // A consumer that writes `backdrop-filter: blur(var(--glass-blur))` on its
+    // own selector (not a .lu-glass* class) must also lose the blur under each
+    // fallback — otherwise the filter stays active behind an opaque fill.
+    for (const anchor of [
+      'prefers-reduced-transparency',
+      'prefers-contrast',
+      '@supports not (backdrop-filter',
+    ]) {
+      const start = css.indexOf(anchor);
+      // Window covers the whole at-rule body (multiple inner blocks).
+      const block = css.slice(start, start + 1200);
+      expect(block, `${anchor} must zero --glass-blur`).toMatch(/--glass-blur:\s*0px/);
+      expect(block, `${anchor} must neutralize --glass-saturate`).toMatch(/--glass-saturate:\s*100%/);
+    }
+  });
+
   it('carries a @supports capability fallback for browsers without backdrop-filter', () => {
     expect(css).toMatch(/@supports\s+not\s*\(backdrop-filter:/);
   });
