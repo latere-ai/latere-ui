@@ -39,6 +39,11 @@ describe('console.css', () => {
     const rule = css.slice(css.indexOf('.lu-cs-foot .lu-am-dd'));
     expect(rule).toMatch(/min-width:\s*248px\s*!important/);
   });
+  it("v2: no chromatic accent fallback survives (ink accent only)", () => {
+    // v1 leaked a #5b6cf0 fallback; v2 resolves the accent to ink.
+    expect(css).not.toContain("#5b6cf0");
+  });
+
   it("centers collapsed nav items as squares (v2 capsule rail)", () => {
     const blk = css.slice(css.indexOf("[data-collapsed=\"true\"] .lu-cs-item"));
     expect(blk).toMatch(/margin-left:\s*auto/);

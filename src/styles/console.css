@@ -299,7 +299,7 @@ html { overscroll-behavior: none; }
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: var(--accent, #5b6cf0);
+    background: var(--accent, #0a0a0a);
 }
 
 /* ===== Badges ===== */
