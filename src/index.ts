@@ -87,6 +87,13 @@ export { useClickOutside } from './composables/useClickOutside';
 // entrypoint; this exports the headless composable + tier helper.
 export { useGlass, glassClass } from './glass/useGlass';
 export type { UseGlass, GlassTier } from './glass/useGlass';
+
+// Liquid Glass component library. All compose the material tiers, so each
+// inherits the reduce-transparency opaque fallback. Requires the app to
+// `import 'latere-ui/glass'` for the material CSS.
+export { default as GlassSurface } from './components/GlassSurface.vue';
+export { default as GlassPanel } from './components/GlassPanel.vue';
+export { default as GlassBar } from './components/GlassBar.vue';
 export { default as AccountMenu } from './components/AccountMenu.vue';
 export { default as AccountPrefs } from './components/AccountPrefs.vue';
 export type { AccountMenuLabels, AccountMenuItem } from './components/accountMenu';
