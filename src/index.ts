@@ -116,6 +116,11 @@ export { message, dismissToast, toasts } from './glass/message';
 export type { MessageTone, MessageOptions, ToastItem } from './glass/message';
 export { confirm, resolveConfirm, currentConfirm } from './glass/confirm';
 export type { ConfirmOptions } from './glass/confirm';
+// Feedback + loaders.
+export { default as GlassSpinner } from './components/GlassSpinner.vue';
+export { default as GlassProgress } from './components/GlassProgress.vue';
+export { default as GlassSkeleton } from './components/GlassSkeleton.vue';
+export { default as GlassTooltip } from './components/GlassTooltip.vue';
 export { default as AccountMenu } from './components/AccountMenu.vue';
 export { default as AccountPrefs } from './components/AccountPrefs.vue';
 export type { AccountMenuLabels, AccountMenuItem } from './components/accountMenu';
