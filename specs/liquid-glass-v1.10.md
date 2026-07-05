@@ -1,155 +1,214 @@
 ---
-title: latere-ui v1.10 — Liquid Glass material system (shared design foundation)
+title: latere-ui v1.10 — Liquid Glass design system (material tokens + component library)
 status: draft
 depends_on:
   - specs/console-shell-v1.9.md
 affects:
-  - src/styles/glass.css (new — material primitives, tiers, specular edge, reduce-transparency fallback)
-  - src/styles/tokens.css (glass material tokens + dark variants)
-  - src/styles/console.css (ConsoleSidebar renders as a glass chrome layer)
-  - src/styles/footer.css (footer adopts glass surface)
-  - src/styles/brand.css (vibrancy-aware wordmark gradients)
-  - src/index.ts (no code export; docs pointer only)
-  - package.json (bump to 1.10.0; add "./glass": "./src/styles/glass.css" export)
-  - README.md (Liquid Glass section — tokens, tiers, usage, fallback contract)
-  - tests/glass.test.ts (new — token presence, tier vars, fallback selector)
-effort: large
-trigger: platform-wide UI refresh to Apple Liquid Glass; the shared chrome (ConsoleSidebar, footer, wordmarks) must render as glass so every product console is coherent, not glass panes wrapped around flat shared chrome
+  - src/styles/glass.css (new — material tokens usage, tier utility classes, specular edge, reduce-transparency fallback)
+  - src/styles/tokens.css (glass material tokens + canvas tokens; dark variants)
+  - src/glass/useGlass.ts (new — headless composable: resolve tier + reduced-transparency state)
+  - src/glass/overlay.ts (new — shared focus trap + ESC/scrim + teleport/stacking for overlays)
+  - src/glass/message.ts (new — imperative toast/message service backing GlassToast)
+  - src/components/glass/*.vue (new — the component library: surfaces, controls, inputs, feedback, overlays; see Layer 2 catalog)
+  - src/components/ConsoleSidebar.vue (adopt GlassSurface material; no API change)
+  - src/components/SiteFooter.vue (adopt glass surface when over content)
+  - src/styles/console.css (sidebar glass surface via tokens)
+  - src/styles/footer.css (footer glass surface via tokens)
+  - src/index.ts (export all Glass* components + useGlass)
+  - package.json (bump to 1.10.0; add "./glass" style + component subpath exports)
+  - README.md (Liquid Glass design-system section — tokens, tiers, component API, adopt guide)
+  - tests/glass.test.ts (new — tokens/tiers/fallback)
+  - tests/glass-components.test.ts (new — render, props, a11y roles, fallback, focus trap)
+effort: xlarge
+trigger: platform-wide UI refresh to Apple Liquid Glass; every product re-implements the same glass chrome and controls, so the material AND a reusable component library must live in latere-ui for products to adopt by import rather than re-styling
 created: 2026-07-05
 updated: 2026-07-05
 author: changkun
 dispatched_task_id: null
 ---
 
-# latere-ui v1.10 — Liquid Glass Material System
+# latere-ui v1.10 — Liquid Glass Design System
 
 ## Overview
 
-Apple's Liquid Glass is a **material**, not a color scheme: translucent
-layers that refract and blur what sits behind them, carry a specular edge,
-and shift saturation (vibrancy) so foreground text stays legible over live
-content. A platform-wide refresh cannot be delivered per-product in isolation
-— the console sidebar, footer, and product wordmarks all ship from `latere-ui`
-and are consumed by every product (cella, lux, wallfacer, auth, ...). If only a
-product's local panes turn to glass, the shared chrome stays flat and the
-result is incoherent.
+Apple's Liquid Glass is a **material**: translucent layers that refract and
+blur what sits behind them, carry a specular edge, and shift saturation
+(vibrancy) so foreground text stays legible over live content. Making every
+Latere product speak it consistently requires two layers in the shared library,
+not one:
 
-This spec establishes the **shared material foundation** in `latere-ui`: a
-tokenised glass system plus reusable primitives, and it converts the shared
-chrome (ConsoleSidebar, footer) to consume it. Products adopt the material by
-redefining a small set of canvas/base tokens; the shared components then render
-as glass automatically because they already style via `var(--…)` with
-fallbacks (established in v1.9).
+1. **A material foundation** — tokens + tier utilities + the a11y fallback, so
+   the glass "look" has a single source of truth.
+2. **A component library** — ready-made Vue components (surfaces, bars, buttons,
+   fields, dialogs, popovers, badges) built on that material, so a product
+   adopts glass by **importing a component**, not by re-implementing
+   `backdrop-filter` recipes in every app. This is what makes the system
+   genuinely reusable across cella, lux, wallfacer, auth, and the rest.
 
-Non-goal: this spec does **not** repalette any product. Each product owns its
-own accent/canvas (cella spec covers cella's neutral-glass palette). This spec
-owns the *material* — the translucency, blur, edge, and vibrancy contract — and
-the shared chrome that must speak it.
+`latere-ui` already ships shared *components* (ConsoleSidebar, SiteFooter,
+AccountMenu, DocsLayout) — this spec extends that architecture with a glass
+component set and retrofits the existing shared chrome onto the same material.
+
+Non-goal: this spec does not repalette any product. Each product owns its
+accent/canvas; the system owns the *material* and the *components*.
 
 ## Design principles (the material contract)
 
-1. **Glass needs a canvas to refract.** A frosted layer over a flat fill reads
-   as dead gray. The material assumes the product provides a subtly
-   gradient/colored base canvas behind glass layers. This spec defines the
-   *tokens* for that canvas; products set the values.
+1. **Glass needs a canvas to refract.** Frosted layers over a flat fill read as
+   dead gray. Components assume the product sets a subtly gradient `--canvas`
+   behind them; the tokens define it, products set the values.
 2. **Glass is chrome, never content.** `backdrop-filter: blur()` over live
-   xterm / noVNC / video streams tanks performance and legibility. The material
-   is for chrome: sidebars, top strips, dialogs, popovers, command palettes,
-   footers. Content surfaces stay opaque. This is a documented constraint, not
-   just guidance.
-3. **Tiers, not one blur.** Three material tiers so depth reads correctly:
-   `--glass-thin` (inline controls, chips), `--glass-regular` (chrome panels,
-   sidebar, footer), `--glass-thick` (modal/overlay scrims, command palette).
-   Each tier is a bundle of blur radius, background tint, saturation, and edge.
-4. **Specular edge.** Glass has a bright top/left inner edge and a soft outer
-   shadow — a single `--glass-edge` inset shadow token layers hairline highlight
-   over drop shadow so panels read as lifted glass, not flat cards.
-5. **Vibrancy.** `backdrop-filter: saturate()` boosts color behind the layer so
-   tinted content shows through; text uses the existing `--text*` ramp
-   unchanged so contrast is preserved.
-6. **Adaptive.** Every token has a `[data-theme="dark"]` variant — dark glass is
-   a darker tint with lower blur and a subtler edge.
-7. **Accessible fallback is part of the material.** Under
-   `prefers-reduced-transparency: reduce` (and as a `@supports not
-   (backdrop-filter: blur())` fallback) glass tokens collapse to **opaque**
-   surfaces built from `--bg-surface`/`--bg-raised`. Legibility and a11y win
-   over aesthetics; mirror the existing `prefers-reduced-motion` handling.
+   xterm / noVNC / video tanks performance and legibility. Components are for
+   chrome (bars, sidebars, dialogs, popovers, fields); content surfaces stay
+   opaque. Documented per component.
+3. **Three tiers.** `thin` (inline controls, chips, fields), `regular` (panels,
+   sidebar, bars), `thick` (modal/overlay scrims, popovers, command palette).
+   Each tier bundles blur radius, tint, saturation, and edge. Components take a
+   `tier` where it makes sense and default sensibly.
+4. **Specular edge + vibrancy.** A single `--glass-edge` inset+drop shadow gives
+   the lifted-glass look; `backdrop-filter: saturate()` provides vibrancy. Text
+   uses the existing `--text*` ramp so contrast is preserved.
+5. **Adaptive.** Every token and component has a `[data-theme="dark"]` variant.
+6. **Accessible fallback is built in.** Under `prefers-reduced-transparency:
+   reduce` (and `@supports not (backdrop-filter)`) the glass tokens collapse to
+   **opaque** `--bg-surface`/`--bg-raised`. Because every component styles via
+   those tokens, the fallback is automatic — no per-component or per-product
+   work. `useGlass()` also exposes the reactive reduced-transparency flag for
+   components that need to branch behavior (e.g. drop a parallax).
 
-## Deliverables
+## Layer 1 — Material foundation
 
-### 1. `src/styles/glass.css` (new) — primitives + fallback
+### `src/styles/tokens.css` — glass + canvas tokens
 
-Opt-in entrypoint `import 'latere-ui/glass'`. Defines:
-
-- Utility classes `.lu-glass`, `.lu-glass-thin`, `.lu-glass-thick` that apply a
-  tier's `background`, `backdrop-filter` (`blur() saturate()`), `border`, and
-  `box-shadow` (`--glass-edge`). `-webkit-backdrop-filter` paired for Safari.
-- The specular-edge inset-shadow recipe as `--glass-edge` (highlight + shadow).
-- The **fallback block**: one `@media (prefers-reduced-transparency: reduce)`
-  and one `@supports not (backdrop-filter: blur(1px))` that both redefine the
-  glass tokens to opaque `--bg-surface`/`--bg-raised` with `backdrop-filter:
-  none`. Everything downstream (shared + product) inherits the fallback for free
-  because it consumes the tokens.
-
-### 2. `src/styles/tokens.css` — glass material tokens
-
-Add to `:root` (light) and `[data-theme="dark"]`, all with safe literal
-fallbacks so token-less apps degrade to opaque:
+Add to `:root` and `[data-theme="dark"]`, all with safe literal fallbacks:
 
 ```
---glass-blur, --glass-blur-thin, --glass-blur-thick
+--glass-blur / --glass-blur-thin / --glass-blur-thick
 --glass-saturate
---glass-bg, --glass-bg-thin, --glass-bg-thick      (translucent rgba tints)
---glass-border                                      (hairline, brighter than --border)
---glass-highlight                                   (specular top-edge color)
---glass-edge                                        (composed inset+drop shadow)
---canvas, --canvas-gradient                         (base the product fills behind glass)
+--glass-bg / --glass-bg-thin / --glass-bg-thick     (translucent rgba tints)
+--glass-border                                       (hairline, brighter than --border)
+--glass-highlight                                    (specular top-edge color)
+--glass-edge                                         (composed inset highlight + drop shadow)
+--canvas / --canvas-gradient                         (base the product fills behind glass)
 ```
 
-### 3. `src/styles/console.css` — glass ConsoleSidebar
+### `src/styles/glass.css` — tier utilities + fallback
 
-The `.lu-cs` rail becomes a `--glass-regular` layer: translucent `--glass-bg`,
-`backdrop-filter`, `--glass-border` right edge, `--glass-edge` shadow. Active
-row and account dropdown adopt `--glass-thin`. No structural change; purely the
-surface. Falls back to opaque via the token contract.
+Opt-in `import 'latere-ui/glass'`. Utility classes `.lu-glass`,
+`.lu-glass-thin`, `.lu-glass-thick` (background + `backdrop-filter: blur()
+saturate()` with `-webkit-` pair + `--glass-border` + `--glass-edge`), and the
+two fallback blocks (`prefers-reduced-transparency: reduce` and `@supports not
+(backdrop-filter: blur(1px))`) that redefine glass tokens to opaque. Components
+lean on these classes so the fallback lives in exactly one place.
 
-### 4. `src/styles/footer.css` — glass footer
+### `src/glass/useGlass.ts` + `src/glass/focusTrap.ts`
 
-Footer surface adopts `--glass-regular` when it sits over content; keep the
-opaque path for the marketing page where it's the page base.
+- `useGlass()` — resolve a tier's class + the reactive `reducedTransparency`
+  flag (matchMedia, SSR-safe no-op without `window`).
+- `focusTrap.ts` — shared overlay behavior (focus trap, ESC, scrim click) so
+  `GlassDialog` and `GlassPopover` don't each reinvent it.
 
-### 5. `src/styles/brand.css` — vibrancy-aware wordmarks
+## Layer 2 — Component library
 
-Wordmark gradients are unchanged in hue but documented to sit on glass; no
-token change required (they're `-webkit-text-fill: transparent` over gradient).
-Verify they remain legible over `--glass-regular` in both themes.
+A comprehensive set of reusable glass elements — the full common vocabulary
+(surfaces, sidebar, buttons, inputs, modal, alert, message, and the rest) — so
+a product builds its UI from imports, not bespoke glass CSS. All are thin,
+token-styled Vue SFCs that compose the tier utility classes, so each renders
+opaque under the reduce-transparency fallback for free. Each ships with a README
+API block and tests (render, props, a11y role, keyboard).
 
-### 6. `package.json` / `README.md` / tests
+To stay tightly scoped and buildable, the catalog ships in two phases within
+this spec — **Core** (the primitives + the elements cella needs to adopt on day
+one) and **Extended** (the long tail) — but all live in the same `1.10.x` line.
 
-- Bump to `1.10.0`; add `"./glass": "./src/styles/glass.css"` export.
-- README: Liquid Glass section — the tier table, the three principles a
-  consumer must honor (canvas behind glass, chrome-not-content, fallback is
-  automatic), and a copy-paste "adopt in your product" snippet.
-- `tests/glass.test.ts`: assert glass tokens are declared for both themes, the
-  three tier classes exist, and the reduced-transparency fallback selector is
-  present in `glass.css` (guards the a11y contract from silent regression).
+### Core
+
+**Surfaces & layout**
+| Component | Tier | Purpose |
+|---|---|---|
+| `GlassSurface` | prop | Base primitive — tiered glass container (`as`, `tier`, `interactive`); everything composes it |
+| `GlassPanel` | regular | Content card / grouped section (padding + radius; opaque inner regions via slot) |
+| `GlassBar` | regular | Sticky chrome bar / toolbar / top strip (`sticky`; safe over content) |
+| `GlassSidebar` | regular | Rail shell — `ConsoleSidebar` retrofit onto the material (no API change) |
+
+**Controls & inputs**
+| Component | Tier | Purpose |
+|---|---|---|
+| `GlassButton` | thin | Action — `variant` primary/ghost/danger, `size`, loading, `icon` slot |
+| `GlassIconButton` | thin | Square icon-only button (toolbar affordances) |
+| `GlassField` | thin | Input / textarea / select shell — focus ring via `--accent`, `label`/`error` slots |
+| `GlassSegmented` | thin | Segmented control — theme/density/view switches, roving-tabindex |
+| `GlassSwitch` | thin | On/off toggle |
+
+**Feedback & overlays**
+| Component | Tier | Purpose |
+|---|---|---|
+| `GlassBadge` | thin | Status pill — maps `--state-*`, `tone` prop |
+| `GlassAlert` | regular | Inline banner — info/success/warning/error, dismissible |
+| `GlassToast` + `message()` | thick | Transient notifications via imperative `message.success/error/…` service (`glass/message.ts`) |
+| `GlassModal` (`GlassDialog`) | thick | Modal + scrim — focus trap, ESC/overlay close, `v-model:open`, teleport |
+| `GlassPopover` | thick | Floating menu / command-palette surface — anchored, dismiss-on-outside, ESC |
+
+### Extended
+
+| Component | Tier | Purpose |
+|---|---|---|
+| `GlassCheckbox` / `GlassRadio` | thin | Boolean / single-choice inputs |
+| `GlassSelect` | thin+thick | Custom dropdown select (field + popover) |
+| `GlassTabs` | thin | Tab strip with glass indicator |
+| `GlassTooltip` | thick | Hover/focus tooltip |
+| `GlassDrawer` | thick | Edge-anchored sliding panel |
+| `GlassMenu` | thick | Context/dropdown menu list (built on `GlassPopover`) |
+| `GlassProgress` / `GlassSpinner` | — | Determinate bar + indeterminate spinner |
+| `GlassSkeleton` | — | Loading placeholder shimmer |
+| `GlassTable` | regular | Data table with glass header/rows |
+| `GlassConfirm` | thick | Imperative confirm/alert dialog (`confirm()`), built on `GlassModal` |
+
+`GlassConfirm` + `message()` give products the imperative **modal / alert /
+message** trio directly, mirroring the ad-hoc dialogs each app hand-rolls today.
+`ConsoleSidebar` and `SiteFooter` retrofit onto the material — no public API
+change, purely the surface.
+
+## package.json / README / tests
+
+- Bump `1.10.0`. Add exports: `"./glass": "./src/styles/glass.css"` and keep
+  components on the existing `.` barrel via `src/index.ts`.
+- README: a **Liquid Glass** design-system section — tier table, the three
+  adopter obligations (set `--canvas`, chrome-not-content, fallback is
+  automatic), a per-component API table, and a copy-paste "adopt in your
+  product" snippet (import glass.css, set canvas tokens, drop in `GlassBar`).
+- Tests: `glass.test.ts` (tokens for both themes, three tier classes, both
+  fallback selectors present) + `glass-components.test.ts` (each component
+  renders, honors props, exposes correct role, and `GlassDialog`/`GlassPopover`
+  trap focus + close on ESC; a jsdom pass asserts opaque fallback when
+  `backdrop-filter` is unsupported).
 
 ## Acceptance criteria
 
-- [ ] `import 'latere-ui/glass'` + setting `--canvas`/`--glass-bg` yields a
-      frosted, blurred sidebar & footer over a gradient canvas in a demo, in
-      both light and dark.
-- [ ] With `prefers-reduced-transparency: reduce` forced, every glass surface is
-      fully opaque and text contrast is unchanged (no `backdrop-filter` active).
-- [ ] Token-less consumer (no glass tokens defined) degrades to opaque chrome,
-      not a broken transparent one (literal fallbacks hold).
-- [ ] `vitest` green (existing 125 + new glass tests); `vue-tsc` clean.
+- [ ] The Core catalog (surfaces, sidebar, buttons, inputs, badge, alert,
+      toast/`message()`, modal, popover) ships in `1.10.0`; a demo composing
+      them over a gradient `--canvas` renders as frosted, blurred,
+      specular-edged glass in both light and dark. Extended catalog follows in
+      the same `1.10.x` line.
+- [ ] Imperative `message()` and `confirm()` services mount, stack, and dismiss
+      correctly (and no-op SSR-safe without `window`).
+- [ ] Forcing `prefers-reduced-transparency: reduce` makes every component and
+      the shared chrome fully opaque with unchanged text contrast — zero active
+      `backdrop-filter` — with no per-component code path.
+- [ ] `GlassDialog`/`GlassPopover` trap focus, restore it on close, and close on
+      ESC and scrim/outside click.
+- [ ] Token-less consumer degrades to opaque components (literal fallbacks).
+- [ ] SSR-safe: `useGlass`/components no-op without `window`.
+- [ ] `vitest` green (existing 125 + glass + component tests); `vue-tsc` clean.
 - [ ] No product repo referenced from this package (shared-package hygiene).
 
 ## Rollout
 
-1. Build + release `latere-ui@1.10.0` (this spec).
-2. cella adopts (sandbox `liquid-glass-refresh` spec) — bumps the pinned
-   `latere-ui#v1.10.0` and sets its canvas/glass tokens + neutral palette.
-3. lux / wallfacer / auth adopt on their own cadence by defining canvas tokens;
-   until they do, they render opaque (fallback), so the release is non-breaking.
+1. Build + release `latere-ui@1.10.0` (this spec) — material + components.
+2. cella adopts (sandbox `liquid-glass-refresh`): bump the pin, set canvas +
+   neutral-glass palette, and **replace local ad-hoc chrome/controls with the
+   Glass* components** (dialogs, command palette, top strip, buttons, fields).
+   This is the reference adoption other products copy.
+3. lux / wallfacer / auth adopt on their cadence by setting canvas tokens and
+   swapping in Glass* components; until they do they render opaque (fallback),
+   so the release is non-breaking.

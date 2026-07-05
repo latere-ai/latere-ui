@@ -10,7 +10,7 @@ Active specs:
 specs/
   auth-client-v1.8.md      (complete, leaf — v1.8 adds vanilla async core, OrgSwitcher, runFrontChannelLogout)
   console-shell-v1.9.md    (complete — shared ConsoleSidebar + DocsLayout shipped in v1.9.0; per-product migrations pending)
-  liquid-glass-v1.10.md    (draft — shared Liquid Glass material system; glass tokens + primitives + glass ConsoleSidebar/footer; products adopt by setting canvas tokens)
+  liquid-glass-v1.10.md    (draft — shared Liquid Glass design system: material tokens + a reusable component library (sidebar, button, modal, alert, message, field, ...); products adopt by setting canvas tokens and importing Glass* components)
 ```
 
 ## Dependencies
