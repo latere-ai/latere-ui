@@ -1,6 +1,6 @@
 ---
 title: latere-ui v1.20 — Liquid Glass v2 (five-tier material ladder, ink accent, capsule geometry)
-status: draft
+status: complete
 depends_on:
   - specs/liquid-glass-v1.10.md
 affects:
@@ -228,3 +228,45 @@ ladder, mono eyebrows, glass tiers for floating surfaces.
    separately.)
 3. cella / wallfacer / lux adopt on their cadence; until they upgrade they stay
    on `1.10.x`.
+
+## Outcome (2026-07-06)
+
+Built in latere-ui **v1.20.0** on main (committed; push + tag pending).
+
+- **Material** (`glass.css`): the five-tier ladder `.lu-glass-ultrathin / -thin
+  / (regular) .lu-glass / -thick / -smoke` on the existing class contracts. The
+  Clear tier + `.lu-glass-dim` utility retired; the `--glass-dim` modal/drawer
+  scrim token retained. Layered `--shadow-glass` / `-hover` (drop + inset top
+  specular + inset bottom shade), with `--glass-edge` / `-thick` kept as aliases
+  so `GlassSurface` / `GlassButton` consumers kept working. New tokens
+  `--glass-pill-fill`, `--glass-smoke-*` + `-ink`, `--glass-edge-top`.
+  `--glass-radius` → `--radius-lg` (22px). A11y fallbacks extended to all five
+  tiers.
+- **Tokens** (`tokens.css`): v2 fallback set — ink `--accent` + variants, fg
+  ramp, bg ladder, `--border-strong`, radii ladder.
+- **`useGlass`**: `GlassTier` union → `ultrathin | thin | regular | thick |
+  smoke`; `concentricRadius()` outer default → 22px.
+- **Shell** (`console.css` + `ConsoleSidebar.vue`): the recommended **1d**
+  floating capsule rail — floating regular-glass slab (radius-xl + `--shadow-
+  glass`), capsule nav rows, `--glass-pill-fill` active row with specular edge
+  (the 3px accent bar removed), ultrathin search/badge, mono uppercase section
+  labels. No API change.
+- **Components** (25): reskinned to the ladder — `GlassButton` primary → smoke
+  ink glass; chips/inputs (`GlassBadge`, `GlassField`, `GlassIconButton`,
+  `GlassProgress`, `GlassCheckbox`, `GlassRadio`, `GlassSelect` trigger) →
+  ultrathin; Switch/Checkbox use smoke ink; Segmented/Tabs → pill-fill active
+  (Tabs drops the underline); Tooltip → smoke; surfaces/overlays on the radii
+  ladder. `GlassMenu` stays list-only so its enclosing `GlassPopover` supplies
+  the single glass surface (no double-frost).
+- **Docs / footer / account / palette** (`docs.css`, `footer.css`,
+  `AccountMenu`, `ConsolePalette`, `AccountPrefs`): ink accent (kills the
+  `#5b6cf0` drift), mono eyebrows, capsule chrome, radii ladder.
+- **Tests**: 217 passing (215 baseline + tier-contract updates + 2 new v2
+  guards); typecheck clean. Version `1.20.0`.
+
+Diverged from plan: none material. Tooltip moved to `smoke` (not `thick`) so its
+reduced-transparency fallback keeps dark-fill/light-ink contrast — recorded in
+the component pass.
+
+Remaining: push + tag `v1.20.0`; then adopt in `latere-ai` (second handoff,
+tracked separately).

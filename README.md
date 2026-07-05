@@ -182,8 +182,16 @@ const html = md.render(stripFirstHeading(source));
 The shared Apple-style glass design system: a **material** (translucent, blurred,
 specular-edged layers) plus a component library built on it, so every product
 console reads as one coherent surface. This section covers the material
-foundation; the `Glass*` component library is layered on top (see
-`specs/liquid-glass-v1.10.md`).
+foundation; the `Glass*` component library is layered on top.
+
+**v1.20 (Liquid Glass v2)** firms the recipe: a **five-step material ladder**,
+capsule geometry on a radii ladder, **ink as the only accent** (product colors
+survive only as gradient wordmarks), and a layered floating-glass shadow. See
+`specs/liquid-glass-v2-v1.20.md`. Migrating from v1.10.x: the `.lu-glass-clear`
+Clear tier and the `.lu-glass-dim` utility are removed (the `--glass-dim` modal
+scrim token stays); `.lu-glass-ultrathin` and `.lu-glass-smoke` are new; the
+`GlassTier` union is now `ultrathin | thin | regular | thick | smoke`; and
+`--accent` resolves to ink — drop any per-product chromatic accent.
 
 Import the material once, then set a canvas for glass to refract against:
 
@@ -206,35 +214,32 @@ that floats above content, built from three optical layers — **illumination**
 (tint + backdrop blur), **highlight** (specular top-edge rim), and **shadow**
 (separation from content).
 
-Two **variants**, per Apple:
+The **five-step material ladder** — pick a tier by prominence, never decoration:
 
-- **Regular** — adaptive and always legible over any content; use for chrome.
-  Ships in three depth tiers:
+| Tier | Class | Use for |
+|------|-------|---------|
+| ultrathin | `.lu-glass-ultrathin` | hover targets, chips, badges, search, inputs |
+| thin | `.lu-glass-thin` | nav rows, pills, ghost buttons, bars |
+| regular | `.lu-glass` | cards, panels, the sidebar slab |
+| thick | `.lu-glass-thick` | modals, popovers, palettes — anything over busy content |
+| smoke | `.lu-glass-smoke` | primary buttons, inverse emphasis (ink glass) |
 
-  | Tier | Class | Use for |
-  |------|-------|---------|
-  | thin | `.lu-glass-thin` | inline controls, chips, fields |
-  | regular | `.lu-glass` | chrome panels, sidebar, bars |
-  | thick | `.lu-glass-thick` | modal / overlay scrims, popovers, command palette |
-
-- **Clear** (`.lu-glass-clear`) — permanently transparent, lets media show
-  through; legible only with a dimming layer (`.lu-glass-dim`) beneath. Use
-  sparingly, over media.
+`smoke` is near-solid ink glass; its label color is `--glass-smoke-ink` (flips
+per theme) — never hardcode white on it.
 
 ```ts
 import { useGlass, concentricRadius } from 'latere-ui';
 const { glassClass, reducedTransparency } = useGlass();
 // :class="glassClass('regular')"  — reducedTransparency is a reactive ref
-// concentricRadius('8px') → calc(var(--glass-radius,14px) - 8px)
+// concentricRadius('8px') → calc(var(--glass-radius,22px) - 8px)
 ```
 
 Obligations when adopting:
 
 1. **Set a `--canvas`.** Frosted glass over a flat fill reads as dead gray.
-2. **Glass is chrome, never content.** Never put Regular glass over live
+2. **Glass is chrome, never content.** Never put glass over live
    terminal / VNC / video — `backdrop-filter` there tanks performance and
-   legibility. Keep content surfaces opaque. (Clear glass + a dim layer is the
-   one exception, over media.)
+   legibility. Keep content surfaces opaque.
 3. **Concentric corners.** A nested control's radius = parent radius − padding;
    use `concentricRadius()` / `--glass-radius`.
 4. **Accessibility is automatic.** `prefers-reduced-transparency: reduce`,
