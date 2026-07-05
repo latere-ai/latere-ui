@@ -1,6 +1,6 @@
 ---
 title: latere-ui v1.10 — Liquid Glass design system (material tokens + component library)
-status: draft
+status: complete
 depends_on:
   - specs/console-shell-v1.9.md
 affects:
@@ -222,3 +222,17 @@ change, purely the surface.
 3. lux / wallfacer / auth adopt on their cadence by setting canvas tokens and
    swapping in Glass* components; until they do they render opaque (fallback),
    so the release is non-breaking.
+
+## Outcome (2026-07-05)
+
+Built in latere-ui v1.10.0 on main (committed, not yet pushed/tagged).
+
+- **Material** (`src/styles/glass.css`): Regular tiers (thin/regular/thick) + Clear variant (`.lu-glass-clear` + `.lu-glass-dim`), three optical layers in `--glass-edge`, vibrancy (saturate + brightness), concentric radius token + `concentricRadius()`. A11y baked into the token contract: `prefers-reduced-transparency`, `prefers-contrast: more` (Increase Contrast → near-opaque 4.5:1), `@supports not (backdrop-filter)`.
+- **Composables/services** (`src/glass/`): `useGlass`, `useFocusTrap`, `message()`, `confirm()`, shared value types.
+- **Components** (25): Surface, Panel, Bar, Button, IconButton, Field, Badge, Alert, Switch, Segmented, Checkbox, Radio, Tabs, Modal, Popover, Toaster, ConfirmHost, Spinner, Progress, Skeleton, Tooltip, Menu, Select, Drawer, Table — all keyboard/ARIA-complete.
+- **Shared chrome**: `console.css` `.lu-cs` sidebar retrofit to glass. `footer.css` deferred (marketing base).
+- **Tests**: 213 passing; typecheck clean. `./glass` CSS entrypoint added; `1.10.0`.
+
+Diverged from plan: glass tokens live canonically in `glass.css` (not `tokens.css`) so apps with their own token system (which skip `tokens.css`) still get them. Extended `GlassMenu`/`GlassSelect`/`GlassDrawer`/`GlassTable` shipped in the same pass rather than a follow-up.
+
+Remaining: push + tag `v1.10.0` (release gate); per-product adoption (cella is the reference, in progress).
