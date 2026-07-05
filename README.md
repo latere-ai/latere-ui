@@ -242,6 +242,29 @@ Obligations when adopting:
    browsers without `backdrop-filter` all redefine the glass tokens, so every
    surface degrades with no per-component work.
 
+### Component library
+
+All compose the material, so each inherits the fallbacks above. Import from
+`latere-ui`; the app must `import 'latere-ui/glass'` once for the CSS.
+
+| Group | Components |
+|-------|-----------|
+| Surfaces | `GlassSurface`, `GlassPanel`, `GlassBar` |
+| Controls | `GlassButton`, `GlassIconButton`, `GlassSwitch`, `GlassSegmented`, `GlassCheckbox`, `GlassRadio`, `GlassTabs` |
+| Inputs | `GlassField`, `GlassSelect` |
+| Feedback | `GlassBadge`, `GlassAlert`, `GlassSpinner`, `GlassProgress`, `GlassSkeleton`, `GlassTooltip` |
+| Overlays | `GlassModal`, `GlassDrawer`, `GlassPopover`, `GlassMenu` |
+| Data | `GlassTable` |
+
+Imperative services (mount the host once, call anywhere):
+
+```ts
+import { GlassToaster, GlassConfirmHost, message, confirm } from 'latere-ui';
+// <GlassToaster /> and <GlassConfirmHost /> near the app root, then:
+message.success('Saved');
+if (await confirm({ message: 'Delete this sandbox?', danger: true })) { /* … */ }
+```
+
 ## Develop
 
 ```sh
