@@ -7,18 +7,19 @@
 import { readonly, ref, onScopeDispose, type Ref } from 'vue';
 
 /**
- * Material tiers. `thin`/`regular`/`thick` are depth tiers of Apple's *Regular*
- * variant — adaptive, always legible; use for chrome. `clear` is the *Clear*
- * variant — permanently transparent, legible only with a dimming layer beneath;
- * use sparingly, over media. See `glass.css`.
+ * Material tiers — the v2 five-step ladder. Pick by prominence:
+ * `ultrathin` (chips, badges, search, hover), `thin` (nav, pills, bars),
+ * `regular` (cards, panels, sidebar), `thick` (modals, popovers, palettes),
+ * `smoke` (ink glass for primary buttons / inverse emphasis). See `glass.css`.
  */
-export type GlassTier = 'thin' | 'regular' | 'thick' | 'clear';
+export type GlassTier = 'ultrathin' | 'thin' | 'regular' | 'thick' | 'smoke';
 
 const TIER_CLASS: Record<GlassTier, string> = {
+  ultrathin: 'lu-glass-ultrathin',
   thin: 'lu-glass-thin',
   regular: 'lu-glass',
   thick: 'lu-glass-thick',
-  clear: 'lu-glass-clear',
+  smoke: 'lu-glass-smoke',
 };
 
 /** The utility class that paints a given tier. */
@@ -31,7 +32,7 @@ export function glassClass(tier: GlassTier = 'regular'): string {
  * rule is inner radius = outer radius − padding. Returns a CSS `calc()` so the
  * outer radius can stay a token.
  */
-export function concentricRadius(padding: string, outer = 'var(--glass-radius, 14px)'): string {
+export function concentricRadius(padding: string, outer = 'var(--glass-radius, 22px)'): string {
   return `calc(${outer} - ${padding})`;
 }
 

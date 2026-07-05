@@ -25,20 +25,29 @@ describe('glass.css material tokens', () => {
     expect(light).toMatch(/--canvas:/);
   });
 
-  it('defines the Regular tiers + Clear variant with paired -webkit-backdrop-filter', () => {
-    for (const cls of ['.lu-glass', '.lu-glass-thin', '.lu-glass-thick', '.lu-glass-clear']) {
+  it('defines the five-tier ladder with paired -webkit-backdrop-filter and no retired Clear tier', () => {
+    for (const cls of [
+      '.lu-glass-ultrathin',
+      '.lu-glass-thin',
+      '.lu-glass',
+      '.lu-glass-thick',
+      '.lu-glass-smoke',
+    ]) {
       expect(css).toContain(cls);
     }
+    // The Clear variant retired in v2.
+    expect(css).not.toContain('.lu-glass-clear');
     // Safari needs the prefixed property alongside the standard one.
     const webkit = css.match(/-webkit-backdrop-filter/g) ?? [];
     const standard = css.match(/(?<!-webkit-)\bbackdrop-filter/g) ?? [];
-    expect(webkit.length).toBeGreaterThanOrEqual(4);
-    expect(standard.length).toBeGreaterThanOrEqual(4);
+    expect(webkit.length).toBeGreaterThanOrEqual(5);
+    expect(standard.length).toBeGreaterThanOrEqual(5);
   });
 
-  it('composes the three optical layers (highlight + shadow + drop) in --glass-edge', () => {
-    const edge = css.slice(css.indexOf('--glass-edge:'));
-    expect(edge).toMatch(/inset 0 1px[^;]*var\(--glass-highlight\)/); // top specular rim
+  it('composes the layered floating-glass shadow (drop + inset top specular) in --shadow-glass', () => {
+    const shadow = css.slice(css.indexOf('--shadow-glass:'));
+    expect(shadow).toMatch(/0 14px 38px/); // separation drop shadow
+    expect(shadow).toMatch(/inset 0 1\.5px 0/); // top specular rim
   });
 
   it('carries a reduce-transparency fallback that opaques the tokens', () => {
@@ -79,17 +88,18 @@ describe('glass.css material tokens', () => {
 
 describe('concentricRadius', () => {
   it('subtracts padding from the outer radius (Apple concentric rule)', () => {
-    expect(concentricRadius('8px')).toBe('calc(var(--glass-radius, 14px) - 8px)');
+    expect(concentricRadius('8px')).toBe('calc(var(--glass-radius, 22px) - 8px)');
     expect(concentricRadius('4px', '20px')).toBe('calc(20px - 4px)');
   });
 });
 
 describe('glassClass', () => {
   it('maps each tier to its utility class', () => {
+    expect(glassClass('ultrathin')).toBe('lu-glass-ultrathin');
     expect(glassClass('thin')).toBe('lu-glass-thin');
     expect(glassClass('regular')).toBe('lu-glass');
     expect(glassClass('thick')).toBe('lu-glass-thick');
-    expect(glassClass('clear')).toBe('lu-glass-clear');
+    expect(glassClass('smoke')).toBe('lu-glass-smoke');
     expect(glassClass()).toBe('lu-glass'); // defaults to regular
   });
 });

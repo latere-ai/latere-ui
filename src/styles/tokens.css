@@ -1,20 +1,64 @@
-/* Fallback design tokens for apps that do not define their own. The footer
- * only consumes the subset below. Apps with an existing token system should
- * skip importing this file. */
+/* Fallback design tokens for apps that do not define their own. The shared
+ * chrome (footer, console, docs) and the Glass* material consume the subset
+ * below. Apps with an existing token system should skip importing this file —
+ * the Glass* material tokens live in glass.css so they still get those.
+ *
+ * v2 (Latere Design System): neutral ink on paper. The accent IS the ink;
+ * product colors survive only as gradient wordmarks, never page themes. */
 :root {
+    /* Base surfaces */
+    --bg:         #fafafa;
+    --bg-deep:    #f0f0ee;   /* gradient stop behind glass */
     --bg-surface: #ffffff;
-    --bg-raised: #f5f5f5;
-    --text: #0a0a0a;
-    --text-secondary: #666666;
-    --text-muted: #a0a0a0;
-    --border: rgba(0, 0, 0, 0.08);
+    --bg-raised:  #f5f5f5;
+    --bg-code:    rgba(0, 0, 0, 0.05);
+
+    /* Ink accent (replaces the per-product chromatic accent) */
+    --accent:              #0a0a0a;
+    --accent-hover:        #404040;
+    --accent-subtle:       rgba(0, 0, 0, 0.04);
+    --accent-glow:         rgba(0, 0, 0, 0.08);
+    --accent-glow-strong:  rgba(0, 0, 0, 0.15);
+
+    /* Foreground ramp + semantic text aliases */
+    --fg-1: #0a0a0a;
+    --fg-2: #666666;
+    --fg-3: #a0a0a0;
+    --text:           var(--fg-1);
+    --text-secondary: var(--fg-2);
+    --text-muted:     var(--fg-3);
+
+    --border:        rgba(0, 0, 0, 0.08);
+    --border-strong: rgba(0, 0, 0, 0.12);
+
+    /* Radii ladder (Apple-style large radii + capsules). Concentric rule:
+     * inner-radius = outer-radius − padding. */
+    --radius-xs:   8px;
+    --radius-sm:  12px;
+    --radius-md:  16px;   /* inputs, small controls */
+    --radius-lg:  22px;   /* cards */
+    --radius-xl:  28px;   /* large cards, panels, sidebar slab */
+    --radius-2xl: 36px;   /* screenshots, page frames */
+    --radius-pill: 999px; /* buttons, badges, nav capsule */
 }
 
 [data-theme="dark"] {
+    --bg:         #09090b;
+    --bg-deep:    #050506;
     --bg-surface: #111113;
-    --bg-raised: #18181b;
-    --text: #fafafa;
-    --text-secondary: #a1a1aa;
-    --text-muted: #52525b;
-    --border: rgba(255, 255, 255, 0.06);
+    --bg-raised:  #18181b;
+    --bg-code:    rgba(255, 255, 255, 0.06);
+
+    --accent:              #e4e4e7;
+    --accent-hover:        #a1a1aa;
+    --accent-subtle:       rgba(255, 255, 255, 0.04);
+    --accent-glow:         rgba(255, 255, 255, 0.06);
+    --accent-glow-strong:  rgba(255, 255, 255, 0.10);
+
+    --fg-1: #fafafa;
+    --fg-2: #b6b6bf;
+    --fg-3: #82828c;
+
+    --border:        rgba(255, 255, 255, 0.06);
+    --border-strong: rgba(255, 255, 255, 0.10);
 }
