@@ -54,27 +54,37 @@ accent/canvas; the system owns the *material* and the *components*.
 
 ## Design principles (the material contract)
 
+Grounded in Apple's Liquid Glass (macOS Tahoe / HIG "Materials"): glass is a
+distinct functional layer floating above content, built from three optical
+layers Apple names — **illumination** (tint + real-time backdrop blur),
+**highlight** (specular top-edge rim), and **shadow** (separation from content).
+
 1. **Glass needs a canvas to refract.** Frosted layers over a flat fill read as
    dead gray. Components assume the product sets a subtly gradient `--canvas`
    behind them; the tokens define it, products set the values.
 2. **Glass is chrome, never content.** `backdrop-filter: blur()` over live
-   xterm / noVNC / video tanks performance and legibility. Components are for
+   xterm / noVNC / video tanks performance and legibility. Regular glass is for
    chrome (bars, sidebars, dialogs, popovers, fields); content surfaces stay
    opaque. Documented per component.
-3. **Three tiers.** `thin` (inline controls, chips, fields), `regular` (panels,
-   sidebar, bars), `thick` (modal/overlay scrims, popovers, command palette).
-   Each tier bundles blur radius, tint, saturation, and edge. Components take a
-   `tier` where it makes sense and default sensibly.
-4. **Specular edge + vibrancy.** A single `--glass-edge` inset+drop shadow gives
-   the lifted-glass look; `backdrop-filter: saturate()` provides vibrancy. Text
-   uses the existing `--text*` ramp so contrast is preserved.
-5. **Adaptive.** Every token and component has a `[data-theme="dark"]` variant.
-6. **Accessible fallback is built in.** Under `prefers-reduced-transparency:
-   reduce` (and `@supports not (backdrop-filter)`) the glass tokens collapse to
-   **opaque** `--bg-surface`/`--bg-raised`. Because every component styles via
-   those tokens, the fallback is automatic — no per-component or per-product
-   work. `useGlass()` also exposes the reactive reduced-transparency flag for
-   components that need to branch behavior (e.g. drop a parallax).
+3. **Two variants, three Regular tiers.** Apple's *Regular* variant (adaptive,
+   always legible) ships as `thin` (controls, chips, fields), `regular` (panels,
+   sidebar, bars), `thick` (modal/overlay scrims, popovers, palette). Apple's
+   *Clear* variant (`clear`) is permanently transparent for over-media chrome
+   and requires a dimming layer (`.lu-glass-dim`) for legibility.
+4. **Specular edge + vibrancy.** `--glass-edge` composes the highlight (top
+   rim), shadow (bottom rim), and drop shadow (separation); `saturate()` +
+   `brightness()` provide vibrancy. Text uses the existing `--text*` ramp so
+   contrast is preserved.
+5. **Concentric corners.** Nested controls' radius = parent radius − padding
+   (Apple concentricity); exposed via `--glass-radius` + `concentricRadius()`.
+6. **Adaptive.** Every token and component has a `[data-theme="dark"]` variant.
+7. **Accessible fallback is built in.** `prefers-reduced-transparency: reduce`,
+   `prefers-contrast: more` (Apple Increase Contrast → near-opaque fills at a
+   4.5:1 ratio, thicker borders), and `@supports not (backdrop-filter)` all
+   collapse the glass tokens to opaque/high-contrast. Because every component
+   styles via those tokens, the fallback is automatic — no per-component or
+   per-product work. `useGlass()` also exposes the reactive reduced-transparency
+   flag for components that need to branch behavior (e.g. drop a parallax).
 
 ## Layer 1 — Material foundation
 

@@ -201,30 +201,46 @@ import 'latere-ui/glass';           // material tokens + tier utilities + fallba
 }
 ```
 
-Three material **tiers**, applied via utility class or the `useGlass()` helper:
+Modeled on Apple's Liquid Glass (macOS Tahoe / HIG). Glass is a distinct layer
+that floats above content, built from three optical layers — **illumination**
+(tint + backdrop blur), **highlight** (specular top-edge rim), and **shadow**
+(separation from content).
 
-| Tier | Class | Use for |
-|------|-------|---------|
-| thin | `.lu-glass-thin` | inline controls, chips, fields |
-| regular | `.lu-glass` | chrome panels, sidebar, bars |
-| thick | `.lu-glass-thick` | modal / overlay scrims, popovers, command palette |
+Two **variants**, per Apple:
+
+- **Regular** — adaptive and always legible over any content; use for chrome.
+  Ships in three depth tiers:
+
+  | Tier | Class | Use for |
+  |------|-------|---------|
+  | thin | `.lu-glass-thin` | inline controls, chips, fields |
+  | regular | `.lu-glass` | chrome panels, sidebar, bars |
+  | thick | `.lu-glass-thick` | modal / overlay scrims, popovers, command palette |
+
+- **Clear** (`.lu-glass-clear`) — permanently transparent, lets media show
+  through; legible only with a dimming layer (`.lu-glass-dim`) beneath. Use
+  sparingly, over media.
 
 ```ts
-import { useGlass } from 'latere-ui';
+import { useGlass, concentricRadius } from 'latere-ui';
 const { glassClass, reducedTransparency } = useGlass();
 // :class="glassClass('regular')"  — reducedTransparency is a reactive ref
+// concentricRadius('8px') → calc(var(--glass-radius,14px) - 8px)
 ```
 
-Three obligations when adopting:
+Obligations when adopting:
 
 1. **Set a `--canvas`.** Frosted glass over a flat fill reads as dead gray.
-2. **Glass is chrome, never content.** Never put a glass layer over live
+2. **Glass is chrome, never content.** Never put Regular glass over live
    terminal / VNC / video — `backdrop-filter` there tanks performance and
-   legibility. Keep content surfaces opaque.
-3. **The fallback is automatic.** Under `prefers-reduced-transparency: reduce`
-   (or a browser without `backdrop-filter`) every glass surface collapses to an
-   opaque `--bg-surface`/`--bg-raised`, with no per-component work, because
-   everything styles through the glass tokens.
+   legibility. Keep content surfaces opaque. (Clear glass + a dim layer is the
+   one exception, over media.)
+3. **Concentric corners.** A nested control's radius = parent radius − padding;
+   use `concentricRadius()` / `--glass-radius`.
+4. **Accessibility is automatic.** `prefers-reduced-transparency: reduce`,
+   `prefers-contrast: more` (Apple Increase Contrast → near-opaque, 4.5:1), and
+   browsers without `backdrop-filter` all redefine the glass tokens, so every
+   surface degrades with no per-component work.
 
 ## Develop
 

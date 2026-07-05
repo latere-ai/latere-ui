@@ -6,18 +6,33 @@
 
 import { readonly, ref, onScopeDispose, type Ref } from 'vue';
 
-/** Material depth tiers. See `glass.css`. */
-export type GlassTier = 'thin' | 'regular' | 'thick';
+/**
+ * Material tiers. `thin`/`regular`/`thick` are depth tiers of Apple's *Regular*
+ * variant — adaptive, always legible; use for chrome. `clear` is the *Clear*
+ * variant — permanently transparent, legible only with a dimming layer beneath;
+ * use sparingly, over media. See `glass.css`.
+ */
+export type GlassTier = 'thin' | 'regular' | 'thick' | 'clear';
 
 const TIER_CLASS: Record<GlassTier, string> = {
   thin: 'lu-glass-thin',
   regular: 'lu-glass',
   thick: 'lu-glass-thick',
+  clear: 'lu-glass-clear',
 };
 
 /** The utility class that paints a given tier. */
 export function glassClass(tier: GlassTier = 'regular'): string {
   return TIER_CLASS[tier];
+}
+
+/**
+ * Concentric inner radius for a control nested inside a glass surface: Apple's
+ * rule is inner radius = outer radius − padding. Returns a CSS `calc()` so the
+ * outer radius can stay a token.
+ */
+export function concentricRadius(padding: string, outer = 'var(--glass-radius, 14px)'): string {
+  return `calc(${outer} - ${padding})`;
 }
 
 export interface UseGlass {

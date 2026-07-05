@@ -85,7 +85,7 @@ export { useClickOutside } from './composables/useClickOutside';
 
 // Liquid Glass material. The CSS ships separately as the `latere-ui/glass`
 // entrypoint; this exports the headless composable + tier helper.
-export { useGlass, glassClass } from './glass/useGlass';
+export { useGlass, glassClass, concentricRadius } from './glass/useGlass';
 export type { UseGlass, GlassTier } from './glass/useGlass';
 
 // Liquid Glass component library. All compose the material tiers, so each

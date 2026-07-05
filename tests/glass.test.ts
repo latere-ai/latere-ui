@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it, vi, afterEach } from 'vitest';
 import { effectScope } from 'vue';
 
-import { glassClass, useGlass } from '../src/glass/useGlass';
+import { concentricRadius, glassClass, useGlass } from '../src/glass/useGlass';
 
 const css = readFileSync(resolve(process.cwd(), 'src/styles/glass.css'), 'utf8');
 
@@ -25,15 +25,20 @@ describe('glass.css material tokens', () => {
     expect(light).toMatch(/--canvas:/);
   });
 
-  it('defines the three tier utility classes with paired -webkit-backdrop-filter', () => {
-    for (const cls of ['.lu-glass', '.lu-glass-thin', '.lu-glass-thick']) {
+  it('defines the Regular tiers + Clear variant with paired -webkit-backdrop-filter', () => {
+    for (const cls of ['.lu-glass', '.lu-glass-thin', '.lu-glass-thick', '.lu-glass-clear']) {
       expect(css).toContain(cls);
     }
     // Safari needs the prefixed property alongside the standard one.
     const webkit = css.match(/-webkit-backdrop-filter/g) ?? [];
     const standard = css.match(/(?<!-webkit-)\bbackdrop-filter/g) ?? [];
-    expect(webkit.length).toBeGreaterThanOrEqual(3);
-    expect(standard.length).toBeGreaterThanOrEqual(3);
+    expect(webkit.length).toBeGreaterThanOrEqual(4);
+    expect(standard.length).toBeGreaterThanOrEqual(4);
+  });
+
+  it('composes the three optical layers (highlight + shadow + drop) in --glass-edge', () => {
+    const edge = css.slice(css.indexOf('--glass-edge:'));
+    expect(edge).toMatch(/inset 0 1px[^;]*var\(--glass-highlight\)/); // top specular rim
   });
 
   it('carries a reduce-transparency fallback that opaques the tokens', () => {
@@ -43,8 +48,22 @@ describe('glass.css material tokens', () => {
     expect(block).toMatch(/backdrop-filter:\s*none/);
   });
 
+  it('carries an increase-contrast fallback (Apple Increase Contrast)', () => {
+    expect(css).toMatch(/@media\s*\(prefers-contrast:\s*more\)/);
+    const block = css.slice(css.indexOf('prefers-contrast'));
+    // Fills go near-opaque so text keeps a 4.5:1 ratio.
+    expect(block).toMatch(/--glass-bg:\s*rgba\([^)]*0\.9/);
+  });
+
   it('carries a @supports capability fallback for browsers without backdrop-filter', () => {
     expect(css).toMatch(/@supports\s+not\s*\(backdrop-filter:/);
+  });
+});
+
+describe('concentricRadius', () => {
+  it('subtracts padding from the outer radius (Apple concentric rule)', () => {
+    expect(concentricRadius('8px')).toBe('calc(var(--glass-radius, 14px) - 8px)');
+    expect(concentricRadius('4px', '20px')).toBe('calc(20px - 4px)');
   });
 });
 
@@ -53,6 +72,7 @@ describe('glassClass', () => {
     expect(glassClass('thin')).toBe('lu-glass-thin');
     expect(glassClass('regular')).toBe('lu-glass');
     expect(glassClass('thick')).toBe('lu-glass-thick');
+    expect(glassClass('clear')).toBe('lu-glass-clear');
     expect(glassClass()).toBe('lu-glass'); // defaults to regular
   });
 });

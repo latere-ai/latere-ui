@@ -1,50 +1,78 @@
 /* Liquid Glass material — shared foundation for every Latere product surface.
  * Opt-in entrypoint: `import 'latere-ui/glass'`.
  *
- * This file is the single source of truth for the glass "look": translucent
- * layers that blur and saturate (vibrancy) what sits behind them, a specular
- * top edge, and a soft drop shadow. Three tiers give depth:
- *   · thin    → inline controls, chips, fields
- *   · regular → chrome panels, sidebar, bars
- *   · thick   → modal / overlay scrims, popovers, command palette
+ * Modeled on Apple's Liquid Glass (macOS Tahoe / HIG "Materials"). Glass is a
+ * distinct FUNCTIONAL LAYER that floats above content — navigation and controls
+ * live on glass; content scrolls underneath. It is built from three optical
+ * layers Apple names explicitly:
+ *   · illumination → the translucent tint + real-time backdrop blur (the body)
+ *   · highlight    → a specular rim light on the top edge (catches the light)
+ *   · shadow       → a soft drop shadow that separates the layer from content
+ *
+ * Two variants, per Apple:
+ *   · Regular (default) → adaptive + always legible over ANY content. Use for
+ *     chrome: sidebars, bars, panels, dialogs, popovers. Ships in three depth
+ *     tiers (thin / regular / thick) so nested chrome reads with correct depth.
+ *   · Clear (`.lu-glass-clear`) → permanently more transparent, no adaptive
+ *     dimming; lets rich media show through. Legible ONLY with a dimming layer
+ *     beneath it — pair with `.lu-glass-dim`. Use sparingly, over media.
  *
  * Contract for adopters:
  *   1. Set a subtly gradient `--canvas` behind glass so it has something to
  *      refract; a frosted layer over a flat fill reads as dead gray.
  *   2. Glass is chrome, never content. Do NOT put a glass layer over live
  *      xterm / noVNC / video — `backdrop-filter` there tanks perf + legibility.
- *   3. The reduce-transparency fallback below is automatic: everything that
- *      styles via these tokens degrades to opaque with no extra work.
+ *      (Clear glass over media is the one exception, with a dim layer.)
+ *   3. Concentric corners: a nested control's radius = parent radius − padding.
+ *      Use `--glass-radius` on the outer surface and shrink inward.
+ *   4. Accessibility is automatic: reduce-transparency, increase-contrast, and
+ *      no-backdrop-filter fallbacks below all redefine the tokens to opaque /
+ *      high-contrast, so everything that styles through them degrades for free.
  *
  * Tokens carry literal fallbacks, so `import 'latere-ui/glass'` works even in
  * an app that never sets a value. Products override any token in their own
  * theme scope (light and `[data-theme="dark"]`). */
 
 :root {
-    /* Blur radius per tier. */
+    /* Blur radius per Regular tier. */
     --glass-blur:        20px;
     --glass-blur-thin:    8px;
     --glass-blur-thick:  40px;
 
-    /* Vibrancy: saturate color bleeding through the layer. */
+    /* Vibrancy: saturate + lift color bleeding through the layer, so tinted
+     * content shows through and glyphs stay vivid. */
     --glass-saturate:   180%;
+    --glass-brightness: 1.08;
 
-    /* Translucent tints per tier (light theme = white glass). */
+    /* Illumination — translucent tints per Regular tier (light = white glass). */
     --glass-bg:         rgba(255, 255, 255, 0.60);
-    --glass-bg-thin:    rgba(255, 255, 255, 0.45);
+    --glass-bg-thin:    rgba(255, 255, 255, 0.44);
     --glass-bg-thick:   rgba(255, 255, 255, 0.72);
 
-    /* Hairline edge + specular highlight (brighter than the opaque --border). */
-    --glass-border:     rgba(255, 255, 255, 0.55);
-    --glass-highlight:  rgba(255, 255, 255, 0.80);
+    /* Clear variant — near-transparent; relies on a dimming layer for legibility. */
+    --glass-bg-clear:   rgba(255, 255, 255, 0.14);
+    --glass-blur-clear:  3px;
+    /* Dimming layer beneath Clear glass over bright media. */
+    --glass-dim:        rgba(0, 0, 0, 0.28);
 
-    /* Composed lift: inner specular top edge + soft outer drop shadow. */
+    /* Edge + highlight. --glass-border is the hairline; --glass-highlight is the
+     * specular rim light on the top edge. */
+    --glass-border:     rgba(255, 255, 255, 0.55);
+    --glass-highlight:  rgba(255, 255, 255, 0.85);
+
+    /* Composed lift = highlight (top rim) + shadow (bottom rim, for depth) +
+     * drop shadow (separation from content). */
     --glass-edge:
-        inset 0 1px 0 0 var(--glass-highlight),
+        inset 0 1px 0.5px 0 var(--glass-highlight),
+        inset 0 -1px 0.5px 0 rgba(0, 0, 0, 0.04),
         0 8px 24px -8px rgba(0, 0, 0, 0.18);
     --glass-edge-thick:
-        inset 0 1px 0 0 var(--glass-highlight),
+        inset 0 1px 0.5px 0 var(--glass-highlight),
+        inset 0 -1px 0.5px 0 rgba(0, 0, 0, 0.05),
         0 24px 64px -16px rgba(0, 0, 0, 0.28);
+
+    /* Concentric outer radius; nested controls subtract their padding. */
+    --glass-radius:     14px;
 
     /* Base canvas the product fills behind glass. A near-flat default; adopters
      * override --canvas-gradient with a real gradient/orbs so glass refracts. */
@@ -57,78 +85,121 @@
     --glass-blur-thin:    7px;
     --glass-blur-thick:  36px;
     --glass-saturate:   160%;
+    --glass-brightness: 1.0;
 
     --glass-bg:         rgba(30, 30, 34, 0.55);
     --glass-bg-thin:    rgba(38, 38, 42, 0.42);
     --glass-bg-thick:   rgba(24, 24, 28, 0.72);
 
+    --glass-bg-clear:   rgba(40, 40, 46, 0.20);
+    --glass-dim:        rgba(0, 0, 0, 0.42);
+
     --glass-border:     rgba(255, 255, 255, 0.12);
-    --glass-highlight:  rgba(255, 255, 255, 0.14);
+    --glass-highlight:  rgba(255, 255, 255, 0.16);
 
     --glass-edge:
-        inset 0 1px 0 0 var(--glass-highlight),
+        inset 0 1px 0.5px 0 var(--glass-highlight),
+        inset 0 -1px 0.5px 0 rgba(0, 0, 0, 0.30),
         0 8px 24px -8px rgba(0, 0, 0, 0.50);
     --glass-edge-thick:
-        inset 0 1px 0 0 var(--glass-highlight),
+        inset 0 1px 0.5px 0 var(--glass-highlight),
+        inset 0 -1px 0.5px 0 rgba(0, 0, 0, 0.40),
         0 24px 64px -16px rgba(0, 0, 0, 0.66);
 }
 
-/* ---------- Tier utility classes ---------- */
+/* ---------- Tier utility classes (Regular variant) ---------- */
 /* Every glass component composes one of these, so blur/tint/edge live in one
- * place and the fallback below reaches all of them. */
+ * place and the fallbacks below reach all of them. */
 
 .lu-glass,
 .lu-glass-thin,
-.lu-glass-thick {
+.lu-glass-thick,
+.lu-glass-clear {
     border: 1px solid var(--glass-border, rgba(0, 0, 0, 0.08));
     box-shadow: var(--glass-edge);
+    border-radius: var(--glass-radius, 14px);
     /* Safari needs the -webkit- prefix; keep both. */
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-            backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+            backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
     background: var(--glass-bg, var(--bg-surface, #fff));
 }
 
 .lu-glass-thin {
-    -webkit-backdrop-filter: blur(var(--glass-blur-thin)) saturate(var(--glass-saturate));
-            backdrop-filter: blur(var(--glass-blur-thin)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur-thin)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+            backdrop-filter: blur(var(--glass-blur-thin)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
     background: var(--glass-bg-thin, var(--bg-raised, #f5f5f5));
 }
 
 .lu-glass-thick {
-    -webkit-backdrop-filter: blur(var(--glass-blur-thick)) saturate(var(--glass-saturate));
-            backdrop-filter: blur(var(--glass-blur-thick)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur-thick)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+            backdrop-filter: blur(var(--glass-blur-thick)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
     background: var(--glass-bg-thick, var(--bg-surface, #fff));
     box-shadow: var(--glass-edge-thick);
 }
 
-/* ---------- Accessibility / capability fallback ---------- */
-/* Both paths redefine the glass tokens to OPAQUE surfaces and kill the filter.
- * Because every component and shared style consumes these tokens, honoring the
- * fallback is automatic downstream — no per-component work. This mirrors the
- * existing prefers-reduced-motion handling in tokens.css. */
+/* Clear variant: minimal tint + blur so media reads through. NOT self-legible;
+ * pair with .lu-glass-dim underneath. */
+.lu-glass-clear {
+    -webkit-backdrop-filter: blur(var(--glass-blur-clear)) saturate(var(--glass-saturate));
+            backdrop-filter: blur(var(--glass-blur-clear)) saturate(var(--glass-saturate));
+    background: var(--glass-bg-clear, rgba(255, 255, 255, 0.14));
+}
 
+/* Dimming layer for Clear glass over bright media — a scrim that restores
+ * contrast for the glyphs on top. Place as a sibling/backdrop behind the glass. */
+.lu-glass-dim {
+    background: var(--glass-dim, rgba(0, 0, 0, 0.28));
+}
+
+/* ---------- Accessibility / capability fallbacks ---------- */
+/* Each path redefines the glass tokens; because every component and shared
+ * style consumes them, honoring the setting is automatic downstream. Mirrors
+ * the prefers-reduced-motion handling in tokens.css. */
+
+/* Reduce Transparency → fully opaque surfaces, filter off. */
 @media (prefers-reduced-transparency: reduce) {
     :root,
     [data-theme="dark"] {
         --glass-bg:       var(--bg-surface, #fff);
         --glass-bg-thin:  var(--bg-raised, #f5f5f5);
         --glass-bg-thick: var(--bg-surface, #fff);
+        --glass-bg-clear: var(--bg-surface, #fff);
         --glass-border:   var(--border, rgba(0, 0, 0, 0.08));
     }
     .lu-glass,
     .lu-glass-thin,
-    .lu-glass-thick {
+    .lu-glass-thick,
+    .lu-glass-clear {
         -webkit-backdrop-filter: none;
                 backdrop-filter: none;
     }
 }
 
+/* Increase Contrast → thicker, opaque borders + near-opaque fills so text keeps
+ * a 4.5:1 ratio, per Apple's Increase Contrast behavior. */
+@media (prefers-contrast: more) {
+    :root {
+        --glass-bg:       rgba(255, 255, 255, 0.92);
+        --glass-bg-thin:  rgba(255, 255, 255, 0.90);
+        --glass-bg-thick: rgba(255, 255, 255, 0.96);
+        --glass-border:   var(--border-strong, rgba(0, 0, 0, 0.30));
+    }
+    [data-theme="dark"] {
+        --glass-bg:       rgba(24, 24, 28, 0.94);
+        --glass-bg-thin:  rgba(30, 30, 34, 0.92);
+        --glass-bg-thick: rgba(20, 20, 24, 0.97);
+        --glass-border:   var(--border-strong, rgba(255, 255, 255, 0.30));
+    }
+}
+
+/* No backdrop-filter support → opaque. */
 @supports not (backdrop-filter: blur(1px)) {
     :root,
     [data-theme="dark"] {
         --glass-bg:       var(--bg-surface, #fff);
         --glass-bg-thin:  var(--bg-raised, #f5f5f5);
         --glass-bg-thick: var(--bg-surface, #fff);
+        --glass-bg-clear: var(--bg-surface, #fff);
         --glass-border:   var(--border, rgba(0, 0, 0, 0.08));
     }
 }
