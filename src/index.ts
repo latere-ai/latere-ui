@@ -98,6 +98,17 @@ export { default as GlassButton } from './components/GlassButton.vue';
 export { default as GlassField } from './components/GlassField.vue';
 export { default as GlassBadge } from './components/GlassBadge.vue';
 export { default as GlassAlert } from './components/GlassAlert.vue';
+// Overlays + imperative services.
+export { default as GlassModal } from './components/GlassModal.vue';
+export { default as GlassPopover } from './components/GlassPopover.vue';
+export { default as GlassToaster } from './components/GlassToaster.vue';
+export { default as GlassConfirmHost } from './components/GlassConfirmHost.vue';
+export { useFocusTrap } from './glass/overlay';
+export type { FocusTrapOptions } from './glass/overlay';
+export { message, dismissToast, toasts } from './glass/message';
+export type { MessageTone, MessageOptions, ToastItem } from './glass/message';
+export { confirm, resolveConfirm, currentConfirm } from './glass/confirm';
+export type { ConfirmOptions } from './glass/confirm';
 export { default as AccountMenu } from './components/AccountMenu.vue';
 export { default as AccountPrefs } from './components/AccountPrefs.vue';
 export type { AccountMenuLabels, AccountMenuItem } from './components/accountMenu';
