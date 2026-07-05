@@ -1,7 +1,7 @@
 {
   "name": "latere-ui",
-  "version": "1.9.14",
-  "description": "Shared Latere platform UI: footer, logo, console sidebar, docs renderer, and the session/auth client + store + account menu.",
+  "version": "1.10.0",
+  "description": "Shared Latere platform UI: Liquid Glass design system (material + component library), footer, logo, console sidebar, docs renderer, and the session/auth client + store + account menu.",
   "type": "module",
   "license": "MIT",
   "files": [
@@ -14,7 +14,8 @@
     "./tokens": "./src/styles/tokens.css",
     "./brand": "./src/styles/brand.css",
     "./console": "./src/styles/console.css",
-    "./docs": "./src/styles/docs.css"
+    "./docs": "./src/styles/docs.css",
+    "./glass": "./src/styles/glass.css"
   },
   "scripts": {
     "test": "vitest run",

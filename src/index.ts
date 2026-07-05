@@ -82,6 +82,11 @@ export { default as OrgSwitcher } from './components/OrgSwitcher.vue';
 export type { UseSession, UseSessionOptions } from './session/useSession';
 export type { Reauth, ReauthOptions } from './session/reauth';
 export { useClickOutside } from './composables/useClickOutside';
+
+// Liquid Glass material. The CSS ships separately as the `latere-ui/glass`
+// entrypoint; this exports the headless composable + tier helper.
+export { useGlass, glassClass } from './glass/useGlass';
+export type { UseGlass, GlassTier } from './glass/useGlass';
 export { default as AccountMenu } from './components/AccountMenu.vue';
 export { default as AccountPrefs } from './components/AccountPrefs.vue';
 export type { AccountMenuLabels, AccountMenuItem } from './components/accountMenu';

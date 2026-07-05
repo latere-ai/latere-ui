@@ -177,6 +177,55 @@ const md = createMarkdown(MarkdownIt, {
 const html = md.render(stripFirstHeading(source));
 ```
 
+## Liquid Glass
+
+The shared Apple-style glass design system: a **material** (translucent, blurred,
+specular-edged layers) plus a component library built on it, so every product
+console reads as one coherent surface. This section covers the material
+foundation; the `Glass*` component library is layered on top (see
+`specs/liquid-glass-v1.10.md`).
+
+Import the material once, then set a canvas for glass to refract against:
+
+```ts
+import 'latere-ui/glass';           // material tokens + tier utilities + fallback
+```
+
+```css
+/* Your product theme — give glass something to blur behind it. */
+:root {
+  --canvas: #f4f6f5;
+  --canvas-gradient: radial-gradient(60% 50% at 30% 0%, #eef2f0 0%, transparent 70%);
+  /* Optionally tune the tint; sensible neutral defaults ship in glass.css. */
+  --glass-bg: rgba(255, 255, 255, 0.62);
+}
+```
+
+Three material **tiers**, applied via utility class or the `useGlass()` helper:
+
+| Tier | Class | Use for |
+|------|-------|---------|
+| thin | `.lu-glass-thin` | inline controls, chips, fields |
+| regular | `.lu-glass` | chrome panels, sidebar, bars |
+| thick | `.lu-glass-thick` | modal / overlay scrims, popovers, command palette |
+
+```ts
+import { useGlass } from 'latere-ui';
+const { glassClass, reducedTransparency } = useGlass();
+// :class="glassClass('regular')"  — reducedTransparency is a reactive ref
+```
+
+Three obligations when adopting:
+
+1. **Set a `--canvas`.** Frosted glass over a flat fill reads as dead gray.
+2. **Glass is chrome, never content.** Never put a glass layer over live
+   terminal / VNC / video — `backdrop-filter` there tanks performance and
+   legibility. Keep content surfaces opaque.
+3. **The fallback is automatic.** Under `prefers-reduced-transparency: reduce`
+   (or a browser without `backdrop-filter`) every glass surface collapses to an
+   opaque `--bg-surface`/`--bg-raised`, with no per-component work, because
+   everything styles through the glass tokens.
+
 ## Develop
 
 ```sh

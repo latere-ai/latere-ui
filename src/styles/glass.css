@@ -1,0 +1,134 @@
+/* Liquid Glass material — shared foundation for every Latere product surface.
+ * Opt-in entrypoint: `import 'latere-ui/glass'`.
+ *
+ * This file is the single source of truth for the glass "look": translucent
+ * layers that blur and saturate (vibrancy) what sits behind them, a specular
+ * top edge, and a soft drop shadow. Three tiers give depth:
+ *   · thin    → inline controls, chips, fields
+ *   · regular → chrome panels, sidebar, bars
+ *   · thick   → modal / overlay scrims, popovers, command palette
+ *
+ * Contract for adopters:
+ *   1. Set a subtly gradient `--canvas` behind glass so it has something to
+ *      refract; a frosted layer over a flat fill reads as dead gray.
+ *   2. Glass is chrome, never content. Do NOT put a glass layer over live
+ *      xterm / noVNC / video — `backdrop-filter` there tanks perf + legibility.
+ *   3. The reduce-transparency fallback below is automatic: everything that
+ *      styles via these tokens degrades to opaque with no extra work.
+ *
+ * Tokens carry literal fallbacks, so `import 'latere-ui/glass'` works even in
+ * an app that never sets a value. Products override any token in their own
+ * theme scope (light and `[data-theme="dark"]`). */
+
+:root {
+    /* Blur radius per tier. */
+    --glass-blur:        20px;
+    --glass-blur-thin:    8px;
+    --glass-blur-thick:  40px;
+
+    /* Vibrancy: saturate color bleeding through the layer. */
+    --glass-saturate:   180%;
+
+    /* Translucent tints per tier (light theme = white glass). */
+    --glass-bg:         rgba(255, 255, 255, 0.60);
+    --glass-bg-thin:    rgba(255, 255, 255, 0.45);
+    --glass-bg-thick:   rgba(255, 255, 255, 0.72);
+
+    /* Hairline edge + specular highlight (brighter than the opaque --border). */
+    --glass-border:     rgba(255, 255, 255, 0.55);
+    --glass-highlight:  rgba(255, 255, 255, 0.80);
+
+    /* Composed lift: inner specular top edge + soft outer drop shadow. */
+    --glass-edge:
+        inset 0 1px 0 0 var(--glass-highlight),
+        0 8px 24px -8px rgba(0, 0, 0, 0.18);
+    --glass-edge-thick:
+        inset 0 1px 0 0 var(--glass-highlight),
+        0 24px 64px -16px rgba(0, 0, 0, 0.28);
+
+    /* Base canvas the product fills behind glass. A near-flat default; adopters
+     * override --canvas-gradient with a real gradient/orbs so glass refracts. */
+    --canvas:           var(--bg, #fafafa);
+    --canvas-gradient:  none;
+}
+
+[data-theme="dark"] {
+    --glass-blur:        18px;
+    --glass-blur-thin:    7px;
+    --glass-blur-thick:  36px;
+    --glass-saturate:   160%;
+
+    --glass-bg:         rgba(30, 30, 34, 0.55);
+    --glass-bg-thin:    rgba(38, 38, 42, 0.42);
+    --glass-bg-thick:   rgba(24, 24, 28, 0.72);
+
+    --glass-border:     rgba(255, 255, 255, 0.12);
+    --glass-highlight:  rgba(255, 255, 255, 0.14);
+
+    --glass-edge:
+        inset 0 1px 0 0 var(--glass-highlight),
+        0 8px 24px -8px rgba(0, 0, 0, 0.50);
+    --glass-edge-thick:
+        inset 0 1px 0 0 var(--glass-highlight),
+        0 24px 64px -16px rgba(0, 0, 0, 0.66);
+}
+
+/* ---------- Tier utility classes ---------- */
+/* Every glass component composes one of these, so blur/tint/edge live in one
+ * place and the fallback below reaches all of them. */
+
+.lu-glass,
+.lu-glass-thin,
+.lu-glass-thick {
+    border: 1px solid var(--glass-border, rgba(0, 0, 0, 0.08));
+    box-shadow: var(--glass-edge);
+    /* Safari needs the -webkit- prefix; keep both. */
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+            backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    background: var(--glass-bg, var(--bg-surface, #fff));
+}
+
+.lu-glass-thin {
+    -webkit-backdrop-filter: blur(var(--glass-blur-thin)) saturate(var(--glass-saturate));
+            backdrop-filter: blur(var(--glass-blur-thin)) saturate(var(--glass-saturate));
+    background: var(--glass-bg-thin, var(--bg-raised, #f5f5f5));
+}
+
+.lu-glass-thick {
+    -webkit-backdrop-filter: blur(var(--glass-blur-thick)) saturate(var(--glass-saturate));
+            backdrop-filter: blur(var(--glass-blur-thick)) saturate(var(--glass-saturate));
+    background: var(--glass-bg-thick, var(--bg-surface, #fff));
+    box-shadow: var(--glass-edge-thick);
+}
+
+/* ---------- Accessibility / capability fallback ---------- */
+/* Both paths redefine the glass tokens to OPAQUE surfaces and kill the filter.
+ * Because every component and shared style consumes these tokens, honoring the
+ * fallback is automatic downstream — no per-component work. This mirrors the
+ * existing prefers-reduced-motion handling in tokens.css. */
+
+@media (prefers-reduced-transparency: reduce) {
+    :root,
+    [data-theme="dark"] {
+        --glass-bg:       var(--bg-surface, #fff);
+        --glass-bg-thin:  var(--bg-raised, #f5f5f5);
+        --glass-bg-thick: var(--bg-surface, #fff);
+        --glass-border:   var(--border, rgba(0, 0, 0, 0.08));
+    }
+    .lu-glass,
+    .lu-glass-thin,
+    .lu-glass-thick {
+        -webkit-backdrop-filter: none;
+                backdrop-filter: none;
+    }
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+    :root,
+    [data-theme="dark"] {
+        --glass-bg:       var(--bg-surface, #fff);
+        --glass-bg-thin:  var(--bg-raised, #f5f5f5);
+        --glass-bg-thick: var(--bg-surface, #fff);
+        --glass-border:   var(--border, rgba(0, 0, 0, 0.08));
+    }
+}
