@@ -98,6 +98,13 @@ export { default as GlassButton } from './components/GlassButton.vue';
 export { default as GlassField } from './components/GlassField.vue';
 export { default as GlassBadge } from './components/GlassBadge.vue';
 export { default as GlassAlert } from './components/GlassAlert.vue';
+export { default as GlassIconButton } from './components/GlassIconButton.vue';
+export { default as GlassSwitch } from './components/GlassSwitch.vue';
+export { default as GlassSegmented } from './components/GlassSegmented.vue';
+export { default as GlassCheckbox } from './components/GlassCheckbox.vue';
+export { default as GlassRadio } from './components/GlassRadio.vue';
+export { default as GlassTabs } from './components/GlassTabs.vue';
+export type { SegmentOption, TabItem } from './glass/types';
 // Overlays + imperative services.
 export { default as GlassModal } from './components/GlassModal.vue';
 export { default as GlassPopover } from './components/GlassPopover.vue';
