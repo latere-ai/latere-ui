@@ -18,7 +18,7 @@ defineEmits<{ (e: 'click', ev: MouseEvent): void }>();
 <template>
   <button
     type="button"
-    class="lu-iconbtn lu-glass-thin"
+    class="lu-iconbtn lu-glass-ultrathin"
     :class="[`lu-iconbtn-${size}`, { 'is-pressed': pressed }]"
     :aria-label="label"
     :aria-pressed="pressed || undefined"
@@ -34,13 +34,13 @@ defineEmits<{ (e: 'click', ev: MouseEvent): void }>();
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-md, 8px);
+  border-radius: var(--radius-pill, 999px);
   color: var(--text-secondary, #666);
   cursor: pointer;
   box-shadow: none;
   transition: color 0.16s ease, background 0.16s ease;
 }
-.lu-iconbtn-md { width: 34px; height: 34px; }
+.lu-iconbtn-md { width: 36px; height: 36px; }
 .lu-iconbtn-sm { width: 28px; height: 28px; }
 .lu-iconbtn:hover { color: var(--text, #0a0a0a); }
 .lu-iconbtn.is-pressed { color: var(--accent, #171717); }

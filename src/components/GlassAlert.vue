@@ -47,8 +47,8 @@ const role = computed(() => (props.tone === 'error' ? 'alert' : 'status'));
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding: 12px 14px;
-  border-radius: var(--radius-lg, 10px);
+  padding: 14px 16px;
+  border-radius: var(--radius-md, 16px);
   border-left: 3px solid var(--tone);
   color: var(--text, #0a0a0a);
 }
@@ -56,7 +56,7 @@ const role = computed(() => (props.tone === 'error' ? 'alert' : 'status'));
 .lu-alert-title {
   font-weight: var(--fw-semibold, 600);
   font-size: var(--fs-body-sm, 13px);
-  color: var(--tone);
+  color: var(--text, #0a0a0a);
   margin-bottom: 2px;
 }
 .lu-alert-text { font-size: var(--fs-body-sm, 13px); color: var(--text-secondary, #666); }

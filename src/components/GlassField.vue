@@ -39,7 +39,7 @@ function onInput(ev: Event) {
     <textarea
       v-if="multiline"
       :id="id"
-      class="lu-field-control lu-glass-thin"
+      class="lu-field-control lu-glass-ultrathin"
       :value="modelValue"
       :rows="rows"
       :placeholder="placeholder"
@@ -51,7 +51,7 @@ function onInput(ev: Event) {
     <input
       v-else
       :id="id"
-      class="lu-field-control lu-glass-thin"
+      class="lu-field-control lu-glass-ultrathin"
       :type="type"
       :value="modelValue"
       :placeholder="placeholder"
@@ -73,13 +73,13 @@ function onInput(ev: Event) {
 }
 .lu-field-control {
   width: 100%;
-  padding: 8px 12px;
-  border-radius: var(--radius-md, 8px);
+  padding: 9px 14px;
+  border-radius: var(--radius-md, 16px);
   font-family: inherit;
   font-size: var(--fs-body-sm, 13px);
   color: var(--text, #0a0a0a);
-  /* .lu-glass-thin supplies background/blur/border; override the box-shadow so
-   * a resting field is flat, lifting only on focus. */
+  /* .lu-glass-ultrathin supplies background/blur/border; override the box-shadow
+   * so a resting field is flat, lifting only on focus. */
   box-shadow: none;
   transition: box-shadow 0.16s ease, border-color 0.16s ease;
 }

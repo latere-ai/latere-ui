@@ -24,6 +24,9 @@ defineEmits<{ (e: 'select', value: string): void }>();
 </template>
 
 <style scoped>
+/* The menu is the list content; its enclosing GlassPopover supplies the thick
+ * glass surface, padding, and radius — so the list itself stays unstyled to
+ * avoid a double-frost when nested. */
 .lu-menu { display: flex; flex-direction: column; gap: 1px; min-width: 160px; }
 .lu-menu-item {
   display: flex;
@@ -34,7 +37,7 @@ defineEmits<{ (e: 'select', value: string): void }>();
   background: none;
   cursor: pointer;
   padding: 7px 10px;
-  border-radius: var(--radius-sm, 6px);
+  border-radius: var(--radius-sm, 10px);
   font: inherit;
   font-size: var(--fs-body-sm, 13px);
   color: var(--text, #0a0a0a);

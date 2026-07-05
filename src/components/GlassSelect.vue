@@ -58,7 +58,7 @@ function onKey(e: KeyboardEvent) {
   <div ref="root" class="lu-select">
     <button
       type="button"
-      class="lu-select-trigger lu-glass-thin"
+      class="lu-select-trigger lu-glass-ultrathin"
       :class="{ 'is-open': open }"
       role="combobox"
       aria-haspopup="listbox"
@@ -99,8 +99,8 @@ function onKey(e: KeyboardEvent) {
   justify-content: space-between;
   gap: 8px;
   width: 100%;
-  padding: 8px 12px;
-  border-radius: var(--radius-md, 8px);
+  padding: 9px 16px;
+  border-radius: var(--radius-pill, 999px);
   font: inherit;
   font-size: var(--fs-body-sm, 13px);
   color: var(--text, #0a0a0a);
@@ -119,20 +119,21 @@ function onKey(e: KeyboardEvent) {
   z-index: 900;
   max-height: 240px;
   overflow-y: auto;
-  padding: 4px;
-  border-radius: var(--radius-lg, 10px);
+  padding: 6px;
+  border-radius: var(--radius-md, 16px);
   list-style: none;
   margin: 0;
 }
 .lu-select-option {
   padding: 7px 10px;
-  border-radius: var(--radius-sm, 6px);
+  border-radius: var(--radius-sm, 12px);
   font-size: var(--fs-body-sm, 13px);
   color: var(--text, #0a0a0a);
   cursor: pointer;
 }
 .lu-select-option.is-active { background: var(--accent-subtle, rgba(0, 0, 0, 0.04)); }
-.lu-select-option.is-selected { font-weight: var(--fw-semibold, 600); color: var(--accent, #171717); }
+.lu-select-option.is-selected { font-weight: var(--fw-semibold, 600); color: var(--text, #0a0a0a); background: var(--glass-pill-fill, rgba(255, 255, 255, 0.70)); }
+.lu-select-option.is-selected.is-active { background: var(--glass-pill-fill, rgba(255, 255, 255, 0.70)); }
 .lu-select-option.is-disabled { opacity: 0.45; cursor: not-allowed; }
 .lu-select-enter-active, .lu-select-leave-active { transition: opacity 0.14s ease, transform 0.14s ease; }
 .lu-select-enter-from, .lu-select-leave-to { opacity: 0; transform: translateY(-4px); }

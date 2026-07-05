@@ -11,7 +11,7 @@ withDefaults(defineProps<{
 <template>
   <span class="lu-tip-wrap">
     <slot />
-    <span class="lu-tip lu-glass-thick" :class="`lu-tip--${placement}`" role="tooltip">{{ text }}</span>
+    <span class="lu-tip lu-glass-smoke" :class="`lu-tip--${placement}`" role="tooltip">{{ text }}</span>
   </span>
 </template>
 
@@ -22,10 +22,16 @@ withDefaults(defineProps<{
   left: 50%;
   transform: translateX(-50%) translateY(2px);
   z-index: 950;
-  padding: 4px 8px;
-  border-radius: var(--radius-sm, 6px);
+  padding: 5px 13px;
+  border-radius: var(--radius-pill, 999px);
   font-size: var(--fs-micro, 12px);
-  color: var(--text, #0a0a0a);
+  background: var(--glass-smoke, rgba(10, 10, 10, 0.68));
+  color: var(--glass-smoke-ink, #fafafa);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+          backdrop-filter: blur(24px) saturate(180%);
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;

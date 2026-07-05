@@ -28,7 +28,7 @@ const checked = computed(() => props.modelValue === props.value);
       :disabled="disabled"
       @change="emit('update:modelValue', value)"
     />
-    <span class="lu-radio-dot lu-glass-thin" aria-hidden="true" />
+    <span class="lu-radio-dot lu-glass-ultrathin" aria-hidden="true" />
     <span v-if="label" class="lu-radio-label">{{ label }}</span>
   </label>
 </template>
@@ -39,8 +39,8 @@ const checked = computed(() => props.modelValue === props.value);
 .lu-radio-native { position: absolute; opacity: 0; width: 0; height: 0; }
 .lu-radio-dot {
   position: relative;
-  width: 18px;
-  height: 18px;
+  width: 19px;
+  height: 19px;
   border-radius: 50%;
   box-shadow: none;
   transition: border-color 0.14s ease;
@@ -58,7 +58,7 @@ const checked = computed(() => props.modelValue === props.value);
   transform: scale(0.6);
   transition: opacity 0.14s ease, transform 0.14s ease;
 }
-.lu-radio-native:checked + .lu-radio-dot { border-color: var(--accent, #171717); }
+.lu-radio-native:checked + .lu-radio-dot { border: 1.5px solid var(--accent, #171717); }
 .lu-radio-native:checked + .lu-radio-dot::after { opacity: 1; transform: scale(1); }
 .lu-radio-native:focus-visible + .lu-radio-dot { outline: 2px solid var(--accent, #171717); outline-offset: 2px; }
 .lu-radio-label { font-size: var(--fs-body-sm, 13px); color: var(--text, #0a0a0a); }

@@ -26,7 +26,7 @@ function toggle() {
     :disabled="disabled"
     @click="toggle"
   >
-    <span class="lu-switch-track" :class="modelValue ? 'lu-glass-thin' : ''">
+    <span class="lu-switch-track" :class="modelValue ? '' : 'lu-glass-ultrathin'">
       <span class="lu-switch-thumb" />
     </span>
     <span v-if="label" class="lu-switch-label">{{ label }}</span>
@@ -47,26 +47,32 @@ function toggle() {
 }
 .lu-switch-track {
   position: relative;
-  width: 36px;
-  height: 21px;
-  border-radius: 999px;
-  background: var(--bg-raised, #e5e5e5);
-  border: 1px solid var(--border, rgba(0, 0, 0, 0.08));
-  transition: background 0.18s ease;
+  width: 40px;
+  height: 23px;
+  border-radius: var(--radius-pill, 999px);
+  /* OFF: .lu-glass-ultrathin supplies the fill; flatten the resting track. */
+  box-shadow: none;
+  transition: background 0.18s ease, box-shadow 0.18s ease;
 }
-.lu-switch.is-on .lu-switch-track { background: var(--accent, #171717); }
+.lu-switch.is-on .lu-switch-track {
+  background: var(--glass-smoke-strong, rgba(10, 10, 10, 0.82));
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
 .lu-switch-thumb {
   position: absolute;
-  top: 1px;
-  left: 1px;
-  width: 17px;
-  height: 17px;
+  top: 2px;
+  left: 2px;
+  width: 19px;
+  height: 19px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--bg-surface, #fff);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-  transition: transform 0.18s ease;
+  transition: transform 0.18s ease, background 0.18s ease;
 }
-.lu-switch.is-on .lu-switch-thumb { transform: translateX(15px); }
+.lu-switch.is-on .lu-switch-thumb {
+  background: var(--glass-smoke-ink, #fafafa);
+  transform: translateX(17px);
+}
 .lu-switch-label { font-size: var(--fs-body-sm, 13px); }
 .lu-switch:disabled { opacity: 0.5; cursor: not-allowed; }
 .lu-switch:focus-visible { outline: 2px solid var(--accent, #171717); outline-offset: 3px; border-radius: 4px; }

@@ -57,15 +57,15 @@ describe('GlassField', () => {
     expect(w.get('label').attributes('for')).toBe(input.attributes('id'));
   });
 
-  it('sits on thin glass', () => {
-    expect(mount(GlassField).get('input').classes()).toContain('lu-glass-thin');
+  it('sits on ultrathin glass', () => {
+    expect(mount(GlassField).get('input').classes()).toContain('lu-glass-ultrathin');
   });
 });
 
 describe('GlassBadge', () => {
   it('maps tone to a state token and glass by default', () => {
     const w = mount(GlassBadge, { props: { tone: 'error' }, slots: { default: 'Error' } });
-    expect(w.classes()).toContain('lu-glass-thin');
+    expect(w.classes()).toContain('lu-glass-ultrathin');
     expect(w.attributes('style')).toContain('--state-error');
     expect(w.text()).toBe('Error');
   });
@@ -73,7 +73,7 @@ describe('GlassBadge', () => {
   it('renders a solid fill and optional dot', () => {
     const w = mount(GlassBadge, { props: { solid: true, dot: true } });
     expect(w.classes()).toContain('is-solid');
-    expect(w.classes()).not.toContain('lu-glass-thin');
+    expect(w.classes()).not.toContain('lu-glass-ultrathin');
     expect(w.find('.lu-badge-dot').exists()).toBe(true);
   });
 });

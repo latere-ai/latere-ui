@@ -29,7 +29,7 @@ withDefaults(defineProps<{
   background: linear-gradient(
     90deg,
     var(--bg-raised, #ececec) 25%,
-    var(--bg-code, #f4f4f4) 37%,
+    var(--bg-surface, #f4f4f4) 37%,
     var(--bg-raised, #ececec) 63%
   );
   background-size: 400% 100%;

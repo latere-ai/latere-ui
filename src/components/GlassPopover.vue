@@ -49,7 +49,7 @@ const panelClass = computed(() => `lu-pop-panel--${props.placement}`);
   z-index: 900;
   min-width: 180px;
   padding: 6px;
-  border-radius: var(--radius-lg, 10px);
+  border-radius: var(--radius-md, 16px);
 }
 .lu-pop-panel--match { min-width: 100%; }
 .lu-pop-panel--bottom-start { top: calc(100% + 6px); left: 0; }

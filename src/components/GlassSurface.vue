@@ -37,7 +37,7 @@ const classes = computed(() => [
 <style scoped>
 .lu-gs {
   position: relative;
-  border-radius: var(--glass-radius, 14px);
+  border-radius: var(--glass-radius, 22px);
   color: var(--text, #0a0a0a);
 }
 .lu-gs-interactive {

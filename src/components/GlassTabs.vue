@@ -55,32 +55,30 @@ function onKey(e: KeyboardEvent, i: number) {
 .lu-tabs {
   display: flex;
   gap: 4px;
-  border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.08));
 }
 .lu-tab {
   position: relative;
   border: none;
   background: none;
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 7px 15px;
+  border-radius: var(--radius-pill, 999px);
   font: inherit;
   font-size: var(--fs-body-sm, 13px);
   font-weight: var(--fw-medium, 500);
   color: var(--text-secondary, #666);
-  transition: color 0.14s ease;
+  transition: color 0.14s ease, background 0.14s ease;
 }
 .lu-tab:hover { color: var(--text, #0a0a0a); }
-.lu-tab.is-active { color: var(--accent, #171717); }
+/* v2: the active tab is a glass pill, not an underline. */
+.lu-tab.is-active {
+  color: var(--text, #0a0a0a);
+  background: var(--glass-pill-fill);
+  box-shadow: var(--shadow, 0 1px 2px rgba(0, 0, 0, 0.06)), var(--glass-edge-top);
+}
+/* The indicator span is superseded by the pill; keep markup, drop the bar. */
 .lu-tab-ind {
-  position: absolute;
-  left: 8px;
-  right: 8px;
-  bottom: -1px;
-  height: 2px;
-  border-radius: 2px 2px 0 0;
-  background: var(--accent, #171717);
-  box-shadow: none;
-  border: none;
+  display: none;
 }
 .lu-tab:focus-visible { outline: 2px solid var(--accent, #171717); outline-offset: -2px; border-radius: 4px; }
 @media (prefers-reduced-motion: reduce) { .lu-tab { transition: none; } }

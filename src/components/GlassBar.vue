@@ -32,7 +32,7 @@ withDefaults(defineProps<{
   align-items: center;
   gap: var(--space-3, 12px);
   padding: var(--space-2, 8px) var(--space-4, 16px);
-  border-radius: var(--glass-radius, 14px);
+  border-radius: var(--radius-pill, 999px);
 }
 .lu-bar-sticky {
   position: sticky;

@@ -17,7 +17,7 @@ const pct = computed(() => {
 
 <template>
   <div
-    class="lu-progress lu-glass-thin"
+    class="lu-progress lu-glass-ultrathin"
     role="progressbar"
     :aria-valuenow="value"
     aria-valuemin="0"
@@ -32,7 +32,7 @@ const pct = computed(() => {
 .lu-progress {
   position: relative;
   width: 100%;
-  height: 8px;
+  height: 10px;
   border-radius: 999px;
   overflow: hidden;
   box-shadow: none;
@@ -41,7 +41,7 @@ const pct = computed(() => {
   display: block;
   height: 100%;
   border-radius: 999px;
-  background: var(--accent, #171717);
+  background: var(--glass-smoke-strong, #171717);
   transition: width 0.24s ease;
 }
 @media (prefers-reduced-motion: reduce) { .lu-progress-fill { transition: none; } }

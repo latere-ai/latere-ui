@@ -23,6 +23,9 @@ withDefaults(defineProps<{
 </template>
 
 <style scoped>
-.lu-panel { padding: var(--space-5, 20px); }
+.lu-panel {
+  padding: var(--space-5, 20px);
+  border-radius: var(--radius-lg, 22px);
+}
 .lu-panel-flush { padding: 0; }
 </style>

@@ -82,7 +82,7 @@ function onScrim() {
   width: 100%;
   max-height: calc(100vh - 48px);
   overflow-y: auto;
-  border-radius: var(--radius-2xl, 16px);
+  border-radius: var(--radius-xl, 28px);
   padding: 0;
 }
 .lu-modal-head { padding: 18px 20px 0; }

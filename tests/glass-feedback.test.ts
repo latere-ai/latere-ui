@@ -45,6 +45,8 @@ describe('GlassTooltip', () => {
     expect(w.find('button').exists()).toBe(true);
     const tip = w.get('[role="tooltip"]');
     expect(tip.text()).toBe('Copy');
-    expect(tip.classes()).toContain('lu-glass-thick');
+    // v2: tooltips are ink glass (smoke) so the reduced-transparency fallback
+    // keeps a dark fill + light ink for contrast.
+    expect(tip.classes()).toContain('lu-glass-smoke');
   });
 });

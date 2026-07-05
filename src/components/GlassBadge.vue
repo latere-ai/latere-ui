@@ -29,7 +29,7 @@ const color = computed(() => TONE_VAR[props.tone] ?? TONE_VAR.neutral);
 <template>
   <span
     class="lu-badge"
-    :class="[{ 'lu-glass-thin': !solid, 'is-solid': solid }]"
+    :class="[{ 'lu-glass-ultrathin': !solid, 'is-solid': solid }]"
     :style="{ '--tone': color }"
   >
     <span v-if="dot" class="lu-badge-dot" aria-hidden="true" />
@@ -42,7 +42,7 @@ const color = computed(() => TONE_VAR[props.tone] ?? TONE_VAR.neutral);
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 2px 9px;
+  padding: 3px 11px;
   border-radius: var(--radius-pill, 999px);
   font-size: var(--fs-micro, 12px);
   font-weight: var(--fw-medium, 500);
@@ -52,8 +52,9 @@ const color = computed(() => TONE_VAR[props.tone] ?? TONE_VAR.neutral);
 }
 .is-solid {
   background: var(--tone);
-  color: var(--bg-surface, #fff);
+  color: var(--glass-smoke-ink, #fff);
   border: 1px solid transparent;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 .lu-badge-dot {
   width: 6px;

@@ -73,8 +73,16 @@ function onScrim() { if (props.closeOnScrim) close(); }
   overflow-y: auto;
   border-radius: 0;
 }
-.lu-drawer--right { margin-left: auto; border-left: 1px solid var(--glass-border); }
-.lu-drawer--left { margin-right: auto; border-right: 1px solid var(--glass-border); }
+.lu-drawer--right {
+  margin-left: auto;
+  border-left: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl, 28px) 0 0 var(--radius-xl, 28px);
+}
+.lu-drawer--left {
+  margin-right: auto;
+  border-right: 1px solid var(--glass-border);
+  border-radius: 0 var(--radius-xl, 28px) var(--radius-xl, 28px) 0;
+}
 .lu-drawer-head { padding: 18px 20px 6px; }
 .lu-drawer-title { font-size: var(--fs-h3, 1.15rem); font-weight: var(--fw-semibold, 600); color: var(--text, #0a0a0a); }
 .lu-drawer-body { padding: 12px 20px 20px; }

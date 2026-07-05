@@ -13,7 +13,7 @@ withDefaults(defineProps<{
 </script>
 
 <template>
-  <div class="lu-table-wrap">
+  <div class="lu-table-wrap lu-glass">
     <table class="lu-table">
       <thead>
         <tr class="lu-table-head lu-glass">
@@ -46,7 +46,10 @@ withDefaults(defineProps<{
 </template>
 
 <style scoped>
-.lu-table-wrap { overflow-x: auto; }
+.lu-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-xl, 28px);
+}
 .lu-table {
   width: 100%;
   border-collapse: separate;
@@ -59,8 +62,12 @@ withDefaults(defineProps<{
   z-index: 2;
   text-align: left;
   padding: 9px 12px;
-  font-weight: var(--fw-semibold, 600);
-  color: var(--text-secondary, #666);
+  font-family: var(--font-mono, ui-monospace, 'SF Mono', Menlo, monospace);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted, #999);
   border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.08));
   white-space: nowrap;
 }

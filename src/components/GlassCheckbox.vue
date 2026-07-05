@@ -26,7 +26,7 @@ function onChange(e: Event) {
       :disabled="disabled"
       @change="onChange"
     />
-    <span class="lu-check-box lu-glass-thin" aria-hidden="true">
+    <span class="lu-check-box lu-glass-ultrathin" aria-hidden="true">
       <svg class="lu-check-tick" viewBox="0 0 12 12" fill="none">
         <path d="M2.5 6.2l2.2 2.2 4.6-4.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
       </svg>
@@ -43,14 +43,14 @@ function onChange(e: Event) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: var(--radius-sm, 5px);
+  width: 19px;
+  height: 19px;
+  border-radius: var(--radius-xs, 7px);
   box-shadow: none;
   transition: background 0.14s ease, border-color 0.14s ease;
 }
-.lu-check-tick { width: 12px; height: 12px; color: #fff; opacity: 0; transform: scale(0.8); transition: opacity 0.14s ease, transform 0.14s ease; }
-.lu-check-native:checked + .lu-check-box { background: var(--accent, #171717); border-color: var(--accent, #171717); }
+.lu-check-tick { width: 12px; height: 12px; color: var(--glass-smoke-ink, #fafafa); opacity: 0; transform: scale(0.8); transition: opacity 0.14s ease, transform 0.14s ease; }
+.lu-check-native:checked + .lu-check-box { background: var(--glass-smoke-strong, rgba(10, 10, 10, 0.82)); border-color: transparent; }
 .lu-check-native:checked + .lu-check-box .lu-check-tick { opacity: 1; transform: scale(1); }
 .lu-check-native:focus-visible + .lu-check-box { outline: 2px solid var(--accent, #171717); outline-offset: 2px; }
 .lu-check-label { font-size: var(--fs-body-sm, 13px); color: var(--text, #0a0a0a); }

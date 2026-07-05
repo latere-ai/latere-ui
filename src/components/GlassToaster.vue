@@ -52,14 +52,16 @@ const TONE_VAR: Record<MessageTone, string> = {
   min-width: 220px;
   max-width: 420px;
   padding: 10px 14px;
-  border-radius: var(--radius-lg, 10px);
+  border-radius: var(--radius-pill, 999px);
   cursor: pointer;
   color: var(--text, #0a0a0a);
 }
 .lu-toast-bar {
-  width: 3px;
-  align-self: stretch;
-  border-radius: 2px;
+  flex: none;
+  width: 6px;
+  height: 6px;
+  align-self: center;
+  border-radius: 50%;
   background: var(--tone);
 }
 .lu-toast-text { font-size: var(--fs-body-sm, 13px); }

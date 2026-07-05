@@ -53,15 +53,15 @@ function onKey(e: KeyboardEvent, i: number) {
 .lu-seg {
   display: inline-flex;
   gap: 2px;
-  padding: 2px;
-  border-radius: var(--radius-md, 8px);
+  padding: 3px;
+  border-radius: var(--radius-pill, 999px);
 }
 .lu-seg-item {
   border: none;
   background: transparent;
   cursor: pointer;
-  padding: 4px 12px;
-  border-radius: var(--radius-sm, 6px);
+  padding: 5px 14px;
+  border-radius: var(--radius-pill, 999px);
   font: inherit;
   font-size: var(--fs-micro, 12px);
   font-weight: var(--fw-medium, 500);
@@ -69,7 +69,7 @@ function onKey(e: KeyboardEvent, i: number) {
   transition: background 0.14s ease, color 0.14s ease;
 }
 .lu-seg-item.is-active {
-  background: var(--bg-surface, #fff);
+  background: var(--glass-pill-fill, var(--bg-surface, #fff));
   color: var(--text, #0a0a0a);
   box-shadow: var(--shadow, 0 1px 2px rgba(0, 0, 0, 0.06));
 }

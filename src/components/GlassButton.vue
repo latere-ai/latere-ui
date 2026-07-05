@@ -64,25 +64,42 @@ function onClick(ev: MouseEvent) {
   transition: background 0.16s ease, box-shadow 0.16s ease, opacity 0.16s ease;
   white-space: nowrap;
 }
-.lu-btn-md { padding: 8px 16px; font-size: var(--fs-body-sm, 13px); }
-.lu-btn-sm { padding: 5px 11px; font-size: var(--fs-micro, 12px); }
+.lu-btn-md { padding: 10px 20px; font-size: var(--fs-body-sm, 13px); }
+.lu-btn-sm { padding: 7px 16px; font-size: var(--fs-micro, 12px); }
 
 /* Default: thin glass (the .lu-glass-thin class supplies bg/blur/edge/border). */
+.lu-btn-glass { color: var(--text-secondary, #666); }
 .lu-btn-glass:hover { box-shadow: var(--glass-edge-thick, var(--glass-edge)); }
 
+/* Primary: smoked ink glass — a translucent dark capsule, not a flat accent fill. */
 .lu-btn-primary {
-  background: var(--accent, #171717);
-  color: var(--bg-surface, #fff);
+  background: var(--glass-smoke-strong, #171717);
+  color: var(--glass-smoke-ink, #fafafa);
   border-color: transparent;
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow:
+    0 14px 34px rgba(0, 0, 0, 0.24),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
 }
-.lu-btn-primary:hover { background: var(--accent-hover, #404040); }
+.lu-btn-primary:hover {
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.3),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+}
 
-.lu-btn-ghost { background: transparent; }
+.lu-btn-ghost { background: transparent; color: var(--text-secondary, #666); }
 .lu-btn-ghost:hover { background: var(--accent-subtle, rgba(0, 0, 0, 0.04)); }
 
 .lu-btn-danger {
   background: var(--state-error, #a8412e);
-  color: #fff;
+  color: #fafafa;
+  box-shadow:
+    0 14px 34px rgba(168, 65, 46, 0.3),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
 }
 .lu-btn-danger:hover { filter: brightness(0.94); }
 
