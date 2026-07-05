@@ -25,18 +25,23 @@ html { overscroll-behavior: none; }
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 240px;
+    width: 248px;
     box-sizing: border-box;
     padding: 14px 12px 12px;
-    gap: 8px;
-    /* Regular-tier Liquid Glass. Falls back to an opaque --bg-surface for
-     * products that have not set glass tokens (or under reduce-transparency /
-     * increase-contrast, where latere-ui/glass redefines --glass-bg to opaque),
-     * so the rail is never broken-transparent. */
+    gap: 10px;
+    /* v2 (1d): a FLOATING regular-tier glass slab, not a flush rail. The host
+     * console layout insets it (e.g. a 16px-padded shell) so it reads as a
+     * detached capsule; here we supply the rounded glass material + shadow.
+     * Falls back to an opaque --bg-surface for products that have not set glass
+     * tokens (or under reduce-transparency / increase-contrast, where
+     * latere-ui/glass redefines --glass-bg to opaque), so the rail is never
+     * broken-transparent. */
     background: var(--glass-bg, var(--bg-surface, #fff));
     -webkit-backdrop-filter: blur(var(--glass-blur, 0)) saturate(var(--glass-saturate, 100%));
             backdrop-filter: blur(var(--glass-blur, 0)) saturate(var(--glass-saturate, 100%));
-    border-right: 1px solid var(--glass-border, var(--border, rgba(0, 0, 0, 0.08)));
+    border: 1px solid var(--glass-border, var(--border, rgba(0, 0, 0, 0.08)));
+    border-radius: var(--radius-xl, 28px);
+    box-shadow: var(--shadow-glass, none);
     color: var(--text, #0a0a0a);
     transition: width 0.16s ease;
 }
@@ -119,9 +124,10 @@ html { overscroll-behavior: none; }
     text-overflow: ellipsis;
 }
 .lu-cs-brand-sub {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
+    font-family: var(--font-mono, ui-monospace, 'SF Mono', Menlo, monospace);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--text-muted, #a0a0a0);
 }
@@ -129,10 +135,10 @@ html { overscroll-behavior: none; }
     appearance: none;
     background: transparent;
     border: 0;
-    padding: 4px;
+    padding: 5px;
     display: grid;
     place-items: center;
-    border-radius: 6px;
+    border-radius: var(--radius-pill, 999px);
     color: var(--text-muted, #a0a0a0);
     cursor: pointer;
     flex-shrink: 0;
@@ -140,7 +146,7 @@ html { overscroll-behavior: none; }
 }
 .lu-cs-fold:hover {
     color: var(--text, #0a0a0a);
-    background: var(--bg-raised, #f5f5f5);
+    background: var(--glass-pill-fill, var(--bg-raised, #f5f5f5));
 }
 
 /* ===== Built-in search bar (⌘K) ===== */
@@ -150,22 +156,22 @@ html { overscroll-behavior: none; }
     gap: 8px;
     width: 100%;
     box-sizing: border-box;
-    margin: 6px 0 4px;
+    margin: 2px 0;
     min-height: 38px;
-    padding: 0 12px;
-    border: 1px solid var(--border, rgba(0, 0, 0, 0.08));
-    border-radius: 9px;
-    background: var(--bg-surface, #fff);
+    padding: 0 8px 0 14px;
+    border: 1px solid var(--glass-border, var(--border, rgba(0, 0, 0, 0.08)));
+    border-radius: var(--radius-pill, 999px);
+    background: var(--glass-bg-ultrathin, var(--bg-raised, #f5f5f5));
     color: var(--text-muted, #a0a0a0);
     font: inherit;
-    font-size: 13.5px;
+    font-size: 13px;
     line-height: 1;
     cursor: pointer;
     transition: border-color 0.13s, background 0.13s, color 0.13s;
 }
 .lu-cs-search:hover {
     border-color: var(--border-strong, var(--border, rgba(0, 0, 0, 0.16)));
-    background: var(--bg-raised, #f5f5f5);
+    background: var(--glass-pill-fill, var(--bg-raised, #f5f5f5));
     color: var(--text, #0a0a0a);
 }
 .lu-cs-search-ic {
@@ -179,10 +185,12 @@ html { overscroll-behavior: none; }
 }
 .lu-cs-search-hint {
     flex-shrink: 0;
-    font-size: 11px;
-    padding: 1px 5px;
-    border-radius: 4px;
-    background: var(--bg-raised, #f5f5f5);
+    font-family: var(--font-mono, ui-monospace, 'SF Mono', Menlo, monospace);
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: var(--radius-pill, 999px);
+    background: var(--glass-bg-ultrathin, var(--bg-raised, #f5f5f5));
+    border: 1px solid var(--glass-border, var(--border, rgba(0, 0, 0, 0.08)));
     color: var(--text-muted, #a0a0a0);
 }
 .lu-cs-search[data-collapsed="true"] {
@@ -195,7 +203,7 @@ html { overscroll-behavior: none; }
 .lu-cs-nav {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 16px;
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
@@ -204,33 +212,34 @@ html { overscroll-behavior: none; }
 .lu-cs-group {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
 }
 .lu-cs-group-pinned {
     margin-top: auto;
 }
 .lu-cs-group-label {
+    font-family: var(--font-mono, ui-monospace, 'SF Mono', Menlo, monospace);
     font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.07em;
+    font-weight: 500;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--text-muted, #a0a0a0);
-    padding: 2px 10px 4px;
+    padding: 2px 14px 5px;
 }
 
 .lu-cs-item {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 7px 10px;
-    border-radius: 8px;
+    padding: 8px 14px;
+    border-radius: var(--radius-pill, 999px);
     color: var(--text-secondary, #666);
     text-decoration: none;
     font-size: 13px;
     line-height: 1.2;
     cursor: pointer;
     position: relative;
-    transition: color 0.13s, background 0.13s;
+    transition: color 0.13s, background 0.13s, box-shadow 0.13s;
     /* Reset so action rows rendered as <button> match link rows. */
     appearance: none;
     width: 100%;
@@ -241,33 +250,17 @@ html { overscroll-behavior: none; }
     text-align: left;
 }
 .lu-cs-item:hover {
-    background: var(--bg-raised, #f5f5f5);
+    background: var(--glass-pill-fill, var(--bg-raised, #f5f5f5));
     color: var(--text, #0a0a0a);
 }
+/* v2 (1d): the active row is a filled capsule with a specular top edge — the
+ * v1 3px accent bar is gone. The pill fill + rim carry the state in both the
+ * expanded and collapsed rail, so no per-mode indicator is needed. */
 .lu-cs-item[data-active="true"] {
-    background: var(--bg-raised, #f5f5f5);
+    background: var(--glass-pill-fill, var(--bg-raised, #f5f5f5));
+    box-shadow: var(--shadow, 0 1px 3px rgba(0, 0, 0, 0.05)), var(--glass-edge-top, none);
     color: var(--text, #0a0a0a);
     font-weight: 500;
-}
-/* The active icon is accent-colored — a clear, theme-independent indicator that
- * reads even where bg-raised barely differs from the rail (e.g. cella's sunken
- * rail), and it carries the active state in the collapsed rail (no bar there). */
-.lu-cs-item[data-active="true"] .lu-cs-item-icon {
-    color: var(--accent, #5b6cf0);
-}
-.lu-cs[data-collapsed="true"] .lu-cs-item[data-active="true"] {
-    background: color-mix(in srgb, var(--accent, #5b6cf0) 14%, transparent);
-}
-.lu-cs-item[data-active="true"]::before {
-    content: "";
-    position: absolute;
-    left: 2px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 3px;
-    height: 16px;
-    border-radius: 2px;
-    background: var(--accent, #5b6cf0);
 }
 .lu-cs-item[data-disabled="true"] {
     opacity: 0.45;
@@ -275,19 +268,13 @@ html { overscroll-behavior: none; }
     pointer-events: none;
 }
 .lu-cs[data-collapsed="true"] .lu-cs-item {
-    /* A centered square button so the icon + its highlight sit dead-center in
-     * the rail (a full-width pill reads as left-weighted next to the accent
-     * bar). */
+    /* A centered square-ish capsule so the icon sits dead-center in the folded
+     * rail. The active pill-fill still reads centered here. */
     justify-content: center;
     width: 40px;
     margin-left: auto;
     margin-right: auto;
     padding: 9px 0;
-}
-/* The left accent bar looks off-center on a centered square — the bg highlight
- * carries the active state in the collapsed rail. */
-.lu-cs[data-collapsed="true"] .lu-cs-item[data-active="true"]::before {
-    display: none;
 }
 .lu-cs-item-icon {
     flex-shrink: 0;
@@ -320,9 +307,9 @@ html { overscroll-behavior: none; }
     flex-shrink: 0;
     font-size: 11px;
     line-height: 1;
-    padding: 2px 6px;
-    border-radius: 999px;
-    background: var(--bg-raised, #f5f5f5);
+    padding: 3px 8px;
+    border-radius: var(--radius-pill, 999px);
+    background: var(--glass-bg-ultrathin, var(--bg-raised, #f5f5f5));
     color: var(--text-muted, #a0a0a0);
 }
 .lu-cs-item[data-active="true"] .lu-cs-badge {

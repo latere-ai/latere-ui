@@ -39,10 +39,19 @@ describe('console.css', () => {
     const rule = css.slice(css.indexOf('.lu-cs-foot .lu-am-dd'));
     expect(rule).toMatch(/min-width:\s*248px\s*!important/);
   });
-  it("centers collapsed nav items as squares and drops the accent bar", () => {
-    const css2 = readFileSync(resolve(process.cwd(), "src/styles/console.css"), "utf8");
-    const blk = css2.slice(css2.indexOf("[data-collapsed=\"true\"] .lu-cs-item"));
+  it("centers collapsed nav items as squares (v2 capsule rail)", () => {
+    const blk = css.slice(css.indexOf("[data-collapsed=\"true\"] .lu-cs-item"));
     expect(blk).toMatch(/margin-left:\s*auto/);
-    expect(blk).toMatch(/\[data-active=\"true\"\]::before\s*\{\s*display:\s*none/);
+  });
+
+  it("v2: active row is a filled capsule, not a 3px accent bar", () => {
+    const active = css.slice(css.indexOf('.lu-cs-item[data-active="true"] {'));
+    // Pill fill carries the active state.
+    expect(active).toMatch(/background:\s*var\(--glass-pill-fill/);
+    // The v1 accent-bar pseudo-element is gone entirely.
+    expect(css).not.toMatch(/\.lu-cs-item\[data-active="true"\]::before/);
+    // Nav rows are capsules.
+    const item = css.slice(css.indexOf('.lu-cs-item {'), css.indexOf('.lu-cs-item:hover'));
+    expect(item).toMatch(/border-radius:\s*var\(--radius-pill/);
   });
 });
