@@ -121,6 +121,12 @@ export { default as GlassSpinner } from './components/GlassSpinner.vue';
 export { default as GlassProgress } from './components/GlassProgress.vue';
 export { default as GlassSkeleton } from './components/GlassSkeleton.vue';
 export { default as GlassTooltip } from './components/GlassTooltip.vue';
+// Containers.
+export { default as GlassMenu } from './components/GlassMenu.vue';
+export { default as GlassSelect } from './components/GlassSelect.vue';
+export { default as GlassDrawer } from './components/GlassDrawer.vue';
+export { default as GlassTable } from './components/GlassTable.vue';
+export type { MenuItem, SelectOption, TableColumn } from './glass/types';
 export { default as AccountMenu } from './components/AccountMenu.vue';
 export { default as AccountPrefs } from './components/AccountPrefs.vue';
 export type { AccountMenuLabels, AccountMenuItem } from './components/accountMenu';

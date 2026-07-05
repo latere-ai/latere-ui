@@ -13,3 +13,29 @@ export interface TabItem {
   value: string;
   label: string;
 }
+
+/** One row in a GlassMenu. */
+export interface MenuItem {
+  value: string;
+  label: string;
+  /** Style as destructive. */
+  danger?: boolean;
+  disabled?: boolean;
+}
+
+/** One option in a GlassSelect. */
+export interface SelectOption {
+  value: string;
+  label: string;
+  disabled?: boolean;
+}
+
+/** A column definition for GlassTable. */
+export interface TableColumn {
+  key: string;
+  label: string;
+  /** CSS text-align for the column. */
+  align?: 'left' | 'center' | 'right';
+  /** Fixed/max width, any CSS length. */
+  width?: string;
+}
