@@ -1,0 +1,109 @@
+<script setup lang="ts">
+// A glass action control. Capsule-shaped (Apple's control shape); the default
+// variant is thin glass, `primary` is a prominent accent fill, `danger` is
+// destructive. Composes the material so it inherits the a11y fallbacks.
+// Requires `import 'latere-ui/glass'`.
+import { computed } from 'vue';
+
+const props = withDefaults(defineProps<{
+  variant?: 'glass' | 'primary' | 'ghost' | 'danger';
+  size?: 'sm' | 'md';
+  /** Show a spinner and block interaction. */
+  loading?: boolean;
+  disabled?: boolean;
+  /** Native button type; defaults to "button" so it never submits by accident. */
+  type?: 'button' | 'submit' | 'reset';
+}>(), {
+  variant: 'glass',
+  size: 'md',
+  loading: false,
+  disabled: false,
+  type: 'button',
+});
+
+const emit = defineEmits<{ (e: 'click', ev: MouseEvent): void }>();
+
+// Only the default variant paints itself as glass; primary/ghost/danger own
+// their fill so they read as distinct affordances against a glass panel.
+const glassy = computed(() => props.variant === 'glass');
+
+function onClick(ev: MouseEvent) {
+  if (props.disabled || props.loading) return;
+  emit('click', ev);
+}
+</script>
+
+<template>
+  <button
+    :type="type"
+    class="lu-btn"
+    :class="[`lu-btn-${variant}`, `lu-btn-${size}`, { 'lu-glass-thin': glassy, 'is-loading': loading }]"
+    :disabled="disabled || loading"
+    :aria-busy="loading || undefined"
+    @click="onClick"
+  >
+    <span v-if="loading" class="lu-btn-spin" aria-hidden="true" />
+    <slot name="icon" />
+    <span class="lu-btn-label"><slot /></span>
+  </button>
+</template>
+
+<style scoped>
+.lu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: var(--radius-pill, 999px);
+  font-family: inherit;
+  font-weight: var(--fw-medium, 500);
+  line-height: 1;
+  cursor: pointer;
+  color: var(--text, #0a0a0a);
+  border: 1px solid transparent;
+  transition: background 0.16s ease, box-shadow 0.16s ease, opacity 0.16s ease;
+  white-space: nowrap;
+}
+.lu-btn-md { padding: 8px 16px; font-size: var(--fs-body-sm, 13px); }
+.lu-btn-sm { padding: 5px 11px; font-size: var(--fs-micro, 12px); }
+
+/* Default: thin glass (the .lu-glass-thin class supplies bg/blur/edge/border). */
+.lu-btn-glass:hover { box-shadow: var(--glass-edge-thick, var(--glass-edge)); }
+
+.lu-btn-primary {
+  background: var(--accent, #171717);
+  color: var(--bg-surface, #fff);
+  border-color: transparent;
+}
+.lu-btn-primary:hover { background: var(--accent-hover, #404040); }
+
+.lu-btn-ghost { background: transparent; }
+.lu-btn-ghost:hover { background: var(--accent-subtle, rgba(0, 0, 0, 0.04)); }
+
+.lu-btn-danger {
+  background: var(--state-error, #a8412e);
+  color: #fff;
+}
+.lu-btn-danger:hover { filter: brightness(0.94); }
+
+.lu-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.lu-btn:focus-visible {
+  outline: 2px solid var(--accent, #171717);
+  outline-offset: 2px;
+}
+
+.lu-btn-spin {
+  width: 0.85em;
+  height: 0.85em;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: lu-btn-spin 0.6s linear infinite;
+}
+.is-loading .lu-btn-label { opacity: 0.85; }
+@keyframes lu-btn-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .lu-btn { transition: none; }
+  .lu-btn-spin { animation-duration: 1.2s; }
+}
+</style>
