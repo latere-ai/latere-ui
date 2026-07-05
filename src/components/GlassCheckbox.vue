@@ -3,7 +3,7 @@
 // native input stays in the DOM for accessibility and keyboard support.
 import { useId } from 'vue';
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   modelValue: boolean;
   label?: string;
   disabled?: boolean;
