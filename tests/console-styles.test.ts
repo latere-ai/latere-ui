@@ -10,6 +10,15 @@ describe('console.css', () => {
     expect(css).toMatch(/@import\s+['"]\.\/brand\.css['"]/);
   });
 
+  it('renders the rail as Liquid Glass with an opaque fallback', () => {
+    const rail = css.slice(css.indexOf('.lu-cs {'), css.indexOf('.lu-cs[data-collapsed'));
+    // Glass tint, falling back to --bg-surface for non-glass consumers.
+    expect(rail).toMatch(/background:\s*var\(--glass-bg,\s*var\(--bg-surface/);
+    // Paired backdrop-filter (Safari) driven by the glass blur token.
+    expect(rail).toMatch(/-webkit-backdrop-filter:\s*blur\(var\(--glass-blur/);
+    expect(rail).toMatch(/(?<!-webkit-)backdrop-filter:\s*blur\(var\(--glass-blur/);
+  });
+
   it('shrinks an AccountMenu foot to its avatar when collapsed (fits the 64px rail)', () => {
     // Regression guard: without this rule the account control overflows the
     // collapsed rail into the main content (caught during the lux pilot).

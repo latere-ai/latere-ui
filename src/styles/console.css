@@ -29,8 +29,14 @@ html { overscroll-behavior: none; }
     box-sizing: border-box;
     padding: 14px 12px 12px;
     gap: 8px;
-    background: var(--bg-surface, #fff);
-    border-right: 1px solid var(--border, rgba(0, 0, 0, 0.08));
+    /* Regular-tier Liquid Glass. Falls back to an opaque --bg-surface for
+     * products that have not set glass tokens (or under reduce-transparency /
+     * increase-contrast, where latere-ui/glass redefines --glass-bg to opaque),
+     * so the rail is never broken-transparent. */
+    background: var(--glass-bg, var(--bg-surface, #fff));
+    -webkit-backdrop-filter: blur(var(--glass-blur, 0)) saturate(var(--glass-saturate, 100%));
+            backdrop-filter: blur(var(--glass-blur, 0)) saturate(var(--glass-saturate, 100%));
+    border-right: 1px solid var(--glass-border, var(--border, rgba(0, 0, 0, 0.08)));
     color: var(--text, #0a0a0a);
     transition: width 0.16s ease;
 }
