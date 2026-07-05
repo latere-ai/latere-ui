@@ -328,9 +328,9 @@ function onExtraItem(item: AccountMenuItem) {
   align-items: center;
   gap: 9px;
   padding: 4px 10px 4px 4px;
-  border: 1px solid var(--border-strong, var(--border, #ccc));
-  background: var(--bg-surface, #fff);
-  border-radius: 999px;
+  border: 1px solid var(--glass-border, var(--border, #ccc));
+  background: var(--glass-bg-ultrathin, var(--bg-surface, #fff));
+  border-radius: var(--radius-pill, 999px);
   cursor: pointer;
   font: inherit;
   color: var(--text, #111);
@@ -338,9 +338,8 @@ function onExtraItem(item: AccountMenuItem) {
   transition: background 0.12s, border-color 0.12s, box-shadow 0.12s;
 }
 .lu-am-trigger:hover {
-  background: var(--bg-raised, #f4f4f4);
-  border-color: var(--accent, #888);
-  box-shadow: 0 0 0 3px var(--accent-glow, transparent);
+  background: var(--glass-pill-fill, var(--bg-raised, #f4f4f4));
+  box-shadow: var(--shadow, none);
 }
 .lu-am-avatar {
   width: 26px;
@@ -350,8 +349,8 @@ function onExtraItem(item: AccountMenuItem) {
   place-items: center;
   flex-shrink: 0;
   overflow: hidden;
-  background: var(--bg-raised, #eee);
-  color: var(--text, #111);
+  background: var(--glass-smoke-strong, var(--bg-raised, #eee));
+  color: var(--glass-smoke-ink, var(--text, #111));
   font-family: var(--font-mono, monospace);
   font-size: 11px;
   font-weight: 600;
@@ -380,7 +379,7 @@ function onExtraItem(item: AccountMenuItem) {
 .lu-am-id-sub {
   font-family: var(--font-mono, monospace);
   font-size: 9px;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--text-muted, #888);
 }
@@ -398,10 +397,12 @@ function onExtraItem(item: AccountMenuItem) {
   position: absolute;
   top: calc(100% + 8px);
   width: 280px;
-  background: var(--bg-surface, #fff);
-  border: 1px solid var(--border-strong, var(--border, #ccc));
-  border-radius: 10px;
-  box-shadow: var(--shadow-lg, 0 8px 30px rgba(0, 0, 0, 0.12));
+  background: var(--glass-bg-thick, var(--bg-surface, #fff));
+  -webkit-backdrop-filter: blur(36px) saturate(180%);
+  backdrop-filter: blur(36px) saturate(180%);
+  border: 1px solid var(--glass-border, var(--border, #ccc));
+  border-radius: var(--radius-lg, 22px);
+  box-shadow: var(--shadow-glass, var(--shadow-lg, 0 8px 30px rgba(0, 0, 0, 0.12)));
   padding: 6px;
   z-index: 200;
   font-size: 13px;
@@ -426,7 +427,7 @@ function onExtraItem(item: AccountMenuItem) {
 }
 .lu-am-up .lu-am-trigger {
   width: 100%;
-  border-radius: 8px;
+  border-radius: var(--radius-pill, 999px);
 }
 .lu-am-up .lu-am-chev {
   margin-left: auto;
@@ -460,8 +461,8 @@ function onExtraItem(item: AccountMenuItem) {
   place-items: center;
   flex-shrink: 0;
   overflow: hidden;
-  background: var(--bg-raised, #eee);
-  color: var(--text, #111);
+  background: var(--glass-smoke-strong, var(--bg-raised, #eee));
+  color: var(--glass-smoke-ink, var(--text, #111));
   font-family: var(--font-mono, monospace);
   font-size: 12px;
   font-weight: 600;
@@ -519,11 +520,11 @@ function onExtraItem(item: AccountMenuItem) {
   font: inherit;
   text-align: left;
   text-decoration: none;
-  border-radius: 6px;
+  border-radius: var(--radius-sm, 10px);
   transition: background 0.1s;
 }
 .lu-am-item:hover {
-  background: var(--bg-raised, #f4f4f4);
+  background: var(--accent-subtle, var(--bg-raised, #f4f4f4));
 }
 .lu-am-item.is-active {
   background: var(--accent-subtle, rgba(0, 0, 0, 0.04));
@@ -552,11 +553,11 @@ function onExtraItem(item: AccountMenuItem) {
   font: inherit;
   text-align: left;
   text-decoration: none;
-  border-radius: 6px;
+  border-radius: var(--radius-sm, 10px);
   transition: background 0.1s;
 }
 :slotted(.lu-am-item:hover) {
-  background: var(--bg-raised, #f4f4f4);
+  background: var(--accent-subtle, var(--bg-raised, #f4f4f4));
 }
 
 .lu-am-org {

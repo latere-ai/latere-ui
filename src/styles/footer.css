@@ -105,10 +105,11 @@
     color: var(--text-muted);
 }
 .footer-col-title {
-    font-size: 11px;
-    font-weight: 600;
+    font-family: var(--font-mono, ui-monospace, 'SF Mono', Menlo, monospace);
+    font-size: 10px;
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.15em;
     color: var(--text-muted);
     margin: 0 0 4px;
 }
@@ -118,9 +119,10 @@
     gap: 8px;
 }
 .footer-subgroup-title {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
+    font-family: var(--font-mono, ui-monospace, 'SF Mono', Menlo, monospace);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--text-muted);
     opacity: 0.75;
@@ -164,35 +166,41 @@
 }
 .footer-seg {
     display: inline-flex;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    overflow: hidden;
-    background: var(--bg-surface);
+    gap: 2px;
+    padding: 3px;
+    border: 1px solid var(--glass-border, var(--border));
+    border-radius: var(--radius-pill, 999px);
+    background: var(--glass-bg-ultrathin, var(--bg-surface));
 }
 .footer-seg-btn {
     appearance: none;
     background: transparent;
     border: 0;
-    padding: 4px 8px;
+    padding: 4px 12px;
     font: inherit;
     font-size: 12px;
     color: var(--text-muted);
     cursor: pointer;
     line-height: 1;
     min-width: 28px;
+    border-radius: var(--radius-pill, 999px);
+    transition: color 0.13s, background 0.13s;
 }
-.footer-seg-btn + .footer-seg-btn { border-left: 1px solid var(--border); }
 .footer-seg-btn:hover { color: var(--text); }
-.footer-seg-btn.is-active { background: var(--bg-raised); color: var(--text); }
+.footer-seg-btn.is-active {
+    background: var(--glass-pill-fill, var(--bg-raised));
+    box-shadow: var(--shadow, 0 1px 3px rgba(0, 0, 0, 0.05));
+    color: var(--text);
+}
 .footer-lang {
     display: inline-flex;
 }
 .footer-lang-select {
     appearance: none;
     -webkit-appearance: none;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--bg-surface);
+    border: 1px solid var(--glass-border, var(--border));
+    border-radius: var(--radius-pill, 999px);
+    background: var(--glass-bg-ultrathin, var(--bg-surface));
     color: var(--text-muted);
     font: inherit;
     font-size: 12px;

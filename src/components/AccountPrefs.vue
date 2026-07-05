@@ -109,21 +109,21 @@ const themes = computed<{ v: Theme; label: string }[]>(() => [
   line-height: 1;
   min-height: 24px;
   padding: 0 9px;
-  border-radius: 999px;
+  border-radius: var(--radius-pill, 999px);
   background: transparent;
-  border: 1px solid var(--border, #ccc);
+  border: 1px solid var(--glass-border, var(--border, #ccc));
   color: var(--text-secondary, #555);
   cursor: pointer;
   transition: background 0.1s, color 0.1s, border-color 0.1s;
 }
 .lu-ap-pill:hover {
-  background: var(--bg-raised, #f4f4f4);
+  background: var(--glass-pill-fill, var(--bg-raised, #f4f4f4));
   color: var(--text, #111);
 }
 .lu-ap-pill.is-active {
-  background: var(--bg-raised, #f4f4f4);
+  background: var(--glass-pill-fill, var(--bg-raised, #f4f4f4));
   color: var(--text, #111);
-  border-color: var(--border-strong, var(--border, #999));
+  border-color: var(--glass-border, var(--border-strong, var(--border, #999)));
   font-weight: 600;
 }
 </style>

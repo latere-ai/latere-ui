@@ -116,22 +116,24 @@ function onKeydown(e: KeyboardEvent) {
 }
 .lu-cp {
   width: min(560px, 92vw);
-  background: var(--bg-surface, #fff);
-  border: 1px solid var(--border, rgba(0, 0, 0, 0.1));
-  border-radius: 12px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.24);
+  background: var(--glass-bg-thick, var(--bg-surface, #fff));
+  -webkit-backdrop-filter: blur(36px) saturate(180%);
+  backdrop-filter: blur(36px) saturate(180%);
+  border: 1px solid var(--glass-border, var(--border, rgba(0, 0, 0, 0.1)));
+  border-radius: var(--radius-xl, 28px);
+  box-shadow: var(--shadow-glass, 0 16px 48px rgba(0, 0, 0, 0.24));
   overflow: hidden;
 }
 .lu-cp-input {
   width: 100%;
   box-sizing: border-box;
   border: 0;
-  border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.08));
+  border-bottom: 1px solid var(--glass-border, var(--border, rgba(0, 0, 0, 0.08)));
   background: transparent;
   color: var(--text, #0a0a0a);
   font: inherit;
   font-size: 15px;
-  padding: 14px 16px;
+  padding: 14px 18px;
   outline: none;
 }
 .lu-cp-list {
@@ -146,20 +148,21 @@ function onKeydown(e: KeyboardEvent) {
   align-items: center;
   gap: 8px;
   padding: 9px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm, 12px);
   cursor: pointer;
   color: var(--text-secondary, #555);
 }
 .lu-cp-item[data-active="true"] {
-  background: var(--bg-raised, #f5f5f5);
+  background: var(--glass-pill-fill, var(--bg-raised, #f5f5f5));
   color: var(--text, #0a0a0a);
 }
 .lu-cp-item-label { flex: 1 1 auto; font-size: 14px; }
 .lu-cp-item-group {
   flex-shrink: 0;
+  font-family: var(--font-mono, monospace);
   font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.15em;
   color: var(--text-muted, #a0a0a0);
 }
 .lu-cp-empty {
