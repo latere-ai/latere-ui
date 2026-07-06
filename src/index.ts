@@ -37,6 +37,10 @@ export type {
   DocSearchEntry,
 } from './docs/model';
 export { createToc, slugify } from './docs/toc';
+
+// Liquid Glass v2 runtime — refraction + specular sheen (progressive, a11y-safe).
+export { initLiquidGlass, refract, sheen } from './glass/liquidGlass';
+export { useLiquidGlass, type UseLiquidGlassOptions } from './glass/useLiquidGlass';
 export type { TocItem, TocOptions, TocController } from './docs/toc';
 // Types are re-exported from .ts modules, never from the .vue SFCs: a
 // consumer's vue-tsc can fall back to the default-only `*.vue` shim and drop
