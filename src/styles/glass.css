@@ -40,7 +40,17 @@
     --glass-bg-ultrathin: rgba(255, 255, 255, 0.28);
     --glass-bg-thin:      rgba(255, 255, 255, 0.38);
     --glass-bg:           rgba(255, 255, 255, 0.42);  /* regular */
-    --glass-bg-thick:     rgba(255, 255, 255, 0.65);
+    /* Thick = the OVERLAY tier: dropdowns, popovers, palettes, modals, drawers,
+     * footers — glass that floats over arbitrary, busy content. The Latere
+     * handoff sets this at 0.65 because its canonical recipe adds a per-element
+     * SVG displacement/lensing map in the backdrop chain (direction 1b) that
+     * refracts the content beneath into illegibility. We composite blur only —
+     * no lensing — so 0.65 lets sharp text (headings, attractor lines, model
+     * pills) read straight through. Raise the fill to near-opaque so overlays
+     * OCCLUDE rather than reveal; the blur + specular edge keep the glass read.
+     * On-surface tiers (ultrathin/thin/regular) stay translucent — they never
+     * sit over unrelated content. */
+    --glass-bg-thick:     rgba(255, 255, 255, 0.90);
 
     /* Smoked ink glass — near-solid stays intentional (primary buttons). */
     --glass-smoke:        rgba(10, 10, 10, 0.68);
@@ -97,7 +107,8 @@
     --glass-bg-ultrathin: rgba(30, 30, 34, 0.42);
     --glass-bg-thin:      rgba(30, 30, 34, 0.58);
     --glass-bg:           rgba(30, 30, 34, 0.66);
-    --glass-bg-thick:     rgba(30, 30, 34, 0.85);
+    /* Overlay tier — near-opaque so it occludes busy content (see :root note). */
+    --glass-bg-thick:     rgba(24, 24, 28, 0.92);
 
     --glass-smoke:        rgba(250, 250, 250, 0.10);
     --glass-smoke-strong: rgba(250, 250, 250, 0.88);

@@ -25,6 +25,20 @@ describe('glass.css material tokens', () => {
     expect(light).toMatch(/--canvas:/);
   });
 
+  it('keeps the overlay (thick) tier near-opaque so it occludes busy content', () => {
+    // Thick is the overlay tier (dropdowns, palettes, modals, drawers, footers)
+    // that floats over arbitrary content. We composite blur only — no SVG
+    // lensing — so the fill must occlude, not reveal. A regression below ~0.9
+    // lets sharp text/graphics read straight through (the v1.20.0 bleed bug).
+    const light = css.slice(css.indexOf(':root {'), css.indexOf('[data-theme="dark"] {'));
+    const dark = css.slice(css.indexOf('[data-theme="dark"] {'));
+    for (const [name, block] of [['light', light], ['dark', dark]] as const) {
+      const m = block.match(/--glass-bg-thick:\s*rgba\([^)]*?,\s*([0-9.]+)\s*\)/);
+      expect(m, `thick fill must be rgba in ${name}`).toBeTruthy();
+      expect(Number(m![1]), `thick alpha too low in ${name}`).toBeGreaterThanOrEqual(0.9);
+    }
+  });
+
   it('defines the five-tier ladder with paired -webkit-backdrop-filter and no retired Clear tier', () => {
     for (const cls of [
       '.lu-glass-ultrathin',
