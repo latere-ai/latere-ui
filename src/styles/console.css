@@ -37,8 +37,8 @@ html { overscroll-behavior: none; }
      * latere-ui/glass redefines --glass-bg to opaque), so the rail is never
      * broken-transparent. */
     background: var(--glass-bg, var(--bg-surface, #fff));
-    -webkit-backdrop-filter: blur(var(--glass-blur, 0)) saturate(var(--glass-saturate, 100%));
-            backdrop-filter: blur(var(--glass-blur, 0)) saturate(var(--glass-saturate, 100%));
+    -webkit-backdrop-filter: blur(var(--glass-blur, 0)) saturate(var(--glass-saturate, 100%)) brightness(var(--glass-brightness, 1));
+            backdrop-filter: blur(var(--glass-blur, 0)) saturate(var(--glass-saturate, 100%)) brightness(var(--glass-brightness, 1));
     border: 1px solid var(--glass-border, var(--border, rgba(0, 0, 0, 0.08)));
     border-radius: var(--radius-xl, 28px);
     box-shadow: var(--shadow-glass, none);

@@ -211,8 +211,9 @@ import 'latere-ui/glass';           // material tokens + tier utilities + fallba
 
 Modeled on Apple's Liquid Glass (macOS Tahoe / HIG). Glass is a distinct layer
 that floats above content, built from three optical layers — **illumination**
-(tint + backdrop blur), **highlight** (specular top-edge rim), and **shadow**
-(separation from content).
+(tint + backdrop blur + a `--glass-brightness` luminance lift so content reads
+_through_ the glass as frost rather than under it as a scrim), **highlight**
+(specular top-edge rim), and **shadow** (separation from content).
 
 The **five-step material ladder** — pick a tier by prominence, never decoration:
 
@@ -246,6 +247,13 @@ Obligations when adopting:
    `prefers-contrast: more` (Apple Increase Contrast → near-opaque, 4.5:1), and
    browsers without `backdrop-filter` all redefine the glass tokens, so every
    surface degrades with no per-component work.
+5. **Hand-rolled chains must carry the full recipe.** The `.lu-glass*` classes
+   bake `brightness(var(--glass-brightness))` into their `backdrop-filter`. A
+   surface that writes its own chain instead — `blur(var(--glass-blur))
+   saturate(var(--glass-saturate))` — must append `brightness(var(--glass-
+   brightness, 1))` too, on both the standard and `-webkit-` property; otherwise
+   dark-mode glass darkens content into a scrim instead of lifting it to frost.
+   Prefer the class over a hand-rolled chain wherever possible.
 
 ### Native v2 runtime — refraction + sheen
 

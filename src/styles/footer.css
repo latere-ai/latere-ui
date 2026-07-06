@@ -237,8 +237,8 @@
      * reduce-transparency / increase-contrast). The full marketing footer keeps
      * its transparent page-base treatment. */
     background: var(--glass-bg, transparent);
-    -webkit-backdrop-filter: blur(var(--glass-blur, 0)) saturate(var(--glass-saturate, 100%));
-            backdrop-filter: blur(var(--glass-blur, 0)) saturate(var(--glass-saturate, 100%));
+    -webkit-backdrop-filter: blur(var(--glass-blur, 0)) saturate(var(--glass-saturate, 100%)) brightness(var(--glass-brightness, 1));
+            backdrop-filter: blur(var(--glass-blur, 0)) saturate(var(--glass-saturate, 100%)) brightness(var(--glass-brightness, 1));
     border-top: 1px solid var(--glass-border, var(--border));
 }
 .footer-compact-copy {

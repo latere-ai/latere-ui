@@ -78,6 +78,37 @@ describe('glass.css material tokens', () => {
     expect(block).toMatch(/--glass-bg:\s*rgba\([^)]*0\.9/);
   });
 
+  it('lifts luminance through the backdrop chain so glass reads as frost, not a scrim', () => {
+    const light = css.slice(css.indexOf(':root {'), css.indexOf('[data-theme="dark"] {'));
+    const dark = css.slice(css.indexOf('[data-theme="dark"] {'), css.indexOf('@media'));
+    // Both themes declare the lift token.
+    const lit = light.match(/--glass-brightness:\s*([0-9.]+)/);
+    const drk = dark.match(/--glass-brightness:\s*([0-9.]+)/);
+    expect(lit, 'light --glass-brightness').toBeTruthy();
+    expect(drk, 'dark --glass-brightness').toBeTruthy();
+    // Dark glass over dark content needs a real lift (a scrim would be <= 1);
+    // it must also out-lift the light tier, which only whispers.
+    expect(Number(drk![1])).toBeGreaterThan(1.2);
+    expect(Number(drk![1])).toBeGreaterThan(Number(lit![1]));
+    expect(Number(lit![1])).toBeGreaterThanOrEqual(1);
+    // Every tier folds the lift into its backdrop-filter (both prefixes), so the
+    // effect reaches all five utility classes uniformly.
+    const brightnessInChain = css.match(/backdrop-filter:\s*blur\([^;]*brightness\(var\(--glass-brightness/g) ?? [];
+    // Four filter definitions (ultrathin, thin, thick, and the group base that
+    // serves regular + smoke) x 2 prefixes = 8 chains carry the lift.
+    expect(brightnessInChain.length).toBeGreaterThanOrEqual(8);
+  });
+
+  it('neutralizes the luminance lift in the opaque a11y fallbacks', () => {
+    // reduce-transparency and increase-contrast go near-opaque; a residual
+    // brightness lift would wash those fills out, so both reset the token to 1.
+    for (const anchor of ['prefers-reduced-transparency', 'prefers-contrast']) {
+      const start = css.indexOf(anchor);
+      const block = css.slice(start, start + 1200);
+      expect(block, `${anchor} must reset --glass-brightness`).toMatch(/--glass-brightness:\s*1\b/);
+    }
+  });
+
   it('zeroes the blur/saturate tokens in every fallback so hand-rolled backdrop-filters degrade too', () => {
     // A consumer that writes `backdrop-filter: blur(var(--glass-blur))` on its
     // own selector (not a .lu-glass* class) must also lose the blur under each

@@ -66,6 +66,13 @@
 
     /* Vibrancy: saturate color bleeding through the layer so glyphs stay vivid. */
     --glass-saturate:   180%;
+    /* Luminance lift folded into the backdrop chain so glass reads as bright
+     * frost the content passes THROUGH, not a scrim laid over it. Works in every
+     * engine (plain `brightness()`, unlike the Chromium-only SVG lensing). Light
+     * glass sits over light content and already reads as frost, so the lift is a
+     * no-op here (1); dark glass over dark content needs a real lift (set in the
+     * dark scope) or it darkens into a scrim. */
+    --glass-brightness: 1;
 
     /* Edge + highlight. --glass-border is the hairline; --glass-highlight is the
      * specular rim light on the top edge. */
@@ -104,9 +111,11 @@
 }
 
 [data-theme="dark"] {
-    --glass-bg-ultrathin: rgba(30, 30, 34, 0.42);
-    --glass-bg-thin:      rgba(30, 30, 34, 0.58);
-    --glass-bg:           rgba(30, 30, 34, 0.66);
+    /* On-surface fills sit ~0.08 lighter than a pure scrim so the brightness lift
+     * below reads through them as frost. Thick (overlay) stays near-opaque. */
+    --glass-bg-ultrathin: rgba(30, 30, 34, 0.36);
+    --glass-bg-thin:      rgba(30, 30, 34, 0.50);
+    --glass-bg:           rgba(30, 30, 34, 0.56);
     /* Overlay tier — near-opaque so it occludes busy content (see :root note). */
     --glass-bg-thick:     rgba(24, 24, 28, 0.92);
 
@@ -119,9 +128,11 @@
     --glass-blur:           24px;
     --glass-blur-thick:     36px;
     --glass-saturate:   180%;
+    /* Dark glass over dark content needs a real lift, not a whisper (see :root). */
+    --glass-brightness: 1.5;
 
     --glass-border:     rgba(255, 255, 255, 0.20);
-    --glass-highlight:  rgba(255, 255, 255, 0.14);
+    --glass-highlight:  rgba(255, 255, 255, 0.22);
     --glass-edge-top:   inset 0 1.5px 0 var(--glass-highlight);
     --glass-pill-fill:  rgba(255, 255, 255, 0.16);
 
@@ -152,26 +163,26 @@
     box-shadow: var(--shadow-glass);
     border-radius: var(--glass-radius, 22px);
     /* Safari needs the -webkit- prefix; keep both. */
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-            backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness, 1));
+            backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness, 1));
     background: var(--glass-bg, var(--bg-surface, #fff));
 }
 
 .lu-glass-ultrathin {
-    -webkit-backdrop-filter: blur(var(--glass-blur-ultrathin)) saturate(var(--glass-saturate));
-            backdrop-filter: blur(var(--glass-blur-ultrathin)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur-ultrathin)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness, 1));
+            backdrop-filter: blur(var(--glass-blur-ultrathin)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness, 1));
     background: var(--glass-bg-ultrathin, var(--bg-raised, #f5f5f5));
 }
 
 .lu-glass-thin {
-    -webkit-backdrop-filter: blur(var(--glass-blur-thin)) saturate(var(--glass-saturate));
-            backdrop-filter: blur(var(--glass-blur-thin)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur-thin)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness, 1));
+            backdrop-filter: blur(var(--glass-blur-thin)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness, 1));
     background: var(--glass-bg-thin, var(--bg-raised, #f5f5f5));
 }
 
 .lu-glass-thick {
-    -webkit-backdrop-filter: blur(var(--glass-blur-thick)) saturate(var(--glass-saturate));
-            backdrop-filter: blur(var(--glass-blur-thick)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur-thick)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness, 1));
+            backdrop-filter: blur(var(--glass-blur-thick)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness, 1));
     background: var(--glass-bg-thick, var(--bg-surface, #fff));
 }
 
@@ -205,6 +216,7 @@
         --glass-blur:        0px;
         --glass-blur-thick:  0px;
         --glass-saturate:  100%;
+        --glass-brightness: 1;
     }
     .lu-glass-ultrathin,
     .lu-glass-thin,
@@ -241,6 +253,7 @@
         --glass-blur:        0px;
         --glass-blur-thick:  0px;
         --glass-saturate:  100%;
+        --glass-brightness: 1;
     }
 }
 
