@@ -15,9 +15,13 @@
 //
 // Per-element opt in / out via attributes:
 //   data-lg-refract / data-lg-refract="off"
-//   data-lg-sheen   / data-lg-sheen="off"
-// Without attributes, any element with a backdrop-filter qualifies: refraction
-// if its border radius is >= 16px, sheen if >= 260px wide.
+//   data-lg-sheen   (opt-IN; sheen never auto-attaches)
+// Refraction auto-qualifies any backdrop-filter surface with a border radius
+// >= 16px (or force it with data-lg-refract). Sheen is OPT-IN only: a cursor-
+// following light spot is right for a deliberate hero panel but reads as a
+// stray blob smeared across a footer / card / menu, so a surface must ask for
+// it with `data-lg-sheen`. Add `data-lg-sheen="off"` to also suppress a
+// nested opt-in inherited from a wrapper.
 
 const NS = 'http://www.w3.org/2000/svg';
 let uid = 0;
@@ -134,30 +138,35 @@ export function refract(el: LGElement): void {
   el.style.backdropFilter = softened + ' url(#' + id + ')';
 }
 
-/** Attach a cursor-following specular sheen to one large glass panel. */
+/** Attach a cursor-following specular sheen to one glass panel. OPT-IN: the
+ *  element must carry `data-lg-sheen` (a value other than "off"). Without it the
+ *  panel gets no sheen — a big radial highlight chasing the cursor across a
+ *  footer or menu reads as a stray blob, not glass. */
 export function sheen(el: LGElement): void {
   if (el.__lgSheen) return;
+  const attr = el.getAttribute('data-lg-sheen');
+  if (attr === null || attr === 'off') return;
   const cs = getComputedStyle(el);
   const bf = cs.backdropFilter || (cs as unknown as { webkitBackdropFilter?: string }).webkitBackdropFilter || 'none';
   if (bf === 'none') return;
-  if (el.getAttribute('data-lg-sheen') === null && el.offsetWidth < 260) return;
   el.__lgSheen = true;
   let dark = false;
   const bgc = cs.backgroundColor.match(/rgba?\((\d+)/);
   if (bgc && parseInt(bgc[1], 10) < 128) dark = true;
-  const peak = dark ? 0.1 : 0.3;
+  // Restrained peak + a tighter radius: a soft specular hint, not a spotlight.
+  const peak = dark ? 0.06 : 0.16;
   if (cs.position === 'static') el.style.position = 'relative';
   const s = document.createElement('div');
   s.setAttribute('aria-hidden', 'true');
   s.style.cssText =
-    'position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:0; transition:opacity 0.5s cubic-bezier(0.22,1,0.36,1); z-index:0;';
+    'position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:0; transition:opacity 0.45s cubic-bezier(0.22,1,0.36,1); z-index:0;';
   el.appendChild(s);
   el.addEventListener('mousemove', (e) => {
     const r = el.getBoundingClientRect();
     const x = ((e.clientX - r.left) / r.width) * 100;
     const y = ((e.clientY - r.top) / r.height) * 100;
     s.style.background =
-      'radial-gradient(320px circle at ' + x + '% ' + y + '%, rgba(255,255,255,' + peak + '), rgba(255,255,255,0) 65%)';
+      'radial-gradient(200px circle at ' + x + '% ' + y + '%, rgba(255,255,255,' + peak + '), rgba(255,255,255,0) 60%)';
     s.style.opacity = '1';
   });
   el.addEventListener('mouseleave', () => {
@@ -179,6 +188,7 @@ export function initLiquidGlass(root?: Document | HTMLElement): void {
   scope.querySelectorAll('*').forEach((el) => {
     if (!(el instanceof HTMLElement)) return;
     if (canRefract && el.getAttribute('data-lg-refract') !== 'off') refract(el);
-    if (!reducedMotion && el.getAttribute('data-lg-sheen') !== 'off') sheen(el);
+    // sheen() self-gates on the data-lg-sheen opt-in; motion-averse users get none.
+    if (!reducedMotion) sheen(el);
   });
 }
