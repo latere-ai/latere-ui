@@ -247,10 +247,59 @@ Obligations when adopting:
    browsers without `backdrop-filter` all redefine the glass tokens, so every
    surface degrades with no per-component work.
 
-### Component library
+### Native v2 runtime — refraction + sheen
 
-All compose the material, so each inherits the fallbacks above. Import from
-`latere-ui`; the app must `import 'latere-ui/glass'` once for the CSS.
+The CSS material gives you tint, blur, saturation, rim light, and shadow. The
+_distortion_ — the background visibly bending at the rounded edge, the way real
+Apple Liquid Glass lenses what sits behind it — is a progressive enhancement in
+JS, because no CSS primitive can displace the backdrop (it needs an SVG
+`feDisplacementMap`). Call it once near the app root:
+
+```ts
+import { useLiquidGlass } from 'latere-ui';   // Vue
+useLiquidGlass({ watchSource: () => route.fullPath }); // re-scan on navigation
+// …or framework-free: import { initLiquidGlass } from 'latere-ui';
+//                     initLiquidGlass();  // call again after the DOM changes
+```
+
+What it does, per surface:
+
+- **Refraction** — appends an edge-inward SVG displacement to the
+  `backdrop-filter` chain so the background bends at the corners. Auto-applies to
+  any glass surface with radius ≥ 16px. **Chromium only** (feature-detected via
+  `CSS.supports('backdrop-filter','url(#f)')`); every other engine keeps the
+  flat frosted blur. Force it on a tighter radius with `data-lg-refract`, or
+  suppress with `data-lg-refract="off"`.
+- **Sheen** — a soft specular highlight that follows the cursor. **Opt-in**: a
+  surface must carry `data-lg-sheen`, otherwise the highlight reads as a stray
+  blob smeared across a footer or menu. Use it on deliberate hero panels only.
+
+Both honor `prefers-reduced-motion` (no sheen) and
+`prefers-reduced-transparency` (no refraction), and are SSR-safe no-ops.
+
+### Overlay glass — and why a dropdown sometimes shows no blur
+
+Dropdowns, mega-menus, popovers, and palettes float over arbitrary busy content,
+so they take the **thick** tier — a near-opaque fill (`--glass-bg-thick`, 0.90)
+_plus_ blur, so sharp headings underneath are occluded rather than bleeding
+through. Reach for `GlassPopover` (its panel is already `.lu-glass-thick`) or
+apply the class directly; never hand-roll a translucent panel with a light fill,
+which is the usual cause of "the text behind is unreadable".
+
+```html
+<!-- Bespoke overlay markup: thick tier + no backdrop-filter killer above it. -->
+<div class="lu-glass-thick" role="menu"> … </div>
+```
+
+If an overlay still shows **no blur at all**, the backdrop-filter is being
+neutralized, not missing. `backdrop-filter` samples the backdrop only up to the
+nearest ancestor that establishes an isolated compositing context — so **any
+ancestor with `transform`, `filter`, `perspective`, `will-change`, `contain`, or
+a non-`normal` `mix-blend-mode` silently kills the blur** on everything beneath
+it. Keep the glass surface out of such a subtree (portal it to `<body>`), or drop
+the offending property. This is the single most common Liquid Glass regression.
+
+### Component library
 
 | Group | Components |
 |-------|-----------|
