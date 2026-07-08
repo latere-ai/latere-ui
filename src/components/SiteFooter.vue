@@ -83,7 +83,6 @@ function linkProps(path: string) {
     <nav class="footer-compact-links" :aria-label="t('footer.products')">
       <a href="https://wf.latere.ai/"><span class="wallfacer-brand">{{ t('footer.products.wallfacer') }}</span></a>
       <a href="https://topos.latere.ai/"><span class="topos-brand">{{ t('footer.products.topos') }}</span></a>
-      <a href="https://agon.latere.ai/"><span class="agon-brand">{{ t('footer.products.agon') }}</span></a>
       <a href="https://cella.latere.ai/"><span class="cella-brand">{{ t('footer.products.cella') }}</span></a>
       <a href="https://lux.latere.ai/"><span class="lux-brand">{{ t('footer.products.lux') }}</span></a>
       <a href="https://lectio.latere.ai/"><span class="lectio-brand">{{ t('footer.products.lectio') }}</span></a>
@@ -150,7 +149,6 @@ function linkProps(path: string) {
           <h4 class="footer-col-title" v-html="t('footer.products')" />
           <a href="https://wf.latere.ai/"><span class="wallfacer-brand">{{ t('footer.products.wallfacer') }}</span></a>
           <a href="https://topos.latere.ai/"><span class="topos-brand">{{ t('footer.products.topos') }}</span></a>
-          <a href="https://agon.latere.ai/"><span class="agon-brand">{{ t('footer.products.agon') }}</span></a>
           <a href="https://cella.latere.ai/"><span class="cella-brand">{{ t('footer.products.cella') }}</span></a>
           <a href="https://lux.latere.ai/"><span class="lux-brand">{{ t('footer.products.lux') }}</span></a>
           <a href="https://lectio.latere.ai/"><span class="lectio-brand">{{ t('footer.products.lectio') }}</span></a>

@@ -15,11 +15,14 @@ describe('SiteFooter', () => {
   it('renders every product name and cross-product link', () => {
     const w = render();
     const html = w.html();
-    for (const name of ['Wallfacer', 'Topos', 'Agon', 'Cella', 'Lux']) {
+    for (const name of ['Wallfacer', 'Topos', 'Cella', 'Lux']) {
       expect(html).toContain(name);
     }
     expect(html).toContain('https://wf.latere.ai/');
     expect(html).toContain('https://auth.latere.ai/');
+    // Agon was retired: neither the name nor its site may reappear in the footer.
+    expect(html).not.toContain('Agon');
+    expect(html).not.toContain('agon.latere.ai');
   });
 
   it('renders internal links as absolute URLs against baseUrl by default', () => {
@@ -107,7 +110,7 @@ describe('SiteFooter', () => {
     const links = w.find('.footer-compact-links');
     expect(links.exists()).toBe(true);
     const html = links.html();
-    for (const name of ['Wallfacer', 'Topos', 'Agon', 'Cella', 'Lux']) {
+    for (const name of ['Wallfacer', 'Topos', 'Cella', 'Lux']) {
       expect(html).toContain(name);
     }
     // still has the theme toggle + locale dropdown

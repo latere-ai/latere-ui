@@ -15,7 +15,7 @@ import {
   type NavItem,
 } from '../console/nav';
 
-type BrandTheme = 'lux' | 'cella' | 'topos' | 'wallfacer' | 'agon' | 'lectio';
+type BrandTheme = 'lux' | 'cella' | 'topos' | 'wallfacer' | 'lectio';
 
 interface Props {
   /** Grouped navigation model. */
