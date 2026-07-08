@@ -145,4 +145,26 @@ describe('AccountMenu', () => {
     expect(headRule).not.toContain('border-bottom');
     expect(styleBlock).not.toContain('.lu-am-section:first-of-type');
   });
+
+  // Regression: the dropdown filled with a single translucent `--glass-bg-thick`
+  // tint and relied on `backdrop-filter` to occlude. When the menu renders inside
+  // a glass nav/sidebar, the ancestor's backdrop-filter neutralizes this panel's
+  // blur, so sharp page text bled through the 0.90 fill. The fix composites the
+  // tint over a solid `--bg-surface` base so occlusion no longer depends on the
+  // blur resolving. Guard that the panel keeps a solid backing.
+  it('composites the dropdown tint over a solid surface (occludes without blur)', () => {
+    const src = readFileSync(
+      resolve(process.cwd(), 'src/components/AccountMenu.vue'),
+      'utf8',
+    );
+    const styleBlock = src.slice(src.indexOf('<style'));
+    const ddRule = styleBlock.slice(
+      styleBlock.indexOf('.lu-am-dd {'),
+      styleBlock.indexOf('}', styleBlock.indexOf('.lu-am-dd {')),
+    );
+    // The background must include a solid surface base under the glass tint, not
+    // a lone translucent `--glass-bg-thick`.
+    expect(ddRule).toContain('--bg-surface');
+    expect(ddRule).toMatch(/background:[\s\S]*--bg-surface/);
+  });
 });

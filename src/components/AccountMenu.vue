@@ -397,7 +397,17 @@ function onExtraItem(item: AccountMenuItem) {
   position: absolute;
   top: calc(100% + 8px);
   width: 280px;
-  background: var(--glass-bg-thick, var(--bg-surface, #fff));
+  /* Reading surface: composite the glass tint OVER a solid surface so the panel
+   * always occludes the content behind it. This menu hosts dense 13px text and
+   * commonly renders inside a glass nav/sidebar whose own backdrop-filter
+   * neutralizes this panel's blur (a nested backdrop-filter samples the
+   * ancestor's buffer, empty below the bar, not the page) — a translucent fill
+   * alone would then let sharp page text bleed through. The solid base makes
+   * legibility independent of whether the blur resolves. */
+  background:
+    linear-gradient(var(--glass-bg-thick, rgba(255, 255, 255, 0.9)),
+                    var(--glass-bg-thick, rgba(255, 255, 255, 0.9))),
+    var(--bg-surface, #fff);
   -webkit-backdrop-filter: blur(36px) saturate(180%);
   backdrop-filter: blur(36px) saturate(180%);
   border: 1px solid var(--glass-border, var(--border, #ccc));
