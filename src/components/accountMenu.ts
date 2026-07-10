@@ -20,6 +20,14 @@ export interface AccountMenuItem {
   target?: string;
 }
 
+/** Localized labels for the canonical account roles (badge + subline). */
+export interface AccountRoleLabels {
+  platform_admin: string;
+  org_admin: string;
+  org_member: string;
+  individual: string;
+}
+
 export interface AccountMenuLabels {
   account: string;
   notSignedIn: string;
@@ -30,6 +38,8 @@ export interface AccountMenuLabels {
   owner: string;
   signOut: string;
   signIn: string;
+  /** Role badge / subline labels (spec: shared four-role account model). */
+  roles: AccountRoleLabels;
 }
 
 export const DEFAULT_ACCOUNT_MENU_LABELS: AccountMenuLabels = {
@@ -42,4 +52,10 @@ export const DEFAULT_ACCOUNT_MENU_LABELS: AccountMenuLabels = {
   owner: 'owner',
   signOut: 'Sign out',
   signIn: 'Sign in',
+  roles: {
+    platform_admin: 'Platform Admin',
+    org_admin: 'Admin',
+    org_member: 'Member',
+    individual: 'Individual',
+  },
 };

@@ -13,6 +13,19 @@ export interface OrgEntry {
   owner?: boolean;
 }
 
+/**
+ * Canonical account role, shared by every Latere product. A principal is
+ * exactly one of these at a time:
+ * - `platform_admin`: a Latere-wide superadmin (operates across all orgs).
+ * - `org_admin`: an admin of the active org.
+ * - `org_member`: a non-admin member of the active org.
+ * - `individual`: a personal principal with no org.
+ * Derivation is app-specific (which scope means "admin" differs per product),
+ * so each app computes `Principal.role`; AccountMenu owns the shared badge
+ * rendering and labels.
+ */
+export type PlatformRole = 'platform_admin' | 'org_admin' | 'org_member' | 'individual';
+
 /** The authenticated principal, as consumed by the store + AccountMenu. */
 export interface Principal {
   principal_id: string;
@@ -27,6 +40,12 @@ export interface Principal {
   org_name?: string;
   orgs: OrgEntry[];
   is_superadmin?: boolean;
+  /**
+   * Canonical account role. When set, AccountMenu renders a role badge next
+   * to the identity and uses the role for the no-org subline ("Individual").
+   * Omit to fall back to the plain org/Personal subline (legacy behavior).
+   */
+  role?: PlatformRole;
   auth_url?: string;
 }
 

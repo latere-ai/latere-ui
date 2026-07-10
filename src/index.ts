@@ -133,10 +133,11 @@ export { default as GlassTable } from './components/GlassTable.vue';
 export type { MenuItem, SelectOption, TableColumn } from './glass/types';
 export { default as AccountMenu } from './components/AccountMenu.vue';
 export { default as AccountPrefs } from './components/AccountPrefs.vue';
-export type { AccountMenuLabels, AccountMenuItem } from './components/accountMenu';
+export type { AccountMenuLabels, AccountMenuItem, AccountRoleLabels } from './components/accountMenu';
 export type { AccountPrefsLabels } from './components/accountPrefs';
 export type {
   Principal,
+  PlatformRole,
   OrgEntry,
   ApiClient,
   ApiClientOptions,

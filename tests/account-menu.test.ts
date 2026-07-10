@@ -168,3 +168,49 @@ describe('AccountMenu', () => {
     expect(ddRule).toMatch(/background:[\s\S]*--bg-surface/);
   });
 });
+
+describe('AccountMenu role badge (shared four-role account model)', () => {
+  it('renders a Platform Admin accent badge and "Individual" subline for a no-org superadmin', () => {
+    const w = mount(AccountMenu, {
+      props: { principal: { ...base, role: 'platform_admin' } },
+    });
+    const badge = w.find('.lu-am-role');
+    expect(badge.exists()).toBe(true);
+    expect(badge.text()).toBe('Platform Admin');
+    expect(badge.classes()).toContain('lu-am-role-platform_admin');
+    // Subline text is the individual descriptor, not "Personal".
+    expect(w.find('.lu-am-id-sub-text').text()).toBe('Individual');
+  });
+
+  it('shows the org name as subline and an Admin badge for an org admin', () => {
+    const w = mount(AccountMenu, {
+      props: { principal: { ...base, org_id: 'o1', org_name: 'Acme', role: 'org_admin' } },
+    });
+    expect(w.find('.lu-am-role').text()).toBe('Admin');
+    expect(w.find('.lu-am-id-sub-text').text()).toBe('Acme');
+  });
+
+  it('shows no badge for a plain individual (subline carries it)', () => {
+    const w = mount(AccountMenu, {
+      props: { principal: { ...base, role: 'individual' } },
+    });
+    expect(w.find('.lu-am-role').exists()).toBe(false);
+    expect(w.find('.lu-am-id-sub-text').text()).toBe('Individual');
+  });
+
+  it('falls back to the legacy Personal subline when no role is set', () => {
+    const w = mount(AccountMenu, { props: { principal: base } });
+    expect(w.find('.lu-am-role').exists()).toBe(false);
+    expect(w.find('.lu-am-id-sub-text').text()).toBe('Personal');
+  });
+
+  it('honors custom role labels', () => {
+    const w = mount(AccountMenu, {
+      props: {
+        principal: { ...base, role: 'platform_admin' },
+        labels: { roles: { platform_admin: '平台管理员' } },
+      },
+    });
+    expect(w.find('.lu-am-role').text()).toBe('平台管理员');
+  });
+});

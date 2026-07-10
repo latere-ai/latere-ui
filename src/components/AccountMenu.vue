@@ -66,7 +66,13 @@ const emit = defineEmits<{
   (e: 'item-select', id: string): void;
 }>();
 
-const t = computed<AccountMenuLabels>(() => ({ ...DEFAULT_LABELS, ...props.labels }));
+const t = computed<AccountMenuLabels>(() => ({
+  ...DEFAULT_LABELS,
+  ...props.labels,
+  // Deep-merge the roles sub-object so a consumer passing partial role
+  // labels doesn't wipe the defaults for the rest.
+  roles: { ...DEFAULT_LABELS.roles, ...props.labels?.roles },
+}));
 
 const slots = useSlots();
 // A dropdown is only worth opening when it has content: the signed-in
@@ -98,6 +104,22 @@ const name = computed(
 );
 const email = computed(() => me.value?.email || '');
 const orgName = computed(() => me.value?.org_name || '');
+
+// Canonical role badge (shared four-role account model). The subline text
+// carries the org context ("Individual" for a no-org principal); the badge
+// names the role. `individual` needs no badge — the subline already says it.
+const role = computed(() => me.value?.role);
+const roleBadge = computed(() =>
+  role.value && role.value !== 'individual' ? t.value.roles[role.value] : '',
+);
+// Subline: the org name when in an org, otherwise the role-aware personal
+// label ("Individual") when a role is set, falling back to the legacy
+// "Personal" string for consumers that don't pass a role.
+const identitySub = computed(() => {
+  if (orgName.value) return orgName.value;
+  if (role.value) return t.value.roles.individual;
+  return t.value.personal;
+});
 const orgs = computed(() => me.value?.orgs ?? []);
 const activeOrgId = computed(() => me.value?.org_id || '');
 const isPersonal = computed(() => !activeOrgId.value);
@@ -155,9 +177,16 @@ function onExtraItem(item: AccountMenuItem) {
       </span>
       <span class="lu-am-id">
         <span class="lu-am-id-name">{{ principal ? name : t.signIn }}</span>
-        <!-- Sub-label (org / Personal) only when signed in — the logged-out
-             "Sign in" trigger stays a single line. -->
-        <span class="lu-am-id-sub" v-if="principal">{{ orgName || t.personal }}</span>
+        <!-- Sub-label (role badge + org / Individual) only when signed in —
+             the logged-out "Sign in" trigger stays a single line. -->
+        <span class="lu-am-id-sub" v-if="principal">
+          <span
+            v-if="roleBadge"
+            class="lu-am-role"
+            :class="`lu-am-role-${role}`"
+          >{{ roleBadge }}</span>
+          <span class="lu-am-id-sub-text">{{ identitySub }}</span>
+        </span>
       </span>
       <svg
         v-if="hasDropdown"
@@ -382,6 +411,32 @@ function onExtraItem(item: AccountMenuItem) {
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--text-muted, #888);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.lu-am-id-sub-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Role badge (shared four-role account model). Neutral pill by default;
+ * platform_admin gets the accent treatment since it is the cross-org role. */
+.lu-am-role {
+  flex: none;
+  font-size: 8.5px;
+  letter-spacing: 0.1em;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill, 999px);
+  background: var(--bg-raised, rgba(0, 0, 0, 0.05));
+  color: var(--text-secondary, #666);
+  border: 1px solid var(--border-faint, rgba(0, 0, 0, 0.08));
+}
+.lu-am-role-platform_admin {
+  background: var(--accent-subtle, rgba(99, 102, 241, 0.12));
+  color: var(--accent, #6366f1);
+  border-color: transparent;
 }
 .lu-am-chev {
   color: var(--text-muted, #888);
