@@ -231,4 +231,35 @@ describe('<ConsoleSidebar />', () => {
     expect(w.find('.lu-cs-brand-name').classes()).toContain('lux-brand');
     expect(w.find('.lu-cs-brand-sub').text()).toBe('Console');
   });
+
+  it('renders no product switcher unless product is set (zero change for adopters)', () => {
+    expect(render().find('.lu-cs-switch').exists()).toBe(false);
+    expect(render().find('.lu-ps-grid').exists()).toBe(false);
+  });
+
+  it('renders the product switcher in the head when product is set', async () => {
+    const w = render({ product: 'lux' });
+    const sw = w.find('.lu-cs-switch');
+    expect(sw.exists()).toBe(true);
+    // It sits inside the head, before the fold button.
+    const html = w.html();
+    expect(html.indexOf('lu-cs-switch')).toBeLessThan(html.indexOf('lu-cs-fold'));
+    // Opening it marks this console as current and non-navigating.
+    await sw.find('button.lu-iconbtn').trigger('click');
+    const current = w.find('.lu-ps-tile.is-current');
+    expect(current.text()).toContain('Lux');
+    expect(current.element.tagName).toBe('SPAN');
+  });
+
+  it('hides the product switcher while the rail is collapsed', () => {
+    const w = render({ product: 'lux', collapsed: true });
+    expect(w.find('.lu-cs-switch').exists()).toBe(false);
+  });
+
+  it('forwards productLabels to the switcher trigger', () => {
+    const w = render({ product: 'lux', productLabels: { switchProduct: 'Produkt wechseln' } });
+    expect(w.find('.lu-cs-switch button.lu-iconbtn').attributes('aria-label')).toBe(
+      'Produkt wechseln',
+    );
+  });
 });

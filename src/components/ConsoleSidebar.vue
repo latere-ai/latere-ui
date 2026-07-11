@@ -14,6 +14,8 @@ import {
   type NavGroup,
   type NavItem,
 } from '../console/nav';
+import ProductSwitcher from './ProductSwitcher.vue';
+import type { ProductSwitcherLabelOverrides } from './productSwitcher';
 
 type BrandTheme = 'lux' | 'cella' | 'topos' | 'wallfacer' | 'lectio';
 
@@ -60,6 +62,16 @@ interface Props {
   /** Accessible labels for the fold button. */
   expandLabel?: string;
   collapseLabel?: string;
+  /**
+   * Slug of this console in the shared product registry (e.g. "lux"). When
+   * set, a ProductSwitcher (cross-console app grid) renders in the head next
+   * to the brand; when omitted the head is byte-for-byte what it was, so
+   * existing adopters are unaffected until they opt in. Requires the
+   * `latere-ui/glass` stylesheet (for the popover material).
+   */
+  product?: string;
+  /** A11y label overrides forwarded to the ProductSwitcher. */
+  productLabels?: ProductSwitcherLabelOverrides;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -208,6 +220,17 @@ function letter(label: string): string {
       </slot>
 
       <slot name="brand-extra" :collapsed="collapsed" />
+
+      <!-- Cross-console app grid, opt-in via `product`. Hidden while the rail
+           is collapsed: the 64px column head stacks vertically and only keeps
+           the essentials (brand mark + fold button). -->
+      <ProductSwitcher
+        v-if="product && !collapsed"
+        class="lu-cs-switch"
+        :current="product"
+        :labels="productLabels"
+        size="sm"
+      />
 
       <button
         v-if="collapsible"
