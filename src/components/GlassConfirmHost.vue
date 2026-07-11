@@ -17,6 +17,7 @@ const c = computed(() => currentConfirm.current);
     :title="c?.title"
     :close-on-scrim="false"
     width="26rem"
+    layer="confirm"
     @close="resolveConfirm(false)"
   >
     <p class="lu-confirm-msg">{{ c?.message }}</p>

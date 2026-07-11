@@ -21,7 +21,7 @@ withDefaults(defineProps<{
   position: absolute;
   left: 50%;
   transform: translateX(-50%) translateY(2px);
-  z-index: 950;
+  z-index: var(--lu-z-tooltip, 950);
   padding: 5px 13px;
   border-radius: var(--radius-pill, 999px);
   font-size: var(--fs-micro, 12px);

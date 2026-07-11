@@ -36,6 +36,16 @@
  * theme scope (light and `[data-theme="dark"]`). */
 
 :root {
+    /* Overlay layering scale. One ladder for every floating surface so a
+     * confirm triggered while a modal is open always lands on top, and
+     * toasts outrank everything. Components read these with their historic
+     * values as fallbacks. */
+    --lu-z-popover: 900;
+    --lu-z-tooltip: 950;
+    --lu-z-modal:   1000;
+    --lu-z-confirm: 1200;
+    --lu-z-toast:   1300;
+
     /* Illumination — translucent fills per tier (light = white glass). */
     --glass-bg-ultrathin: rgba(255, 255, 255, 0.28);
     --glass-bg-thin:      rgba(255, 255, 255, 0.38);

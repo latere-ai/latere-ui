@@ -38,7 +38,7 @@ const TONE_VAR: Record<MessageTone, string> = {
   top: 16px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1100;
+  z-index: var(--lu-z-toast, 1300);
   display: flex;
   flex-direction: column;
   gap: 8px;

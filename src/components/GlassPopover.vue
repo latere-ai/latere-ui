@@ -46,7 +46,7 @@ const panelClass = computed(() => `lu-pop-panel--${props.placement}`);
 .lu-pop { position: relative; display: inline-block; }
 .lu-pop-panel {
   position: absolute;
-  z-index: 900;
+  z-index: var(--lu-z-popover, 900);
   min-width: 180px;
   padding: 6px;
   border-radius: var(--radius-md, 16px);

@@ -61,7 +61,7 @@ function onScrim() { if (props.closeOnScrim) close(); }
 .lu-drawer-scrim {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: var(--lu-z-modal, 1000);
   display: flex;
   background: var(--glass-dim, rgba(0, 0, 0, 0.28));
   -webkit-backdrop-filter: blur(2px);

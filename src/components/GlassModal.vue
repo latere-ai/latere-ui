@@ -13,9 +13,16 @@ const props = withDefaults(defineProps<{
   closeOnScrim?: boolean;
   /** Max width of the panel. */
   width?: string;
+  /**
+   * Stacking layer. 'confirm' floats above content modals (--lu-z-confirm
+   * vs --lu-z-modal) so a confirm dialog raised while a modal is open is
+   * never occluded by it. Used by GlassConfirmHost.
+   */
+  layer?: 'modal' | 'confirm';
 }>(), {
   closeOnScrim: true,
   width: '30rem',
+  layer: 'modal',
 });
 
 const emit = defineEmits<{ (e: 'update:open', v: boolean): void; (e: 'close'): void }>();
@@ -41,7 +48,12 @@ function onScrim() {
 <template>
   <Teleport to="body">
     <Transition name="lu-modal">
-      <div v-if="open" class="lu-modal-scrim" @click.self="onScrim">
+      <div
+        v-if="open"
+        class="lu-modal-scrim"
+        :class="`lu-modal-scrim--${layer}`"
+        @click.self="onScrim"
+      >
         <div
           ref="panel"
           class="lu-modal lu-glass-thick"
@@ -69,7 +81,7 @@ function onScrim() {
 .lu-modal-scrim {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: var(--lu-z-modal, 1000);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -78,6 +90,7 @@ function onScrim() {
   -webkit-backdrop-filter: blur(2px);
           backdrop-filter: blur(2px);
 }
+.lu-modal-scrim--confirm { z-index: var(--lu-z-confirm, 1200); }
 .lu-modal {
   width: 100%;
   max-height: calc(100vh - 48px);
