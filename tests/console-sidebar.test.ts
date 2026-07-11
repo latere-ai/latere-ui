@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { defineComponent, h } from 'vue';
 
@@ -254,6 +254,31 @@ describe('<ConsoleSidebar />', () => {
   it('hides the product switcher while the rail is collapsed', () => {
     const w = render({ product: 'lux', collapsed: true });
     expect(w.find('.lu-cs-switch').exists()).toBe(false);
+  });
+
+  it('opens the switcher fully on-screen from a 260px sidebar at the left edge', async () => {
+    // Console layout: 260px rail flush with the viewport's left edge, the
+    // trigger sitting in the head next to the brand. The panel must anchor to
+    // the trigger and grow rightward (start-aligned), never off-screen left.
+    Object.defineProperty(window, 'innerWidth', { value: 1440, configurable: true });
+    Object.defineProperty(window, 'innerHeight', { value: 900, configurable: true });
+    const rect = (r: Partial<DOMRect>): DOMRect =>
+      ({ x: 0, y: 0, top: 0, left: 0, right: 0, bottom: 0, width: 0, height: 0, toJSON: () => ({}), ...r }) as DOMRect;
+    vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+      if (this.classList.contains('lu-ps-panel')) return rect({ width: 280, height: 340 });
+      if (this.classList.contains('lu-ps')) {
+        return rect({ left: 190, right: 218, top: 24, bottom: 52, width: 28, height: 28 });
+      }
+      return rect({});
+    });
+    const w = render({ product: 'lux' });
+    await w.find('.lu-cs-switch button.lu-iconbtn').trigger('click');
+    await w.vm.$nextTick();
+    const panel = w.find('.lu-ps-panel');
+    expect(panel.exists()).toBe(true);
+    expect(panel.attributes('data-align')).toBe('start'); // grows rightward
+    expect(panel.attributes('data-side')).toBe('bottom');
+    vi.restoreAllMocks();
   });
 
   it('forwards productLabels to the switcher trigger', () => {

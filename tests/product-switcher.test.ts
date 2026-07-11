@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 
 import ProductSwitcher from '../src/components/ProductSwitcher.vue';
@@ -32,12 +32,32 @@ describe('product registry', () => {
     }
   });
 
-  it('gives every product a name, a hex brand color, and an inline SVG glyph', () => {
+  it('gives every product a name, a hex brand color, and a complete SVG mark', () => {
     for (const p of LATERE_PRODUCTS) {
       expect(p.name.length).toBeGreaterThan(0);
       expect(p.color).toMatch(/^#[0-9a-f]{6}$/i);
-      expect(p.icon).toMatch(/<(path|circle|rect)/);
+      expect(p.icon.startsWith('<svg ')).toBe(true);
+      expect(p.icon).toContain('aria-hidden="true"');
+      expect(p.icon).toContain('width="22"');
     }
+  });
+
+  it('carries the canonical marketing-site marks, not invented glyphs', () => {
+    const bySlug = Object.fromEntries(LATERE_PRODUCTS.map((p) => [p.slug, p.icon]));
+    // Pixelated 16x16 rect marks for Wallfacer and Cella.
+    for (const slug of ['wallfacer', 'cella']) {
+      expect(bySlug[slug]).toContain('viewBox="0 0 16 16"');
+      expect(bySlug[slug]).toContain('image-rendering:pixelated');
+    }
+    expect(bySlug.wallfacer).toContain('fill="#d97757"');
+    expect(bySlug.cella).toContain('fill="#4a7558"');
+    // Stroke marks with the brand stroke colors baked in.
+    expect(bySlug.topos).toContain('stroke="#55707a"');
+    expect(bySlug.lux).toContain('stroke="#3a4ed1"');
+    expect(bySlug.lux).toContain('M12 4l8 14H4z'); // the Lux prism triangle
+    expect(bySlug.lectio).toContain('stroke="#b87333"');
+    expect(bySlug.drive).toContain('stroke="#c9a227"'); // gold folder
+    expect(bySlug.identity).toContain('stroke="#6b5fc0"');
   });
 
   it('carries the brand.css wordmark class for products and none for identity', () => {
@@ -57,6 +77,10 @@ describe('<ProductSwitcher />', () => {
   function render(props: Record<string, unknown> = {}) {
     return mount(ProductSwitcher, { props: { current: 'lux', ...props } });
   }
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
 
   it('renders a labeled grid trigger, closed by default', () => {
     const w = render();
@@ -140,10 +164,63 @@ describe('<ProductSwitcher />', () => {
     expect(w.find('.lu-ps-sr').text()).toBe('Aktuell');
   });
 
-  it('tints each tile glyph with the product brand color', async () => {
+  it('renders each tile glyph from the canonical inline mark', async () => {
     const w = render();
     await w.find('button.lu-iconbtn').trigger('click');
     const lux = w.findAll('.lu-ps-tile').find((t) => t.text().includes('Lux'))!;
-    expect(lux.find('.lu-ps-ic').attributes('style')).toContain('color:');
+    expect(lux.find('.lu-ps-ic svg path[d="M12 4l8 14H4z"]').exists()).toBe(true);
+    const wallfacer = w.findAll('.lu-ps-tile').find((t) => t.text().includes('Wallfacer'))!;
+    expect(wallfacer.find('.lu-ps-ic svg rect[fill="#d97757"]').exists()).toBe(true);
+  });
+
+  it('opens on an opaque own panel anchored below/start by default', async () => {
+    const w = render();
+    await w.find('button.lu-iconbtn').trigger('click');
+    await w.vm.$nextTick();
+    const panel = w.find('.lu-ps-panel');
+    expect(panel.exists()).toBe(true);
+    // Anchored to the trigger, default placement: below, start-aligned.
+    expect(panel.attributes('data-side')).toBe('bottom');
+    expect(panel.attributes('data-align')).toBe('start');
+    // Not the translucent glass material: the panel owns an opaque composite.
+    expect(panel.classes()).not.toContain('lu-glass-thick');
+  });
+
+  it('flips to top/end when the viewport would clip the default placement', async () => {
+    // Viewport 1000x600; trigger sits near the bottom-right corner; the
+    // panel measures 280x240, so bottom/start would clip both edges.
+    Object.defineProperty(window, 'innerWidth', { value: 1000, configurable: true });
+    Object.defineProperty(window, 'innerHeight', { value: 600, configurable: true });
+    const rect = (r: Partial<DOMRect>): DOMRect =>
+      ({ x: 0, y: 0, top: 0, left: 0, right: 0, bottom: 0, width: 0, height: 0, toJSON: () => ({}), ...r }) as DOMRect;
+    vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+      if (this.classList.contains('lu-ps-panel')) return rect({ width: 280, height: 240 });
+      return rect({ left: 900, right: 930, top: 520, bottom: 548, width: 30, height: 28 });
+    });
+    const w = render();
+    await w.find('button.lu-iconbtn').trigger('click');
+    await w.vm.$nextTick();
+    const panel = w.find('.lu-ps-panel');
+    expect(panel.attributes('data-side')).toBe('top');
+    expect(panel.attributes('data-align')).toBe('end');
+  });
+
+  it('keeps the default placement when a flip would not fit either', async () => {
+    // Anchor at the very left edge of a viewport narrower than the panel:
+    // start clips, but end would clip even harder, so stay start-aligned.
+    Object.defineProperty(window, 'innerWidth', { value: 240, configurable: true });
+    Object.defineProperty(window, 'innerHeight', { value: 800, configurable: true });
+    const rect = (r: Partial<DOMRect>): DOMRect =>
+      ({ x: 0, y: 0, top: 0, left: 0, right: 0, bottom: 0, width: 0, height: 0, toJSON: () => ({}), ...r }) as DOMRect;
+    vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+      if (this.classList.contains('lu-ps-panel')) return rect({ width: 280, height: 240 });
+      return rect({ left: 12, right: 42, top: 20, bottom: 48, width: 30, height: 28 });
+    });
+    const w = render();
+    await w.find('button.lu-iconbtn').trigger('click');
+    await w.vm.$nextTick();
+    const panel = w.find('.lu-ps-panel');
+    expect(panel.attributes('data-side')).toBe('bottom');
+    expect(panel.attributes('data-align')).toBe('start');
   });
 });
