@@ -42,6 +42,15 @@ export interface AccountMenuLabels {
   roles: AccountRoleLabels;
 }
 
+/**
+ * Deep-partial label overrides consumers pass to `<AccountMenu :labels>`:
+ * every label is optional, including individual role labels (the component
+ * deep-merges `roles` over the defaults).
+ */
+export type AccountMenuLabelOverrides = Partial<Omit<AccountMenuLabels, 'roles'>> & {
+  roles?: Partial<AccountRoleLabels>;
+};
+
 export const DEFAULT_ACCOUNT_MENU_LABELS: AccountMenuLabels = {
   account: 'Account',
   notSignedIn: 'Not signed in',

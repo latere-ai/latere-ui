@@ -17,6 +17,7 @@ import type { Principal } from '../session/types';
 import { useClickOutside } from '../composables/useClickOutside';
 import {
   type AccountMenuLabels,
+  type AccountMenuLabelOverrides,
   type AccountMenuItem,
   DEFAULT_ACCOUNT_MENU_LABELS,
 } from './accountMenu';
@@ -39,8 +40,8 @@ const props = withDefaults(
     switchingOrgId?: string | null;
     /** When true, render nothing while logged out (instead of a Sign-in CTA). */
     signedInOnly?: boolean;
-    /** Per-locale label overrides. */
-    labels?: Partial<AccountMenuLabels>;
+    /** Per-locale label overrides (deep-partial; roles merge over defaults). */
+    labels?: AccountMenuLabelOverrides;
     /**
      * Per-app custom rows (e.g. Admin Panel) rendered in the menu's own style,
      * between the prefs and Sign out. Prefer this over the #extra slot, whose
