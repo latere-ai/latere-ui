@@ -27,6 +27,22 @@ const NS = 'http://www.w3.org/2000/svg';
 let uid = 0;
 let defs: SVGSVGElement | null = null;
 
+// Live refraction filters keyed by their owning element. Every re-scan prunes
+// filters whose element has left the document: without this, each SPA
+// navigation re-created glass chrome and appended fresh <filter> nodes (each
+// holding a canvas-rendered data-URL feImage) while the old ones stayed in the
+// shared defs forever — unbounded DOM/memory growth over a browsing session.
+const refractions = new Map<SVGFilterElement, LGElement>();
+
+function pruneRefractions(): void {
+  refractions.forEach((el, f) => {
+    if (!el.isConnected) {
+      f.remove();
+      refractions.delete(f);
+    }
+  });
+}
+
 interface LGElement extends HTMLElement {
   __lgRefract?: boolean;
   __lgSheen?: boolean;
@@ -133,6 +149,7 @@ export function refract(el: LGElement): void {
   f.appendChild(fi);
   f.appendChild(dm);
   ensureDefs().appendChild(f);
+  refractions.set(f, el);
   // Blur first, then displace: lensing stays crisp at the edges.
   const softened = bf.replace(/blur\((\d+(?:\.\d+)?)px\)/, (_m, v) => 'blur(' + Math.min(parseFloat(v), 14) + 'px)');
   el.style.backdropFilter = softened + ' url(#' + id + ')';
@@ -181,6 +198,9 @@ export function sheen(el: LGElement): void {
  */
 export function initLiquidGlass(root?: Document | HTMLElement): void {
   if (typeof window === 'undefined' || typeof document === 'undefined') return;
+  // Re-scans run on every route change; first drop filters owned by elements
+  // that navigation removed, so long sessions stay flat.
+  pruneRefractions();
   const scope: Document | HTMLElement = root ?? document;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const reducedTransparency = window.matchMedia('(prefers-reduced-transparency: reduce)').matches;
