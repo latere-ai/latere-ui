@@ -8,6 +8,7 @@ import {
   type LocaleOption,
 } from '../i18n/footer';
 import LatereLogoMark from './LatereLogoMark.vue';
+import { LATERE_PRODUCTS } from './productSwitcher';
 
 // Types now live in ../i18n/footer (a .ts module) and the package entrypoint
 // re-exports them from there — never re-export types from a .vue file, since a
@@ -67,6 +68,11 @@ function onLocaleChange(e: Event) {
   emit('update:locale', (e.target as HTMLSelectElement).value);
 }
 
+// Product links come from the shared registry (also used by ProductSwitcher)
+// so the lineup lives in one place; Identity stays a separate row because the
+// footer presents it as the platform sign-in, not a product.
+const footerProducts = LATERE_PRODUCTS.filter((p) => p.slug !== 'identity');
+
 // Internal link rendering: relative `to` for routerLink, absolute href otherwise.
 const linkTag = computed<Component | 'a'>(() => props.routerLink ?? 'a');
 function linkProps(path: string) {
@@ -81,12 +87,7 @@ function linkProps(path: string) {
   <footer v-if="compact" class="site-footer site-footer-compact">
     <p class="footer-compact-copy" v-html="t('footer.rights')" />
     <nav class="footer-compact-links" :aria-label="t('footer.products')">
-      <a href="https://wf.latere.ai/"><span class="wallfacer-brand">{{ t('footer.products.wallfacer') }}</span></a>
-      <a href="https://topos.latere.ai/"><span class="topos-brand">{{ t('footer.products.topos') }}</span></a>
-      <a href="https://cella.latere.ai/"><span class="cella-brand">{{ t('footer.products.cella') }}</span></a>
-      <a href="https://lux.latere.ai/"><span class="lux-brand">{{ t('footer.products.lux') }}</span></a>
-      <a href="https://lectio.latere.ai/"><span class="lectio-brand">{{ t('footer.products.lectio') }}</span></a>
-      <a href="https://drive.latere.ai/"><span class="drive-brand">{{ t('footer.products.drive') }}</span></a>
+      <a v-for="p in footerProducts" :key="p.slug" :href="`${p.url}/`"><span :class="p.brandClass">{{ t(`footer.products.${p.slug}`) }}</span></a>
       <a href="https://auth.latere.ai/" v-html="t('footer.identity')" />
       <component :is="linkTag" v-bind="linkProps('/about')">{{ t('footer.team') }}</component>
       <component :is="linkTag" v-bind="linkProps('/blog')">{{ t('footer.blog') }}</component>
@@ -148,12 +149,7 @@ function linkProps(path: string) {
       <div class="footer-cols">
         <div class="footer-col">
           <h4 class="footer-col-title" v-html="t('footer.products')" />
-          <a href="https://wf.latere.ai/"><span class="wallfacer-brand">{{ t('footer.products.wallfacer') }}</span></a>
-          <a href="https://topos.latere.ai/"><span class="topos-brand">{{ t('footer.products.topos') }}</span></a>
-          <a href="https://cella.latere.ai/"><span class="cella-brand">{{ t('footer.products.cella') }}</span></a>
-          <a href="https://lux.latere.ai/"><span class="lux-brand">{{ t('footer.products.lux') }}</span></a>
-          <a href="https://lectio.latere.ai/"><span class="lectio-brand">{{ t('footer.products.lectio') }}</span></a>
-          <a href="https://drive.latere.ai/"><span class="drive-brand">{{ t('footer.products.drive') }}</span></a>
+          <a v-for="p in footerProducts" :key="p.slug" :href="`${p.url}/`"><span :class="p.brandClass">{{ t(`footer.products.${p.slug}`) }}</span></a>
         </div>
         <div class="footer-col">
           <h4 class="footer-col-title" v-html="t('footer.latere')" />
