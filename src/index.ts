@@ -131,6 +131,19 @@ export { default as GlassSelect } from './components/GlassSelect.vue';
 export { default as GlassDrawer } from './components/GlassDrawer.vue';
 export { default as GlassTable } from './components/GlassTable.vue';
 export type { MenuItem, SelectOption, TableColumn } from './glass/types';
+// Cross-console product switcher (app grid) + the shared product registry,
+// which is also the source of truth for the SiteFooter product links.
+export { default as ProductSwitcher } from './components/ProductSwitcher.vue';
+export {
+  LATERE_PRODUCTS,
+  DEFAULT_PRODUCT_SWITCHER_LABELS,
+} from './components/productSwitcher';
+export type {
+  ProductInfo,
+  ProductSlug,
+  ProductSwitcherLabels,
+  ProductSwitcherLabelOverrides,
+} from './components/productSwitcher';
 export { default as AccountMenu } from './components/AccountMenu.vue';
 export { default as AccountPrefs } from './components/AccountPrefs.vue';
 export type { AccountMenuLabels, AccountMenuLabelOverrides, AccountMenuItem, AccountRoleLabels } from './components/accountMenu';
