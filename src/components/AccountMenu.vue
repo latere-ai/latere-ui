@@ -572,6 +572,9 @@ function onExtraItem(item: AccountMenuItem) {
 }
 .lu-am-head-meta {
   display: flex;
+  /* The dropdown grows as tall as it needs, so wrap the context onto its own
+   * line rather than truncating it to "INDIVI…" beside the badge. */
+  flex-wrap: wrap;
   align-items: center;
   gap: 6px;
   margin-top: 7px;
@@ -583,9 +586,7 @@ function onExtraItem(item: AccountMenuItem) {
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: var(--text-muted, #888);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .lu-am-section {
