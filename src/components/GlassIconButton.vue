@@ -45,7 +45,7 @@ defineEmits<{ (e: 'click', ev: MouseEvent): void }>();
 .lu-iconbtn:hover { color: var(--text, #0a0a0a); }
 .lu-iconbtn.is-pressed { color: var(--accent, #171717); }
 .lu-iconbtn:disabled { opacity: 0.45; cursor: not-allowed; }
-.lu-iconbtn:focus-visible { outline: 2px solid var(--accent, #171717); outline-offset: 2px; }
+.lu-iconbtn:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: 2px; }
 :slotted(svg) { width: 1.05em; height: 1.05em; }
 @media (prefers-reduced-motion: reduce) { .lu-iconbtn { transition: none; } }
 </style>

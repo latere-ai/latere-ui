@@ -75,7 +75,7 @@ function toggle() {
 }
 .lu-switch-label { font-size: var(--fs-body-sm, 13px); }
 .lu-switch:disabled { opacity: 0.5; cursor: not-allowed; }
-.lu-switch:focus-visible { outline: 2px solid var(--accent, #171717); outline-offset: 3px; border-radius: 4px; }
+.lu-switch:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: 3px; border-radius: 4px; }
 @media (prefers-reduced-motion: reduce) {
   .lu-switch-track, .lu-switch-thumb { transition: none; }
 }

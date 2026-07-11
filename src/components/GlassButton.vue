@@ -105,7 +105,7 @@ function onClick(ev: MouseEvent) {
 
 .lu-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .lu-btn:focus-visible {
-  outline: 2px solid var(--accent, #171717);
+  outline: var(--focus-outline, 2px solid var(--accent, #171717));
   outline-offset: 2px;
 }
 

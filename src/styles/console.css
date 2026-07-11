@@ -392,3 +392,15 @@ html { overscroll-behavior: none; }
 .lu-cs-foot {
     overflow: visible;
 }
+
+/* ===== Focus ===== */
+/* Replace the browser-default blue :focus-visible outline with the design
+ * system's ink ring on every interactive sidebar element. Inset so the ring
+ * hugs the pill radius inside the rail instead of clipping at its edge. */
+.lu-cs-brand:focus-visible,
+.lu-cs-fold:focus-visible,
+.lu-cs-search:focus-visible,
+.lu-cs-item:focus-visible {
+    outline: var(--focus-outline, 2px solid var(--accent, #171717));
+    outline-offset: -2px;
+}

@@ -214,7 +214,15 @@
     background-size: 11px;
 }
 .footer-lang-select:hover { color: var(--text); }
-.footer-lang-select:focus-visible { outline: 2px solid var(--border-strong); outline-offset: 1px; }
+/* Design-system ink focus ring (never the browser-default blue) for every
+ * interactive footer element: product/legal/social links, theme segments,
+ * and the locale select. */
+.site-footer a:focus-visible,
+.footer-seg-btn:focus-visible,
+.footer-lang-select:focus-visible {
+    outline: var(--focus-outline, 2px solid var(--accent, #171717));
+    outline-offset: 1px;
+}
 .footer-lang-select option { color: var(--text); background: var(--bg-surface); }
 .footer-bottom {
     max-width: 1200px;

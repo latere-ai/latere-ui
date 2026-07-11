@@ -46,6 +46,6 @@ defineEmits<{ (e: 'select', value: string): void }>();
 .lu-menu-item:hover { background: var(--accent-subtle, rgba(0, 0, 0, 0.04)); }
 .lu-menu-item.is-danger { color: var(--state-error, #a8412e); }
 .lu-menu-item:disabled { opacity: 0.45; cursor: not-allowed; }
-.lu-menu-item:focus-visible { outline: 2px solid var(--accent, #171717); outline-offset: -2px; }
+.lu-menu-item:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: -2px; }
 @media (prefers-reduced-motion: reduce) { .lu-menu-item { transition: none; } }
 </style>

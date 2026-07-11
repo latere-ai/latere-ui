@@ -73,6 +73,6 @@ function onKey(e: KeyboardEvent, i: number) {
   color: var(--text, #0a0a0a);
   box-shadow: var(--shadow, 0 1px 2px rgba(0, 0, 0, 0.06));
 }
-.lu-seg-item:focus-visible { outline: 2px solid var(--accent, #171717); outline-offset: 1px; }
+.lu-seg-item:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: 1px; }
 @media (prefers-reduced-motion: reduce) { .lu-seg-item { transition: none; } }
 </style>

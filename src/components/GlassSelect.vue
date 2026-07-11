@@ -107,7 +107,7 @@ function onKey(e: KeyboardEvent) {
   cursor: pointer;
   box-shadow: none;
 }
-.lu-select-trigger:focus-visible { outline: 2px solid var(--accent, #171717); outline-offset: 2px; }
+.lu-select-trigger:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: 2px; }
 .lu-select-trigger:disabled { opacity: 0.5; cursor: not-allowed; }
 .lu-select-value.is-placeholder { color: var(--text-muted, #a0a0a0); }
 .lu-select-chevron { color: var(--text-muted, #a0a0a0); font-size: 10px; }

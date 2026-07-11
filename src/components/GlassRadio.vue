@@ -60,7 +60,7 @@ const checked = computed(() => props.modelValue === props.value);
 }
 .lu-radio-native:checked + .lu-radio-dot { border: 1.5px solid var(--accent, #171717); }
 .lu-radio-native:checked + .lu-radio-dot::after { opacity: 1; transform: scale(1); }
-.lu-radio-native:focus-visible + .lu-radio-dot { outline: 2px solid var(--accent, #171717); outline-offset: 2px; }
+.lu-radio-native:focus-visible + .lu-radio-dot { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: 2px; }
 .lu-radio-label { font-size: var(--fs-body-sm, 13px); color: var(--text, #0a0a0a); }
 @media (prefers-reduced-motion: reduce) { .lu-radio-dot, .lu-radio-dot::after { transition: none; } }
 </style>

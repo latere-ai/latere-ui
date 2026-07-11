@@ -103,6 +103,11 @@ const themes = computed<{ v: Theme; label: string }[]>(() => [
   gap: 4px;
   padding: 0 8px 8px;
 }
+.lu-ap-pill:focus-visible {
+  /* Design-system ink focus ring instead of the browser-default blue. */
+  outline: var(--focus-outline, 2px solid var(--accent, #171717));
+  outline-offset: 1px;
+}
 .lu-ap-pill {
   font: inherit;
   font-size: 11px;

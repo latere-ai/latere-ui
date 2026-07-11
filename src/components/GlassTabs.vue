@@ -80,6 +80,6 @@ function onKey(e: KeyboardEvent, i: number) {
 .lu-tab-ind {
   display: none;
 }
-.lu-tab:focus-visible { outline: 2px solid var(--accent, #171717); outline-offset: -2px; border-radius: 4px; }
+.lu-tab:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: -2px; border-radius: 4px; }
 @media (prefers-reduced-motion: reduce) { .lu-tab { transition: none; } }
 </style>

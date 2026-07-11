@@ -184,7 +184,7 @@ function close() {
   background: var(--accent-subtle, var(--bg-raised, rgba(0, 0, 0, 0.05)));
 }
 .lu-ps-tile:focus-visible {
-  outline: 2px solid var(--accent, #171717);
+  outline: var(--focus-outline, 2px solid var(--accent, #171717));
   outline-offset: -2px;
 }
 /* Current console: a quiet ring instead of a hover surface. */

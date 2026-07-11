@@ -52,7 +52,7 @@ function onChange(e: Event) {
 .lu-check-tick { width: 12px; height: 12px; color: var(--glass-smoke-ink, #fafafa); opacity: 0; transform: scale(0.8); transition: opacity 0.14s ease, transform 0.14s ease; }
 .lu-check-native:checked + .lu-check-box { background: var(--glass-smoke-strong, rgba(10, 10, 10, 0.82)); border-color: transparent; }
 .lu-check-native:checked + .lu-check-box .lu-check-tick { opacity: 1; transform: scale(1); }
-.lu-check-native:focus-visible + .lu-check-box { outline: 2px solid var(--accent, #171717); outline-offset: 2px; }
+.lu-check-native:focus-visible + .lu-check-box { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: 2px; }
 .lu-check-label { font-size: var(--fs-body-sm, 13px); color: var(--text, #0a0a0a); }
 @media (prefers-reduced-motion: reduce) { .lu-check-box, .lu-check-tick { transition: none; } }
 </style>

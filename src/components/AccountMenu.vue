@@ -621,6 +621,12 @@ function onExtraItem(item: AccountMenuItem) {
 .lu-am-item:hover {
   background: var(--accent-subtle, var(--bg-raised, #f4f4f4));
 }
+/* Design-system ink focus ring instead of the browser-default blue. */
+.lu-am-trigger:focus-visible,
+.lu-am-item:focus-visible {
+  outline: var(--focus-outline, 2px solid var(--accent, #171717));
+  outline-offset: -2px;
+}
 .lu-am-item.is-active {
   background: var(--accent-subtle, rgba(0, 0, 0, 0.04));
 }
@@ -653,6 +659,10 @@ function onExtraItem(item: AccountMenuItem) {
 }
 :slotted(.lu-am-item:hover) {
   background: var(--accent-subtle, var(--bg-raised, #f4f4f4));
+}
+:slotted(.lu-am-item:focus-visible) {
+  outline: var(--focus-outline, 2px solid var(--accent, #171717));
+  outline-offset: -2px;
 }
 
 .lu-am-org {

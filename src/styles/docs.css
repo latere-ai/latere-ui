@@ -246,3 +246,17 @@
     }
     .lu-docs-pager { grid-template-columns: 1fr; }
 }
+
+/* ===== Focus ===== */
+/* Design-system ink focus ring (never the browser-default blue) for the doc
+ * nav rows, pager cards, TOC links, and anchors inside rendered doc bodies. */
+.lu-docs-link:focus-visible,
+.lu-docs-pager-link:focus-visible,
+.lu-docs-toc-link:focus-visible {
+    outline: var(--focus-outline, 2px solid var(--accent, #171717));
+    outline-offset: -2px;
+}
+.lu-docs-body a:focus-visible {
+    outline: var(--focus-outline, 2px solid var(--accent, #171717));
+    outline-offset: 1px;
+}

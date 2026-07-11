@@ -31,6 +31,11 @@
     --border:        rgba(0, 0, 0, 0.08);
     --border-strong: rgba(0, 0, 0, 0.12);
 
+    /* Focus ring: the single library-wide :focus-visible treatment. An ink
+     * outline (the accent IS the ink), never the browser-default blue.
+     * Consumers pair it with a per-component outline-offset. */
+    --focus-outline: 2px solid var(--accent);
+
     /* Radii ladder (Apple-style large radii + capsules). Concentric rule:
      * inner-radius = outer-radius − padding. */
     --radius-xs:   8px;
@@ -61,4 +66,9 @@
 
     --border:        rgba(255, 255, 255, 0.06);
     --border-strong: rgba(255, 255, 255, 0.10);
+
+    /* Recomputed here so a dark subtree inside a light page still resolves
+     * the ring against the dark accent (custom properties substitute var()
+     * at the defining element, then inherit the resolved value). */
+    --focus-outline: 2px solid var(--accent);
 }

@@ -71,5 +71,5 @@ const role = computed(() => (props.tone === 'error' ? 'alert' : 'status'));
   padding: 0 2px;
 }
 .lu-alert-close:hover { color: var(--text, #0a0a0a); }
-.lu-alert-close:focus-visible { outline: 2px solid var(--accent, #171717); outline-offset: 2px; }
+.lu-alert-close:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: 2px; }
 </style>
