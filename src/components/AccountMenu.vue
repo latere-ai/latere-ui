@@ -673,7 +673,9 @@ function onExtraItem(item: AccountMenuItem) {
   font-weight: 600;
 }
 .lu-am-org-team {
-  color: #fff;
+  /* Ink-on-accent must invert with the theme: dark themes flip --accent to a
+     light tone, so hardcoded white text washed out on the light tile. */
+  color: var(--bg, #fff);
   background: var(--accent, #555);
   border-color: var(--accent, #555);
 }

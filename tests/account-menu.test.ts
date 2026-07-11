@@ -35,6 +35,15 @@ describe('AccountMenu', () => {
     expect(w.text()).toContain('THEME+LANG');
   });
 
+  it('org/team initials tiles keep ink-on-accent contrast in both themes', () => {
+    // Dark themes flip --accent to a light tone; hardcoded white initials
+    // washed out on the light tile (founder-reported). Ink must be var(--bg).
+    const sfc = readFileSync(resolve(process.cwd(), 'src/components/AccountMenu.vue'), 'utf8');
+    const rule = sfc.slice(sfc.indexOf('.lu-am-org-team {'), sfc.indexOf('.lu-am-org-text'));
+    expect(rule).toMatch(/color:\s*var\(--bg/);
+    expect(rule).not.toMatch(/color:\s*#fff/);
+  });
+
   it('hides the org section when the principal has no orgs (no lonely Personal)', async () => {
     const w = mountOpen({ ...base, orgs: [] });
     await w.vm.$nextTick();
