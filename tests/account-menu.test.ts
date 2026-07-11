@@ -214,3 +214,24 @@ describe('AccountMenu role badge (shared four-role account model)', () => {
     expect(w.find('.lu-am-role').text()).toBe('平台管理员');
   });
 });
+
+// The open dropdown header always resolves the identity descriptor (role
+// badge + org/individual context), so a trigger that hides it to stay compact
+// still surfaces it on click.
+describe('AccountMenu dropdown identity descriptor', () => {
+  it('shows the role badge + individual context in the open dropdown', async () => {
+    const w = mountOpen({ ...base, role: 'platform_admin' });
+    await w.vm.$nextTick();
+    const meta = w.find('.lu-am-head-meta');
+    expect(meta.exists()).toBe(true);
+    expect(meta.find('.lu-am-role').text()).toBe('Platform Admin');
+    expect(meta.find('.lu-am-head-context').text()).toBe('Individual');
+  });
+
+  it('shows the org name as context for an org member', async () => {
+    const w = mountOpen({ ...base, org_id: 'o1', org_name: 'Acme', role: 'org_member' });
+    await w.vm.$nextTick();
+    expect(w.find('.lu-am-head-context').text()).toBe('Acme');
+    expect(w.find('.lu-am-head-meta .lu-am-role').text()).toBe('Member');
+  });
+});

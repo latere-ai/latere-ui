@@ -216,6 +216,17 @@ function onExtraItem(item: AccountMenuItem) {
         <div class="lu-am-head-text">
           <div class="lu-am-head-name">{{ name }}</div>
           <div class="lu-am-head-email">{{ email }}</div>
+          <!-- Identity descriptor: the role badge + org/individual context.
+               Triggers may hide these to stay compact, so the dropdown is the
+               canonical place they always resolve. -->
+          <div v-if="roleBadge || identitySub" class="lu-am-head-meta">
+            <span
+              v-if="roleBadge"
+              class="lu-am-role"
+              :class="`lu-am-role-${role}`"
+            >{{ roleBadge }}</span>
+            <span class="lu-am-head-context">{{ identitySub }}</span>
+          </div>
         </div>
       </div>
       <div class="lu-am-head lu-am-head-muted" v-else>{{ t.notSignedIn }}</div>
@@ -555,6 +566,23 @@ function onExtraItem(item: AccountMenuItem) {
   color: var(--text-muted, #888);
   letter-spacing: 0.02em;
   margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lu-am-head-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 7px;
+  min-width: 0;
+}
+.lu-am-head-context {
+  font-family: var(--font-mono, monospace);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted, #888);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
