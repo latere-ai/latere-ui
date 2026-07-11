@@ -15,10 +15,11 @@ describe('SiteFooter', () => {
   it('renders every product name and cross-product link', () => {
     const w = render();
     const html = w.html();
-    for (const name of ['Wallfacer', 'Topos', 'Cella', 'Lux']) {
+    for (const name of ['Wallfacer', 'Topos', 'Cella', 'Lux', 'Lectio', 'Drive']) {
       expect(html).toContain(name);
     }
     expect(html).toContain('https://wf.latere.ai/');
+    expect(html).toContain('https://drive.latere.ai/');
     expect(html).toContain('https://auth.latere.ai/');
     // Agon was retired: neither the name nor its site may reappear in the footer.
     expect(html).not.toContain('Agon');
