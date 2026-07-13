@@ -6,7 +6,6 @@ export { default as LatereLogoMark } from './components/LatereLogoMark.vue';
 export { default as ConsoleSidebar } from './components/ConsoleSidebar.vue';
 export { default as ConsolePalette } from './components/ConsolePalette.vue';
 export {
-  createCollapse,
   partitionGroups,
   flattenNavItems,
   isItemDisabled,
@@ -16,9 +15,11 @@ export type {
   NavGroup,
   FlatNavItem,
   ConsoleNavModel,
-  CollapseOptions,
-  CollapseState,
 } from './console/nav';
+// Collapse primitive lives in its own module (holds Vue state; nav.ts stays
+// import-clean of `vue` so the React ConsoleSidebar can value-import it).
+export { createCollapse } from './console/collapse';
+export type { CollapseOptions, CollapseState } from './console/collapse';
 
 // Docs renderer: headless grouped-docs model + TOC primitive, and the Vue
 // adapter. Styles ship separately as the `latere-ui/docs` entrypoint.

@@ -1,13 +1,14 @@
 // Headless console-navigation model. Holds the data shape every product
-// console already uses (a list of grouped nav items) plus a tiny
-// controlled/uncontrolled collapse primitive. No DOM, no router — the visual
-// representation lives in the Vue adapter at src/components/ConsoleSidebar.vue,
-// exactly as createOrgSwitcher relates to OrgSwitcher.vue.
+// console already uses (a list of grouped nav items) plus the pure
+// partition/flatten/disabled helpers. No DOM, no router, no framework runtime
+// import — both the Vue adapter (src/components/ConsoleSidebar.vue) and the
+// React adapter (src/react/ConsoleSidebar.tsx) value-import this module
+// directly, so it must stay import-clean of `vue`. The one piece of the
+// original console-nav primitive that held Vue state — the uncontrolled
+// collapse ref — lives in `./collapse` instead (react-support v1.27).
 //
 // lux, agents and wallfacer each independently arrived at
 // `groups: { group, items: NavItem[] }[]`; this is that shape, unified.
-
-import { ref, type Ref } from 'vue';
 
 /** A single navigation row. */
 export interface NavItem {
@@ -50,44 +51,6 @@ export interface NavGroup {
 /** The full grouped model the sidebar renders. */
 export interface ConsoleNavModel {
   groups: NavGroup[];
-}
-
-export interface CollapseOptions {
-  /** Starting collapsed state. Default: `false` (expanded). */
-  initial?: boolean;
-  /**
-   * Called on every change so the host can persist the value
-   * (e.g. to localStorage / a prefs store).
-   */
-  onChange?: (collapsed: boolean) => void;
-}
-
-export interface CollapseState {
-  /** Reactive collapsed flag. */
-  collapsed: Ref<boolean>;
-  /** Flip the current value. */
-  toggle: () => void;
-  /** Set an explicit value. */
-  set: (v: boolean) => void;
-}
-
-/**
- * Uncontrolled collapse helper. Hosts that own the state (e.g. wallfacer,
- * which persists it) can ignore this and drive `v-model:collapsed` directly;
- * hosts that want the sidebar to manage its own state use this.
- */
-export function createCollapse(opts: CollapseOptions = {}): CollapseState {
-  const collapsed = ref(opts.initial ?? false);
-  function set(v: boolean) {
-    if (collapsed.value === v) return;
-    collapsed.value = v;
-    opts.onChange?.(v);
-  }
-  return {
-    collapsed,
-    toggle: () => set(!collapsed.value),
-    set,
-  };
 }
 
 /**

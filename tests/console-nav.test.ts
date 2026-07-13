@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { createCollapse } from '../src/console/collapse';
 import {
-  createCollapse,
   partitionGroups,
   isItemDisabled,
   type NavGroup,
