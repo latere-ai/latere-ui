@@ -21,6 +21,16 @@ export type { GlassTier } from './GlassSurface';
 // Shared value types (framework-free .ts modules).
 export type { SelectOption, SegmentOption, TableColumn } from '../glass/types';
 
+// Console shell: React adapter over the headless nav model (console/nav.ts).
+// Styles ship separately as the `latere-ui/console` entrypoint, same as Vue.
+export {
+  ConsoleSidebar,
+  type ConsoleSidebarProps,
+  type ConsoleSidebarItemRenderProps,
+  type ConsoleSidebarIconRenderProps,
+  type RouterLinkComponent,
+} from './ConsoleSidebar';
+
 // Session bindings — React context + hooks over the vanilla session core
 // (session/client.ts, me.ts, reauth.ts, frontChannel.ts). No vue, no pinia.
 export {
