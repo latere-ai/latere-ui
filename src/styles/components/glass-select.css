@@ -1,0 +1,51 @@
+/* GlassSelect — de-scoped from the SFC so the Vue and React adapters share
+ * one stylesheet. Load after `latere-ui/glass` (the material layer). */
+.lu-select { position: relative; }
+.lu-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 16px;
+  border-radius: var(--radius-pill, 999px);
+  font: inherit;
+  font-size: var(--fs-body-sm, 13px);
+  color: var(--text, #0a0a0a);
+  cursor: pointer;
+  box-shadow: none;
+}
+.lu-select-trigger:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: 2px; }
+.lu-select-trigger:disabled { opacity: 0.5; cursor: not-allowed; }
+.lu-select-value.is-placeholder { color: var(--text-muted, #a0a0a0); }
+.lu-select-chevron { color: var(--text-muted, #a0a0a0); font-size: 10px; }
+.lu-select-list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 900;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 6px;
+  border-radius: var(--radius-md, 16px);
+  list-style: none;
+  margin: 0;
+}
+.lu-select-option {
+  padding: 7px 10px;
+  border-radius: var(--radius-sm, 12px);
+  font-size: var(--fs-body-sm, 13px);
+  color: var(--text, #0a0a0a);
+  cursor: pointer;
+}
+.lu-select-option.is-active { background: var(--accent-subtle, rgba(0, 0, 0, 0.04)); }
+.lu-select-option.is-selected { font-weight: var(--fw-semibold, 600); color: var(--text, #0a0a0a); background: var(--glass-pill-fill, rgba(255, 255, 255, 0.70)); }
+.lu-select-option.is-selected.is-active { background: var(--glass-pill-fill, rgba(255, 255, 255, 0.70)); }
+.lu-select-option.is-disabled { opacity: 0.45; cursor: not-allowed; }
+.lu-select-enter-active, .lu-select-leave-active { transition: opacity 0.14s ease, transform 0.14s ease; }
+.lu-select-enter-from, .lu-select-leave-to { opacity: 0; transform: translateY(-4px); }
+@media (prefers-reduced-motion: reduce) {
+  .lu-select-enter-active, .lu-select-leave-active { transition: none; }
+  .lu-select-enter-from, .lu-select-leave-to { transform: none; }
+}

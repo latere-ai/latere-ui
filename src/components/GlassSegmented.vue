@@ -49,4 +49,3 @@ function onKey(e: KeyboardEvent, i: number) {
     >{{ opt.label }}</button>
   </div>
 </template>
-

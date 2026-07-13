@@ -17,4 +17,3 @@ withDefaults(defineProps<{
     :style="{ width: `${size}px`, height: `${size}px` }"
   />
 </template>
-

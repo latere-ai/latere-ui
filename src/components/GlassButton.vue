@@ -48,4 +48,3 @@ function onClick(ev: MouseEvent) {
     <span class="lu-btn-label"><slot /></span>
   </button>
 </template>
-

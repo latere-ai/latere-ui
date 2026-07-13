@@ -37,4 +37,3 @@ const color = computed(() => TONE_VAR[props.tone] ?? TONE_VAR.neutral);
     <slot />
   </span>
 </template>
-

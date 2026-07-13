@@ -1,0 +1,38 @@
+/* GlassField — de-scoped from the SFC so the Vue and React adapters share
+ * one stylesheet. Load after `latere-ui/glass` (the material layer).
+ * The invalid state anchors on .lu-field so the bare .is-invalid state class
+ * cannot leak into global scope. */
+.lu-field { display: flex; flex-direction: column; gap: 5px; }
+.lu-field-label {
+  font-size: var(--fs-micro, 12px);
+  font-weight: var(--fw-medium, 500);
+  color: var(--text-secondary, #666);
+}
+.lu-field-control {
+  width: 100%;
+  padding: 9px 14px;
+  border-radius: var(--radius-md, 16px);
+  font-family: inherit;
+  font-size: var(--fs-body-sm, 13px);
+  color: var(--text, #0a0a0a);
+  /* .lu-glass-ultrathin supplies background/blur/border; override the box-shadow
+   * so a resting field is flat, lifting only on focus. */
+  box-shadow: none;
+  transition: box-shadow 0.16s ease, border-color 0.16s ease;
+}
+.lu-field-control::placeholder { color: var(--text-muted, #a0a0a0); }
+.lu-field-control:focus {
+  outline: none;
+  border-color: var(--accent, #171717);
+  box-shadow: 0 0 0 3px var(--accent-glow, rgba(0, 0, 0, 0.08));
+}
+.lu-field.is-invalid .lu-field-control {
+  border-color: var(--state-error, #a8412e);
+}
+.lu-field.is-invalid .lu-field-control:focus {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--state-error, #a8412e) 25%, transparent);
+}
+.lu-field-error { font-size: var(--fs-micro, 12px); color: var(--state-error, #a8412e); }
+@media (prefers-reduced-motion: reduce) {
+  .lu-field-control { transition: none; }
+}
