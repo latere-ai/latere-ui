@@ -4,6 +4,7 @@
 // an opaque background themselves — glass is chrome, not content.
 import GlassSurface from './GlassSurface.vue';
 import type { GlassTier } from '../glass/useGlass';
+import '../styles/components/glass-panel.css';
 
 withDefaults(defineProps<{
   /** Override the tier if a panel needs a thinner/thicker material. */
@@ -21,11 +22,3 @@ withDefaults(defineProps<{
     <slot />
   </GlassSurface>
 </template>
-
-<style scoped>
-.lu-panel {
-  padding: var(--space-5, 20px);
-  border-radius: var(--radius-lg, 22px);
-}
-.lu-panel-flush { padding: 0; }
-</style>

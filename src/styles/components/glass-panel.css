@@ -1,0 +1,9 @@
+/* GlassPanel — de-scoped from the SFC so the Vue and React adapters share one
+ * stylesheet. Load after `latere-ui/glass` (the material layer it composes).
+ * `.lu-gs.lu-panel` keeps the specificity the scoped block had, so the panel
+ * radius/padding still beat GlassSurface's (still-scoped) `.lu-gs` box rules. */
+.lu-gs.lu-panel {
+  padding: var(--space-5, 20px);
+  border-radius: var(--radius-lg, 22px);
+}
+.lu-panel.lu-panel-flush { padding: 0; }

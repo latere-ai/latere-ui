@@ -1,0 +1,17 @@
+/* GlassBar — de-scoped from the SFC so the Vue and React adapters share one
+ * stylesheet. Load after `latere-ui/glass` (the material layer it composes).
+ * `.lu-gs.lu-bar*` keeps the specificity the scoped block had, so the pill
+ * radius and sticky positioning still beat GlassSurface's (still-scoped)
+ * `.lu-gs` box rules (border-radius, position: relative). */
+.lu-gs.lu-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 12px);
+  padding: var(--space-2, 8px) var(--space-4, 16px);
+  border-radius: var(--radius-pill, 999px);
+}
+.lu-gs.lu-bar-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}

@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
@@ -12,6 +12,17 @@ import { describe, expect, it } from 'vitest';
 
 const root = process.cwd();
 const read = (p: string) => readFileSync(resolve(root, p), 'utf8');
+
+// A de-scoped component's shared stylesheet (src/styles/components/<kebab>.css),
+// or null while its styles still live in the SFC's scoped block.
+function sharedSheet(sfcName: string): string | null {
+  const kebab = sfcName
+    .replace(/\.vue$/, '')
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .toLowerCase();
+  const rel = `src/styles/components/${kebab}.css`;
+  return existsSync(resolve(root, rel)) ? rel : null;
+}
 
 describe('focus-visible treatment', () => {
   it('defines the --focus-outline token for the light and dark themes', () => {
@@ -80,6 +91,13 @@ describe('focus-visible treatment', () => {
         if (sheet) expect(read(sheet)).toContain(':focus-visible');
         continue;
       }
+      // De-scoped components (react-support v1.27) keep their styles in the
+      // shared per-component sheet; the gate follows the styles there.
+      const shared = sharedSheet(name);
+      if (shared) {
+        expect(read(shared), `${shared} must style :focus-visible`).toContain(':focus-visible');
+        continue;
+      }
       expect(src.includes(':focus-visible'), `${name} must style :focus-visible`).toBe(true);
     }
   });
@@ -88,12 +106,18 @@ describe('focus-visible treatment', () => {
     const components = readdirSync(resolve(root, 'src/components')).filter((n) =>
       n.endsWith('.vue'),
     );
-    for (const name of components) {
-      const src = read(`src/components/${name}`);
+    const sheets = existsSync(resolve(root, 'src/styles/components'))
+      ? readdirSync(resolve(root, 'src/styles/components'))
+          .filter((n) => n.endsWith('.css'))
+          .map((n) => `src/styles/components/${n}`)
+      : [];
+    const sources = [...components.map((n) => `src/components/${n}`), ...sheets];
+    for (const path of sources) {
+      const src = read(path);
       for (const line of src.split('\n')) {
         if (!line.includes('outline:') || line.includes('outline: none')) continue;
         // Every outline declaration must resolve from the token first.
-        expect(line.includes('var(--focus-outline'), `${name}: ${line.trim()}`).toBe(true);
+        expect(line.includes('var(--focus-outline'), `${path}: ${line.trim()}`).toBe(true);
       }
     }
   });
