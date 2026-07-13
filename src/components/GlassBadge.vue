@@ -2,6 +2,7 @@
 // A small status pill. `tone` maps to the product's --state-* tokens so status
 // dots/badges harmonize with the theme. Thin glass by default; `solid` fills it.
 import { computed } from 'vue';
+import '../styles/components/glass-badge.css';
 
 const props = withDefaults(defineProps<{
   tone?: 'neutral' | 'running' | 'idle' | 'stopped' | 'error' | 'creating';
@@ -37,29 +38,3 @@ const color = computed(() => TONE_VAR[props.tone] ?? TONE_VAR.neutral);
   </span>
 </template>
 
-<style scoped>
-.lu-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 3px 11px;
-  border-radius: var(--radius-pill, 999px);
-  font-size: var(--fs-micro, 12px);
-  font-weight: var(--fw-medium, 500);
-  line-height: 1.5;
-  color: var(--tone);
-  box-shadow: none;
-}
-.is-solid {
-  background: var(--tone);
-  color: var(--glass-smoke-ink, #fff);
-  border: 1px solid transparent;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
-}
-.lu-badge-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: currentColor;
-}
-</style>

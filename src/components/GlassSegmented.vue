@@ -5,6 +5,7 @@
 // Requires `import 'latere-ui/glass'`.
 import { ref } from 'vue';
 import type { SegmentOption } from '../glass/types';
+import '../styles/components/glass-segmented.css';
 
 const props = defineProps<{
   modelValue: string;
@@ -49,30 +50,3 @@ function onKey(e: KeyboardEvent, i: number) {
   </div>
 </template>
 
-<style scoped>
-.lu-seg {
-  display: inline-flex;
-  gap: 2px;
-  padding: 3px;
-  border-radius: var(--radius-pill, 999px);
-}
-.lu-seg-item {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  padding: 5px 14px;
-  border-radius: var(--radius-pill, 999px);
-  font: inherit;
-  font-size: var(--fs-micro, 12px);
-  font-weight: var(--fw-medium, 500);
-  color: var(--text-secondary, #666);
-  transition: background 0.14s ease, color 0.14s ease;
-}
-.lu-seg-item.is-active {
-  background: var(--glass-pill-fill, var(--bg-surface, #fff));
-  color: var(--text, #0a0a0a);
-  box-shadow: var(--shadow, 0 1px 2px rgba(0, 0, 0, 0.06));
-}
-.lu-seg-item:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: 1px; }
-@media (prefers-reduced-motion: reduce) { .lu-seg-item { transition: none; } }
-</style>

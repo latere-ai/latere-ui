@@ -4,6 +4,7 @@
 // destructive. Composes the material so it inherits the a11y fallbacks.
 // Requires `import 'latere-ui/glass'`.
 import { computed } from 'vue';
+import '../styles/components/glass-button.css';
 
 const props = withDefaults(defineProps<{
   variant?: 'glass' | 'primary' | 'ghost' | 'danger';
@@ -48,79 +49,3 @@ function onClick(ev: MouseEvent) {
   </button>
 </template>
 
-<style scoped>
-.lu-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  border-radius: var(--radius-pill, 999px);
-  font-family: inherit;
-  font-weight: var(--fw-medium, 500);
-  line-height: 1;
-  cursor: pointer;
-  color: var(--text, #0a0a0a);
-  border: 1px solid transparent;
-  transition: background 0.16s ease, box-shadow 0.16s ease, opacity 0.16s ease;
-  white-space: nowrap;
-}
-.lu-btn-md { padding: 10px 20px; font-size: var(--fs-body-sm, 13px); }
-.lu-btn-sm { padding: 7px 16px; font-size: var(--fs-micro, 12px); }
-
-/* Default: thin glass (the .lu-glass-thin class supplies bg/blur/edge/border). */
-.lu-btn-glass { color: var(--text-secondary, #666); }
-.lu-btn-glass:hover { box-shadow: var(--glass-edge-thick, var(--glass-edge)); }
-
-/* Primary: smoked ink glass — a translucent dark capsule, not a flat accent fill. */
-.lu-btn-primary {
-  background: var(--glass-smoke-strong, #171717);
-  color: var(--glass-smoke-ink, #fafafa);
-  border-color: transparent;
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  backdrop-filter: blur(20px) saturate(180%);
-  box-shadow:
-    0 14px 34px rgba(0, 0, 0, 0.24),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.25),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
-}
-.lu-btn-primary:hover {
-  box-shadow:
-    0 18px 42px rgba(0, 0, 0, 0.3),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.25),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
-}
-
-.lu-btn-ghost { background: transparent; color: var(--text-secondary, #666); }
-.lu-btn-ghost:hover { background: var(--accent-subtle, rgba(0, 0, 0, 0.04)); }
-
-.lu-btn-danger {
-  background: var(--state-error, #a8412e);
-  color: #fafafa;
-  box-shadow:
-    0 14px 34px rgba(168, 65, 46, 0.3),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.25),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
-}
-.lu-btn-danger:hover { filter: brightness(0.94); }
-
-.lu-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.lu-btn:focus-visible {
-  outline: var(--focus-outline, 2px solid var(--accent, #171717));
-  outline-offset: 2px;
-}
-
-.lu-btn-spin {
-  width: 0.85em;
-  height: 0.85em;
-  border: 2px solid currentColor;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: lu-btn-spin 0.6s linear infinite;
-}
-.is-loading .lu-btn-label { opacity: 0.85; }
-@keyframes lu-btn-spin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) {
-  .lu-btn { transition: none; }
-  .lu-btn-spin { animation-duration: 1.2s; }
-}
-</style>
