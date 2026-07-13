@@ -20,3 +20,15 @@ export type { GlassTier } from './GlassSurface';
 
 // Shared value types (framework-free .ts modules).
 export type { SelectOption, SegmentOption, TableColumn } from '../glass/types';
+
+// Session bindings — React context + hooks over the vanilla session core
+// (session/client.ts, me.ts, reauth.ts, frontChannel.ts). No vue, no pinia.
+export {
+  SessionProvider,
+  useSession,
+  useSessionGate,
+  type SessionProviderProps,
+  type SessionContextValue,
+  type UseSessionGateOptions,
+  type UseSessionGate,
+} from './session';
