@@ -31,11 +31,16 @@ export {
   type RouterLinkComponent,
 } from './ConsoleSidebar';
 
+// Account menu — reuses the headless types/defaults from components/accountMenu.ts.
+export { AccountMenu, type AccountMenuProps } from './AccountMenu';
+export type { AccountMenuLabels, AccountMenuLabelOverrides, AccountMenuItem, AccountRoleLabels } from '../components/accountMenu';
+
 // Session bindings — React context + hooks over the vanilla session core
 // (session/client.ts, me.ts, reauth.ts, frontChannel.ts). No vue, no pinia.
 export {
   SessionProvider,
   useSession,
+  useOptionalSession,
   useSessionGate,
   type SessionProviderProps,
   type SessionContextValue,

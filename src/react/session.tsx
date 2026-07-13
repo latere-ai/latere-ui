@@ -278,6 +278,16 @@ export function useSession(): SessionContextValue {
   return ctx;
 }
 
+/**
+ * Like `useSession()`, but returns `null` instead of throwing when there is
+ * no ancestor `<SessionProvider>`. Used by components (e.g. `AccountMenu`)
+ * that work standalone with explicit props but opportunistically wire
+ * themselves up when a provider is present.
+ */
+export function useOptionalSession(): SessionContextValue | null {
+  return useContext(SessionContext);
+}
+
 export interface UseSessionGateOptions {
   /**
    * Path used to compute `return_to` and to re-run the gate check when it
