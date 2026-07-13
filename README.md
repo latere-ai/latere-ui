@@ -327,6 +327,122 @@ message.success('Saved');
 if (await confirm({ message: 'Delete this sandbox?', danger: true })) { /* … */ }
 ```
 
+## React
+
+Vue is the primary target, but a subset of the library — the twelve Glass
+primitives, the console shell, and the session client — also ships as React
+bindings from `latere-ui/react`. Source-shipped `.tsx`, compiled by the host
+app exactly as Vue hosts compile the SFCs; both frameworks import the same
+`src/styles/components/*.css` sheets, so rendered output is pixel-identical.
+`react` / `react-dom` are **optional peer dependencies** — install them
+yourself (`^18` or `^19`) if your app doesn't already have them; nothing in
+`latere-ui/react` imports `vue` or `pinia`.
+
+```sh
+bun add github:latere-ai/latere-ui#v1.27.0 react react-dom
+```
+
+### Session
+
+`SessionProvider` owns the same state machine the Vue store + `useSession`
+composable do — resolve `/me` on mount, the global 401 seam, org switching,
+front-channel logout — built on the identical framework-agnostic core
+(`session/client.ts`, `me.ts`, `reauth.ts`). `useSession()` reads it;
+`useSessionGate()` is the router-agnostic port of the Vue route gate.
+
+```tsx
+import { SessionProvider, useSession, AccountMenu } from 'latere-ui/react';
+
+function App() {
+  return (
+    <SessionProvider csrfCookie="csrf_token" defaultReturnTo="/dashboard">
+      <Shell />
+    </SessionProvider>
+  );
+}
+
+function Shell() {
+  const { principal, loading, login, logout, switchOrg } = useSession();
+  if (loading) return <Spinner />;
+  return (
+    <>
+      {/* AccountMenu reads principal/login/logout/switchOrg from the
+          ambient SessionProvider automatically when no matching prop is
+          passed — pass `principal` explicitly to override. */}
+      <AccountMenu dashboardPath="/dashboard" />
+      {principal ? <Dashboard /> : <button onClick={() => login()}>Sign in</button>}
+    </>
+  );
+}
+```
+
+### Console shell
+
+```tsx
+import { ConsoleSidebar, AccountMenu, type ConsoleNavModel } from 'latere-ui/react';
+import 'latere-ui/console';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+
+const model: ConsoleNavModel = {
+  groups: [
+    { label: 'Workspace', items: [
+      { id: 'requests', label: 'Requests', to: '/requests', badge: 'live' },
+    ] },
+  ],
+};
+
+function Rail() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  return (
+    <ConsoleSidebar
+      model={model}
+      activeKey={location.pathname}
+      brandName="Lux" brandSub="Console" brandTheme="lux"
+      routerLink={Link}
+      onNavigate={(item) => item.to && navigate(item.to)}
+      foot={<AccountMenu placement="bottom-start" />}
+    />
+  );
+}
+```
+
+`routerLink` must forward `className`/`title`/`onClick`/`children` itself —
+React has no Vue-style attrs fallthrough onto a child component's root
+element; real router `Link` components already do this. Collapse is
+`collapsed`/`onCollapsedChange` (controlled) or uncontrolled if omitted.
+`product`/`productLabels` (the ProductSwitcher head integration) are not
+ported — use `brandExtra` for a custom head control.
+
+### Glass primitives
+
+`GlassButton, GlassPanel, GlassBar, GlassField, GlassBadge, GlassAlert,
+GlassSpinner, GlassSelect, GlassCheckbox, GlassTable, GlassModal,
+GlassSegmented` — same names and class output as the Vue components, `v-model`
+becomes `value`/`onChange`, slots become `children` or a render-prop function.
+Requires `import 'latere-ui/glass'` for the material CSS, same as Vue.
+
+```tsx
+import { GlassButton, GlassModal } from 'latere-ui/react';
+import 'latere-ui/glass';
+
+function Example() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <GlassButton onClick={() => setOpen(true)}>Open</GlassButton>
+      <GlassModal open={open} title="Confirm" onClose={() => setOpen(false)}>
+        Body content.
+      </GlassModal>
+    </>
+  );
+}
+```
+
+Everything else in the library (Drawer, Toaster, Popover, DocsLayout,
+SiteFooter, ProductSwitcher, ConsolePalette, …) is Vue-only for now — ported
+incrementally as React consumers need it.
+
 ## Develop
 
 ```sh

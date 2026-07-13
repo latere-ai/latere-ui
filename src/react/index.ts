@@ -30,6 +30,8 @@ export {
   type ConsoleSidebarIconRenderProps,
   type RouterLinkComponent,
 } from './ConsoleSidebar';
+export { partitionGroups, flattenNavItems, isItemDisabled } from '../console/nav';
+export type { NavItem, NavGroup, FlatNavItem, ConsoleNavModel } from '../console/nav';
 
 // Account menu — reuses the headless types/defaults from components/accountMenu.ts.
 export { AccountMenu, type AccountMenuProps } from './AccountMenu';
@@ -47,3 +49,21 @@ export {
   type UseSessionGateOptions,
   type UseSessionGate,
 } from './session';
+// Vanilla async core (framework-agnostic) — re-exported here so a React
+// consumer doesn't need to reach into the Vue-flavored `latere-ui` entry for
+// the types SessionProvider/AccountMenu's props are built from.
+export { me, orgs, switchOrg, switchPersonal, logout, login } from '../session/me';
+export { createApiClient, ApiError } from '../session/client';
+export { runFrontChannelLogout } from '../session/frontChannel';
+export type {
+  Principal,
+  PlatformRole,
+  OrgEntry,
+  ApiClient,
+  ApiClientOptions,
+  RequestOptions,
+  UnauthorizedContext,
+  ExpiredSessionMode,
+  SwitchOrgMode,
+} from '../session/types';
+export type { FrontChannelLogoutOptions, FrontChannelLogoutResponse } from '../session/frontChannel';
