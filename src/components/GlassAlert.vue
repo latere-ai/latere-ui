@@ -3,6 +3,7 @@
 // and optional dismiss. For transient notifications use the `message()` toast
 // service instead. Requires `import 'latere-ui/glass'`.
 import { computed } from 'vue';
+import '../styles/components/glass-alert.css';
 
 const props = withDefaults(defineProps<{
   tone?: 'info' | 'success' | 'warning' | 'error';
@@ -41,35 +42,3 @@ const role = computed(() => (props.tone === 'error' ? 'alert' : 'status'));
     >×</button>
   </div>
 </template>
-
-<style scoped>
-.lu-alert {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 14px 16px;
-  border-radius: var(--radius-md, 16px);
-  border-left: 3px solid var(--tone);
-  color: var(--text, #0a0a0a);
-}
-.lu-alert-body { flex: 1; min-width: 0; }
-.lu-alert-title {
-  font-weight: var(--fw-semibold, 600);
-  font-size: var(--fs-body-sm, 13px);
-  color: var(--text, #0a0a0a);
-  margin-bottom: 2px;
-}
-.lu-alert-text { font-size: var(--fs-body-sm, 13px); color: var(--text-secondary, #666); }
-.lu-alert-close {
-  flex: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  line-height: 1;
-  color: var(--text-muted, #a0a0a0);
-  padding: 0 2px;
-}
-.lu-alert-close:hover { color: var(--text, #0a0a0a); }
-.lu-alert-close:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: 2px; }
-</style>

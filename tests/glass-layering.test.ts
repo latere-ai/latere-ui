@@ -33,8 +33,10 @@ describe('overlay layering scale', () => {
   });
 
   it('every floating surface reads the scale (no hardcoded z-index)', () => {
-    expect(read('src/components/GlassModal.vue')).toMatch(/z-index:\s*var\(--lu-z-modal/);
-    expect(read('src/components/GlassModal.vue')).toMatch(/scrim--confirm\s*\{\s*z-index:\s*var\(--lu-z-confirm/);
+    // GlassModal's styles are de-scoped into the shared component sheet
+    // (react-support v1.27); the layering contract moved with them.
+    expect(read('src/styles/components/glass-modal.css')).toMatch(/z-index:\s*var\(--lu-z-modal/);
+    expect(read('src/styles/components/glass-modal.css')).toMatch(/scrim--confirm\s*\{\s*z-index:\s*var\(--lu-z-confirm/);
     expect(read('src/components/GlassToaster.vue')).toMatch(/z-index:\s*var\(--lu-z-toast/);
     expect(read('src/components/GlassPopover.vue')).toMatch(/z-index:\s*var\(--lu-z-popover/);
     expect(read('src/components/GlassTooltip.vue')).toMatch(/z-index:\s*var\(--lu-z-tooltip/);

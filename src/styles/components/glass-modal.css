@@ -1,0 +1,48 @@
+/* GlassModal — de-scoped from the SFC so the Vue and React adapters share
+ * one stylesheet. Load after `latere-ui/glass` (the material layer). */
+.lu-modal-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--lu-z-modal, 1000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--glass-dim, rgba(0, 0, 0, 0.28));
+  -webkit-backdrop-filter: blur(2px);
+          backdrop-filter: blur(2px);
+}
+.lu-modal-scrim--confirm { z-index: var(--lu-z-confirm, 1200); }
+.lu-modal {
+  width: 100%;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  border-radius: var(--radius-xl, 28px);
+  padding: 0;
+}
+.lu-modal-head { padding: 18px 20px 0; }
+.lu-modal-title {
+  font-size: var(--fs-h3, 1.15rem);
+  font-weight: var(--fw-semibold, 600);
+  color: var(--text, #0a0a0a);
+}
+.lu-modal-body { padding: 14px 20px; color: var(--text-secondary, #666); }
+.lu-modal-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 0 20px 18px;
+}
+.lu-modal-enter-active, .lu-modal-leave-active { transition: opacity 0.18s ease; }
+.lu-modal-enter-active .lu-modal, .lu-modal-leave-active .lu-modal {
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+.lu-modal-enter-from, .lu-modal-leave-to { opacity: 0; }
+.lu-modal-enter-from .lu-modal, .lu-modal-leave-to .lu-modal {
+  transform: translateY(8px) scale(0.98);
+}
+@media (prefers-reduced-motion: reduce) {
+  .lu-modal-enter-active, .lu-modal-leave-active,
+  .lu-modal-enter-active .lu-modal, .lu-modal-leave-active .lu-modal { transition: none; }
+  .lu-modal-enter-from .lu-modal, .lu-modal-leave-to .lu-modal { transform: none; }
+}
