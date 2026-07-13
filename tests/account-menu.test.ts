@@ -38,8 +38,13 @@ describe('AccountMenu', () => {
   it('org/team initials tiles keep ink-on-accent contrast in both themes', () => {
     // Dark themes flip --accent to a light tone; hardcoded white initials
     // washed out on the light tile (founder-reported). Ink must be var(--bg).
-    const sfc = readFileSync(resolve(process.cwd(), 'src/components/AccountMenu.vue'), 'utf8');
-    const rule = sfc.slice(sfc.indexOf('.lu-am-org-team {'), sfc.indexOf('.lu-am-org-text'));
+    // AccountMenu's styles are de-scoped into the shared component sheet
+    // (react-support v1.27); this contrast contract moved with them.
+    const css = readFileSync(
+      resolve(process.cwd(), 'src/styles/components/account-menu.css'),
+      'utf8',
+    );
+    const rule = css.slice(css.indexOf('.lu-am-org-team {'), css.indexOf('.lu-am-org-text'));
     expect(rule).toMatch(/color:\s*var\(--bg/);
     expect(rule).not.toMatch(/color:\s*#fff/);
   });
@@ -142,17 +147,18 @@ describe('AccountMenu', () => {
   // fix drops the head's border-bottom so the first section's border-top is the
   // single header separator. Guard the CSS so the doubling can't return.
   it('does not declare both a head border-bottom and a dead first-of-type guard', () => {
-    const src = readFileSync(
-      resolve(process.cwd(), 'src/components/AccountMenu.vue'),
+    // AccountMenu's styles are de-scoped into the shared component sheet
+    // (react-support v1.27); this regression guard moved with them.
+    const css = readFileSync(
+      resolve(process.cwd(), 'src/styles/components/account-menu.css'),
       'utf8',
     );
-    const styleBlock = src.slice(src.indexOf('<style'));
-    const headRule = styleBlock.slice(
-      styleBlock.indexOf('.lu-am-head {'),
-      styleBlock.indexOf('}', styleBlock.indexOf('.lu-am-head {')),
+    const headRule = css.slice(
+      css.indexOf('.lu-am-head {'),
+      css.indexOf('}', css.indexOf('.lu-am-head {')),
     );
     expect(headRule).not.toContain('border-bottom');
-    expect(styleBlock).not.toContain('.lu-am-section:first-of-type');
+    expect(css).not.toContain('.lu-am-section:first-of-type');
   });
 
   // Regression: the dropdown filled with a single translucent `--glass-bg-thick`
@@ -162,14 +168,15 @@ describe('AccountMenu', () => {
   // tint over a solid `--bg-surface` base so occlusion no longer depends on the
   // blur resolving. Guard that the panel keeps a solid backing.
   it('composites the dropdown tint over a solid surface (occludes without blur)', () => {
-    const src = readFileSync(
-      resolve(process.cwd(), 'src/components/AccountMenu.vue'),
+    // AccountMenu's styles are de-scoped into the shared component sheet
+    // (react-support v1.27); this regression guard moved with them.
+    const css = readFileSync(
+      resolve(process.cwd(), 'src/styles/components/account-menu.css'),
       'utf8',
     );
-    const styleBlock = src.slice(src.indexOf('<style'));
-    const ddRule = styleBlock.slice(
-      styleBlock.indexOf('.lu-am-dd {'),
-      styleBlock.indexOf('}', styleBlock.indexOf('.lu-am-dd {')),
+    const ddRule = css.slice(
+      css.indexOf('.lu-am-dd {'),
+      css.indexOf('}', css.indexOf('.lu-am-dd {')),
     );
     // The background must include a solid surface base under the glass tint, not
     // a lone translucent `--glass-bg-thick`.
