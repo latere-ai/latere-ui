@@ -12,7 +12,7 @@
 import type MarkdownIt from 'markdown-it';
 import type { Options as MarkdownItOptions } from 'markdown-it';
 
-import { slugify } from './toc';
+import { headingSlugSource, slugify } from './toc';
 
 export interface MarkdownConfig {
   /** markdown-it options, merged over the defaults (html+linkify on). */
@@ -36,7 +36,7 @@ function addHeadingIds(md: MarkdownIt, levels: number[]): void {
       const t = tokens[i];
       if (t.type !== 'heading_open' || !tags.has(t.tag)) continue;
       const inline = tokens[i + 1];
-      const text = inline?.content ?? '';
+      const text = inline ? headingSlugSource(inline) : '';
       if (!text) continue;
       if (t.attrIndex('id') < 0) t.attrSet('id', slugify(text, used));
       else used.add(t.attrGet('id') ?? '');

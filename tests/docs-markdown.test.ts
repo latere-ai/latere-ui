@@ -26,6 +26,27 @@ describe('createMarkdown()', () => {
     expect(html).toContain('<h3>Three</h3>'); // no id at h3
   });
 
+  // The rendered heading is what a reader sees and what the TOC slugifies
+  // from the DOM; the id must come from the same text, not from the raw
+  // markdown source of the heading (URLs, image paths, markup characters).
+  it('anchor ids match slugify of rendered visible text for headings with inline markup', () => {
+    const md = createMarkdown(MarkdownIt);
+    const parse = (src: string) => {
+      const doc = new DOMParser().parseFromString(md.render(src), 'text/html');
+      const h = doc.querySelector('h2');
+      if (!h) throw new Error('no heading rendered');
+      return h;
+    };
+    for (const src of [
+      '## See [Docs](https://example.com)',
+      '## Image ![alt](/x.png) end',
+      '## Use `createMarkdown` with **bold** and _em_',
+    ]) {
+      const h = parse(src);
+      expect(h.getAttribute('id')).toBe(slugify((h.textContent ?? '').trim()));
+    }
+  });
+
   it('rewrites link hrefs through rewriteLink', () => {
     const md = createMarkdown(MarkdownIt, {
       rewriteLink: (href) => (href.endsWith('.md') ? `/docs/${href.replace(/\.md$/, '')}` : undefined),

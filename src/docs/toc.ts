@@ -50,6 +50,29 @@ export function slugify(text: string, used?: Set<string>): string {
   return slug;
 }
 
+/**
+ * Visible text of a heading's inline token, the source string the id scheme
+ * slugifies. It is the token-level equivalent of `element.textContent`, which
+ * is what `scan()` slugifies from the DOM: one id scheme, two representations
+ * of the same text. `inline.content` is the raw markdown source and must not
+ * be used — it carries link URLs, image paths, and markup characters that the
+ * reader never sees.
+ *
+ * Images are skipped explicitly: markdown-it puts a heading image's alt text
+ * in `token.content`, so a default text branch would fold alt text into the id
+ * while the rendered `<img>` contributes nothing to `textContent`.
+ */
+export function headingSlugSource(inline: { children?: { type: string; content: string }[] | null }): string {
+  const children = inline.children;
+  if (!children) return '';
+  let out = '';
+  for (const t of children) {
+    if (t.type === 'text' || t.type === 'code_inline') out += t.content;
+    else if (t.type === 'softbreak' || t.type === 'hardbreak') out += ' ';
+  }
+  return out;
+}
+
 const hasDom = (): boolean =>
   typeof document !== 'undefined' && typeof window !== 'undefined';
 
