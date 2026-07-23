@@ -80,9 +80,14 @@ export function createSessionStore<Raw = Principal>(opts: SessionStoreOptions<Ra
     // Called by the client's global 401 seam when an authenticated request
     // fails mid-session. This is the fix for "expired session not rejected":
     // silent re-auth once, then an interactive login. Terminal, never a loop.
-    function handleExpired(path?: string) {
+    //
+    // Takes no arguments so it is safe to install point-free
+    // (`client.onUnauthorized = store.handleExpired`): the seam invokes it with
+    // an UnauthorizedContext, and a return_to must be the page the user is on,
+    // never the failing request's URL. recoverSession resolves it.
+    function handleExpired() {
       me.value = null;
-      reauth.recoverSession(path);
+      reauth.recoverSession();
     }
 
     function login(returnTo: string = defaultReturnTo) {

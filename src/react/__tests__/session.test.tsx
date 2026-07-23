@@ -89,6 +89,9 @@ describe('SessionProvider / useSession', () => {
   });
 
   it('a mid-session 401 clears the principal and runs the silent-recheck seam', async () => {
+    // return_to must be the page the user is on, not the API path that 401'd;
+    // otherwise re-auth lands them on a raw JSON response.
+    stubLocation('/settings/billing', '?tab=payment');
     vi.stubGlobal(
       'fetch',
       mockFetch([
@@ -105,7 +108,36 @@ describe('SessionProvider / useSession', () => {
 
     expect(result.current.principal).toBeNull();
     expect(hrefSpy).toHaveBeenCalledTimes(1);
-    expect(hrefSpy.mock.calls[0][0]).toContain('/login?prompt=none&return_to=');
+    expect(hrefSpy.mock.calls[0][0]).toBe(
+      '/login?prompt=none&return_to=' + encodeURIComponent('/settings/billing?tab=payment'),
+    );
+  });
+
+  it('a mid-session 401 after the silent recheck falls back to interactive login on the current page', async () => {
+    // Silent re-auth already ran this tab, so recoverSession goes straight to
+    // the interactive login. It must carry the same current-page return_to.
+    stubLocation('/settings/billing', '?tab=payment');
+    vi.stubGlobal(
+      'fetch',
+      mockFetch([
+        [200, PRINCIPAL],
+        [401, { error: 'unauthorized' }],
+      ]),
+    );
+    const { result } = renderHook(() => useSession(), { wrapper: wrapper() });
+    await waitFor(() => expect(result.current.principal).not.toBeNull());
+    // Set after the session resolves: a live session clears the flag.
+    sessionStorage.setItem('latere.sso_checked.session', '1');
+
+    await act(async () => {
+      await expect(result.current.client.api('GET', '/v1/thing')).rejects.toThrow();
+    });
+
+    expect(result.current.principal).toBeNull();
+    expect(hrefSpy).toHaveBeenCalledTimes(1);
+    expect(hrefSpy.mock.calls[0][0]).toBe(
+      '/login?return_to=' + encodeURIComponent('/settings/billing?tab=payment'),
+    );
   });
 
   it('switchOrg follows the redirect from the endpoint', async () => {

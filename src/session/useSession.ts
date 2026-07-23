@@ -51,6 +51,11 @@ export interface UseSessionOptions {
    * What to run on a mid-session 401. Pass `store.handleExpired` so the store's
    * own expiry policy (graceful vs silent-recheck) decides. Defaults to a
    * silent recovery via this composable's reauth.
+   *
+   * Called with no meaningful arguments. The seam that ends up invoking it
+   * passes an `UnauthorizedContext`, so a handler that declares a parameter
+   * receives that object; the return destination is resolved from
+   * `window.location`, never from the failing request.
    */
   onExpired?: () => void;
 }

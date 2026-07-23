@@ -185,19 +185,18 @@ export function SessionProvider<Raw = Principal>({
     [reauth],
   );
 
-  const handleExpired = useCallback(
-    (path?: string) => {
-      principalRef.current = null;
-      setPrincipal(null);
-      reauth.recoverSession(path);
-    },
-    [reauth],
-  );
+  const handleExpired = useCallback(() => {
+    principalRef.current = null;
+    setPrincipal(null);
+    // No argument: recoverSession defaults to the page the user is on. The
+    // failing request's URL is not a destination a user can be returned to.
+    reauth.recoverSession();
+  }, [reauth]);
 
   // Global 401 seam: an authenticated request failing mid-session runs the
   // same recovery (silent re-auth once, then interactive login) as the store.
   useEffect(() => {
-    const onUnauthorized = (ctx: { path: string }) => handleExpired(ctx.path);
+    const onUnauthorized = () => handleExpired();
     client.onUnauthorized = onUnauthorized;
     return () => {
       if (client.onUnauthorized === onUnauthorized) client.onUnauthorized = undefined;

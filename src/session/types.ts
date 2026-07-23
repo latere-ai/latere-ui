@@ -61,9 +61,18 @@ export class ApiError extends Error {
   }
 }
 
-/** Context handed to the global 401 handler. */
+/** Context handed to the global 401 handler. Diagnostics only: describes the
+ *  request that failed, not anywhere the user should be sent. */
 export interface UnauthorizedContext {
+  /**
+   * URL of the request that returned 401, e.g. `/api/jobs`. For logging and
+   * telemetry. Never use it as a `return_to`: it is an API endpoint, so
+   * re-auth would land the user on a raw JSON response instead of the page
+   * they were on. Recovery helpers resolve the return destination from
+   * `window.location` themselves.
+   */
   path: string;
+  /** HTTP method of the failing request. */
   method: string;
 }
 
