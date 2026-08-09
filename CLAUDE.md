@@ -1,9 +1,9 @@
 - Respond short, precise, and concise.
 - If you didn't add a test, you didn't fix a bug. Every bug fix must include a reproducible test that fails without the fix and passes with it.
 - When implement a big feature, create specs first then implement. Each spec is tightly scoped.
-- You commit frequent and one small scope diff at a time.
+- Leftover must be cleaned up using follow up commits.
+- You commit frequently, one small scope diff at a time. Push to main once a full batch of work is complete and verified.
 - Target for high quality outcome, >90% coverage, each feature verified via an e2e test.
 - Write in audience language, where documents aim users value and usage understanding, api surface aim builders precision, and code comments aim tech precision.
-- Commit and push to main branch directly.
 - Specs live in specs/
 - Relevant latere projects and shared components (latere.ai/x/pkg/*) are in ../
