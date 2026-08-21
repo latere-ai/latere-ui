@@ -330,8 +330,8 @@ if (await confirm({ message: 'Delete this sandbox?', danger: true })) { /* … *
 ## React
 
 Vue is the primary target, but a subset of the library — the twelve Glass
-primitives, the console shell, and the session client — also ships as React
-bindings from `latere-ui/react`. Source-shipped `.tsx`, compiled by the host
+primitives, the console shell, the site footer, and the session client — also
+ships as React bindings from `latere-ui/react`. Source-shipped `.tsx`, compiled by the host
 app exactly as Vue hosts compile the SFCs; both frameworks import the same
 `src/styles/components/*.css` sheets, so rendered output is pixel-identical.
 `react` / `react-dom` are **optional peer dependencies** — install them
@@ -339,7 +339,7 @@ yourself (`^18` or `^19`) if your app doesn't already have them; nothing in
 `latere-ui/react` imports `vue` or `pinia`.
 
 ```sh
-bun add github:latere-ai/latere-ui#v1.27.0 react react-dom
+bun add github:latere-ai/latere-ui#v1.28.0 react react-dom
 ```
 
 ### Session
@@ -439,9 +439,36 @@ function Example() {
 }
 ```
 
+### Footer
+
+Same footer the Vue sites render, same `footer.css`. `v-model` splits into
+value + handler; the component imports its own stylesheet, so there is no
+`latere-ui/styles` import to remember.
+
+```tsx
+import { SiteFooter } from 'latere-ui/react';
+
+<SiteFooter
+  theme={theme} onThemeChange={setTheme}
+  locale={locale} onLocaleChange={setLocale}
+/>
+```
+
+`compact` swaps the product columns for a one-line bar, for app surfaces where
+the full footer is too tall. `routerLink` keeps internal links inside your SPA
+(relative `to`); without it they are absolute under `baseUrl`. An app that
+ships one language should pass `locales` with just that one, so the dropdown
+tells the truth.
+
+`footer.css` reads `--text`, `--text-secondary`, `--text-muted`, `--accent`,
+`--border`, `--bg-surface`, `--bg-raised`, `--shadow`, `--focus-outline` and
+the `--glass-*` set. If your app already has its own palette, alias them on
+`.site-footer` rather than importing `latere-ui/tokens`, which would redefine
+`--bg-*` for the whole page.
+
 Everything else in the library (Drawer, Toaster, Popover, DocsLayout,
-SiteFooter, ProductSwitcher, ConsolePalette, …) is Vue-only for now — ported
-incrementally as React consumers need it.
+ProductSwitcher, ConsolePalette, …) is Vue-only for now — ported incrementally
+as React consumers need it.
 
 ## Develop
 
