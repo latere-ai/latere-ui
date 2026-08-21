@@ -33,6 +33,14 @@ export {
 export { partitionGroups, flattenNavItems, isItemDisabled } from '../console/nav';
 export type { NavItem, NavGroup, FlatNavItem, ConsoleNavModel } from '../console/nav';
 
+// Site footer — the shared Latere footer in both variants. Copy and the
+// product lineup come from the same framework-free modules the SFC reads.
+export { SiteFooter, type SiteFooterProps } from './SiteFooter';
+export { LatereLogoMark } from './LatereLogoMark';
+export { translator, en, zh, de } from '../i18n/footer';
+export type { Locale, Messages, Theme, LocaleOption } from '../i18n/footer';
+export { LATERE_PRODUCTS, type ProductInfo, type ProductSlug } from '../components/productSwitcher';
+
 // Account menu — reuses the headless types/defaults from components/accountMenu.ts.
 export { AccountMenu, type AccountMenuProps } from './AccountMenu';
 export type { AccountMenuLabels, AccountMenuLabelOverrides, AccountMenuItem, AccountRoleLabels } from '../components/accountMenu';
