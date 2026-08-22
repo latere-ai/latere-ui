@@ -115,7 +115,7 @@ export function refract(el: LGElement): void {
   if (el.__lgRefract) return;
   const cs = getComputedStyle(el);
   const bf = cs.backdropFilter || (cs as unknown as { webkitBackdropFilter?: string }).webkitBackdropFilter || 'none';
-  if (bf === 'none' || bf.indexOf('url(') !== -1) return;
+  if (bf === 'none' || bf.includes('url(')) return;
   const w = el.offsetWidth;
   const h = el.offsetHeight;
   if (!w || !h || w * h > 700000) return;
