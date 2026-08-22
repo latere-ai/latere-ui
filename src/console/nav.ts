@@ -76,11 +76,7 @@ export interface FlatNavItem extends NavItem {
 
 /** Flatten the grouped model into one in-order list (for palettes/search). */
 export function flattenNavItems(groups: NavGroup[]): FlatNavItem[] {
-  const out: FlatNavItem[] = [];
-  for (const g of groups) {
-    for (const item of g.items) out.push({ ...item, groupLabel: g.label });
-  }
-  return out;
+  return groups.flatMap((g) => g.items.map((item) => ({ ...item, groupLabel: g.label })));
 }
 
 /** True when a row should not be interactive. */
