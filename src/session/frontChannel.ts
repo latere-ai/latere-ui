@@ -4,9 +4,9 @@
 // timeout so a dead RP cannot block the user's logout, then navigates to the
 // final post_logout_redirect.
 //
-// Latere-ai renders this flow server-side (see latere-ai/internal/handler/
-// auth.go's LogoutNotify path); SPAs that want client-side control over the
-// orchestration use runFrontChannelLogout() instead.
+// The marketing site renders this flow server-side from its logout-notify
+// handler; SPAs that want client-side control over the orchestration use
+// runFrontChannelLogout() instead.
 
 import type { ApiClient } from './types';
 

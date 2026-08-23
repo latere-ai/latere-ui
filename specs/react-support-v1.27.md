@@ -14,7 +14,7 @@ affects:
   - vitest.config.ts (@testing-library/react)
   - README.md (React consumer section)
 effort: large
-trigger: the eval console (latere-ai/eval) is React + Bun; latere-ui components are Vue-only, so a React consumer today gets only the vanilla session core and raw CSS
+trigger: a new internal console is React + Bun; latere-ui components are Vue-only, so a React consumer today gets only the vanilla session core and raw CSS
 created: 2026-07-13
 updated: 2026-07-13
 author: changkun

@@ -4,6 +4,7 @@ import { defineComponent, h } from 'vue';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { SiteFooter } from '../src';
+import { LATERE_PRODUCTS } from '../src/components/productSwitcher';
 
 function render(props: Record<string, unknown> = {}) {
   return mount(SiteFooter, {
@@ -21,9 +22,15 @@ describe('SiteFooter', () => {
     expect(html).toContain('https://wf.latere.ai/');
     expect(html).toContain('https://drive.latere.ai/');
     expect(html).toContain('https://auth.latere.ai/');
-    // Agon was retired: neither the name nor its site may reappear in the footer.
-    expect(html).not.toContain('Agon');
-    expect(html).not.toContain('agon.latere.ai');
+    // The lineup is exactly the registry, so a product retired from the
+    // registry cannot survive as a stray hardcoded link in the footer.
+    const productHrefs = w
+      .findAll('.footer-col a')
+      .map((a) => a.attributes('href'))
+      .filter((h): h is string => !!h && h.includes('.latere.ai'));
+    const expected = LATERE_PRODUCTS.filter((p) => p.slug !== 'identity').map((p) => `${p.url}/`);
+    expect(productHrefs.filter((h) => expected.includes(h)).length).toBe(expected.length);
+    expect(productHrefs.every((h) => expected.includes(h) || h === 'https://auth.latere.ai/')).toBe(true);
   });
 
   it('renders internal links as absolute URLs against baseUrl by default', () => {

@@ -11,7 +11,7 @@ affects:
   - package.json (bump to 1.28.0)
   - README.md (React footer section)
 effort: small
-trigger: replichai (React + Vite) is putting the shared footer on its landing page; v1.27 deferred the SiteFooter port until a React consumer appeared, and one has
+trigger: a React + Vite product landing page is adopting the shared footer; v1.27 deferred the SiteFooter port until a React consumer appeared, and one has
 created: 2026-08-21
 updated: 2026-08-21
 author: changkun

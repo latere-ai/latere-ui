@@ -6,11 +6,10 @@
 // The registry is the single source of truth for cross-product identity:
 // slug, display name, console origin, the canonical inline SVG mark, and the
 // primary brand color. The marks are copied verbatim from the marketing
-// site's product registry (latere-ai/frontend/src/data/products.ts), with
-// only sizing attributes adjusted, so the switcher, the library footer, and
-// the site all show the same founder-approved logos. SiteFooter renders its
-// product links from this registry too, so adding or retiring a product is a
-// one-place change.
+// site's product registry, with only sizing attributes adjusted, so the
+// switcher, the library footer, and the site all show the same logos.
+// SiteFooter renders its product links from this registry too, so adding or
+// retiring a product is a one-place change.
 
 export type ProductSlug =
   | 'wallfacer'

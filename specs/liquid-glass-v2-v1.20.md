@@ -223,10 +223,10 @@ ladder, mono eyebrows, glass tiers for floating surfaces.
 
 1. Build + release `latere-ui@1.20.0` (this spec) — token layer, shell,
    components, docs, footer; push + tag.
-2. `latere-ai` adopts: bump the pin to `1.20`, adopt the v2 Latere Design System
-   (second handoff), consume the Glass\* material/components. (Tracked
+2. The marketing site adopts: bump the pin to `1.20`, adopt the v2 Latere
+   Design System, consume the Glass\* material/components. (Tracked
    separately.)
-3. cella / wallfacer / lux adopt on their cadence; until they upgrade they stay
+3. Cella / Wallfacer / Lux adopt on their cadence; until they upgrade they stay
    on `1.10.x`.
 
 ## Outcome (2026-07-06)

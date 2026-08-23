@@ -15,7 +15,7 @@ affects:
   - package.json (bump to 1.9.0; add markdown-it as a peer/optional dep)
   - README.md (ConsoleSidebar + DocsLayout API sections)
 effort: large
-trigger: five product consoles (lux, sandbox, agents, wallfacer, lectio) each reimplement a near-identical sidebar shell and 2–3 reimplement a docs renderer; visual + structural drift across consoles
+trigger: five product consoles (Lux, Cella, Topos, Wallfacer, Lectio) each reimplement a near-identical sidebar shell and 2–3 reimplement a docs renderer; visual + structural drift across consoles
 created: 2026-06-14
 updated: 2026-06-14
 author: changkun
@@ -67,8 +67,8 @@ override visuals through slots and documented data attributes.
 
 ## Non-goals
 
-- **Not** unifying the diagram pipelines. lux's `[[diagram:name]]` Vue mounts,
-  sandbox's mermaid + zoom/pan modal, and wallfacer's light/dark image
+- **Not** unifying the diagram pipelines. Lux's `[[diagram:name]]` Vue mounts,
+  Cella's mermaid + zoom/pan modal, and Wallfacer's light/dark image
   rewriting are genuinely different and stay in each app behind a hook.
 - **Not** a router. `ConsoleSidebar` renders links via an injected
   `router-link` component (or `<a>` fallback); it never imports `vue-router`.
@@ -82,31 +82,31 @@ override visuals through slots and documented data attributes.
 Scoped to the five flagship consoles (marketing sites and headless harnesses
 excluded). Per-component consumer counts set the realistic payoff.
 
-| Project   | Sidebar today                                   | Docs today                                          |
+| Console   | Sidebar today                                   | Docs today                                          |
 | --------- | ----------------------------------------------- | --------------------------------------------------- |
-| lux       | `Sidebar.vue` — collapsible, `pin:'bottom'` groups, badges | `Docs.vue` — `[[diagram:name]]` Vue mounts          |
-| sandbox   | `Rail.vue` — **fixed** (no collapse), command palette | `Docs.vue` — mermaid + zoom/pan modal               |
-| agents    | `ConsoleShell.vue` — collapsible, internal `open` ref | — none                                              |
-| wallfacer | `Sidebar.vue` — collapsible, workspace switcher | `DocPage.vue` / `LocalDocsPage.vue` — TOC, light/dark images |
-| lectio    | `AppShell.vue` + `Nav.vue`                       | — (not deep-dived)                                  |
+| Lux       | collapsible, `pin:'bottom'` groups, badges      | `[[diagram:name]]` Vue mounts                       |
+| Cella     | **fixed** (no collapse), command palette        | mermaid + zoom/pan modal                            |
+| Topos     | collapsible, internal `open` ref                | — none                                              |
+| Wallfacer | collapsible, workspace switcher                 | TOC, light/dark images                              |
+| Lectio    | app shell + nav                                 | — (not deep-dived)                                  |
 
 **Sidebar: ~5 consumers. Docs: ~3 consumers.** Sidebar is the clean win and
 ships first (phase 1). All three consoles inspected share the same underlying
 shape:
 
 ```ts
-groups: { group: string; items: NavItem[] }[]   // lux, agents, wallfacer all use this
+groups: { group: string; items: NavItem[] }[]   // Lux, Topos, Wallfacer all use this
 ```
 
 The divergences collapse cleanly:
 
 | Divergence                          | Resolution                                                       |
 | ----------------------------------- | --------------------------------------------------------------- |
-| lux `pin:'bottom'` vs section divs  | one model: `NavGroup { pin?: 'top' \| 'bottom' }`               |
-| wallfacer parent-controlled collapse vs lux/agents internal `ref` | `v-model:collapsed` with an uncontrolled default |
-| sandbox command palette, wallfacer workspace switcher | slots: `#brand`, `#brand-extra`, `#extra`, `#foot`     |
+| Lux `pin:'bottom'` vs section divs  | one model: `NavGroup { pin?: 'top' \| 'bottom' }`               |
+| Wallfacer parent-controlled collapse vs Lux/Topos internal `ref` | `v-model:collapsed` with an uncontrolled default |
+| Cella command palette, Wallfacer workspace switcher | slots: `#brand`, `#brand-extra`, `#extra`, `#foot`     |
 | active state by `route.name` vs `activeKey` prop | `activeKey` prop, matched against `NavItem.id`         |
-| sandbox fixed rail (no fold)        | `collapsible={false}` hides the fold button                     |
+| Cella fixed rail (no fold)          | `collapsible={false}` hides the fold button                     |
 
 ---
 
@@ -169,9 +169,9 @@ Props
   model: ConsoleNavModel        // grouped nav (required)
   activeKey: string             // matches NavItem.id for active styling
   collapsed?: boolean           // v-model:collapsed (uncontrolled if omitted)
-  collapsible?: boolean = true  // false → no fold button (sandbox rail)
+  collapsible?: boolean = true  // false → no fold button (fixed rail)
   routerLink?: Component        // injected RouterLink; <a> fallback off-router
-  brandTheme?: 'lux'|'cella'|'topos'|'wallfacer'|'lectio'|'agon'  // gradient wordmark
+  brandTheme?: 'lux'|'cella'|'topos'|'wallfacer'|'lectio'  // gradient wordmark
 
 Emits
   update:collapsed
@@ -179,18 +179,18 @@ Emits
 
 Slots
   #brand            // logo mark + wordmark + "Console" subtitle (default uses brandTheme)
-  #brand-extra      // e.g. sandbox command-palette trigger, collapse-aware
+  #brand-extra      // e.g. a command-palette trigger, collapse-aware
   #item="{ item, active, collapsed }"   // override a row entirely
-  #extra            // app-specific block above the foot (wallfacer workspace switcher)
+  #extra            // app-specific block above the foot (workspace switcher)
   #foot             // <AccountControl/> goes here
 ```
 
 Behavior reproduced from the three consoles:
-- Brand is a `routerLink to="/"`; when `collapsed`, only the mark shows (lux/agents).
-- When `collapsed` and `collapsible`, clicking the brand expands (wallfacer affordance) — opt-in via `expandOnBrandClick`.
+- Brand is a `routerLink to="/"`; when `collapsed`, only the mark shows (Lux/Topos).
+- When `collapsed` and `collapsible`, clicking the brand expands (a Wallfacer affordance), opt-in via `expandOnBrandClick`.
 - Collapsed rows show `title={label}` tooltips and the icon only.
 - Badges: numeric pill, or a pulsing dot + "live" text when `badge === 'live'`
-  (lux pattern), rendered from `tokens.css` colors.
+  (the Lux pattern), rendered from `tokens.css` colors.
 - Disabled items (no `to`) render non-interactive with a "not yet wired" title.
 - Bottom-pinned groups sit below a flex spacer; `#foot` is last.
 
@@ -257,11 +257,11 @@ Lower priority, ~3 consumers, partial extraction.
 
 - **`src/docs/markdown.ts`** — base `markdown-it` config (anchor slugs, `.md →
   /docs/:slug` link rewriting, fenced-code passthrough) factored from
-  wallfacer's `markdown.ts`. Exports `createMarkdown(opts)` and
+  Wallfacer's markdown module. Exports `createMarkdown(opts)` and
   `stripFirstHeading(src)`. `markdown-it` becomes an optional peer dependency so
   apps that don't render docs don't pay for it.
 - **`src/docs/toc.ts`** — headless TOC + scroll-spy primitive (h2/h3 extraction
-  + `IntersectionObserver`), factored from wallfacer's `useToc`. SSR-safe
+  + `IntersectionObserver`), factored from Wallfacer's TOC composable. SSR-safe
   (no-op without `window`).
 - **`src/components/DocsLayout.vue`** — two-column layout: grouped doc-index
   sidebar (collapsible) + article column + floating TOC + prev/next nav.
@@ -274,13 +274,13 @@ Lower priority, ~3 consumers, partial extraction.
 
 - The **diagram layer**. `DocsLayout` exposes `enhanceArticle(el: HTMLElement)`
   called after the body mounts/updates; each app plugs in its own pipeline:
-  lux mounts `[[diagram:name]]` Vue components, sandbox renders mermaid + the
-  zoom/pan modal, wallfacer rewrites light/dark images. No attempt to unify.
+  Lux mounts `[[diagram:name]]` Vue components, Cella renders mermaid + the
+  zoom/pan modal, Wallfacer rewrites light/dark images. No attempt to unify.
 
 ### Doc index sourcing
 
-Stays app-side. Some apps glob local `.md` (wallfacer public docs), some fetch
-`/api/docs` (lux, sandbox, wallfacer local docs). `DocsLayout` is presentational
+Stays app-side. Some apps glob local `.md` (Wallfacer public docs), some fetch
+`/api/docs` (Lux, Cella, Wallfacer local docs). `DocsLayout` is presentational
 over a normalized `DocGroup[]`; fetching/grouping is the host's job.
 
 ---
@@ -322,13 +322,13 @@ Per the repo rule, every behavior ships with a test that fails without it.
 
 1. Land phase 1 (headless `nav.ts` + `ConsoleSidebar.vue` + `console.css` +
    tests), bump to `1.9.0-beta`.
-2. **Pilot migrate one console** — lux (richest: collapse persistence + live
-   badges + pinned groups) — to validate the API before the others. Keep its
+2. **Pilot migrate one console**, Lux (richest: collapse persistence + live
+   badges + pinned groups), to validate the API before the others. Keep its
    local CSS overrides minimal.
-3. Migrate agents, wallfacer, lectio; adopt sandbox last with `collapsible=false`
+3. Migrate Topos, Wallfacer, Lectio; adopt Cella last with `collapsible=false`
    (proves the fixed-rail path).
-4. Land phase 2 (`DocsLayout`) the same way: build → pilot on wallfacer (source
-   of the markdown/TOC code) → migrate lux + sandbox.
+4. Land phase 2 (`DocsLayout`) the same way: build → pilot on Wallfacer (source
+   of the markdown/TOC code) → migrate Lux + Cella.
 5. Tag `1.9.0`; per-product bumps reference this spec.
 
 ## Open questions
@@ -339,10 +339,10 @@ Per the repo rule, every behavior ships with a test that fails without it.
 - **Icon rendering** — each app has its own `Icon.vue` with a private name set.
   `ConsoleSidebar` should take icons via an `#item`/icon slot rather than
   bundling an icon font. Confirm no app needs a built-in icon set.
-- **lectio** was not deep-dived; confirm its `AppShell`/`Nav` matches the model
+- **Lectio** was not deep-dived; confirm its app shell and nav match the model
   before counting it as a clean consumer.
 - Does `markdown-it` as an optional peer dep cause friction for the
-  docs-free consoles (agents)? Alternative: ship `markdown.ts` as a separate
+  docs-free consoles? Alternative: ship `markdown.ts` as a separate
   subpath so it's only pulled when imported.
 
 ## Outcome (built in v1.9.0)
@@ -396,4 +396,4 @@ Decisions that diverged from the plan:
 Still open / deferred:
 
 - Per-product migrations (rollout steps 2–5) are not done — this is library-only.
-- **lectio** still not deep-dived; confirm `AppShell`/`Nav` fits before migrating.
+- **Lectio** still not deep-dived; confirm its app shell and nav fit before migrating.

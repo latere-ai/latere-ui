@@ -1,8 +1,8 @@
 // Tiny fetch wrapper shared by every Latere SPA. Same-origin, JSON in/out,
 // threads CSRF on state-changing requests, normalizes errors into `ApiError`,
 // and exposes a single global 401 seam (`onUnauthorized`) so an expired
-// session is handled uniformly. Ported from the per-app clients (lectio /
-// sandbox), with the CSRF cookie name made configurable.
+// session is handled uniformly. Ported from the per-app clients it replaces,
+// with the CSRF cookie name made configurable.
 //
 // The session cookie is HTTP-only — we never read it. The CSRF cookie (the
 // double-submit pattern) is readable by JS and echoed in `X-CSRF-Token`.
@@ -90,7 +90,7 @@ async function request<T>(
 }
 
 // Pull a human message from the various error envelopes the backends use:
-// `{error:{message}}` (lectio/sandbox), `{message}`, or the auth server's
+// a nested `{error:{message}}`, a flat `{message}`, or the auth server's
 // 401 body `{error, message}`.
 function errorMessage(res: Response, data: unknown): string {
   if (data && typeof data === 'object') {

@@ -7,6 +7,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { SiteFooter, type SiteFooterProps } from '../SiteFooter';
+import { LATERE_PRODUCTS } from '../../components/productSwitcher';
 
 function mount(props: Partial<SiteFooterProps> = {}) {
   return render(<SiteFooter theme="auto" locale="en" {...props} />);
@@ -24,9 +25,16 @@ describe('SiteFooter (React)', () => {
     expect(hrefs(container)).toContain('https://wf.latere.ai/');
     expect(hrefs(container)).toContain('https://drive.latere.ai/');
     expect(hrefs(container)).toContain('https://auth.latere.ai/');
-    // Agon was retired: neither the name nor its site may reappear.
-    expect(container.innerHTML).not.toContain('Agon');
-    expect(container.innerHTML).not.toContain('agon.latere.ai');
+    // The lineup is exactly the registry, so a product retired from the
+    // registry cannot survive as a stray hardcoded link in the footer.
+    const productHrefs = hrefs(container).filter(
+      (h): h is string => !!h && h.includes('.latere.ai'),
+    );
+    const expected = LATERE_PRODUCTS.filter((p) => p.slug !== 'identity').map((p) => `${p.url}/`);
+    expect(productHrefs.filter((h) => expected.includes(h)).length).toBe(expected.length);
+    expect(
+      productHrefs.every((h) => expected.includes(h) || h === 'https://auth.latere.ai/'),
+    ).toBe(true);
   });
 
   it('renders internal links as absolute URLs against baseUrl by default', () => {

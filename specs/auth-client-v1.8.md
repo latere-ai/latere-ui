@@ -2,7 +2,7 @@
 title: latere-ui v1.8 — shared auth client (vanilla async core + OrgSwitcher + front-channel logout)
 status: complete
 depends_on:
-  - auth/specs/auth-unification.md
+  - platform auth unification (tracked outside this repo)
 affects:
   - src/session/me.ts (new)
   - src/session/frontChannel.ts (new)
@@ -15,7 +15,7 @@ affects:
   - package.json (bump to 1.8.0)
   - README.md (auth-client API section + OrgSwitcher example)
 effort: medium
-trigger: parent auth-unification spec; six product frontends consume latere-ui; missing vanilla core, headless OrgSwitcher, SPA front-channel logout
+trigger: platform auth unification; six product frontends consume latere-ui; missing vanilla core, headless OrgSwitcher, SPA front-channel logout
 created: 2026-05-31
 updated: 2026-05-31
 author: changkun
@@ -26,7 +26,7 @@ dispatched_task_id: null
 
 ## Overview
 
-`latere-ui` already provides the Vue session client used by six of the eight latere.ai consumer products (`agents`, `latere-ai`, `lectio`, `lux`, `sandbox`, `wallfacer` cloud-mode). This spec adds the framework-agnostic vanilla async core (so Wails / vanilla harnesses can use it), a headless `OrgSwitcher` primitive + `OrgSwitcher.vue` adapter, an SPA `runFrontChannelLogout()` helper, and renames the CSRF cookie to `__Host-latere-csrf`. Existing Vue exports (`createSessionStore`, `useSession`, `useSessionGate`, `AccountMenu`) are preserved and reimplemented atop the new vanilla primitives so the existing consumer call sites do not change.
+`latere-ui` already provides the Vue session client used by six of the eight Latere consumer frontends (the product consoles plus the marketing site). This spec adds the framework-agnostic vanilla async core (so Wails / vanilla harnesses can use it), a headless `OrgSwitcher` primitive + `OrgSwitcher.vue` adapter, an SPA `runFrontChannelLogout()` helper, and renames the CSRF cookie to `__Host-latere-csrf`. Existing Vue exports (`createSessionStore`, `useSession`, `useSessionGate`, `AccountMenu`) are preserved and reimplemented atop the new vanilla primitives so the existing consumer call sites do not change.
 
 Independent of backend changes; can land in parallel.
 
@@ -42,17 +42,17 @@ Independent of backend changes; can land in parallel.
 - `reauth.ts:68-72` — silent recheck guard.
 - `types.ts:8-77` — `ApiClient`, `Principal`, `OrgEntry`, `SessionStoreOptions`, `UseSessionOptions`.
 
-Existing CSRF cookie names across consumers (renamed by this spec):
-- `sandbox/frontend/src/api/client.ts:13` → `__cella_csrf`
-- `lectio/frontend/src/api/client.ts:13` → `__lectio_csrf`
-- `agents/frontend/src/api/client.ts:13` → `topos_csrf`
-- `lux`: no CSRF today; `lux/frontend/src/api/client.ts` does not call `createApiClient`.
+Each consumer frontend currently picks its own CSRF cookie name, one per
+product, and one console sends no CSRF token at all because it never calls
+`createApiClient`. This spec unifies them on a single name.
 
-Current Vue dependency in `package.json:18-20`: `vue` + `pinia` are **peerDependencies**. No React/Svelte consumer in the monorepo; out of scope per parent spec.
+Current Vue dependency in `package.json:18-20`: `vue` + `pinia` are **peerDependencies**. No React or Svelte consumer exists yet; out of scope here.
 
-`wallfacer` ships an inline vanilla-JS org switcher at `wallfacer/ui/js/status-bar.js:404-526`. The other four products (agents, lectio, sandbox, lux) have placeholders (`AccountControl.vue`) but no org-switcher UI.
+One consumer ships an inline vanilla-JS org switcher in a non-Vue harness. The
+rest have an `AccountControl` placeholder but no org-switcher UI.
 
-`latere-ai` is the only product with working front-channel logout — server-side template renders iframes per `front_channel_uris`. Its post-mortem in `latere-ai/BUGS.md` documents the learning curve.
+Only the marketing site has working front-channel logout today, rendering the
+notification iframes server-side from `front_channel_uris`.
 
 ## Architecture
 
@@ -148,7 +148,7 @@ Behavior:
 4. `Promise.allSettled` over all iframe races.
 5. Remove iframes, navigate to `post_logout_redirect || app_url`.
 
-SSR-safe: no-op without `window`. For `latere-ai` (SSR): the existing server-side iframe rendering at `latere-ai/internal/handler/auth.go:41-48` stays canonical; SPAs use this helper.
+SSR-safe: no-op without `window`. For the SSR marketing site the existing server-side iframe rendering stays canonical; SPAs use this helper.
 
 ### Headless org-switcher — `src/session/orgSwitcher.ts`
 
@@ -172,7 +172,7 @@ export interface OrgSwitcherState {
 export function createOrgSwitcher(deps: OrgSwitcherDeps): OrgSwitcherState
 ```
 
-Vue-reactive state via `ref` + `computed` from `vue` (peer dep). Item ordering: Personal first, orgs in API order, owner badge from `OrgEntry.owner`. The factory renders nothing; consumer products either use the Vue adapter (`OrgSwitcher.vue`) or a vanilla mountpoint (`mountOrgSwitcher(el, opts)` — covers wallfacer's `ui/js/` harness).
+Vue-reactive state via `ref` + `computed` from `vue` (peer dep). Item ordering: Personal first, orgs in API order, owner badge from `OrgEntry.owner`. The factory renders nothing; consumer products either use the Vue adapter (`OrgSwitcher.vue`) or a vanilla mountpoint (`mountOrgSwitcher(el, opts)`, which covers the non-Vue harness).
 
 ### Vue adapter — `src/components/OrgSwitcher.vue`
 
@@ -189,15 +189,15 @@ Existing `createSessionStore` public API preserved. Internals reimplemented to c
 // New (internal):  const data = await me(client, { endpoint: opts.meEndpoint, mapMe: opts.mapMe })
 ```
 
-Same for `orgs`, `switchOrg`, `switchPersonal`. Existing consumers (agents, latere-ai, lectio, sandbox) see no public-API change.
+Same for `orgs`, `switchOrg`, `switchPersonal`. Existing consumers see no public-API change.
 
 ### `useSession` refactor — `src/session/useSession.ts`
 
-Existing composable preserved. Internally calls the refactored store + vanilla helpers. Lux's bespoke `useMeStore` continues to work via the existing `mapMe` extension point.
+Existing composable preserved. Internally calls the refactored store + vanilla helpers. A consumer with a bespoke `me` store continues to work via the existing `mapMe` extension point.
 
 ### CSRF cookie naming — `src/session/client.ts`
 
-No code change; `createApiClient` already takes `csrfCookie` as a config option. The doc updates this spec ships specify the unified target name: `__Host-latere-csrf`. Each consumer changes its `createApiClient({ csrfCookie: '__Host-latere-csrf' })` argument after the backend `pkg/oidc.GetSessionByName` shim ships (per `auth/specs/auth-unification/authkit-cookie-and-env-compat.md`).
+No code change; `createApiClient` already takes `csrfCookie` as a config option. The doc updates this spec ships specify the unified target name: `__Host-latere-csrf`. Each consumer changes its `createApiClient({ csrfCookie: '__Host-latere-csrf' })` argument after the auth backend ships its dual-read cookie shim.
 
 `__Host-` prefix requires `Secure=true`; dev environments using `InsecureCookies` use the legacy non-`__Host-` name; this dev-mode behavior is documented in the README.
 
@@ -224,9 +224,9 @@ New exports: 10 symbols + 6 types. Total package surface remains small.
 
 ## Frontend cookie/env standardization
 
-CSRF cookie target: `__Host-latere-csrf`. Per-product rename PRs land **after** backend dual-read ships (parent spec sequencing step 9). Each consumer's `frontend/src/api/client.ts:13` changes one literal.
+CSRF cookie target: `__Host-latere-csrf`. Per-product renames land **after** the backend dual-read ships. Each consumer changes one string literal in its API client.
 
-Sandbox's session-cookie override (`sandbox/cmd/sandboxd/main.go:687` → `__cella_session`) is a backend concern handled in `sandbox/specs/auth-unification-migration.md`; the frontend just stops sending that cookie name because the backend stops writing it.
+One console also overrides the session-cookie name server-side. That is a backend concern handled in its own migration; the frontend just stops sending the old name because the backend stops writing it.
 
 ## Sequencing
 
@@ -235,7 +235,7 @@ Sandbox's session-cookie override (`sandbox/cmd/sandboxd/main.go:687` → `__cel
 3. Update README with auth-client API section + `OrgSwitcher` example + CSRF cookie naming note.
 4. Tag and publish `latere-ui v1.8.0`.
 5. Per-product frontend `package.json` bump + `csrfCookie` rename happens in each consumer's migration PR after backend dual-read is in production.
-6. Future: deprecate the vanilla `wallfacer/ui/js/status-bar.js` org switcher in favor of `mountOrgSwitcher(el, opts)`.
+6. Future: deprecate the hand-rolled vanilla org switcher in the non-Vue harness in favor of `mountOrgSwitcher(el, opts)`.
 
 ## Testing Strategy
 
@@ -245,21 +245,21 @@ Sandbox's session-cookie override (`sandbox/cmd/sandboxd/main.go:687` → `__cel
   - `switchOrg.test.ts`: POSTs body; follows `{redirect_url}`; falls back to `/login?…` on 404; passes returnTo.
   - `frontChannel.test.ts`: mock `/api/logout` response; iframe creation count matches `front_channel_uris.length`; iframe timeout fires after `iframeTimeoutMs` even if `load` never arrives; final navigation goes to `post_logout_redirect || app_url`; SSR-safe (no `window` → resolves).
   - `orgSwitcher.test.ts`: item ordering Personal-first; active marker matches current; refresh updates items; select calls switchOrg; error surfaces.
-- **Playwright** (in whichever product ships `OrgSwitcher` first, likely `sandbox` or `agents`):
+- **Playwright** (in whichever product console ships `OrgSwitcher` first):
   - Render the switcher, click a non-current org, assert redirect URL.
   - Render the switcher, click Personal, assert behavior.
 
 ## Risks
 
 - **Existing consumer breakage**: store/useSession refactor must preserve public API exactly. Snapshot tests on the existing exports before refactor; revisit if any consumer fails.
-- **Wallfacer version skew**: `wallfacer/frontend/` is on `latere-ui v1.2.3` (large skew per the parent spec's wallfacer migration section). The bump from v1.2.3 to v1.8.0 is its own migration step, handled in the wallfacer migration spec.
+- **Consumer version skew**: the oldest consumer is pinned to `latere-ui v1.2.3`. The bump from v1.2.3 to v1.8.0 is its own migration step, handled on that consumer's side.
 - **`__Host-` requires Secure**: dev environments using HTTP need the legacy non-`__Host-` name; the existing `InsecureCookies` toggle must mirror for CSRF cookie. Documented in README.
 - **Front-channel iframe timeout** at 2000ms is heuristic. Dead RPs leave their session stale at the cost of the user's logout completing fast. Document this tradeoff in `frontChannel.ts` JSDoc.
 - **`OrgSwitcher.vue` styling is unopinionated** — consumers must apply CSS. Provide a minimal example in README so adopters do not see an unstyled list and reach for a different lib.
 
 ## References
 
-- Auth backend contract: `auth/INTEGRATION.md` (rewritten per `auth/specs/auth-unification/integration-doc-rewrite.md`)
-- Front-channel logout reference: `latere-ai/internal/handler/auth.go:41-48`, `latere-ai/test_frontchannel_logout.sh`
-- Wallfacer vanilla switcher reference: `wallfacer/ui/js/status-bar.js:404-526`
+- Auth backend integration contract (maintained with the auth service).
+- The marketing site's server-side front-channel logout handler, as the
+  reference implementation of the iframe notification flow.
 - Existing latere-ui: `src/session/{client,store,useSession,gate,reauth}.ts`, `src/components/AccountMenu.vue`

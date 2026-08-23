@@ -43,7 +43,7 @@ not one:
    fields, dialogs, popovers, badges) built on that material, so a product
    adopts glass by **importing a component**, not by re-implementing
    `backdrop-filter` recipes in every app. This is what makes the system
-   genuinely reusable across cella, lux, wallfacer, auth, and the rest.
+   genuinely reusable across Cella, Lux, Wallfacer, Identity, and the rest.
 
 `latere-ui` already ships shared *components* (ConsoleSidebar, SiteFooter,
 AccountMenu, DocsLayout) — this spec extends that architecture with a glass
@@ -128,7 +128,7 @@ opaque under the reduce-transparency fallback for free. Each ships with a README
 API block and tests (render, props, a11y role, keyboard).
 
 To stay tightly scoped and buildable, the catalog ships in two phases within
-this spec — **Core** (the primitives + the elements cella needs to adopt on day
+this spec: **Core** (the primitives + the elements the pilot console needs on day
 one) and **Extended** (the long tail) — but all live in the same `1.10.x` line.
 
 ### Core
@@ -215,11 +215,11 @@ change, purely the surface.
 ## Rollout
 
 1. Build + release `latere-ui@1.10.0` (this spec) — material + components.
-2. cella adopts (sandbox `liquid-glass-refresh`): bump the pin, set canvas +
-   neutral-glass palette, and **replace local ad-hoc chrome/controls with the
-   Glass* components** (dialogs, command palette, top strip, buttons, fields).
-   This is the reference adoption other products copy.
-3. lux / wallfacer / auth adopt on their cadence by setting canvas tokens and
+2. Cella adopts first: bump the pin, set canvas + neutral-glass palette, and
+   **replace local ad-hoc chrome/controls with the Glass* components**
+   (dialogs, command palette, top strip, buttons, fields). This is the
+   reference adoption other products copy.
+3. Lux / Wallfacer / Identity adopt on their cadence by setting canvas tokens and
    swapping in Glass* components; until they do they render opaque (fallback),
    so the release is non-breaking.
 
@@ -235,4 +235,4 @@ Built in latere-ui v1.10.0 on main (committed, not yet pushed/tagged).
 
 Diverged from plan: glass tokens live canonically in `glass.css` (not `tokens.css`) so apps with their own token system (which skip `tokens.css`) still get them. Extended `GlassMenu`/`GlassSelect`/`GlassDrawer`/`GlassTable` shipped in the same pass rather than a follow-up.
 
-Remaining: push + tag `v1.10.0` (release gate); per-product adoption (cella is the reference, in progress).
+Remaining: push + tag `v1.10.0` (release gate); per-product adoption (Cella is the reference, in progress).
