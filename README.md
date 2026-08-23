@@ -1,20 +1,40 @@
 # latere-ui
 
-Shared Latere platform UI components used across the marketing site and every
-product console: the site footer and logo mark, the session/auth client +
-account menu, the **console sidebar** (brand · grouped tabs · foldable rail),
-and the **docs renderer** (grouped doc index · article · TOC).
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Latest tag](https://img.shields.io/github/v/tag/latere-ai/latere-ui?label=version)](https://github.com/latere-ai/latere-ui/tags)
+[![Vue 3.5+](https://img.shields.io/badge/vue-3.5%2B-42b883.svg)](https://vuejs.org/)
+[![React 18 or 19](https://img.shields.io/badge/react-18%20%7C%2019%20(optional)-61dafb.svg)](https://react.dev/)
+
+One design system and one session client for every Latere web surface, shipped
+as source for Vue 3 and React.
+
+The package covers the site footer and logo mark, the session/auth client and
+account menu, the **Liquid Glass** material plus its component library, the
+**console sidebar** (brand, grouped tabs, foldable rail), and the **docs
+renderer** (grouped doc index, article, TOC).
+
+| Area | Entry point | What you get |
+|---|---|---|
+| Liquid Glass material | `latere-ui/glass` | Tier utilities, tokens, reduced-transparency and no-`backdrop-filter` fallbacks |
+| Glass components | `latere-ui` | 23 Vue components across surfaces, controls, inputs, feedback, overlays and data, plus toast and confirm services |
+| Site footer | `latere-ui` + `latere-ui/styles` | `SiteFooter`, `LatereLogoMark`, bundled en/zh/de copy |
+| Console shell | `latere-ui` + `latere-ui/console` | `ConsoleSidebar`, `ConsolePalette`, headless nav model and collapse |
+| Docs renderer | `latere-ui` + `latere-ui/docs` | `DocsLayout`, headless TOC, doc index and search index |
+| Markdown | `latere-ui/markdown` | `createMarkdown`, `stripFirstHeading`, TOC-aligned heading ids |
+| Session and auth | `latere-ui` | API client, `/me` resolution, org switching, route gate, front-channel logout |
+| React bindings | `latere-ui/react` | Twelve Glass primitives, console shell, footer, session provider |
 
 ## Install
 
 Consumed directly from GitHub (no registry). Pin a tag:
 
 ```sh
-bun add github:latere-ai/latere-ui#v1.3.2
+bun add github:latere-ai/latere-ui#v1.28.0
 ```
 
-Every consumer is a Vite + Vue 3 app, so this package ships **source** (`.vue` /
-`.ts` / `.css`) and is compiled by the host app's `@vitejs/plugin-vue`. Under
+Consumers are Vite apps, so this package ships **source** (`.vue` / `.tsx` /
+`.ts` / `.css`) and is compiled by the host app's own toolchain: `.vue` by
+`@vitejs/plugin-vue`, `.tsx` by the host's React setup. Under
 `vite-ssg` (SSR), add the package to `ssr.noExternal` so its SFCs are compiled
 for the server build:
 
@@ -25,6 +45,36 @@ export default defineConfig({
   ssr: { noExternal: ['latere-ui'] },
 });
 ```
+
+## Quick start
+
+Mount a glass surface and the footer with local state, no store required:
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+import { GlassPanel, GlassButton, SiteFooter, message, GlassToaster } from 'latere-ui';
+import type { Theme, Locale } from 'latere-ui';
+import 'latere-ui/tokens';
+import 'latere-ui/glass';
+import 'latere-ui/styles';
+
+const theme = ref<Theme>('auto');
+const locale = ref<Locale>('en');
+</script>
+
+<template>
+  <GlassPanel>
+    <GlassButton @click="message.success('It works')">Say hello</GlassButton>
+  </GlassPanel>
+  <GlassToaster />
+  <SiteFooter v-model:theme="theme" v-model:locale="locale" />
+</template>
+```
+
+`latere-ui/tokens` is only needed when your app has no `--text` / `--bg-*`
+palette of its own. Set a `--canvas` color so the glass has something to blur
+against, as described under [Liquid Glass](#liquid-glass).
 
 ## Usage
 
@@ -235,7 +285,7 @@ const { glassClass, reducedTransparency } = useGlass();
 // concentricRadius('8px') → calc(var(--glass-radius,22px) - 8px)
 ```
 
-Obligations when adopting:
+Adoption requirements:
 
 1. **Set a `--canvas`.** Frosted glass over a flat fill reads as dead gray.
 2. **Glass is chrome, never content.** Never put glass over live
@@ -470,10 +520,33 @@ Everything else in the library (Drawer, Toaster, Popover, DocsLayout,
 ProductSwitcher, ConsolePalette, …) is Vue-only for now — ported incrementally
 as React consumers need it.
 
+## Status and stability
+
+The package ships source and is pinned by tag, so a consumer upgrades only when
+it changes its pin. Minor versions add components and props; the `.lu-glass-*`
+class names, the CSS custom-property contract, and the exported function
+signatures are the compatibility surface. A breaking change to any of them
+comes with a note in this README's migration paragraphs, as the v1.10 to v1.20
+Liquid Glass change did.
+
+Vue is the primary target and gets every component. The React bindings cover a
+subset and grow as React consumers need them.
+
 ## Develop
 
 ```sh
 bun install
-bun run test       # vitest
+bun run test       # vitest, Vue and React suites together
 bun run typecheck  # vue-tsc
 ```
+
+The suite runs entirely in `happy-dom` against `@vue/test-utils` and
+`@testing-library/react`. There is no database, no network, and no environment
+variable to set, so nothing is silently skipped: the count you see is the count
+that ran. Front-channel logout tests deliberately point iframes at unreachable
+hosts to exercise the timeout path, so the run prints `NetworkError` traces on a
+passing run.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
