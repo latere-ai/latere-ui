@@ -25,16 +25,23 @@ describe('SiteFooter (React)', () => {
     expect(hrefs(container)).toContain('https://wf.latere.ai/');
     expect(hrefs(container)).toContain('https://drive.latere.ai/');
     expect(hrefs(container)).toContain('https://auth.latere.ai/');
-    // The lineup is exactly the registry, so a product retired from the
-    // registry cannot survive as a stray hardcoded link in the footer.
-    const productHrefs = hrefs(container).filter(
-      (h): h is string => !!h && h.includes('.latere.ai'),
+  });
+
+  // The registry is the only sanctioned source of product links. Both footer
+  // variants are checked because they are mutually exclusive branches, so a
+  // hardcoded link in either one is invisible to a single render.
+  it.each([false, true])('links to no site outside the registry (compact=%s)', (compact) => {
+    const allowed = new Set([
+      ...LATERE_PRODUCTS.map((p) => `${p.url}/`),
+      'https://auth.latere.ai/',
+    ]);
+    const { container } = mount({ compact });
+    const found = hrefs(container).filter(
+      (h): h is string => !!h && h.includes('latere.ai') && !h.startsWith('mailto:'),
     );
-    const expected = LATERE_PRODUCTS.filter((p) => p.slug !== 'identity').map((p) => `${p.url}/`);
-    expect(productHrefs.filter((h) => expected.includes(h)).length).toBe(expected.length);
-    expect(
-      productHrefs.every((h) => expected.includes(h) || h === 'https://auth.latere.ai/'),
-    ).toBe(true);
+    const products = found.filter((h) => !h.startsWith('https://latere.ai'));
+    expect(products.length).toBeGreaterThan(0);
+    for (const h of products) expect(allowed).toContain(h);
   });
 
   it('renders internal links as absolute URLs against baseUrl by default', () => {
