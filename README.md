@@ -29,7 +29,7 @@ renderer** (grouped doc index, article, TOC).
 Consumed directly from GitHub (no registry). Pin a tag:
 
 ```sh
-bun add github:latere-ai/latere-ui#v1.28.0
+bun add github:latere-ai/latere-ui#v1.28.1
 ```
 
 Consumers are Vite apps, so this package ships **source** (`.vue` / `.tsx` /
