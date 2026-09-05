@@ -9,7 +9,7 @@
 // use, so callers pass their concrete instances without coupling this file to
 // a specific vue-router version.
 
-import { computed, onMounted, ref, watch, type ComputedRef, type Ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch, type ComputedRef, type Ref } from 'vue';
 
 import type { Principal } from './types';
 
@@ -46,10 +46,14 @@ export function useSessionGate(
 ): UseSessionGate {
   const loginPath = options.loginPath ?? '/login';
   const checked = ref(false);
+  let checkGeneration = 0;
+  onBeforeUnmount(() => { checkGeneration++; });
 
   async function run(path: string, fullPath: string) {
+    const generation = ++checkGeneration;
     checked.value = false;
     await store.ensureSession(fullPath || path);
+    if (generation !== checkGeneration) return;
     // If we returned from a silent re-check still logged out, strip the marker
     // query param so it doesn't linger / re-trigger.
     if (!store.me && route.query.sso_checked !== undefined) {

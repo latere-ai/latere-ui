@@ -4,12 +4,12 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPinia, setActivePinia } from 'pinia';
-import { defineComponent, h } from 'vue';
+import { defineComponent, h, reactive } from 'vue';
 import { flushPromises, mount } from '@vue/test-utils';
 
 import { createApiClient } from '../src/session/client';
 import { createSessionStore } from '../src/session/store';
-import { useSessionGate, type GateRoute, type GateRouter } from '../src/session/gate';
+import { useSessionGate, type GateRoute, type GateRouter, type GateStore } from '../src/session/gate';
 
 let hrefSpy: ReturnType<typeof vi.fn>;
 function stubLocation(pathname: string) {
@@ -49,6 +49,57 @@ beforeEach(() => {
 afterEach(() => vi.restoreAllMocks());
 
 describe('useSessionGate', () => {
+  it('waits for the current route before opening the gate or cleaning its query', async () => {
+    let finishFirst!: (authenticated: boolean) => void;
+    let finishSecond!: (authenticated: boolean) => void;
+    const store: GateStore = {
+      me: null,
+      loaded: true,
+      ensureSession: vi.fn()
+        .mockReturnValueOnce(new Promise<boolean>((resolve) => { finishFirst = resolve; }))
+        .mockReturnValueOnce(new Promise<boolean>((resolve) => { finishSecond = resolve; })),
+    };
+    const route = reactive<GateRoute>({ path: '/first', fullPath: '/first', query: {} });
+    const replace = vi.fn();
+    const wrapper = mount(defineComponent({
+      setup() {
+        const gate = useSessionGate(store, route, { replace });
+        return () => h('div', gate.ready.value ? 'Sign in' : 'Checking');
+      },
+    }));
+    Object.assign(route, { path: '/second', fullPath: '/second?sso_checked=1&tab=files', query: { sso_checked: '1', tab: 'files' } });
+    await flushPromises();
+    expect(store.ensureSession).toHaveBeenLastCalledWith('/second?sso_checked=1&tab=files');
+    finishFirst(false);
+    await flushPromises();
+    expect(wrapper.text()).toBe('Checking');
+    expect(replace).not.toHaveBeenCalled();
+    finishSecond(false);
+    await flushPromises();
+    expect(wrapper.text()).toBe('Sign in');
+    expect(replace).toHaveBeenCalledExactlyOnceWith({ path: '/second', query: { tab: 'files' } });
+    wrapper.unmount();
+  });
+
+  it('does not alter navigation when an unmounted gate finishes checking', async () => {
+    let finish!: (authenticated: boolean) => void;
+    const store: GateStore = {
+      me: null, loaded: true,
+      ensureSession: () => new Promise<boolean>((resolve) => { finish = resolve; }),
+    };
+    const replace = vi.fn();
+    const wrapper = mount(defineComponent({
+      setup() {
+        useSessionGate(store, { path: '/old', fullPath: '/old?sso_checked=1', query: { sso_checked: '1' } }, { replace });
+        return () => h('div');
+      },
+    }));
+    wrapper.unmount();
+    finish(false);
+    await flushPromises();
+    expect(replace).not.toHaveBeenCalled();
+  });
+
   it('does one prompt=none redirect, sets sso_checked, and gates without looping', async () => {
     const store = makeStore();
 
