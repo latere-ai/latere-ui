@@ -7,3 +7,4 @@
 - Write in audience language, where documents aim users value and usage understanding, api surface aim builders precision, and code comments aim tech precision.
 - Specs live in specs/
 - Relevant latere projects and shared components (latere.ai/x/pkg/*) are in ../
+- Every sentence is written for one reader (user, contributor, developer) and the register follows the reader; an error has one code, one fixed user sentence in `message`, and one developer detail in a separate field. The rule and the review checklist: https://github.com/latere-ai/pkg/blob/main/docs/writing/registers.md
