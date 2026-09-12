@@ -1,9 +1,9 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, visit } from './fixtures';
 
 for (const framework of ['vue', 'react']) {
   for (const theme of ['light', 'dark']) {
     test(`${framework} ${theme} badge labels meet default text contrast`, async ({ page }) => {
-      await page.goto(`/?framework=${framework}&scenario=feedback&theme=${theme}`);
+      await visit(page, framework, 'feedback', theme);
       const badges = page.locator('[data-component="GlassBadge"] .lu-badge');
       await expect(badges.first()).toBeVisible();
       const values = await badges.evaluateAll(elements => {

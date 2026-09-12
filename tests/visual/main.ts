@@ -12,6 +12,13 @@ import '../../src/styles/brand.css';
 import './gallery.css';
 import { scenarios } from './manifest';
 
+// Load every fixture face before mounting: late font swaps can leave glass
+// compositing layers with fractional text positions from the fallback font.
+await Promise.all([
+  '400 14px Inter', '500 14px Inter', '600 24px Inter',
+  '400 14px "Instrument Serif"', '400 14px "JetBrains Mono"',
+].map(font => document.fonts.load(font)));
+
 const params = new URLSearchParams(location.search);
 const framework = params.get('framework') ?? 'vue';
 const scenario = params.get('scenario');

@@ -62,7 +62,7 @@ onMounted(async () => { await nextTick(); if (props.scenario === 'effects') UI.i
     <section class="sample row" data-component="GlassSkeleton"><UI.GlassSkeleton width="48px" height="48px" circle/><div class="stack" style="flex:1"><UI.GlassSkeleton/><UI.GlassSkeleton width="65%"/></div></section>
   </div>
   <div v-else-if="scenario === 'containers'" class="stack">
-    <div class="material-stage stack" data-component="GlassSurface"><UI.GlassSurface v-for="tier in tiers" :key="tier" :tier="tier" interactive class="material">{{ tier }} surface · The quick brown fox</UI.GlassSurface></div>
+    <div class="material-stage material-grid" data-component="GlassSurface"><UI.GlassSurface v-for="tier in tiers" :key="tier" :tier="tier" interactive class="material">{{ tier }} surface · The quick brown fox</UI.GlassSurface></div>
     <div class="grid" data-component="GlassPanel"><UI.GlassPanel>Regular panel</UI.GlassPanel><UI.GlassPanel tier="smoke">Smoke panel</UI.GlassPanel><UI.GlassPanel flush><div style="padding:20px">Flush panel with host padding</div></UI.GlassPanel></div>
     <div data-component="GlassBar"><UI.GlassBar header>Workspace toolbar <UI.GlassButton size="sm">New project</UI.GlassButton></UI.GlassBar></div>
     <div data-component="GlassTable"><UI.GlassTable :columns="columns" :rows="rows"/></div>

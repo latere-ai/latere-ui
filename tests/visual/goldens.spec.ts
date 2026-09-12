@@ -79,3 +79,11 @@ for (const theme of ['light', 'dark']) {
     await expect(page).toHaveScreenshot(`account-scrolled-${theme}.png`);
   });
 }
+
+for (const theme of ['light', 'dark']) test(`tooltip reduced transparency ${theme}`, async ({ page, context }) => {
+  const cdp = await context.newCDPSession(page);
+  await cdp.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-transparency', value: 'reduce' }] });
+  await visit(page, 'vue', 'tooltip', theme);
+  await page.getByRole('button', { name: 'Top tooltip' }).focus();
+  await expect(page).toHaveScreenshot(`tooltip-reduced-transparency-${theme}.png`);
+});

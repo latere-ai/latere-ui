@@ -21,3 +21,6 @@ h2 { font-size: 18px; }
 .logo-stage svg { width: 220px; height: 140px; }
 .effect-surface { min-height: 150px; margin: 20px 0; padding: 24px; }
 @media (max-width: 600px) { #app { padding: 16px; } .grid { grid-template-columns: 1fr; } .sample { padding: 16px; } .material-stage { padding: 16px; } .shell-content { padding: 4px; } }
+
+.material-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 600px) { .material-grid { grid-template-columns: 1fr; } }
