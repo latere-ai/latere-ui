@@ -68,6 +68,7 @@ function onScrim() { if (props.closeOnScrim) close(); }
           backdrop-filter: blur(2px);
 }
 .lu-drawer {
+  box-sizing: border-box;
   height: 100%;
   max-width: 90vw;
   overflow-y: auto;
@@ -83,8 +84,8 @@ function onScrim() { if (props.closeOnScrim) close(); }
   border-right: 1px solid var(--glass-border);
   border-radius: 0 var(--radius-xl, 28px) var(--radius-xl, 28px) 0;
 }
-.lu-drawer-head { padding: 18px 20px 6px; }
-.lu-drawer-title { font-size: var(--fs-h3, 1.15rem); font-weight: var(--fw-semibold, 600); color: var(--text, #0a0a0a); }
+.lu-drawer-head { margin: 0; padding: 18px 20px 6px; }
+.lu-drawer-title { margin: 0; font-size: var(--fs-h3, 1.15rem); font-weight: var(--fw-semibold, 600); color: var(--text, #0a0a0a); }
 .lu-drawer-body { padding: 12px 20px 20px; }
 
 /* Scrim fades; panel slides from its edge. */

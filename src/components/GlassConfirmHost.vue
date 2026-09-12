@@ -37,5 +37,5 @@ const c = computed(() => currentConfirm.current);
 </template>
 
 <style scoped>
-.lu-confirm-msg { font-size: var(--fs-body-sm, 13px); color: var(--text-secondary, #666); line-height: 1.6; }
+.lu-confirm-msg { margin: 0; font-size: var(--fs-body-sm, 13px); color: var(--text-secondary, #666); line-height: 1.6; }
 </style>

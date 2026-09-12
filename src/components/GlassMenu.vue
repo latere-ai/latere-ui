@@ -44,7 +44,7 @@ defineEmits<{ (e: 'select', value: string): void }>();
   transition: background 0.12s ease;
 }
 .lu-menu-item:hover { background: var(--accent-subtle, rgba(0, 0, 0, 0.04)); }
-.lu-menu-item.is-danger { color: var(--state-error, #a8412e); }
+.lu-menu-item.is-danger { color: var(--state-error-text, color-mix(in srgb, var(--state-error, #a8412e) 70%, var(--text, #0a0a0a))); }
 .lu-menu-item:disabled { opacity: 0.45; cursor: not-allowed; }
 .lu-menu-item:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: -2px; }
 @media (prefers-reduced-motion: reduce) { .lu-menu-item { transition: none; } }

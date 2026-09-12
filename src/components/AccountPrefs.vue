@@ -116,7 +116,7 @@ const themes = computed<{ v: Theme; label: string }[]>(() => [
   padding: 0 9px;
   border-radius: var(--radius-pill, 999px);
   background: transparent;
-  border: 1px solid var(--glass-border, var(--border, #ccc));
+  border: 1px solid var(--lu-control-border, color-mix(in srgb, var(--text, #0a0a0a) 45%, transparent));
   color: var(--text-secondary, #555);
   cursor: pointer;
   transition: background 0.1s, color 0.1s, border-color 0.1s;
@@ -126,9 +126,9 @@ const themes = computed<{ v: Theme; label: string }[]>(() => [
   color: var(--text, #111);
 }
 .lu-ap-pill.is-active {
-  background: var(--glass-pill-fill, var(--bg-raised, #f4f4f4));
+  background: var(--accent-subtle, rgba(0, 0, 0, 0.05));
   color: var(--text, #111);
-  border-color: var(--glass-border, var(--border-strong, var(--border, #999)));
+  border-color: var(--accent, #171717);
   font-weight: 600;
 }
 </style>

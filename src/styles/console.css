@@ -159,7 +159,7 @@ html { overscroll-behavior: none; }
     margin: 2px 0;
     min-height: 38px;
     padding: 0 8px 0 14px;
-    border: 1px solid var(--glass-border, var(--border, rgba(0, 0, 0, 0.08)));
+    border: 1px solid var(--lu-control-border, color-mix(in srgb, var(--text, #0a0a0a) 45%, transparent));
     border-radius: var(--radius-pill, 999px);
     background: var(--glass-bg-ultrathin, var(--bg-raised, #f5f5f5));
     color: var(--text-muted, #a0a0a0);
@@ -258,7 +258,7 @@ html { overscroll-behavior: none; }
  * expanded and collapsed rail, so no per-mode indicator is needed. */
 .lu-cs-item[data-active="true"] {
     background: var(--glass-pill-fill, var(--bg-raised, #f5f5f5));
-    box-shadow: var(--shadow, 0 1px 3px rgba(0, 0, 0, 0.05)), var(--glass-edge-top, none);
+    box-shadow: inset 0 0 0 1px var(--lu-control-border, color-mix(in srgb, var(--text, #0a0a0a) 45%, transparent)), var(--shadow, 0 1px 3px rgba(0, 0, 0, 0.05)), var(--glass-edge-top, none);
     color: var(--text, #0a0a0a);
     font-weight: 500;
 }
@@ -354,7 +354,7 @@ html { overscroll-behavior: none; }
  * so it fits the 64px rail. AccountMenu (`.lu-am-*`) is the sibling latere-ui
  * component normally dropped here; it is not itself collapse-aware, so the rail
  * drives the shrink. A non-AccountMenu foot simply won't match these rules. */
-.lu-cs[data-collapsed="true"] .lu-cs-foot {
+.lu-cs[data-collapsed="true"] .lu-cs-foot:not(:empty) {
     display: flex;
     justify-content: center;
 }

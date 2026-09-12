@@ -152,6 +152,7 @@ function onKeydown(e: KeyboardEvent) {
   padding: 6px;
   max-height: 50vh;
   overflow-y: auto;
+  scroll-padding-block: 6px;
 }
 .lu-cp-item {
   display: flex;
@@ -163,6 +164,7 @@ function onKeydown(e: KeyboardEvent) {
   color: var(--text-secondary, #555);
 }
 .lu-cp-item[data-active="true"] {
+  box-shadow: inset 0 0 0 1px var(--lu-control-border, color-mix(in srgb, var(--text, #0a0a0a) 45%, transparent));
   background: var(--glass-pill-fill, var(--bg-raised, #f5f5f5));
   color: var(--text, #0a0a0a);
 }
