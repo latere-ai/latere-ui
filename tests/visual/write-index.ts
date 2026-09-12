@@ -4,7 +4,7 @@ import { scenarios, mobileScenarios } from './manifest';
 const lines = [
   '# Visual reference index', '',
   'These PNGs are the expected renders used by the browser suite. Figures are rendered at 3.125× browser resolution and carry 300 DPI metadata. Open a figure to inspect sharp text and edges at full size. The same fixtures are interactive in the local gallery (`bun run visual:dev`). See [Contributing](../CONTRIBUTING.md) for comparison and update commands.', '',
-  'These documentation figures use macOS 27 and pinned Chromium. The [macOS 15 CI references](../tests/visual/goldens/darwin-24) are reviewed separately. Every exported Vue and React UI component has a scenario; this is component inventory coverage, not a percentage of all possible appearances or browser engines.', '',
+  'These documentation figures use macOS 27 and pinned Chromium. The [macOS 15 CI references](../tests/visual/goldens/darwin-24) are reviewed separately. All 34 visual components have Vue and React renders in light and dark themes at desktop and mobile widths. Each paired capture must match every decoded RGBA channel before either reference can be recorded. Baseline checks use the same exact comparison.', '',
 ];
 for (const [framework, sheets] of Object.entries(scenarios)) {
   lines.push(`## ${framework === 'vue' ? 'Vue' : 'React'}`, '', '| Sheet | Components | Light | Dark | Mobile |', '|---|---|---|---|---|');
@@ -16,7 +16,7 @@ for (const [framework, sheets] of Object.entries(scenarios)) {
   lines.push('');
 }
 const standard = new Set(Object.entries(scenarios).flatMap(([framework, sheets]) => Object.keys(sheets).flatMap(scenario => ['light', 'dark'].flatMap(theme => (mobileScenarios.has(scenario) ? ['desktop', 'mobile'] : ['desktop']).map(layout => `${framework}-${scenario}-${theme}-${layout}.png`)))));
-lines.push('## Product style variations', '', 'Real components rendered with the optional `latere-ui/presets` stylesheet. Each style includes both themes, supported adapters, open overlays, and mobile forms, modals, navigation and compact footers. Brand-only logos, headless organization controls and glass-only optical effects retain their default references.', '');
+lines.push('## Product style variations', '', 'Real components rendered with the optional `latere-ui/presets` stylesheet. Every sheet has both adapters, both themes and both viewport sizes in each style. Identity marks retain their brand artwork; headless organization controls demonstrate host styling; optical opt-ins show their intentional matte fallback in these presets.', '');
 for (const design of designs) {
   lines.push(`### ${design}`, '');
   for (const [framework, sheets] of Object.entries(designScenarios)) {
