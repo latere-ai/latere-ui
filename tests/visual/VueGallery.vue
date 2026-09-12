@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from 'vue';
 import * as UI from '../../src';
+import { options, selectOptions, nav, paletteNav, principal, locales, tiers, badgeTones, alertTones, menuItems, columns, rows, groups, article, createWorkspaceRows, buttonSizes, buttonVariants, progressValues, brands, workspaceMetrics } from './parity-data';
 const props = defineProps<{ scenario: string }>();
 const showToc = new URLSearchParams(location.search).get('showToc') !== 'false';
 const matchWidth = new URLSearchParams(location.search).get('matchWidth') === 'true';
@@ -10,28 +11,14 @@ const checked = ref(true);
 const selected = ref('daily');
 const open = ref(false);
 const workspaceCollapsed = ref(matchMedia('(max-width: 720px)').matches);
-const workspaceRows = ref(Array.from({ length: 8 }, (_, i) => ({ name: ['Design system', 'Website refresh', 'Research notes', 'Component library', 'Brand assets', 'Mobile workspace', 'Team handbook', 'Release checklist'][i], status: i % 3 ? 'In progress' : 'Ready', jobs: [12, 8, 3, 24, 6, 5, 2, 4][i] })));
+const workspaceRows = ref(createWorkspaceRows());
 function addProject() { workspaceRows.value.unshift({ name: 'Untitled project', status: 'Ready', jobs: 0 }); }
 const innerOpen = ref(false);
 const theme = ref<'light' | 'dark' | 'auto'>(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
 const locale = ref('en');
-const options = [{ value: 'daily', label: 'Daily' }, { value: 'weekly', label: 'Weekly' }, { value: 'monthly', label: 'Monthly' }];
-const selectOptions = Array.from({ length: 20 }, (_, i) => ({ value: String(i), label: `Workspace ${String(i + 1).padStart(2, '0')}`, disabled: i === 1 }));
 const selectValue = ref('0');
-const nav = { groups: [{ label: 'Workspace', items: [{ id: 'overview', label: 'Overview', to: '#overview', icon: 'home' }, { id: 'jobs', label: 'Jobs', to: '#jobs', badge: 12 }, { id: 'live', label: 'Activity', to: '#activity', badge: 'live' as const }, { id: 'future', label: 'Coming soon', disabled: true }] }, { pin: 'bottom' as const, items: [{ id: 'settings', label: 'Settings', to: '#settings' }] }] };
-const paletteNav = { groups: [{ label: 'Workspace', items: Array.from({ length: 30 }, (_, i) => ({ id: String(i), label: `Page ${String(i + 1).padStart(2, '0')}`, to: `#page-${i}` })) }] };
-const principal = { principal_id: 'user-1', email: 'alex@example.test', display_name: 'Alex Morgan', initials: 'AM', org_id: 'studio', org_name: 'Design studio', role: 'org_admin' as const, orgs: Array.from({ length: 16 }, (_, i) => ({ id: i ? `org-${i}` : 'studio', name: i ? `Workspace ${i}` : 'Design studio', slug: `workspace-${i}`, owner: i === 0 })) };
-const locales = [{ code: 'en', label: 'EN', name: 'English' }, { code: 'zh', label: '中', name: '中文' }, { code: 'de', label: 'DE', name: 'Deutsch' }];
 const organization = ref('studio');
 const orgState = UI.createOrgSwitcher({ getOrgs: async () => principal.orgs.slice(0, 3), getCurrentOrgID: () => organization.value, switchOrg: async (id) => { organization.value = id; }, eager: true });
-const tiers = ['ultrathin', 'thin', 'regular', 'thick', 'smoke'] as const;
-const badgeTones = ['neutral', 'running', 'idle', 'stopped', 'error', 'creating'] as const;
-const alertTones = ['info', 'success', 'warning', 'error'] as const;
-const menuItems = [{ value: 'copy', label: 'Copy link' }, { value: 'move', label: 'Move to folder' }, { value: 'disabled', label: 'Unavailable', disabled: true }, { value: 'delete', label: 'Delete', danger: true }];
-const columns = [{ key: 'name', label: 'Name' }, { key: 'status', label: 'Status' }, { key: 'jobs', label: 'Jobs' }];
-const rows = [{ name: 'Design studio', status: 'Running', jobs: 12 }, { name: 'Research lab', status: 'Idle', jobs: 4 }, { name: 'Archive', status: 'Stopped', jobs: 0 }];
-const groups = [{ id: 'start', label: 'Getting started', pages: [{ slug: 'intro', title: 'Introduction' }, { slug: 'setup', title: 'Setup' }] }, { id: 'guides', label: 'Guides', pages: [{ slug: 'sharing', title: 'Sharing' }] }];
-const article = '<p>Build a shared workspace for your team.</p><h2>Start a workspace</h2><p>Choose a name, invite your team, and begin a project.</p><blockquote>Your work stays together.</blockquote><h3>Invite teammates</h3><p>Share access with the people who need it.</p><pre><code>workspace.create({ name: "Studio" })</code></pre><h2>Review activity</h2><table><thead><tr><th>Role</th><th>Access</th></tr></thead><tbody><tr><td>Owner</td><td>Manage workspace</td></tr><tr><td>Member</td><td>Create projects</td></tr></tbody></table>';
 function notify() { UI.message.clear(); if (new URLSearchParams(location.search).get('long') === 'true') { UI.message.error('Workspace_' + 'x'.repeat(180), { duration: 0 }); return; } for (const tone of alertTones) UI.message(tone, tone === 'error' ? 'The workspace could not be saved. Try again.' : `${tone}: Your workspace is ready.`, { duration: 0 }); }
 function ask() { void UI.confirm({ title: 'Delete workspace?', message: 'This removes the workspace and its saved settings.', danger: true, confirmText: 'Delete workspace' }); }
 onMounted(async () => { await nextTick(); if (props.scenario === 'effects') UI.initLiquidGlass(document.getElementById('stage')!); });
@@ -39,9 +26,9 @@ onMounted(async () => { await nextTick(); if (props.scenario === 'effects') UI.i
 
 <template>
   <div v-if="scenario === 'buttons'" class="stack">
-    <section v-for="size in (['md', 'sm'] as const)" :key="size" class="sample" data-component="GlassButton">
+    <section v-for="size in buttonSizes" :key="size" class="sample" data-component="GlassButton">
       <p class="sample-label">Buttons / {{ size }}</p>
-      <div class="row"><template v-for="variant in (['glass', 'primary', 'ghost', 'danger'] as const)" :key="variant"><UI.GlassButton :variant="variant" :size="size">{{ variant }}</UI.GlassButton><UI.GlassButton :variant="variant" :size="size" disabled>Disabled</UI.GlassButton><UI.GlassButton :variant="variant" :size="size" loading>Saving</UI.GlassButton></template></div>
+      <div class="row"><template v-for="variant in buttonVariants" :key="variant"><UI.GlassButton :variant="variant" :size="size">{{ variant }}</UI.GlassButton><UI.GlassButton :variant="variant" :size="size" disabled>Disabled</UI.GlassButton><UI.GlassButton :variant="variant" :size="size" loading>Saving</UI.GlassButton></template></div>
     </section>
     <section class="sample" data-component="GlassIconButton"><p class="sample-label">Icon buttons</p><div class="row"><UI.GlassIconButton label="Add">+</UI.GlassIconButton><UI.GlassIconButton label="Small add" size="sm">+</UI.GlassIconButton><UI.GlassIconButton label="Pinned" pressed>★</UI.GlassIconButton><UI.GlassIconButton label="Unavailable" disabled>+</UI.GlassIconButton></div></section>
   </div>
@@ -62,7 +49,7 @@ onMounted(async () => { await nextTick(); if (props.scenario === 'effects') UI.i
     <section class="sample stack" data-component="GlassBadge"><div v-for="solid in [false, true]" :key="String(solid)" class="row"><UI.GlassBadge v-for="tone in badgeTones" :key="tone" :tone="tone" :solid="solid" dot>{{ tone }}</UI.GlassBadge></div></section>
     <div class="grid" data-component="GlassAlert"><UI.GlassAlert v-for="tone in alertTones" :key="tone" :tone="tone" :title="tone" dismissible>Workspace activity is available here.</UI.GlassAlert></div>
     <section class="sample row" data-component="GlassSpinner"><UI.GlassSpinner :size="16"/><UI.GlassSpinner :size="24"/><UI.GlassSpinner :size="40"/></section>
-    <section class="sample stack" data-component="GlassProgress"><UI.GlassProgress v-for="value in [0, 50, 100, 150, -10]" :key="value" :value="value" :label="`Progress ${value}`"/></section>
+    <section class="sample stack" data-component="GlassProgress"><UI.GlassProgress v-for="value in progressValues" :key="value" :value="value" :label="`Progress ${value}`"/></section>
     <section class="sample row" data-component="GlassSkeleton"><UI.GlassSkeleton width="48px" height="48px" circle/><div class="stack" style="flex:1"><UI.GlassSkeleton/><UI.GlassSkeleton width="65%"/></div></section>
   </div>
   <div v-else-if="scenario === 'workspace'" class="workspace-demo">
@@ -70,7 +57,7 @@ onMounted(async () => { await nextTick(); if (props.scenario === 'effects') UI.i
     <main class="workspace-main">
       <div class="workspace-heading"><div><p class="sample-label">Design studio</p><h2>Workspace overview</h2></div><span class="workspace-status">All changes saved</span></div>
       <div data-component="GlassBar"><UI.GlassBar><UI.GlassButton size="sm">All projects</UI.GlassButton><UI.GlassButton variant="ghost" size="sm">Recent</UI.GlassButton><span class="workspace-spacer"/><UI.GlassButton variant="primary" size="sm" @click="addProject">New project</UI.GlassButton></UI.GlassBar></div>
-      <div class="workspace-metrics" data-component="GlassPanel"><UI.GlassPanel v-for="metric in [{ label: 'Active projects', value: workspaceRows.length, detail: 'Across your workspace' }, { label: 'Team members', value: 12, detail: 'Working together' }, { label: 'Completed this week', value: 24, detail: '8 more than last week' }]" :key="metric.label"><p>{{ metric.label }}</p><strong>{{ metric.value }}</strong><small>{{ metric.detail }}</small></UI.GlassPanel></div>
+      <div class="workspace-metrics" data-component="GlassPanel"><UI.GlassPanel v-for="metric in workspaceMetrics(workspaceRows.length)" :key="metric.label"><p>{{ metric.label }}</p><strong>{{ metric.value }}</strong><small>{{ metric.detail }}</small></UI.GlassPanel></div>
       <section class="workspace-projects" data-component="GlassTable"><div class="workspace-section-heading"><h3>Projects</h3><span>{{ workspaceRows.length }} projects</span></div><UI.GlassTable :columns="columns" :rows="workspaceRows"/></section>
       <div class="workspace-note"><span>Activity</span><p>Alex updated the component library <span>· 12 minutes ago</span></p></div>
     </main>
@@ -95,7 +82,7 @@ onMounted(async () => { await nextTick(); if (props.scenario === 'effects') UI.i
   <div v-else-if="scenario === 'products'" data-component="ProductSwitcher"><UI.ProductSwitcher current=""/></div>
   <div v-else-if="scenario === 'organizations'" class="sample" data-component="OrgSwitcher"><UI.OrgSwitcher :state="orgState"/></div>
   <div v-else-if="scenario.startsWith('footer')" data-component="SiteFooter"><UI.SiteFooter :theme="theme" v-model:locale="locale" :locales="locales" :compact="scenario === 'footer-compact'" @update:theme="theme = $event"/></div>
-  <div v-else-if="scenario === 'logo'" class="logo-stage row" data-component="LatereLogoMark"><UI.LatereLogoMark/><span v-for="brand in ['cella','drive','lectio','lux','topos','wallfacer']" :key="brand" :class="`${brand}-brand`" style="font-size:28px">{{ brand }}</span></div>
+  <div v-else-if="scenario === 'logo'" class="logo-stage row" data-component="LatereLogoMark"><UI.LatereLogoMark/><span v-for="brand in brands" :key="brand" :class="`${brand}-brand`" style="font-size:28px">{{ brand }}</span></div>
   <div v-else-if="scenario === 'effects'" class="material-stage" data-component="GlassSurface"><UI.GlassButton @click="UI.initLiquidGlass()">Refresh effects</UI.GlassButton><UI.GlassSurface class="effect-surface" data-lg-refract="off">Frosted glass · refraction off</UI.GlassSurface><UI.GlassSurface class="effect-surface" data-lg-refract>Edge refraction · patterned backdrop</UI.GlassSurface><UI.GlassSurface class="effect-surface" data-lg-sheen data-lg-refract="off">Pointer sheen · move across this surface</UI.GlassSurface></div>
   <div v-else>Unknown scenario: {{ scenario }}</div>
 </template>
