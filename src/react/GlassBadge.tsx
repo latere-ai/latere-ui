@@ -26,10 +26,12 @@ export interface GlassBadgeProps {
 
 export function GlassBadge({ tone = 'neutral', solid = false, dot = false, children }: GlassBadgeProps) {
   const color = TONE_VAR[tone] ?? TONE_VAR.neutral;
+  // Semantic fills keep their color across themes; smoke's inverted ink cannot apply here.
+  const ink = `var(--state-${tone}-ink, ${tone === 'running' || tone === 'error' ? '#fafafa' : '#0a0a0a'})`;
   return (
     <span
       className={cx('lu-badge', !solid && 'lu-glass-ultrathin', solid && 'is-solid')}
-      style={{ '--tone': color } as CSSProperties}
+      style={{ '--tone': color, '--tone-ink': ink } as CSSProperties}
     >
       {dot && <span className="lu-badge-dot" aria-hidden="true" />}
       {children}

@@ -25,13 +25,15 @@ const TONE_VAR: Record<string, string> = {
   creating: 'var(--state-creating, #8fb894)',
 };
 const color = computed(() => TONE_VAR[props.tone] ?? TONE_VAR.neutral);
+// Semantic fills keep their color across themes, so their ink must not follow smoke's inversion.
+const ink = computed(() => `var(--state-${props.tone}-ink, ${props.tone === 'running' || props.tone === 'error' ? '#fafafa' : '#0a0a0a'})`);
 </script>
 
 <template>
   <span
     class="lu-badge"
     :class="[{ 'lu-glass-ultrathin': !solid, 'is-solid': solid }]"
-    :style="{ '--tone': color }"
+    :style="{ '--tone': color, '--tone-ink': ink }"
   >
     <span v-if="dot" class="lu-badge-dot" aria-hidden="true" />
     <slot />

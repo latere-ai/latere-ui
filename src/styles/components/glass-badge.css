@@ -9,12 +9,12 @@
   font-size: var(--fs-micro, 12px);
   font-weight: var(--fw-medium, 500);
   line-height: 1.5;
-  color: var(--tone);
+  color: var(--text, #0a0a0a);
   box-shadow: none;
 }
 .lu-badge.is-solid {
   background: var(--tone);
-  color: var(--glass-smoke-ink, #fff);
+  color: var(--tone-ink, #0a0a0a);
   border: 1px solid transparent;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
@@ -22,5 +22,6 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: currentColor;
+  background: var(--tone);
 }
+.lu-badge.is-solid .lu-badge-dot { background: currentColor; }
