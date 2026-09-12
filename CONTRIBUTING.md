@@ -36,7 +36,7 @@ bunx playwright install chromium
 bun run visual:dev
 ```
 
-Open <http://127.0.0.1:4173>. Choose a framework, component sheet, and theme.
+Open <http://127.0.0.1:4173>. Choose an appearance, framework, component sheet, and theme.
 Each page mounts source components with local fonts and fixed sample content.
 The gallery is a development fixture; it is not included in the published package.
 
@@ -54,8 +54,8 @@ its Darwin major: `darwin-24` for macOS 15 (CI), `darwin-27` for macOS 27 (the
 local documentation figures). Chromium is installed by the pinned Playwright
 version. CoreText and blur rendering can differ between macOS releases, so
 these references remain separate and comparisons allow zero differing pixels.
-The viewport is 1100 × 850 for desktop (1280 × 850 for the three-column docs
-layout) and 390 × 844 for mobile in CSS pixels. Captures render at 3.125×
+The viewport is 1100 × 850 for default desktop sheets (1280 × 850 for three-column docs
+and product appearances) and 390 × 844 for mobile in CSS pixels. Captures render at 3.125×
 (300/96), retain device pixels, and store 300 DPI PNG metadata. A standard
 desktop figure is approximately 3438 × 2656 pixels, so text stays sharp when
 enlarged or printed. CSS layout and component sizing stay the same.
@@ -83,6 +83,9 @@ CI uploads that folder on failure. Push and pull-request checks never regenerate
 bun run test:visual:update --grep 'vue buttons'
 # Then compare the result without update mode.
 bun run test:visual --grep 'vue buttons'
+# Review a specific appearance in both adapters and themes.
+bun run test:visual:update --grep 'origo .* forms'
+bun run test:visual --grep 'origo .* forms'
 ```
 
 Review each changed PNG individually in both themes and relevant mobile states.

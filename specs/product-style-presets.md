@@ -1,6 +1,6 @@
 ---
 title: Product style presets
-status: drafted
+status: complete
 depends_on: []
 affects:
   - src/styles/presets.css
@@ -34,3 +34,7 @@ Map the existing material tiers to opaque surfaces and inverse emphasis. Remove 
 ## Verification
 
 Add browser assertions for exact palette, fonts, spacing, geometry, opacity, focus, primary hover, selected controls, teleported overlays, theme switching and restoring the default. Reproduce missing presets before implementation. Verify both adapters, both themes and touch targets. Run type checking, unit coverage and the complete visual suite.
+
+## Outcome
+
+Implemented the root-scoped optional stylesheet and package export for all three appearances. Both adapters cover palette, typography, geometry, material removal, keyboard and hover states, selected controls, overlays, theme changes, default restoration and touch targets. Visual review findings were reproduced in browser regressions and corrected. Type checking and 449 unit tests pass with 92.74% source line coverage; the final local strict browser suite passes all 623 tests.

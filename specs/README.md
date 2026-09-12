@@ -44,6 +44,6 @@ specs/
 
 | Spec | Status | Deliverable |
 |---|---|---|
-| [Product style presets](product-style-presets.md) | In progress | Importable Replichai, Wallfacer and Origo component appearances |
-| [Product style figures](product-style-figures.md) | In progress | Per-style component references and visual regression matrix |
-| [Integrated sidebar](integrated-sidebar.md) | In progress | macOS 27 window-integrated navigation geometry |
+| [Product style presets](product-style-presets.md) | Complete | Importable Replichai, Wallfacer and Origo component appearances |
+| [Product style figures](product-style-figures.md) | Complete | Per-style component references and visual regression matrix |
+| [Integrated sidebar](integrated-sidebar.md) | Complete | macOS 27 window-integrated navigation geometry |

@@ -46,6 +46,4 @@ geometry checks. The parent task records and reviews changed goldens.
 The sidebar now shares the window edge with a flat selected-row fill. All eight
 new regressions failed against the previous CSS; all 31 sidebar, workspace and
 compact-layout checks passed after the change. Light, dark and expanded mobile
-workspace screenshots were inspected individually. The existing shell regression
-that requires a selected-row inset border must be updated to the new flat
-selection contract by the parent task, alongside refreshed goldens.
+workspace screenshots were inspected individually. The existing shell regression now checks the flat selection contract. Refreshed default goldens on both native platforms were reviewed individually, including collapsed mobile rails and full workspace compositions. The final strict local suite passes 623 tests.
