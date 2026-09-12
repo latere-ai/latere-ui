@@ -66,4 +66,17 @@ test('muted table labels remain readable on every base surface', async ({ page }
   });
   for (const surface of colors.surfaces) expect.soft(ratio(colors.text, surface)).toBeGreaterThanOrEqual(4.5);
 });
-
+for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark']) test(`${framework} ${theme} table heading contrasts against its actual glass fill`, async ({ page }) => {
+  await visit(page, framework, 'containers', theme);
+  const colors = await page.locator('th').first().evaluate(el => {
+    const rgba = (color: string) => color.match(/[\d.]+/g)!.map(Number);
+    const ancestors: Element[] = [];
+    for (let node: Element | null = el; node; node = node.parentElement) ancestors.unshift(node);
+    const background = ancestors.reduce((back, node) => {
+      const front = rgba(getComputedStyle(node).backgroundColor), alpha = front[3] ?? 1;
+      return front.slice(0, 3).map((v, i) => v * alpha + back[i] * (1 - alpha));
+    }, [255, 255, 255]);
+    return { background, text: rgba(getComputedStyle(el).color) };
+  });
+  expect(ratio(colors.text, colors.background)).toBeGreaterThanOrEqual(4.5);
+});
