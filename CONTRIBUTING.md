@@ -63,7 +63,7 @@ Fonts are bundled locally;
 media preferences are explicit, with dedicated accessibility scenarios.
 No backend, remote images, or web font service is needed.
 
-Each capture must settle to two identical decoded RGBA images, with animations disabled and the text caret hidden. For every scenario, the suite compares Vue directly with React before checking either committed golden. Explicit recording cannot bypass this adapter parity check.
+Each capture waits for finite transitions to finish, pauses looping animations at their first frame, hides the text caret, and requires two identical decoded RGBA images. It restores the previous animation state afterward. Avoid Playwright's global animation override: repeated SVG captures exposed raster differences with that override. For every scenario, the suite compares Vue directly with React before checking either committed golden. Explicit recording cannot bypass this adapter parity check.
 
 The matrix includes every public visual component in both frameworks, all four appearances (default, Replichai, Wallfacer and Origo), desktop/mobile, and light/dark. Fixed logos, headless organization lists, collapsed sidebars and optical-effects examples also participate; a preset may intentionally leave a fixed identity unchanged.
 

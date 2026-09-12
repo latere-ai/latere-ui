@@ -10,6 +10,8 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+- Add keyboard-accessible toast dismiss buttons and restore popover trigger focus after keyboard dismissal. Match React modal and toast transition lifecycles with Vue.
+- Keep visual-reference button states grouped, show the selected organization in a styled headless example, preserve toast caption readability, and label inactive matte effects explicitly.
 - Complete the React visual component set: add surfaces, icon buttons, switches, radios, tabs, progress/skeleton feedback, tooltips, menus, popovers, drawers, toast/confirm hosts, command palette, documentation layout, preferences, product switching and organization selection. Restore the sidebar's optional product switcher.
 - Share toast/confirmation services and component styles across Vue and React. React controls use values and callbacks; `GlassRadio` uses `value` for the group selection and `optionValue` for each option.
 - Extend the visual matrix to every component in both adapters, all four appearances, light/dark and desktop/mobile. Require exact decoded RGBA equality between adapters and against platform goldens, with no channel or antialiasing tolerance; recording cannot bypass adapter parity.
