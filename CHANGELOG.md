@@ -10,6 +10,9 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+- Rendered visual reference figures at 3.125× resolution with 300 DPI metadata
+  for sharper enlarged and printed views.
+
 - Balanced table corner radii and cell spacing, removed the nested header outline,
   and kept the glass header attached to its labels while scrolling.
 

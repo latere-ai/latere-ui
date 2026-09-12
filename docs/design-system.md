@@ -60,7 +60,7 @@ Test effects over a recognizable backdrop so refraction is visible. Check both t
 
 ## Keep the figures reviewable
 
-Golden figures are committed PNGs from the browser fixtures, using fixed content, bundled fonts, and named viewport/theme combinations. Their filenames identify the framework, scenario, theme, and viewport. For example, `react-buttons-dark-desktop.png` shows the React button fixture in dark mode at the desktop size.
+Golden figures are committed PNGs from the browser fixtures, using fixed content, bundled fonts, and named viewport/theme combinations. They render at 3.125× the CSS layout size and carry 300 DPI metadata for clear enlarged and printed views. The design skeleton is SVG and scales without pixelation. Their filenames identify the framework, scenario, theme, and viewport. For example, `react-buttons-dark-desktop.png` shows the React button fixture in dark mode at the desktop size.
 
 The [reference index](visual-reference.md) maps components to their figures. The [review findings](visual-review.md) record corrected defects and coverage limits. Follow [Contributing](../CONTRIBUTING.md) to compare them, inspect a difference, and update a baseline only after reviewing the intended change.
 

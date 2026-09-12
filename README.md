@@ -108,7 +108,7 @@ For exact props, events, router integration, footer locales, and session setup, 
 
 ![Button variants, sizes, disabled states, and loading states](tests/visual/goldens/darwin-27/vue-buttons-light-desktop.png)
 
-The repository keeps golden PNGs of real components in light and dark themes. Desktop figures cover each visual export; selected mobile figures cover responsive layouts. Vue and React have separate baselines against the shared styles.
+The repository keeps 300 DPI golden PNGs of real components in light and dark themes, rendered at 3.125× resolution for clear enlarged views. Desktop figures cover each visual export; selected mobile figures cover responsive layouts. Vue and React have separate baselines against the shared styles.
 
 Use the [visual reference index](docs/visual-reference.md) to find a component and browse its golden figures, and follow [Contributing](CONTRIBUTING.md) to run comparisons or review an intentional update. The figures show fixed test content and rendering conditions; they complement interaction tests.
 

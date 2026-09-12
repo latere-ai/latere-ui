@@ -55,11 +55,17 @@ local documentation figures). Chromium is installed by the pinned Playwright
 version. CoreText and blur rendering can differ between macOS releases, so
 these references remain separate and comparisons allow zero differing pixels.
 The viewport is 1100 × 850 for desktop (1280 × 850 for the three-column docs
-layout) and 390 × 844 for mobile, at device scale 1. Fonts are bundled locally;
+layout) and 390 × 844 for mobile in CSS pixels. Captures render at 3.125×
+(300/96), retain device pixels, and store 300 DPI PNG metadata. A standard
+desktop figure is approximately 3438 × 2656 pixels, so text stays sharp when
+enlarged or printed. CSS layout and component sizing stay the same.
+Fonts are bundled locally;
 media preferences are explicit, with dedicated accessibility scenarios.
 No backend, remote images, or web font service is needed.
 
 Playwright compares stable screenshots with animations disabled for capture.
+Normal verification also checks the 300 DPI metadata without modifying files.
+Explicit updates stamp density after capture; they never enlarge old pixels.
 Separate interaction tests check focus, keyboard navigation, scrolling, and
 optical effect updates. A still image cannot verify motion or every possible
 host layout. This suite targets Chromium; it does not establish Firefox or

@@ -1,6 +1,6 @@
 # Visual reference index
 
-These PNGs are the expected renders used by the browser suite. Open a figure to inspect it at full size. The same fixtures are interactive in the local gallery (`bun run visual:dev`). See [Contributing](../CONTRIBUTING.md) for comparison and update commands.
+These PNGs are the expected renders used by the browser suite. Figures are rendered at 3.125× browser resolution and carry 300 DPI metadata. Open a figure to inspect sharp text and edges at full size. The same fixtures are interactive in the local gallery (`bun run visual:dev`). See [Contributing](../CONTRIBUTING.md) for comparison and update commands.
 
 These documentation figures use macOS 27 and pinned Chromium. The [macOS 15 CI references](../tests/visual/goldens/darwin-24) are reviewed separately. Every exported Vue and React UI component has a scenario; this is component inventory coverage, not a percentage of all possible appearances or browser engines.
 
