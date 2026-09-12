@@ -53,7 +53,7 @@ The comparator accepts zero changed pixels and zero channel tolerance, including
 ## Verification record
 
 - Type checking passes; 540 unit tests pass with 94.37% source line coverage.
-- Local recording contains all 852 figures, with valid PNG checksums and 300 DPI metadata. All 400 stored Vue/React pairs match exactly. Full strict runs of 815 and 819 tests passed. Subsequent capture fixes pass 44 affected checks and eight final capture, startup and documentation regressions without changing the references.
+- Local recording contains all 852 figures, with valid PNG checksums and 300 DPI metadata. All 400 stored Vue/React pairs match exactly. The final strict run passed all 827 browser tests in 15.5 minutes without changing the references. Every current figure hash matches its individual review record.
 - Native macOS 15 recording and figure review are in progress.
 
 This expands the [initial appearance rollout](product-style-review.md), which recorded a smaller, selective matrix.
