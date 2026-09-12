@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../styles/components/glass-toaster.css';
 // Host for the imperative message() service. Mount ONCE near the app root:
 //   <GlassToaster />
 // It teleports a stack of glass toasts to <body>. Requires 'latere-ui/glass'.
@@ -31,47 +32,3 @@ const TONE_VAR: Record<MessageTone, string> = {
     </div>
   </Teleport>
 </template>
-
-<style scoped>
-.lu-toaster {
-  position: fixed;
-  top: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: var(--lu-z-toast, 1300);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: max-content;
-  max-width: calc(100vw - 32px);
-  pointer-events: none;
-}
-.lu-toast {
-  pointer-events: auto;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  box-sizing: border-box;
-  min-width: min(220px, calc(100vw - 32px));
-  max-width: min(420px, calc(100vw - 32px));
-  padding: 10px 14px;
-  border-radius: var(--radius-pill, 999px);
-  cursor: pointer;
-  color: var(--text, #0a0a0a);
-}
-.lu-toast-bar {
-  flex: none;
-  width: 6px;
-  height: 6px;
-  align-self: center;
-  border-radius: 50%;
-  background: var(--tone);
-}
-.lu-toast-text { min-width: 0; overflow-wrap: anywhere; font-size: var(--fs-body-sm, 13px); }
-.lu-toast-enter-active, .lu-toast-leave-active { transition: opacity 0.2s ease, transform 0.2s ease; }
-.lu-toast-enter-from, .lu-toast-leave-to { opacity: 0; transform: translateY(-8px); }
-@media (prefers-reduced-motion: reduce) {
-  .lu-toast-enter-active, .lu-toast-leave-active { transition: none; }
-  .lu-toast-enter-from, .lu-toast-leave-to { transform: none; }
-}
-</style>

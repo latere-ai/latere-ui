@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../styles/components/glass-popover.css';
 // A floating thick-glass surface anchored to a trigger — dropdown menus, the
 // command palette, filter panels. Toggles on trigger click, closes on outside
 // click / Escape (via useClickOutside). `placement` picks the side.
@@ -41,26 +42,3 @@ const panelClass = computed(() => `lu-pop-panel--${props.placement}`);
     </Transition>
   </div>
 </template>
-
-<style scoped>
-.lu-pop { position: relative; display: inline-block; }
-.lu-pop-panel {
-  position: absolute;
-  z-index: var(--lu-z-popover, 900);
-  min-width: 180px;
-  padding: 6px;
-  border-radius: var(--radius-md, 8px);
-}
-.lu-pop-panel--match { box-sizing: border-box; width: 100%; min-width: 0; overflow-wrap: anywhere; }
-.lu-pop-panel--match :deep(.lu-menu) { min-width: 0; }
-.lu-pop-panel--bottom-start { top: calc(100% + 6px); left: 0; }
-.lu-pop-panel--bottom-end   { top: calc(100% + 6px); right: 0; }
-.lu-pop-panel--top-start    { bottom: calc(100% + 6px); left: 0; }
-.lu-pop-panel--top-end      { bottom: calc(100% + 6px); right: 0; }
-.lu-pop-enter-active, .lu-pop-leave-active { transition: opacity 0.14s ease, transform 0.14s ease; }
-.lu-pop-enter-from, .lu-pop-leave-to { opacity: 0; transform: translateY(-4px); }
-@media (prefers-reduced-motion: reduce) {
-  .lu-pop-enter-active, .lu-pop-leave-active { transition: none; }
-  .lu-pop-enter-from, .lu-pop-leave-to { transform: none; }
-}
-</style>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../styles/components/glass-confirm-host.css';
 // Host for the imperative confirm() service. Mount ONCE near the app root:
 //   <GlassConfirmHost />
 // Renders the active confirm dialog on a GlassModal. Requires 'latere-ui/glass'.
@@ -35,7 +36,3 @@ const c = computed(() => currentConfirm.current);
     </template>
   </GlassModal>
 </template>
-
-<style scoped>
-.lu-confirm-msg { margin: 0; font-size: var(--fs-body-sm, 13px); color: var(--text-secondary, #666); line-height: 1.6; }
-</style>

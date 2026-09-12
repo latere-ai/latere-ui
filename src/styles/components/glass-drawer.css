@@ -1,0 +1,47 @@
+.lu-drawer-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--lu-z-modal, 1000);
+  display: flex;
+  background: var(--glass-dim, rgba(0, 0, 0, 0.28));
+  -webkit-backdrop-filter: blur(2px);
+          backdrop-filter: blur(2px);
+}
+.lu-drawer {
+  box-sizing: border-box;
+  height: 100%;
+  max-width: 90vw;
+  overflow-y: auto;
+  border-radius: 0;
+}
+.lu-drawer--right {
+  margin-left: auto;
+  border-left: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl, 18px) 0 0 var(--radius-xl, 18px);
+}
+.lu-drawer--left {
+  margin-right: auto;
+  border-right: 1px solid var(--glass-border);
+  border-radius: 0 var(--radius-xl, 18px) var(--radius-xl, 18px) 0;
+}
+.lu-drawer-head { margin: 0; padding: 18px 20px 6px; }
+.lu-drawer-title { margin: 0; font-size: var(--fs-h3, 1.15rem); font-weight: var(--fw-semibold, 600); color: var(--text, #0a0a0a); }
+.lu-drawer-body { padding: 12px 20px 20px; }
+
+/* Scrim fades; panel slides from its edge. */
+.lu-drawer-right-enter-active, .lu-drawer-right-leave-active,
+.lu-drawer-left-enter-active, .lu-drawer-left-leave-active { transition: opacity 0.2s ease; }
+.lu-drawer-right-enter-active .lu-drawer, .lu-drawer-right-leave-active .lu-drawer,
+.lu-drawer-left-enter-active .lu-drawer, .lu-drawer-left-leave-active .lu-drawer { transition: transform 0.22s ease; }
+.lu-drawer-right-enter-from, .lu-drawer-right-leave-to,
+.lu-drawer-left-enter-from, .lu-drawer-left-leave-to { opacity: 0; }
+.lu-drawer-right-enter-from .lu-drawer, .lu-drawer-right-leave-to .lu-drawer { transform: translateX(100%); }
+.lu-drawer-left-enter-from .lu-drawer, .lu-drawer-left-leave-to .lu-drawer { transform: translateX(-100%); }
+@media (prefers-reduced-motion: reduce) {
+  .lu-drawer-right-enter-active, .lu-drawer-right-leave-active,
+  .lu-drawer-left-enter-active, .lu-drawer-left-leave-active,
+  .lu-drawer-right-enter-active .lu-drawer, .lu-drawer-right-leave-active .lu-drawer,
+  .lu-drawer-left-enter-active .lu-drawer, .lu-drawer-left-leave-active .lu-drawer { transition: none; }
+  .lu-drawer-right-enter-from .lu-drawer, .lu-drawer-right-leave-to .lu-drawer,
+  .lu-drawer-left-enter-from .lu-drawer, .lu-drawer-left-leave-to .lu-drawer { transform: none; }
+}

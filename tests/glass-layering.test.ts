@@ -37,10 +37,10 @@ describe('overlay layering scale', () => {
     // (react-support v1.27); the layering contract moved with them.
     expect(read('src/styles/components/glass-modal.css')).toMatch(/z-index:\s*var\(--lu-z-modal/);
     expect(read('src/styles/components/glass-modal.css')).toMatch(/scrim--confirm\s*\{\s*z-index:\s*var\(--lu-z-confirm/);
-    expect(read('src/components/GlassToaster.vue')).toMatch(/z-index:\s*var\(--lu-z-toast/);
-    expect(read('src/components/GlassPopover.vue')).toMatch(/z-index:\s*var\(--lu-z-popover/);
-    expect(read('src/components/GlassTooltip.vue')).toMatch(/z-index:\s*var\(--lu-z-tooltip/);
-    expect(read('src/components/GlassDrawer.vue')).toMatch(/z-index:\s*var\(--lu-z-modal/);
+    expect(read('src/styles/components/glass-toaster.css')).toMatch(/z-index:\s*var\(--lu-z-toast/);
+    expect(read('src/styles/components/glass-popover.css')).toMatch(/z-index:\s*var\(--lu-z-popover/);
+    expect(read('src/styles/components/glass-tooltip.css')).toMatch(/z-index:\s*var\(--lu-z-tooltip/);
+    expect(read('src/styles/components/glass-drawer.css')).toMatch(/z-index:\s*var\(--lu-z-modal/);
   });
 
   it('GlassConfirmHost renders its modal on the confirm layer', async () => {

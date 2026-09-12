@@ -21,3 +21,11 @@ dispatched_task_id: null
 Add React GlassPopover, GlassTooltip, GlassMenu, GlassDrawer, GlassToaster and GlassConfirmHost using the existing focus trap and equivalent Vue DOM. Share extracted CSS. Mirror controlled open/close APIs and preserve placement, viewport constraints, disabled states and focus restoration.
 
 Move toast/confirm queue logic into framework-free immutable external stores with subscribe/getSnapshot. Keep Vue reactive exports as compatibility facades; React uses useSyncExternalStore and exports the same imperative services without importing Vue. Preserve timer dismissal, sticky messages, clear, FIFO confirm promises and exactly-once resolution. Unit tests cover service lifecycle and both adapters; browser interactions and exact captures are integrated by complete-matrix. Any discovered behavior fix needs a failing-before regression.
+
+## Implementation notes
+
+The six React overlays share the extracted Vue component stylesheets. `src/react/overlays.ts` exports them and the framework-free `message`, `dismissToast`, `confirm`, and `resolveConfirm` services. Vue retains its existing reactive `toasts` array and `currentConfirm.current` object facade over the same queues; React subscribes through `useSyncExternalStore` with empty server snapshots.
+
+`GlassPopover` supports internal trigger toggling or optional controlled `open` with `onOpenChange`/`onClose`; its trigger render function receives `{ open, toggle }` and its children render function receives `{ close }`. `GlassDrawer` uses controlled `open`/`onClose` and `header`/children in place of Vue slots. Tooltip, Menu, Toaster, and ConfirmHost preserve Vue markup and behavior.
+
+Verification: 61 unit/integration tests across nine focused files cover service snapshots, timers, FIFO promises, Vue/React interoperability, SSR, placements, menu states, drawer dismissal and focus restoration. The changed TypeScript adapters and cores reached 100% line coverage. Complete-matrix owns browser interactions, all-style captures, exact pixel comparison, and final spec completion.
