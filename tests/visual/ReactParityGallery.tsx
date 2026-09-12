@@ -91,7 +91,7 @@ function ReactParityGallery({ scenario }: { scenario: string }) {
       <div className="workspace-heading"><div><p className="sample-label">Design studio</p><h2>Workspace overview</h2></div><span className="workspace-status">All changes saved</span></div>
       <div data-component="GlassBar"><UI.GlassBar><UI.GlassButton size="sm">All projects</UI.GlassButton><UI.GlassButton variant="ghost" size="sm">Recent</UI.GlassButton><span className="workspace-spacer" /><UI.GlassButton variant="primary" size="sm" onClick={addProject}>New project</UI.GlassButton></UI.GlassBar></div>
       <div className="workspace-metrics" data-component="GlassPanel">{workspaceMetrics(workspaceRows.length).map(metric => <UI.GlassPanel key={metric.label}><p>{metric.label}</p><strong>{metric.value}</strong><small>{metric.detail}</small></UI.GlassPanel>)}</div>
-      <section className="workspace-projects" data-component="GlassTable"><div className="workspace-section-heading"><h3>Projects</h3><span>{workspaceRows.length} projects</span></div><UI.GlassTable columns={columns} rows={workspaceRows} /></section>
+      <section className="workspace-projects" data-component="GlassTable"><div className="workspace-section-heading"><h3>Projects</h3><span>{`${workspaceRows.length} projects`}</span></div><UI.GlassTable columns={columns} rows={workspaceRows} /></section>
       <div className="workspace-note"><span>Activity</span><p>Alex updated the component library <span>· 12 minutes ago</span></p></div>
     </main>
   </div>;
