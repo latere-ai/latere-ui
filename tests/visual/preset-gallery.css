@@ -1,0 +1,15 @@
+/* Font assets are fixture-only and locally served; consumers supply their own. */
+@font-face { font-family: 'IBM Plex Sans'; font-style: normal; font-weight: 400 600; src: url('./fonts/plex-sans-latin.woff2') format('woff2'); font-display: block; }
+@font-face { font-family: 'IBM Plex Mono'; font-style: normal; font-weight: 400; src: url('./fonts/plex-mono-400-latin.woff2') format('woff2'); font-display: block; }
+html[data-design] { --fixture-gap: 12px; }
+html[data-design="wallfacer"] { --fixture-gap: 10px; }
+html[data-design="origo"] { --fixture-gap: 8px; }
+html[data-design] :is(.row, .stack, .grid, .material-grid) { gap: var(--fixture-gap); }
+html[data-design] .sample { border-radius: var(--radius-lg); padding: var(--space-4); }
+html[data-design] .workspace-demo { background: var(--bg-deep); border-radius: var(--radius-xl); }
+html[data-design] .workspace-main { gap: var(--fixture-gap); }
+html[data-design="origo"] .workspace-heading h2 { font-size: 19px; letter-spacing: normal; }
+html[data-design="origo"] .workspace-metrics strong { font-family: var(--font-mono); font-size: 22px; }
+html[data-design="origo"] .workspace-main { padding: 12px; }
+html[data-design="origo"] .workspace-note { font-size: 12.5px; }
+html[data-design] .shell-content { background: var(--bg-surface); }

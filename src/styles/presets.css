@@ -1,0 +1,269 @@
+/* Opt-in product appearances. Import after the material entrypoints and set
+ * data-design on <html> so body-portaled overlays share the same recipe.
+ * Typography files belong to the host. See docs/design-system.md for sources,
+ * accessibility adaptations and installation. Unknown/absent values do nothing. */
+
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) {
+  --font-ui: "Inter", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --fs-body-sm: 13px;
+  --fs-micro: 12px;
+  --fs-h3: 16px;
+  --fw-medium: 600;
+  --fw-semibold: 600;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-pill: 999px;
+  --space-3: 12px;
+  --space-4: 14px;
+  --space-2: 8px;
+  --text: var(--fg-1);
+  --text-secondary: var(--fg-2);
+  --text-muted: var(--fg-3);
+  --accent-subtle: color-mix(in srgb, var(--accent) 9%, transparent);
+  --accent-glow: color-mix(in srgb, var(--accent) 25%, transparent);
+  --accent-glow-strong: color-mix(in srgb, var(--accent) 35%, transparent);
+  --focus-outline: 2px solid var(--accent);
+  --lu-control-border: color-mix(in srgb, var(--fg-1) 38%, var(--bg-surface));
+  --lu-button-border: var(--border-strong);
+  --glass-radius: var(--radius-lg);
+  --glass-bg-ultrathin: var(--bg-raised);
+  --glass-bg-thin: var(--bg-surface);
+  --glass-bg: var(--bg-surface);
+  --glass-bg-thick: var(--bg-surface);
+  --glass-overlay-base: var(--bg-surface);
+  --glass-smoke: var(--fg-1);
+  --glass-smoke-strong: var(--fg-1);
+  --glass-smoke-ink: var(--bg-surface);
+  --glass-smoke-border: transparent;
+  --glass-border: var(--border);
+  --glass-highlight: transparent;
+  --glass-edge-top: none;
+  --glass-pill-fill: color-mix(in srgb, var(--fg-1) 9%, var(--bg-surface));
+  --glass-blur: 0px;
+  --glass-blur-ultrathin: 0px;
+  --glass-blur-thin: 0px;
+  --glass-blur-thick: 0px;
+  --glass-saturate: 100%;
+  --glass-brightness: 1;
+  --shadow-glass: var(--shadow);
+  --shadow-glass-hover: var(--shadow);
+  --shadow-glass-smoke: none;
+  --shadow-glass-smoke-hover: none;
+  --glass-edge: var(--shadow);
+  --glass-edge-thick: var(--shadow);
+  --bg-code: var(--bg-raised);
+  --canvas: var(--bg);
+  --canvas-gradient: none;
+  --lu-preset-action-radius: 999px;
+  --lu-preset-field-padding: 6px 10px;
+  --lu-preset-table-padding: 7px 16px;
+  font-family: var(--font-ui);
+  color: var(--text);
+}
+
+:root[data-design="replichai"] {
+  --lu-preset-body-size: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 18px;
+  --radius-md: 8px;
+  --space-1-5: 6px;
+  --lu-preset-field-padding: 6px 11px;
+  --bg: #fafaf9;
+  --bg-deep: #f0f0ee;
+  --bg-surface: #ffffff;
+  --bg-raised: #f4f4f3;
+  --fg-1: #0c0a09;
+  --fg-2: #5c5b58;
+  --fg-3: #6f6c68;
+  --accent: #2369bd;
+  --accent-hover: #1d5aa1;
+  --lu-preset-on-accent: #ffffff;
+  --border: rgba(12,10,9,.08);
+  --border-strong: rgba(12,10,9,.13);
+  --shadow: 0 1px 2px rgba(12,10,9,.04);
+  --lu-preset-overlay-shadow: 0 10px 30px rgba(12,10,9,.13), 0 1px 2px rgba(12,10,9,.06);
+}
+
+:root[data-design="replichai"][data-theme="dark"] {
+  --bg: #17171b;
+  --bg-deep: #101013;
+  --bg-surface: #1f1f25;
+  --bg-raised: #2a2a32;
+  --fg-1: #e9e9ef;
+  --fg-2: #a8a8b4;
+  --fg-3: #a8a8b4;
+  --accent: #6fa3e6;
+  --accent-hover: #8fb8ec;
+  --lu-preset-on-accent: #0a1524;
+  --border: rgba(255,255,255,.09);
+  --border-strong: rgba(255,255,255,.15);
+  --shadow: 0 1px 2px rgba(0,0,0,.4);
+  --lu-preset-overlay-shadow: 0 14px 38px rgba(0,0,0,.5), 0 1px 2px rgba(0,0,0,.38);
+}
+
+:root[data-design="wallfacer"] {
+  --lu-preset-body-size: 13px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-md: 10px;
+  --space-1-5: 8px;
+  --bg: #fafaf9;
+  --bg-deep: #f0efec;
+  --bg-surface: #ffffff;
+  --bg-raised: #f3f2ef;
+  --fg-1: #141311;
+  --fg-2: #55524c;
+  --fg-3: #6f6c66;
+  --accent: #c45a33;
+  --accent-hover: #a84e2e;
+  --lu-preset-on-accent: #0a0a0a;
+  --border: rgba(20,19,17,.08);
+  --border-strong: rgba(20,19,17,.14);
+  --shadow: 0 1px 2px rgba(12,10,9,.04);
+  --lu-preset-overlay-shadow: 0 10px 30px rgba(12,10,9,.13), 0 1px 2px rgba(12,10,9,.06);
+}
+
+:root[data-design="wallfacer"][data-theme="dark"] {
+  --bg: #17171a;
+  --bg-deep: #101012;
+  --bg-surface: #1f1f24;
+  --bg-raised: #141416;
+  --fg-1: #e9e8e4;
+  --fg-2: #a9a8a2;
+  --fg-3: #8a8983;
+  --accent: #e07a51;
+  --accent-hover: #ec8f69;
+  --lu-preset-on-accent: #141311;
+  --border: rgba(255,255,255,.09);
+  --border-strong: rgba(255,255,255,.15);
+  --shadow: 0 1px 2px rgba(0,0,0,.4);
+  --lu-preset-overlay-shadow: 0 14px 38px rgba(0,0,0,.5), 0 1px 2px rgba(0,0,0,.38);
+}
+
+:root[data-design="origo"] {
+  --font-ui: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --lu-preset-body-size: 13px;
+  --fs-body-sm: 12.5px;
+  --fs-h3: 15px;
+  --fw-medium: 500;
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+  --radius-md: 4px;
+  --radius-lg: 4px;
+  --radius-xl: 4px;
+  --space-1-5: 2px;
+  --space-4: 12px;
+  --lu-preset-action-radius: 3px;
+  --lu-preset-field-padding: 6px 8px;
+  --lu-preset-table-padding: 4px 12px;
+  --bg: #fafafa;
+  --bg-deep: #f5f5f5;
+  --bg-surface: #ffffff;
+  --bg-raised: #f5f5f5;
+  --fg-1: #0a0a0a;
+  --fg-2: #666666;
+  --fg-3: #666666;
+  --accent: #4a3b7a;
+  --accent-hover: #3a2e60;
+  --lu-preset-on-accent: #ffffff;
+  --border: rgba(0,0,0,.08);
+  --border-strong: rgba(0,0,0,.12);
+  --shadow: none;
+  --lu-preset-overlay-shadow: none;
+}
+
+:root[data-design="origo"][data-theme="dark"] {
+  --bg: #09090b;
+  --bg-deep: #09090b;
+  --bg-surface: #111113;
+  --bg-raised: #18181b;
+  --fg-1: #fafafa;
+  --fg-2: #a1a1aa;
+  --fg-3: #a1a1aa;
+  --accent: #a897e0;
+  --accent-hover: #c3b6ec;
+  --lu-preset-on-accent: #09090b;
+  --border: rgba(255,255,255,.06);
+  --border-strong: rgba(255,255,255,.10);
+  --shadow: none;
+  --lu-preset-overlay-shadow: none;
+}
+
+/* Every filter-bearing primitive participates, including teleported overlays
+ * and their scrims. Opaque presets must not retain nested glass rendering. */
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) :is(.lu-glass, .lu-glass-ultrathin, .lu-glass-thin, .lu-glass-thick, .lu-glass-smoke,
+  .lu-btn-primary, .lu-tip, .lu-am-dd, .lu-ps-panel, .lu-cp, .lu-cs, .lu-modal-scrim, .lu-drawer-scrim) {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) body { font-family: var(--font-ui); font-size: var(--lu-preset-body-size); }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-cs { background: var(--bg-raised); }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) :is(.lu-modal, .lu-pop-panel, .lu-select-list, .lu-cp, .lu-am-dd, .lu-ps-panel, .lu-drawer, .lu-toast) {
+  box-shadow: var(--lu-preset-overlay-shadow);
+}
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-btn { border-radius: var(--lu-preset-action-radius); font-size: 12.5px; font-weight: var(--fw-medium); }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-btn-md { min-height: 30px; padding: 0 14px; }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-btn-sm { min-height: 26px; padding: 0 10px; }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-btn-primary { background: var(--glass-smoke-strong); color: var(--glass-smoke-ink); box-shadow: none; }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-btn-primary:hover:not(:disabled) { background: var(--accent); color: var(--lu-preset-on-accent); box-shadow: none; }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-btn-danger { box-shadow: none; }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-btn-glass { background: var(--bg-raised); }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-btn-glass:hover:not(:disabled) { background: var(--accent-subtle); border-color: var(--accent); box-shadow: none; }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-bar .lu-btn { border-radius: max(0px, calc(var(--radius-lg) - var(--space-1-5))); }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) :is(.lu-field-control, .lu-select-trigger) { padding: var(--lu-preset-field-padding); background: var(--bg-raised); }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-field-control:focus { background: var(--bg-surface); }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) :is(.lu-table-head th, .lu-table-row td) { padding: var(--lu-preset-table-padding); line-height: 19px; }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-table-head th { color: var(--text-secondary); }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-table-head { background: var(--bg-raised); }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) :is(.lu-seg, .lu-tab, .lu-tab-ind, .lu-tip, .lu-toast) { border-radius: var(--radius-md); }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-seg-item { border-radius: max(0px, calc(var(--radius-md) - 3px)); }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) :is(.lu-tab-ind, .lu-seg-item.is-active) { box-shadow: inset 0 0 0 1px var(--border-strong); }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-switch.is-on .lu-switch-track { box-shadow: none; }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-tip { box-shadow: var(--lu-preset-overlay-shadow); }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) :is(.lu-modal-head, .lu-drawer-head) { padding: 14px 16px 0; }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) :is(.lu-modal-body, .lu-drawer-body) { padding: 12px 16px; }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-modal-foot { padding: 0 16px 14px; }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-cp-input { font-size: var(--lu-preset-body-size); padding: 12px 14px; }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-cp-item { padding: 6px 10px; }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-cp-item-label { font-size: var(--fs-body-sm); }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) :is(.footer-seg, .footer-lang-select) { border-radius: var(--radius-md); }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .footer-seg-btn { border-radius: max(0px, calc(var(--radius-md) - 3px)); }
+
+/* Repository surfaces use small rectangular controls; circular status marks,
+ * avatars, radio dots and switch thumbs retain their semantic geometry. */
+:root[data-design="origo"] .lu-btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
+:root[data-design="origo"] :is(.lu-iconbtn, .lu-am-trigger, .lu-am-item, .lu-cs-fold, .lu-cs-search-hint, .lu-cs-badge) { border-radius: 3px; }
+:root[data-design="origo"] .lu-cs-item { min-height: 28px; padding: 4px 8px; border-radius: 3px; }
+:root[data-design="origo"] .lu-cs-group-label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+:root[data-design="origo"] .lu-table-head th { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+:root[data-design="origo"] .lu-select-option { padding: 4px 8px; }
+:root[data-design="origo"] .lu-select-list { max-height: 196px; }
+:root[data-design="origo"] .lu-cp-item { padding: 4px 8px; }
+:root[data-design="origo"] .lu-menu-item { padding: 5px 8px; }
+
+@media (pointer: coarse) {
+  :root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) :is(.lu-btn, .lu-iconbtn, .lu-field-control, .lu-select-trigger, .lu-cs-item, .lu-cs-search, .lu-tab, .lu-seg-item) { min-height: 44px; }
+  :root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-iconbtn { min-width: 44px; }
+}
+@media (prefers-contrast: more) {
+  :root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) { --glass-border: var(--lu-control-border); --border: var(--lu-control-border); }
+}
+
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-badge.is-solid { box-shadow: none; }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-docs-body :is(pre, code) { font-family: var(--font-mono); }
+:root[data-design="origo"] :is(.lu-ap-pill, .lu-badge) { border-radius: 3px; }
+
+/* Inverse reading surfaces stay neutral; iris belongs to actions and choices. */
+:root[data-design="origo"] .lu-btn-primary { background: var(--accent); color: var(--lu-preset-on-accent); }
+:root[data-design="origo"] .lu-check-native:checked + .lu-check-box,
+:root[data-design="origo"] .lu-switch.is-on .lu-switch-track { background: var(--accent); }
+:root[data-design="origo"] .lu-check-tick { color: var(--lu-preset-on-accent); }
+:root[data-design="origo"] .lu-switch.is-on .lu-switch-thumb { background: var(--lu-preset-on-accent); }
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-skeleton {
+  background-image: linear-gradient(90deg,
+    color-mix(in srgb, var(--text) 18%, var(--bg-raised)) 25%,
+    color-mix(in srgb, var(--text) 25%, var(--bg-surface)) 37%,
+    color-mix(in srgb, var(--text) 18%, var(--bg-raised)) 63%);
+}
