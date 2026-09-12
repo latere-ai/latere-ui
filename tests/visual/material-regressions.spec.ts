@@ -30,9 +30,9 @@ for (const framework of ['vue', 'react']) {
         const edges = await insetEdges(interactive);
         return edges.find(edge => theme === 'light' ? edge.y > 0 : edge.y < 0)!.alpha;
       }, { message: 'Hover must retain the smoke-specific rim treatment' }).toBeLessThanOrEqual(0.25);
-      // The translucent material keeps its existing stronger optical edge.
+      // The translucent material also uses a restrained one-pixel optical edge.
       const regular = await insetEdges(page.locator('.lu-gs.lu-glass').first());
-      expect(regular.find(edge => edge.y > 0)?.y).toBe(1.5);
+      expect(regular.find(edge => edge.y > 0)?.y).toBe(1);
     });
 
     for (const contrast of ['no-preference', 'more'] as const) {

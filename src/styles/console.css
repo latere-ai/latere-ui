@@ -25,10 +25,11 @@ html { overscroll-behavior: none; }
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 248px;
+    width: 224px;
     box-sizing: border-box;
-    padding: 14px 12px 12px;
-    gap: 10px;
+    padding: 10px;
+    font-family: var(--font-ui, system-ui, sans-serif);
+    gap: 8px;
     /* v2 (1d): a FLOATING regular-tier glass slab, not a flush rail. The host
      * console layout insets it (e.g. a 16px-padded shell) so it reads as a
      * detached capsule; here we supply the rounded glass material + shadow.
@@ -40,7 +41,7 @@ html { overscroll-behavior: none; }
     -webkit-backdrop-filter: blur(var(--glass-blur, 0)) saturate(var(--glass-saturate, 100%)) brightness(var(--glass-brightness, 1));
             backdrop-filter: blur(var(--glass-blur, 0)) saturate(var(--glass-saturate, 100%)) brightness(var(--glass-brightness, 1));
     border: 1px solid var(--glass-border, var(--border, rgba(0, 0, 0, 0.08)));
-    border-radius: var(--radius-xl, 28px);
+    border-radius: var(--radius-xl, 18px);
     box-shadow: var(--shadow-glass, none);
     color: var(--text, #0a0a0a);
     transition: width 0.16s ease;
@@ -57,24 +58,24 @@ html { overscroll-behavior: none; }
     display: flex;
     align-items: center;
     gap: 8px;
-    min-height: 38px;
+    min-height: 32px;
 }
 .lu-cs[data-collapsed="true"] .lu-cs-head {
     flex-direction: column;
     gap: 8px;
     align-items: center;
 }
-/* Keep the logo at the SAME vertical position as expanded (centered in a 38px
+/* Keep the logo at the SAME vertical position as expanded (centered in a 32px
  * box) so it doesn't jump when folding; the fold button sits below it and stays
  * visible so the rail can always be unfolded. */
 .lu-cs[data-collapsed="true"] .lu-cs-brand {
-    min-height: 38px;
+    min-height: 32px;
     flex: 0 0 auto;
 }
 .lu-cs-brand {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     flex: 1;
     min-width: 0;
     text-decoration: none;
@@ -157,10 +158,10 @@ html { overscroll-behavior: none; }
     width: 100%;
     box-sizing: border-box;
     margin: 2px 0;
-    min-height: 38px;
-    padding: 0 8px 0 14px;
+    min-height: 32px;
+    padding: 0 8px 0 10px;
     border: 1px solid var(--lu-control-border, color-mix(in srgb, var(--text, #0a0a0a) 45%, transparent));
-    border-radius: var(--radius-pill, 999px);
+    border-radius: var(--radius-md, 8px);
     background: var(--glass-bg-ultrathin, var(--bg-raised, #f5f5f5));
     color: var(--text-muted, #a0a0a0);
     font: inherit;
@@ -203,7 +204,7 @@ html { overscroll-behavior: none; }
 .lu-cs-nav {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
@@ -218,21 +219,22 @@ html { overscroll-behavior: none; }
     margin-top: auto;
 }
 .lu-cs-group-label {
-    font-family: var(--font-mono, ui-monospace, 'SF Mono', Menlo, monospace);
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: normal;
+    text-transform: none;
     color: var(--text-muted, #a0a0a0);
-    padding: 2px 14px 5px;
+    padding: 2px 10px 4px;
 }
 
 .lu-cs-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 14px;
-    border-radius: var(--radius-pill, 999px);
+    gap: 8px;
+    padding: 6px 10px;
+    min-height: 32px;
+    border-radius: var(--radius-md, 8px);
     color: var(--text-secondary, #666);
     text-decoration: none;
     font-size: 13px;
@@ -253,9 +255,7 @@ html { overscroll-behavior: none; }
     background: var(--glass-pill-fill, var(--bg-raised, #f5f5f5));
     color: var(--text, #0a0a0a);
 }
-/* v2 (1d): the active row is a filled capsule with a specular top edge — the
- * v1 3px accent bar is gone. The pill fill + rim carry the state in both the
- * expanded and collapsed rail, so no per-mode indicator is needed. */
+/* A rounded active row preserves room for labels and its visible state edge. */
 .lu-cs-item[data-active="true"] {
     background: var(--glass-pill-fill, var(--bg-raised, #f5f5f5));
     box-shadow: inset 0 0 0 1px var(--lu-control-border, color-mix(in srgb, var(--text, #0a0a0a) 45%, transparent)), var(--shadow, 0 1px 3px rgba(0, 0, 0, 0.05)), var(--glass-edge-top, none);

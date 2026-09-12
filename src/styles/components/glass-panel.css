@@ -3,7 +3,7 @@
  * `.lu-gs.lu-panel` keeps the specificity the scoped block had, so the panel
  * radius/padding still beat GlassSurface's (still-scoped) `.lu-gs` box rules. */
 .lu-gs.lu-panel {
-  padding: var(--space-5, 20px);
-  border-radius: var(--radius-lg, 22px);
+  padding: var(--space-4, 16px);
+  border-radius: var(--radius-lg, 14px);
 }
 .lu-panel.lu-panel-flush { padding: 0; }

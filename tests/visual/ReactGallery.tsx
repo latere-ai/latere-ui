@@ -143,7 +143,7 @@ function Account({ sidebar = false }: { sidebar?: boolean }) {
 function Sidebar({ initiallyCollapsed }: { initiallyCollapsed: boolean }) {
   const [collapsed, setCollapsed] = useState(initiallyCollapsed);
   const [active, setActive] = useState('overview');
-  return <Sample name="ConsoleSidebar"><div style={{ height: 640, display: 'flex' }}>
+  return <Sample name="ConsoleSidebar"><div className="shell-stage">
     <ConsoleSidebar model={model} activeKey={active} collapsed={collapsed} onCollapsedChange={setCollapsed}
       brandName="Lux" brandTheme="lux" brandSub="Console" search onNavigate={item => setActive(item.id)}
       foot={<div data-component="AccountMenu"><Account sidebar /></div>} />

@@ -3,10 +3,11 @@
  * library (--text, --bg-surface, --bg-raised, --text-secondary, --text-muted,
  * --border) plus optional --accent, with safe fallbacks. */
 
+.lu-docs-frame { container: lu-docs / inline-size; min-width: 0; font-family: var(--font-ui, system-ui, sans-serif); }
 .lu-docs {
     display: grid;
-    grid-template-columns: 220px minmax(0, 1fr) 200px;
-    gap: 32px;
+    grid-template-columns: 200px minmax(0, 1fr) 168px;
+    gap: 24px;
     align-items: start;
 }
 
@@ -41,20 +42,22 @@
     display: flex;
     align-items: center;
     gap: 7px;
-    font-family: var(--font-mono, ui-monospace, 'SF Mono', Menlo, monospace);
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: normal;
+    text-transform: none;
     color: var(--text-muted, #a0a0a0);
-    padding: 0 14px 4px;
+    padding: 0 10px 4px;
 }
 .lu-docs-link {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 14px;
-    border-radius: var(--radius-pill, 999px);
+    padding: 6px 10px;
+    min-height: 32px;
+    box-sizing: border-box;
+    border-radius: var(--radius-md, 8px);
     font-size: 13px;
     line-height: 1.3;
     color: var(--text-secondary, #666);
@@ -95,10 +98,11 @@
 }
 .lu-docs-article {
     min-width: 0;
+    max-width: 76ch;
 }
 .lu-docs-title {
     margin: 0 0 16px;
-    font-size: 28px;
+    font-size: 26px;
     line-height: 1.2;
     color: var(--text, #0a0a0a);
 }
@@ -110,7 +114,7 @@
 .lu-docs-body :is(h2, h3, h4) {
     color: var(--text, #0a0a0a);
     line-height: 1.3;
-    margin: 1.8em 0 0.6em;
+    margin: 1.35em 0 0.5em;
     scroll-margin-top: 24px;
 }
 .lu-docs-body h2 { font-size: 21px; }
@@ -128,12 +132,12 @@
     font-size: 0.88em;
     background: var(--bg-code, var(--bg-raised, #f5f5f5));
     padding: 1px 5px;
-    border-radius: var(--radius-xs, 8px);
+    border-radius: var(--radius-xs, 4px);
 }
 .lu-docs-body pre {
     background: var(--bg-raised, #f5f5f5);
     border: 1px solid var(--border, rgba(0, 0, 0, 0.08));
-    border-radius: var(--radius-md, 16px);
+    border-radius: var(--radius-md, 8px);
     padding: 14px 16px;
     overflow-x: auto;
     margin: 0 0 1.2em;
@@ -165,8 +169,8 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
-    margin-top: 40px;
-    padding-top: 20px;
+    margin-top: 24px;
+    padding-top: 12px;
     border-top: 1px solid var(--border, rgba(0, 0, 0, 0.08));
 }
 .lu-docs-pager-link {
@@ -175,7 +179,7 @@
     gap: 3px;
     padding: 12px 16px;
     border: 1px solid var(--border, rgba(0, 0, 0, 0.08));
-    border-radius: var(--radius-md, 16px);
+    border-radius: var(--radius-md, 8px);
     text-decoration: none;
     transition: border-color 0.13s, background 0.13s;
 }
@@ -233,13 +237,18 @@
     font-weight: 500;
 }
 
+/* No empty third track when the optional TOC is omitted. */
+.lu-docs:not(:has(> .lu-docs-toc)) { grid-template-columns: 200px minmax(0, 1fr); }
+
 /* ===== Responsive ===== */
-@media (max-width: 1100px) {
-    .lu-docs { grid-template-columns: 200px minmax(0, 1fr); }
+@container lu-docs (max-width: 1080px) {
+    .lu-docs-frame { container: lu-docs / inline-size; min-width: 0; font-family: var(--font-ui, system-ui, sans-serif); }
+.lu-docs { grid-template-columns: 200px minmax(0, 1fr); }
     .lu-docs-toc { display: none; }
 }
-@media (max-width: 760px) {
-    .lu-docs { grid-template-columns: 1fr; gap: 20px; }
+@container lu-docs (max-width: 720px) {
+    .lu-docs-frame { container: lu-docs / inline-size; min-width: 0; font-family: var(--font-ui, system-ui, sans-serif); }
+.lu-docs, .lu-docs:not(:has(> .lu-docs-toc)) { grid-template-columns: 1fr; gap: 16px; }
     .lu-docs-side {
         position: static;
         max-height: none;

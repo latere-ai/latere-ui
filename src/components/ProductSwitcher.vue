@@ -181,7 +181,7 @@ function close() {
   -webkit-backdrop-filter: blur(36px) saturate(180%);
   backdrop-filter: blur(36px) saturate(180%);
   border: 1px solid var(--glass-border, var(--border, #ccc));
-  border-radius: var(--radius-lg, 22px);
+  border-radius: var(--radius-lg, 14px);
   box-shadow: var(--shadow-glass, var(--shadow-lg, 0 8px 30px rgba(0, 0, 0, 0.12)));
   padding: 6px;
 }
@@ -203,7 +203,7 @@ function close() {
   align-items: center;
   gap: 6px;
   padding: 12px 4px 10px;
-  border-radius: var(--radius-md, 14px);
+  border-radius: var(--radius-md, 8px);
   text-decoration: none;
   color: var(--text, #111);
   position: relative;

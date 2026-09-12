@@ -2,12 +2,16 @@
 import { ref, onMounted, nextTick } from 'vue';
 import * as UI from '../../src';
 const props = defineProps<{ scenario: string }>();
+const showToc = new URLSearchParams(location.search).get('showToc') !== 'false';
 const matchWidth = new URLSearchParams(location.search).get('matchWidth') === 'true';
 const placement = (new URLSearchParams(location.search).get('placement') || 'bottom-start') as 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';
 const text = ref('Studio workspace');
 const checked = ref(true);
 const selected = ref('daily');
 const open = ref(false);
+const workspaceCollapsed = ref(matchMedia('(max-width: 720px)').matches);
+const workspaceRows = ref(Array.from({ length: 8 }, (_, i) => ({ name: ['Design system', 'Website refresh', 'Research notes', 'Component library', 'Brand assets', 'Mobile workspace', 'Team handbook', 'Release checklist'][i], status: i % 3 ? 'In progress' : 'Ready', jobs: [12, 8, 3, 24, 6, 5, 2, 4][i] })));
+function addProject() { workspaceRows.value.unshift({ name: 'Untitled project', status: 'Ready', jobs: 0 }); }
 const innerOpen = ref(false);
 const theme = ref<'light' | 'dark' | 'auto'>(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
 const locale = ref('en');
@@ -61,6 +65,16 @@ onMounted(async () => { await nextTick(); if (props.scenario === 'effects') UI.i
     <section class="sample stack" data-component="GlassProgress"><UI.GlassProgress v-for="value in [0, 50, 100, 150, -10]" :key="value" :value="value" :label="`Progress ${value}`"/></section>
     <section class="sample row" data-component="GlassSkeleton"><UI.GlassSkeleton width="48px" height="48px" circle/><div class="stack" style="flex:1"><UI.GlassSkeleton/><UI.GlassSkeleton width="65%"/></div></section>
   </div>
+  <div v-else-if="scenario === 'workspace'" class="workspace-demo">
+    <div class="workspace-rail" data-component="ConsoleSidebar"><UI.ConsoleSidebar :model="nav" active-key="overview" brand-name="Lux" brand-theme="lux" brand-sub="Workspace" search expand-on-brand-click v-model:collapsed="workspaceCollapsed"><template #logo><UI.LatereLogoMark/></template></UI.ConsoleSidebar></div>
+    <main class="workspace-main">
+      <div class="workspace-heading"><div><p class="sample-label">Design studio</p><h2>Workspace overview</h2></div><span class="workspace-status">All changes saved</span></div>
+      <div data-component="GlassBar"><UI.GlassBar><UI.GlassButton size="sm">All projects</UI.GlassButton><UI.GlassButton variant="ghost" size="sm">Recent</UI.GlassButton><span class="workspace-spacer"/><UI.GlassButton variant="primary" size="sm" @click="addProject">New project</UI.GlassButton></UI.GlassBar></div>
+      <div class="workspace-metrics" data-component="GlassPanel"><UI.GlassPanel v-for="metric in [{ label: 'Active projects', value: workspaceRows.length, detail: 'Across your workspace' }, { label: 'Team members', value: 12, detail: 'Working together' }, { label: 'Completed this week', value: 24, detail: '8 more than last week' }]" :key="metric.label"><p>{{ metric.label }}</p><strong>{{ metric.value }}</strong><small>{{ metric.detail }}</small></UI.GlassPanel></div>
+      <section class="workspace-projects" data-component="GlassTable"><div class="workspace-section-heading"><h3>Projects</h3><span>{{ workspaceRows.length }} projects</span></div><UI.GlassTable :columns="columns" :rows="workspaceRows"/></section>
+      <div class="workspace-note"><span>Activity</span><p>Alex updated the component library <span>· 12 minutes ago</span></p></div>
+    </main>
+  </div>
   <div v-else-if="scenario === 'containers'" class="stack">
     <div class="material-stage material-grid" data-component="GlassSurface"><UI.GlassSurface v-for="tier in tiers" :key="tier" :tier="tier" interactive class="material">{{ tier }} surface · The quick brown fox</UI.GlassSurface></div>
     <div class="grid" data-component="GlassPanel"><UI.GlassPanel>Regular panel</UI.GlassPanel><UI.GlassPanel tier="smoke">Smoke panel</UI.GlassPanel><UI.GlassPanel flush><div style="padding:20px">Flush panel with host padding</div></UI.GlassPanel></div>
@@ -75,7 +89,7 @@ onMounted(async () => { await nextTick(); if (props.scenario === 'effects') UI.i
   <div v-else-if="scenario === 'confirm'" data-component="GlassConfirmHost"><UI.GlassButton @click="ask">Delete workspace</UI.GlassButton><UI.GlassConfirmHost/></div>
   <div v-else-if="scenario.startsWith('sidebar')" class="shell-stage" data-component="ConsoleSidebar"><UI.ConsoleSidebar :model="nav" active-key="jobs" brand-name="Lux" brand-theme="lux" brand-sub="Console" search :collapsed="scenario === 'sidebar-collapsed'"><template #logo><UI.LatereLogoMark/></template></UI.ConsoleSidebar><div class="shell-content"><h2>Workspace overview</h2><p>Projects and activity appear beside the navigation.</p></div></div>
   <div v-else-if="scenario === 'palette'" data-component="ConsolePalette"><UI.GlassButton @click="open = true">Open palette</UI.GlassButton><UI.ConsolePalette :open="open" :model="paletteNav" @close="open = false"/></div>
-  <div v-else-if="scenario === 'docs'" data-component="DocsLayout"><UI.DocsLayout :groups="groups" active-slug="intro" :article-html="article"/></div>
+  <div v-else-if="scenario === 'docs'" data-component="DocsLayout"><UI.DocsLayout :show-toc="showToc" :groups="groups" active-slug="intro" :article-html="article"/></div>
   <form v-else-if="scenario === 'account'" data-component="AccountMenu" style="display:flex;justify-content:flex-end" @submit.prevent="text = 'Unexpected submit'"><UI.AccountMenu :principal="principal" dashboard-path="#dashboard"><template #prefs><div data-component="AccountPrefs"><UI.AccountPrefs :theme="theme" :locale="locale" :locale-options="locales" @set-theme="theme = $event" @set-locale="locale = $event"/></div></template></UI.AccountMenu></form>
   <div v-else-if="scenario === 'preferences'" class="sample" data-component="AccountPrefs"><UI.AccountPrefs :theme="theme" :locale="locale" :locale-options="locales" @set-theme="theme = $event" @set-locale="locale = $event"/></div>
   <div v-else-if="scenario === 'products'" data-component="ProductSwitcher"><UI.ProductSwitcher current="lux"/></div>

@@ -37,7 +37,7 @@ defineEmits<{ (e: 'select', value: string): void }>();
   background: none;
   cursor: pointer;
   padding: 7px 10px;
-  border-radius: var(--radius-sm, 10px);
+  border-radius: var(--radius-sm, 6px);
   font: inherit;
   font-size: var(--fs-body-sm, 13px);
   color: var(--text, #0a0a0a);

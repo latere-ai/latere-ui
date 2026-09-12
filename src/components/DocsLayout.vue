@@ -135,6 +135,7 @@ defineExpose({ refresh, toc });
 </script>
 
 <template>
+  <div class="lu-docs-frame">
   <div class="lu-docs">
     <aside class="lu-docs-side">
       <slot name="sidebar-head">
@@ -219,5 +220,6 @@ defineExpose({ refresh, toc });
         </div>
       </slot>
     </aside>
+  </div>
   </div>
 </template>

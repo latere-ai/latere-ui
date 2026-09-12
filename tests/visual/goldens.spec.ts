@@ -85,3 +85,11 @@ for (const theme of ['light', 'dark']) test(`tooltip reduced transparency ${them
   await page.getByRole('button', { name: 'Top tooltip' }).focus();
   await expect(page).toHaveScreenshot(`tooltip-reduced-transparency-${theme}.png`);
 });
+
+for (const theme of ['light', 'dark']) for (const [name, width, height] of [
+  ['laptop', 1280, 720], ['laptop-large', 1470, 900], ['studio', 2560, 1440],
+] as const) test(`workspace ${theme} ${name}`, async ({ page }) => {
+  await page.setViewportSize({ width, height });
+  await visit(page, 'vue', 'workspace', theme);
+  await expect(page).toHaveScreenshot(`workspace-${theme}-${name}.png`, { fullPage: true });
+});

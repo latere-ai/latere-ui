@@ -65,11 +65,11 @@
     /* Inverse fills need their own rim: the white-glass highlight draws an
      * opaque double outline on dark smoke. Keep one subtle optical edge. */
     --shadow-glass-smoke:
-        0 14px 38px rgba(0, 0, 0, 0.08),
+        0 3px 12px rgba(0, 0, 0, 0.07),
         inset 0 1px 0 rgba(255, 255, 255, 0.16),
         inset 0 -1px 0 rgba(0, 0, 0, 0.12);
     --shadow-glass-smoke-hover:
-        0 26px 60px rgba(0, 0, 0, 0.13),
+        0 6px 18px rgba(0, 0, 0, 0.10),
         inset 0 1px 0 rgba(255, 255, 255, 0.22),
         inset 0 -1px 0 rgba(0, 0, 0, 0.12);
 
@@ -80,7 +80,7 @@
     --glass-blur-thick:     36px;
 
     /* Vibrancy: saturate color bleeding through the layer so glyphs stay vivid. */
-    --glass-saturate:   180%;
+    --glass-saturate:   150%;
     /* Luminance lift folded into the backdrop chain so glass reads as bright
      * frost the content passes THROUGH, not a scrim laid over it. Works in every
      * engine (plain `brightness()`, unlike the Chromium-only SVG lensing). Light
@@ -91,22 +91,22 @@
 
     /* Edge + highlight. --glass-border is the hairline; --glass-highlight is the
      * specular rim light on the top edge. */
-    --glass-border:     rgba(255, 255, 255, 0.85);
-    --glass-highlight:  rgba(255, 255, 255, 0.95);
+    --glass-border:     rgba(255, 255, 255, 0.55);
+    --glass-highlight:  rgba(255, 255, 255, 0.65);
     /* Specular top edge for active nav pills / hover capsules. */
-    --glass-edge-top:   inset 0 1.5px 0 var(--glass-highlight);
+    --glass-edge-top:   inset 0 1px 0 var(--glass-highlight);
     /* Fill for the active nav row and hover capsules. */
     --glass-pill-fill:  rgba(255, 255, 255, 0.70);
 
     /* Layered floating-glass shadow: drop + inset top specular + inset bottom
      * shade. Hover deepens the drop and brightens the rim. */
     --shadow-glass:
-        0 14px 38px rgba(0, 0, 0, 0.08),
-        inset 0 1.5px 0 rgba(255, 255, 255, 0.95),
+        0 3px 12px rgba(0, 0, 0, 0.07),
+        inset 0 1px 0 rgba(255, 255, 255, 0.65),
         inset 0 -1px 0 rgba(0, 0, 0, 0.04);
     --shadow-glass-hover:
-        0 26px 60px rgba(0, 0, 0, 0.13),
-        inset 0 1.5px 0 rgba(255, 255, 255, 1),
+        0 6px 18px rgba(0, 0, 0, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 1),
         inset 0 -1px 0 rgba(0, 0, 0, 0.04);
     /* v1.10 aliases — keep GlassSurface / GlassButton consumers working. */
     --glass-edge:       var(--shadow-glass);
@@ -117,7 +117,7 @@
     --glass-dim:        rgba(0, 0, 0, 0.28);
 
     /* Concentric outer radius → the radii ladder (cards = --radius-lg). */
-    --glass-radius:     var(--radius-lg, 22px);
+    --glass-radius:     var(--radius-lg, 14px);
 
     /* Base canvas the product fills behind glass. A near-flat default; adopters
      * override --canvas-gradient with a real gradient/orbs so glass refracts. */
@@ -142,11 +142,11 @@
     /* Dark-theme smoke is pale: retain its light rim without the dark
      * material's heavy bottom inset cutting a second outline into the fill. */
     --shadow-glass-smoke:
-        0 14px 38px rgba(0, 0, 0, 0.5),
+        0 3px 12px rgba(0, 0, 0, 0.28),
         inset 0 1px 0 rgba(255, 255, 255, 0.65),
         inset 0 -1px 0 rgba(0, 0, 0, 0.10);
     --shadow-glass-smoke-hover:
-        0 24px 56px rgba(0, 0, 0, 0.6),
+        0 6px 18px rgba(0, 0, 0, 0.36),
         inset 0 1px 0 rgba(255, 255, 255, 0.75),
         inset 0 -1px 0 rgba(0, 0, 0, 0.10);
 
@@ -154,22 +154,22 @@
     --glass-blur-thin:      24px;
     --glass-blur:           24px;
     --glass-blur-thick:     36px;
-    --glass-saturate:   180%;
+    --glass-saturate:   150%;
     /* Dark glass over dark content needs a real lift, not a whisper (see :root). */
-    --glass-brightness: 1.5;
+    --glass-brightness: 1.15;
 
     --glass-border:     rgba(255, 255, 255, 0.20);
     --glass-highlight:  rgba(255, 255, 255, 0.22);
-    --glass-edge-top:   inset 0 1.5px 0 var(--glass-highlight);
+    --glass-edge-top:   inset 0 1px 0 var(--glass-highlight);
     --glass-pill-fill:  rgba(255, 255, 255, 0.16);
 
     --shadow-glass:
-        0 14px 38px rgba(0, 0, 0, 0.5),
-        inset 0 1.5px 0 rgba(255, 255, 255, 0.18),
+        0 3px 12px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.18),
         inset 0 -1px 0 rgba(0, 0, 0, 0.4);
     --shadow-glass-hover:
-        0 24px 56px rgba(0, 0, 0, 0.6),
-        inset 0 1.5px 0 rgba(255, 255, 255, 0.26),
+        0 6px 18px rgba(0, 0, 0, 0.36),
+        inset 0 1px 0 rgba(255, 255, 255, 0.26),
         inset 0 -1px 0 rgba(0, 0, 0, 0.4);
     --glass-edge:       var(--shadow-glass);
     --glass-edge-thick: var(--shadow-glass-hover);
@@ -188,7 +188,7 @@
 .lu-glass-smoke {
     border: 1px solid var(--glass-border, rgba(0, 0, 0, 0.08));
     box-shadow: var(--shadow-glass);
-    border-radius: var(--glass-radius, 22px);
+    border-radius: var(--glass-radius, 14px);
     /* Safari needs the -webkit- prefix; keep both. */
     -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness, 1));
             backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness, 1));
@@ -324,4 +324,12 @@
         --glass-blur-thick:  0px;
         --glass-saturate:  100%;
     }
+}
+
+/* Keep compact desktop controls comfortably tappable on touch devices. */
+@media (pointer: coarse) {
+    .lu-btn.lu-btn, .lu-field .lu-field-control, .lu-select .lu-select-trigger, .lu-iconbtn.lu-iconbtn,
+    .lu-cs .lu-cs-search, .lu-cs .lu-cs-item, .lu-docs .lu-docs-link, .lu-tab.lu-tab,
+    .lu-seg .lu-seg-item { min-height: 44px; }
+    .lu-iconbtn.lu-iconbtn { min-width: 44px; }
 }

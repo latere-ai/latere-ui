@@ -57,7 +57,7 @@ describe('console.css', () => {
     expect(blk).toMatch(/margin-left:\s*auto/);
   });
 
-  it("v2: active row is a filled capsule, not a 3px accent bar", () => {
+  it("v2: active row is a compact rounded rectangle", () => {
     const active = css.slice(css.indexOf('.lu-cs-item[data-active="true"] {'));
     // Pill fill carries the active state.
     expect(active).toMatch(/background:\s*var\(--glass-pill-fill/);
@@ -65,6 +65,6 @@ describe('console.css', () => {
     expect(css).not.toMatch(/\.lu-cs-item\[data-active="true"\]::before/);
     // Nav rows are capsules.
     const item = css.slice(css.indexOf('.lu-cs-item {'), css.indexOf('.lu-cs-item:hover'));
-    expect(item).toMatch(/border-radius:\s*var\(--radius-pill/);
+    expect(item).toMatch(/border-radius:\s*var\(--radius-md/);
   });
 });

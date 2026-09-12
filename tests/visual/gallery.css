@@ -1,21 +1,21 @@
 /* Fixture layout only. Do not reset component box sizing or override library rules. */
 :root { --font-mono: "JetBrains Mono", monospace; }
 html { background: var(--bg); }
-body { min-height: 100vh; margin: 0; font-family: Inter, sans-serif; font-size: 14px; line-height: 1.5; color: var(--text); background: var(--bg); }
-#app { padding: 24px; }
-#app > header { margin-bottom: 24px; }
+body { min-height: 100vh; margin: 0; font-family: var(--font-ui, system-ui, sans-serif); font-size: 14px; line-height: 1.5; color: var(--text); background: var(--bg); }
+#app { padding: 16px; }
+#app > header { margin-bottom: 16px; }
 h1 { font-size: 24px; font-weight: 600; margin: 0; }
 h2 { font-size: 18px; }
 .eyebrow { font-size: 10px; letter-spacing: 2px; color: var(--text-secondary); margin: 0 0 8px; }
 .row { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
-.stack { display: flex; flex-direction: column; gap: 20px; }
-.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
-.sample { padding: 20px; border: 1px solid var(--border); border-radius: 16px; min-width: 0; }
-.sample-label { display: block; font-size: 12px; color: var(--text-secondary); margin: 0 0 16px; }
-.material-stage { padding: 32px; background: repeating-linear-gradient(120deg, transparent 0 38px, #bb946338 38px 76px), linear-gradient(40deg, #598e8938, #9580b638); border-radius: 24px; }
+.stack { display: flex; flex-direction: column; gap: 16px; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.sample { padding: 16px; border: 1px solid var(--border); border-radius: 12px; min-width: 0; }
+.sample-label { display: block; font-size: 12px; color: var(--text-secondary); margin: 0 0 12px; }
+.material-stage { padding: 20px; background: repeating-linear-gradient(120deg, transparent 0 38px, #bb946338 38px 76px), linear-gradient(40deg, #598e8938, #9580b638); border-radius: 18px; }
 .material { min-height: 88px; padding: 20px; }
 .popover-stage { display: flex; justify-content: center; align-items: center; min-height: 380px; }
-.shell-stage { display: flex; gap: 24px; min-height: 630px; }
+.shell-stage { display: flex; gap: 16px; height: calc(100vh - 110px); min-height: 360px; }
 .shell-stage > .lu-cs { flex-shrink: 0; }
 .shell-content { flex: 1; padding: 20px; min-width: 0; }
 .gallery-link { display: inline-block; color: var(--text); padding: 8px 16px; }
@@ -25,3 +25,40 @@ h2 { font-size: 18px; }
 
 .material-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
 @media (max-width: 600px) { .material-grid { grid-template-columns: 1fr; } }
+
+/* A composed application example uses library components at their default density. */
+.workspace-demo { display: flex; gap: 16px; max-width: 1520px; margin: 0 auto; padding: 12px; border-radius: 20px; background: linear-gradient(130deg, #839caa18, #b7a78c12), var(--bg-deep); }
+.workspace-rail { flex: none; }
+.workspace-rail .lu-cs { min-height: 580px; }
+.workspace-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px; padding: 8px; }
+.workspace-heading, .workspace-section-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.workspace-heading h2 { margin: 0; font-size: 24px; letter-spacing: -0.025em; }
+.workspace-heading .sample-label { margin-bottom: 2px; }
+.workspace-status, .workspace-section-heading span { font-size: 12px; color: var(--text-secondary); }
+.workspace-spacer { flex: 1; }
+.workspace-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.workspace-metrics p { margin: 0 0 4px; font-size: 13px; color: var(--text-secondary); }
+.workspace-metrics strong { display: block; font-size: 24px; line-height: 1.25; font-weight: 600; letter-spacing: -0.025em; }
+.workspace-metrics small { color: var(--text-secondary); font-size: 12px; }
+.workspace-section-heading { margin-bottom: 8px; }
+.workspace-section-heading h3 { margin: 0; font-size: 15px; }
+.workspace-note { padding-top: 12px; border-top: 1px solid var(--border); font-size: 13px; }
+.workspace-note > span { font-weight: 600; }
+.workspace-note p { margin: 4px 0; }
+.workspace-note p span { color: var(--text-secondary); }
+@media (max-width: 720px) {
+  .workspace-demo { flex-direction: column; padding: 8px; gap: 12px; }
+  .workspace-rail .lu-cs { min-height: 0; width: 100%; }
+  .workspace-rail .lu-cs[data-collapsed="true"] .lu-cs-nav, .workspace-rail .lu-cs[data-collapsed="true"] .lu-cs-search { display: none; }
+  .workspace-rail .lu-cs[data-collapsed="true"] .lu-cs-head { flex-direction: row; justify-content: space-between; }
+  .workspace-main { padding: 4px; gap: 12px; }
+  .workspace-heading { align-items: start; }
+  .workspace-status { display: none; }
+  .workspace-metrics { grid-template-columns: 1fr; gap: 8px; }
+  .workspace-metrics .lu-panel { display: grid; grid-template-columns: 1fr auto; gap: 0 12px; }
+  .workspace-metrics strong { grid-row: span 2; font-size: 24px; }
+  .workspace-metrics small { grid-column: 1; }
+}
+
+#app:has(.workspace-demo) > header h1 { font-size: 14px; font-weight: 500; color: var(--text-secondary); }
+#app:has(.workspace-demo) > header .eyebrow { display: none; }

@@ -130,7 +130,7 @@ function onKeydown(e: KeyboardEvent) {
   -webkit-backdrop-filter: blur(36px) saturate(180%);
   backdrop-filter: blur(36px) saturate(180%);
   border: 1px solid var(--glass-border, var(--border, rgba(0, 0, 0, 0.1)));
-  border-radius: var(--radius-xl, 28px);
+  border-radius: var(--radius-xl, 18px);
   box-shadow: var(--shadow-glass, 0 16px 48px rgba(0, 0, 0, 0.24));
   overflow: hidden;
 }
@@ -159,7 +159,7 @@ function onKeydown(e: KeyboardEvent) {
   align-items: center;
   gap: 8px;
   padding: 9px 12px;
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-sm, 6px);
   cursor: pointer;
   color: var(--text-secondary, #555);
 }

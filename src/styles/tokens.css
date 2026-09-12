@@ -6,6 +6,7 @@
  * v2 (Latere Design System): neutral ink on paper. The accent IS the ink;
  * product colors survive only as gradient wordmarks, never page themes. */
 :root {
+    --font-ui: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     /* Base surfaces */
     --bg:         #fafafa;
     --bg-deep:    #f0f0ee;   /* gradient stop behind glass */
@@ -36,14 +37,14 @@
      * Consumers pair it with a per-component outline-offset. */
     --focus-outline: 2px solid var(--accent);
 
-    /* Radii ladder (Apple-style large radii + capsules). Concentric rule:
+    /* Compact radii ladder. Concentric rule:
      * inner-radius = outer-radius − padding. */
-    --radius-xs:   8px;
-    --radius-sm:  12px;
-    --radius-md:  16px;   /* inputs, small controls */
-    --radius-lg:  22px;   /* cards */
-    --radius-xl:  28px;   /* large cards, panels, sidebar slab */
-    --radius-2xl: 36px;   /* screenshots, page frames */
+    --radius-xs:   4px;
+    --radius-sm:   6px;
+    --radius-md:   8px;   /* inputs, small controls */
+    --radius-lg:  14px;   /* cards */
+    --radius-xl:  18px;   /* large cards, panels, sidebar slab */
+    --radius-2xl: 24px;   /* screenshots, page frames */
     --radius-pill: 999px; /* buttons, badges, nav capsule */
 }
 

@@ -7,8 +7,11 @@
   justify-content: space-between;
   gap: 8px;
   width: 100%;
-  padding: 9px 16px;
-  border-radius: var(--radius-pill, 999px);
+  padding: 6px 10px;
+  min-height: 32px;
+  line-height: 18px;
+  box-sizing: border-box;
+  border-radius: var(--radius-md, 8px);
   font: inherit;
   font-size: var(--fs-body-sm, 13px);
   color: var(--text, #0a0a0a);
@@ -30,14 +33,14 @@
   max-height: 240px;
   overflow-y: auto;
   padding: 6px;
-  border-radius: var(--radius-md, 16px);
+  border-radius: var(--radius-lg, 14px);
   list-style: none;
   margin: 0;
 }
 .lu-select-option {
   overflow-wrap: anywhere;
   padding: 7px 10px;
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-sm, 6px);
   font-size: var(--fs-body-sm, 13px);
   color: var(--text, #0a0a0a);
   cursor: pointer;

@@ -77,12 +77,12 @@ function onScrim() { if (props.closeOnScrim) close(); }
 .lu-drawer--right {
   margin-left: auto;
   border-left: 1px solid var(--glass-border);
-  border-radius: var(--radius-xl, 28px) 0 0 var(--radius-xl, 28px);
+  border-radius: var(--radius-xl, 18px) 0 0 var(--radius-xl, 18px);
 }
 .lu-drawer--left {
   margin-right: auto;
   border-right: 1px solid var(--glass-border);
-  border-radius: 0 var(--radius-xl, 28px) var(--radius-xl, 28px) 0;
+  border-radius: 0 var(--radius-xl, 18px) var(--radius-xl, 18px) 0;
 }
 .lu-drawer-head { margin: 0; padding: 18px 20px 6px; }
 .lu-drawer-title { margin: 0; font-size: var(--fs-h3, 1.15rem); font-weight: var(--fw-semibold, 600); color: var(--text, #0a0a0a); }

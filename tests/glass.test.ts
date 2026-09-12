@@ -60,8 +60,8 @@ describe('glass.css material tokens', () => {
 
   it('composes the layered floating-glass shadow (drop + inset top specular) in --shadow-glass', () => {
     const shadow = css.slice(css.indexOf('--shadow-glass:'));
-    expect(shadow).toMatch(/0 14px 38px/); // separation drop shadow
-    expect(shadow).toMatch(/inset 0 1\.5px 0/); // top specular rim
+    expect(shadow).toMatch(/0 3px 12px/); // separation drop shadow
+    expect(shadow).toMatch(/inset 0 1px 0/); // top specular rim
   });
 
   it('carries a reduce-transparency fallback that opaques the tokens', () => {
@@ -86,9 +86,9 @@ describe('glass.css material tokens', () => {
     const drk = dark.match(/--glass-brightness:\s*([0-9.]+)/);
     expect(lit, 'light --glass-brightness').toBeTruthy();
     expect(drk, 'dark --glass-brightness').toBeTruthy();
-    // Dark glass over dark content needs a real lift (a scrim would be <= 1);
-    // it must also out-lift the light tier, which only whispers.
-    expect(Number(drk![1])).toBeGreaterThan(1.2);
+    // Dark glass lifts the backdrop modestly while preserving its luminance.
+    expect(Number(drk![1])).toBeGreaterThan(1);
+    expect(Number(drk![1])).toBeLessThanOrEqual(1.2);
     expect(Number(drk![1])).toBeGreaterThan(Number(lit![1]));
     expect(Number(lit![1])).toBeGreaterThanOrEqual(1);
     // Every tier folds the lift into its backdrop-filter (both prefixes), so the
@@ -133,7 +133,7 @@ describe('glass.css material tokens', () => {
 
 describe('concentricRadius', () => {
   it('subtracts padding from the outer radius (Apple concentric rule)', () => {
-    expect(concentricRadius('8px')).toBe('calc(var(--glass-radius, 22px) - 8px)');
+    expect(concentricRadius('8px')).toBe('calc(var(--glass-radius, 14px) - 8px)');
     expect(concentricRadius('4px', '20px')).toBe('calc(20px - 4px)');
   });
 });

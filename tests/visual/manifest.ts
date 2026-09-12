@@ -1,6 +1,7 @@
 // Every UI export must appear here; visual-coverage.test.ts enforces the inventory.
 export const scenarios = {
   vue: {
+    workspace: ['ConsoleSidebar', 'GlassBar', 'GlassPanel', 'GlassTable'],
     buttons: ['GlassButton', 'GlassIconButton'],
     forms: ['GlassField', 'GlassCheckbox', 'GlassRadio', 'GlassSwitch', 'GlassSegmented', 'GlassTabs'],
     select: ['GlassSelect'],
@@ -41,4 +42,4 @@ export const scenarios = {
   },
 } as const;
 
-export const mobileScenarios = new Set(['forms', 'select', 'feedback', 'modal', 'drawer-left', 'drawer-right', 'toast', 'confirm', 'sidebar-collapsed', 'palette', 'docs', 'account', 'preferences', 'products', 'footer', 'footer-compact']);
+export const mobileScenarios = new Set(['workspace', 'forms', 'select', 'feedback', 'modal', 'drawer-left', 'drawer-right', 'toast', 'confirm', 'sidebar-collapsed', 'palette', 'docs', 'account', 'preferences', 'products', 'footer', 'footer-compact']);

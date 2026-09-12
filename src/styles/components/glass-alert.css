@@ -5,7 +5,7 @@
   align-items: flex-start;
   gap: 12px;
   padding: 14px 16px;
-  border-radius: var(--radius-md, 16px);
+  border-radius: var(--radius-md, 8px);
   border-left: 3px solid var(--tone);
   color: var(--text, #0a0a0a);
 }

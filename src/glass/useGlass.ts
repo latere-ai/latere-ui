@@ -32,7 +32,7 @@ export function glassClass(tier: GlassTier = 'regular'): string {
  * rule is inner radius = outer radius − padding. Returns a CSS `calc()` so the
  * outer radius can stay a token.
  */
-export function concentricRadius(padding: string, outer = 'var(--glass-radius, 22px)'): string {
+export function concentricRadius(padding: string, outer = 'var(--glass-radius, 14px)'): string {
   return `calc(${outer} - ${padding})`;
 }
 
