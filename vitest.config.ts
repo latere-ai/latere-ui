@@ -6,6 +6,7 @@ export default defineConfig({
   // with the tsconfig "react-jsx" setting, so both frameworks' tests coexist.
   plugins: [vue()],
   test: {
+    exclude: ['tests/visual/**', '**/node_modules/**'],
     environment: 'happy-dom',
     // Expose afterEach & co. globally so @testing-library/react registers its
     // automatic DOM cleanup between tests.

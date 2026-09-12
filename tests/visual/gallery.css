@@ -1,0 +1,23 @@
+/* Fixture layout only. Do not reset component box sizing or override library rules. */
+:root { --font-mono: "JetBrains Mono", monospace; }
+body { margin: 0; font-family: Inter, sans-serif; font-size: 14px; line-height: 1.5; color: var(--text); background: var(--bg); }
+#app { padding: 24px; }
+header { margin-bottom: 24px; }
+h1 { font-size: 24px; font-weight: 600; margin: 0; }
+h2 { font-size: 18px; }
+.eyebrow { font-size: 10px; letter-spacing: 2px; color: var(--text-secondary); margin: 0 0 8px; }
+.row { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
+.stack { display: flex; flex-direction: column; gap: 20px; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.sample { padding: 20px; border: 1px solid var(--border); border-radius: 16px; min-width: 0; }
+.sample-label { display: block; font-size: 12px; color: var(--text-secondary); margin: 0 0 16px; }
+.material-stage { padding: 32px; background: repeating-linear-gradient(120deg, transparent 0 38px, #bb946338 38px 76px), linear-gradient(40deg, #598e8938, #9580b638); border-radius: 24px; }
+.material { min-height: 88px; padding: 20px; }
+.popover-stage { display: flex; justify-content: center; align-items: center; min-height: 380px; }
+.shell-stage { display: flex; gap: 24px; min-height: 630px; }
+.shell-stage > .lu-cs { flex-shrink: 0; }
+.shell-content { flex: 1; padding: 20px; min-width: 0; }
+.gallery-link { display: inline-block; color: var(--text); padding: 8px 16px; }
+.logo-stage svg { width: 220px; height: 140px; }
+.effect-surface { min-height: 150px; margin: 20px 0; padding: 24px; }
+@media (max-width: 600px) { #app { padding: 16px; } .grid { grid-template-columns: 1fr; } .sample { padding: 16px; } .material-stage { padding: 16px; } .shell-content { padding: 4px; } }
