@@ -18,6 +18,7 @@
 import { computed, nextTick, ref, watch } from 'vue';
 
 import GlassIconButton from './GlassIconButton.vue';
+import { productPlacement } from './productPlacement';
 import { useClickOutside } from '../composables/useClickOutside';
 import {
   DEFAULT_PRODUCT_SWITCHER_LABELS,
@@ -64,24 +65,16 @@ const side = ref<'bottom' | 'top'>('bottom');
 const align = ref<'start' | 'end'>('start');
 const shiftX = ref(0);
 const shiftY = ref(0);
-const MARGIN = 8; // gap to the trigger and minimum inset from the viewport
 
 function reposition() {
   const anchor = root.value?.getBoundingClientRect();
   const pane = panel.value?.getBoundingClientRect();
   if (!anchor || !pane || typeof window === 'undefined') return;
-  const startClips = anchor.left + pane.width > window.innerWidth - MARGIN;
-  const endFits = anchor.right - pane.width >= MARGIN;
-  align.value = startClips && endFits ? 'end' : 'start';
-  const bottomClips = anchor.bottom + MARGIN + pane.height > window.innerHeight - MARGIN;
-  const topFits = anchor.top - MARGIN - pane.height >= MARGIN;
-  side.value = bottomClips && topFits ? 'top' : 'bottom';
-  // When neither alignment fits (e.g. a centered mobile trigger), shift the
-  // preferred placement into the viewport. CSS caps oversized panels first.
-  const left = align.value === 'end' ? anchor.right - pane.width : anchor.left;
-  const top = side.value === 'top' ? anchor.top - MARGIN - pane.height : anchor.bottom + MARGIN;
-  shiftX.value = Math.max(MARGIN, Math.min(left, window.innerWidth - MARGIN - pane.width)) - left;
-  shiftY.value = Math.max(MARGIN, Math.min(top, window.innerHeight - MARGIN - pane.height)) - top;
+  const placement = productPlacement(anchor, pane, { width: window.innerWidth, height: window.innerHeight });
+  side.value = placement.side;
+  align.value = placement.align;
+  shiftX.value = placement.shiftX;
+  shiftY.value = placement.shiftY;
 }
 
 watch(open, (isOpen, _previous, onCleanup) => {
@@ -157,105 +150,4 @@ function close() {
   </div>
 </template>
 
-<style scoped>
-.lu-ps {
-  position: relative;
-  display: inline-block;
-}
-.lu-ps-panel {
-  position: absolute;
-  box-sizing: border-box;
-  max-width: calc(100vw - 16px);
-  max-height: calc(100vh - 16px);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  translate: var(--lu-ps-shift-x, 0px) var(--lu-ps-shift-y, 0px);
-  z-index: var(--lu-z-popover, 900);
-  /* Opaque reading surface: glass tint composited over a solid base, so the
-   * nav beneath never bleeds through even when a nested backdrop-filter
-   * cannot resolve (see AccountMenu's dropdown for the full rationale). */
-  background:
-    linear-gradient(var(--glass-bg-thick, rgba(255, 255, 255, 0.9)),
-                    var(--glass-bg-thick, rgba(255, 255, 255, 0.9))),
-    var(--bg-surface, #fff);
-  -webkit-backdrop-filter: blur(36px) saturate(180%);
-  backdrop-filter: blur(36px) saturate(180%);
-  border: 1px solid var(--glass-border, var(--border, #ccc));
-  border-radius: var(--radius-lg, 14px);
-  box-shadow: var(--shadow-glass, var(--shadow-lg, 0 8px 30px rgba(0, 0, 0, 0.12)));
-  padding: 6px;
-}
-.lu-ps-panel[data-side='bottom'] { top: calc(100% + 8px); }
-.lu-ps-panel[data-side='top'] { bottom: calc(100% + 8px); }
-.lu-ps-panel[data-align='start'] { left: 0; }
-.lu-ps-panel[data-align='end'] { right: 0; }
-.lu-ps-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 4px;
-  /* Three 84px columns normally; shrink them only on very narrow screens. */
-  width: 264px;
-  max-width: 100%;
-}
-.lu-ps-tile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 4px 10px;
-  border-radius: var(--radius-md, 8px);
-  text-decoration: none;
-  color: var(--text, #111);
-  position: relative;
-  transition: background 0.12s ease;
-}
-.lu-ps-tile:hover {
-  background: var(--accent-subtle, var(--bg-raised, rgba(0, 0, 0, 0.05)));
-}
-.lu-ps-tile:focus-visible {
-  outline: var(--focus-outline, 2px solid var(--accent, #171717));
-  outline-offset: -2px;
-}
-/* Current console: a quiet ring instead of a hover surface. */
-.lu-ps-tile.is-current {
-  box-shadow: inset 0 0 0 1.5px var(--accent, #171717);
-  cursor: default;
-}
-.lu-ps-tile.is-current:hover {
-  background: transparent;
-}
-.lu-ps-ic {
-  display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-}
-/* The canonical marks arrive via v-html, outside this scope; size defensively. */
-.lu-ps-ic :deep(svg) {
-  width: 22px;
-  height: 22px;
-}
-.lu-ps-name {
-  font-size: 12px;
-  line-height: 1.2;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-/* Visually hidden current-product marker for screen readers. */
-.lu-ps-sr {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-}
-.lu-ps-enter-active, .lu-ps-leave-active { transition: opacity 0.14s ease, transform 0.14s ease; }
-.lu-ps-enter-from, .lu-ps-leave-to { opacity: 0; transform: translateY(-4px); }
-@media (prefers-reduced-motion: reduce) {
-  .lu-ps-enter-active, .lu-ps-leave-active { transition: none; }
-  .lu-ps-enter-from, .lu-ps-leave-to { transform: none; }
-}
-</style>
+<style src="../styles/components/product-switcher.css"></style>

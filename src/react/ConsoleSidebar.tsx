@@ -13,10 +13,6 @@
 // itself; hosts `import 'latere-ui/console'` once, exactly as Vue consumers
 // already do.
 //
-// Deliberately NOT ported: the `product`/`productLabels` head integration
-// (ProductSwitcher.vue is a Vue SFC and is not in the v1.27 ported set — see
-// the spec's deferred list). Use the `brandExtra` slot as the escape hatch
-// for a custom head control.
 import {
   Fragment,
   createElement,
@@ -31,6 +27,8 @@ import {
 
 import { isItemDisabled, partitionGroups, type NavGroup, type NavItem, type ConsoleNavModel } from '../console/nav';
 import { cx } from './internal';
+import { ProductSwitcher } from './ProductSwitcher';
+import type { ProductSwitcherLabelOverrides } from '../components/productSwitcher';
 
 type BrandTheme = 'lux' | 'cella' | 'topos' | 'wallfacer' | 'lectio';
 
@@ -67,6 +65,9 @@ export interface ConsoleSidebarIconRenderProps {
 export interface ConsoleSidebarProps {
   /** Grouped navigation model. */
   model: ConsoleNavModel;
+  /** Show a product switcher in the expanded sidebar head. */
+  product?: string;
+  productLabels?: ProductSwitcherLabelOverrides;
   /** Active row: matched against `NavItem.id`. */
   activeKey?: string;
   /**
@@ -132,6 +133,8 @@ function letter(label: string): string {
 export function ConsoleSidebar({
   model,
   activeKey,
+  product,
+  productLabels,
   collapsed: collapsedProp,
   onCollapsedChange,
   collapsible = true,
@@ -309,6 +312,7 @@ export function ConsoleSidebar({
             )}
 
         {renderSlot(brandExtra, collapsed)}
+        {product && !collapsed && <ProductSwitcher className="lu-cs-switch" current={product} labels={productLabels} size="sm" />}
 
         {collapsible && (
           <button
