@@ -131,11 +131,12 @@ function Modal() {
 
 function Account({ sidebar = false }: { sidebar?: boolean }) {
   const [account, setAccount] = useState(principal);
+  const [appearance, setAppearance] = useState(document.documentElement.dataset.theme ?? 'light');
   return <AccountMenu principal={account} placement={sidebar ? 'bottom-start' : 'top-end'} dashboardPath="#dashboard"
     onSwitchOrg={id => setAccount({ ...account, org_id: id, org_name: principal.orgs.find(org => org.id === id)?.name })}
     onNavigate={() => undefined} onLogout={() => undefined}
     extraItems={[{ id: 'settings', label: 'Account settings' }]}
-    prefs={<div className="row" style={{ padding: 8 }}><span>Appearance</span><GlassSegmented value="light" options={[{ value: 'light', label: 'Light' }, { value: 'dark', label: 'Dark' }]} /></div>}
+    prefs={<div className="row" style={{ padding: 8 }}><span>Appearance</span><GlassSegmented ariaLabel="Appearance" value={appearance} onChange={value => { setAppearance(value); document.documentElement.dataset.theme = value; }} options={[{ value: 'light', label: 'Light' }, { value: 'dark', label: 'Dark' }]} /></div>}
   />;
 }
 
