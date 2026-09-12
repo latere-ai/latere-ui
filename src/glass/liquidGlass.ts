@@ -32,15 +32,42 @@ let defs: SVGSVGElement | null = null;
 // navigation re-created glass chrome and appended fresh <filter> nodes (each
 // holding a canvas-rendered data-URL feImage) while the old ones stayed in the
 // shared defs forever — unbounded DOM/memory growth over a browsing session.
-const refractions = new Map<SVGFilterElement, LGElement>();
+interface Refraction {
+  filter: SVGFilterElement;
+  original: string;
+  priority: string;
+  applied: string;
+  signature: string;
+}
+const refractions = new Map<LGElement, Refraction>();
+const sheens = new Map<LGElement, () => void>();
 
-function pruneRefractions(): void {
-  refractions.forEach((el, f) => {
-    if (!el.isConnected) {
-      f.remove();
-      refractions.delete(f);
-    }
+function restoreFilter(el: LGElement, state: Refraction): void {
+  if (el.style.backdropFilter === state.applied) {
+    el.style.setProperty('backdrop-filter', state.original, state.priority);
+  }
+}
+
+function removeRefraction(el: LGElement): void {
+  const state = refractions.get(el);
+  if (!state) return;
+  restoreFilter(el, state);
+  state.filter.remove();
+  refractions.delete(el);
+  delete el.__lgRefract;
+}
+
+function pruneEffects(): void {
+  refractions.forEach((_state, el) => {
+    if (!el.isConnected) removeRefraction(el);
   });
+  sheens.forEach((cleanup, el) => {
+    if (!el.isConnected) cleanup();
+  });
+}
+
+function prefersReduced(feature: 'motion' | 'transparency'): boolean {
+  return window.matchMedia?.('(prefers-reduced-' + feature + ': reduce)').matches ?? false;
 }
 
 interface LGElement extends HTMLElement {
@@ -49,7 +76,7 @@ interface LGElement extends HTMLElement {
 }
 
 function ensureDefs(): SVGSVGElement {
-  if (defs) return defs;
+  if (defs?.isConnected) return defs;
   defs = document.createElementNS(NS, 'svg');
   defs.setAttribute('width', '0');
   defs.setAttribute('height', '0');
@@ -112,15 +139,45 @@ function makeMap(w: number, h: number, r: number): string {
 
 /** Append an SVG displacement filter to one element's backdrop-filter chain. */
 export function refract(el: LGElement): void {
-  if (el.__lgRefract) return;
+  if (typeof window === 'undefined' || typeof document === 'undefined') return;
+  if (prefersReduced('transparency') || el.getAttribute('data-lg-refract') === 'off'
+      || typeof CSS === 'undefined' || !CSS.supports('backdrop-filter', 'url(#f)')) {
+    removeRefraction(el);
+    return;
+  }
+  let previous = refractions.get(el);
+  // Temporarily restore the author's declaration so a rescan sees current CSS
+  // (theme, media queries, classes), rather than our cached inline filter.
+  if (previous && el.style.backdropFilter !== previous.applied) {
+    removeRefraction(el);
+    previous = undefined;
+  }
+  if (previous) restoreFilter(el, previous);
   const cs = getComputedStyle(el);
   const bf = cs.backdropFilter || (cs as unknown as { webkitBackdropFilter?: string }).webkitBackdropFilter || 'none';
-  if (bf === 'none' || bf.includes('url(')) return;
+  if (bf === 'none' || bf.includes('url(')) {
+    removeRefraction(el);
+    return;
+  }
   const w = el.offsetWidth;
   const h = el.offsetHeight;
-  if (!w || !h || w * h > 700000) return;
+  if (!w || !h || w * h > 700000) {
+    removeRefraction(el);
+    return;
+  }
   const rad = parseFloat(cs.borderTopLeftRadius) || 0;
-  if (el.getAttribute('data-lg-refract') === null && rad < 16) return;
+  if (el.getAttribute('data-lg-refract') === null && rad < 16) {
+    removeRefraction(el);
+    return;
+  }
+  const signature = JSON.stringify([bf, w, h, rad]);
+  if (previous?.signature === signature && previous.filter.isConnected) {
+    el.style.setProperty('backdrop-filter', previous.applied, previous.priority);
+    return;
+  }
+  removeRefraction(el);
+  const original = el.style.backdropFilter;
+  const priority = el.style.getPropertyPriority('backdrop-filter');
   el.__lgRefract = true;
   const r = Math.min(rad, h / 2, w / 2);
   const isCapsule = rad >= h / 2 - 1;
@@ -149,10 +206,11 @@ export function refract(el: LGElement): void {
   f.appendChild(fi);
   f.appendChild(dm);
   ensureDefs().appendChild(f);
-  refractions.set(f, el);
   // Blur first, then displace: lensing stays crisp at the edges.
   const softened = bf.replace(/blur\((\d+(?:\.\d+)?)px\)/, (_m, v) => 'blur(' + Math.min(parseFloat(v), 14) + 'px)');
-  el.style.backdropFilter = softened + ' url(#' + id + ')';
+  const applied = softened + ' url(#' + id + ')';
+  el.style.setProperty('backdrop-filter', applied, priority);
+  refractions.set(el, { filter: f, original, priority, applied: el.style.backdropFilter, signature });
 }
 
 /** Attach a cursor-following specular sheen to one glass panel. OPT-IN: the
@@ -160,34 +218,51 @@ export function refract(el: LGElement): void {
  *  panel gets no sheen — a big radial highlight chasing the cursor across a
  *  footer or menu reads as a stray blob, not glass. */
 export function sheen(el: LGElement): void {
-  if (el.__lgSheen) return;
+  if (typeof window === 'undefined' || typeof document === 'undefined') return;
   const attr = el.getAttribute('data-lg-sheen');
-  if (attr === null || attr === 'off') return;
+  if (prefersReduced('motion') || attr === null || attr === 'off') {
+    sheens.get(el)?.();
+    return;
+  }
   const cs = getComputedStyle(el);
   const bf = cs.backdropFilter || (cs as unknown as { webkitBackdropFilter?: string }).webkitBackdropFilter || 'none';
-  if (bf === 'none') return;
+  if (bf === 'none') {
+    sheens.get(el)?.();
+    return;
+  }
+  if (el.__lgSheen) return;
   el.__lgSheen = true;
   let dark = false;
   const bgc = cs.backgroundColor.match(/rgba?\((\d+)/);
   if (bgc && parseInt(bgc[1], 10) < 128) dark = true;
   // Restrained peak + a tighter radius: a soft specular hint, not a spotlight.
   const peak = dark ? 0.06 : 0.16;
-  if (cs.position === 'static') el.style.position = 'relative';
+  const originalPosition = el.style.position;
+  const positioned = cs.position === 'static';
+  if (positioned) el.style.position = 'relative';
   const s = document.createElement('div');
   s.setAttribute('aria-hidden', 'true');
   s.style.cssText =
     'position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:0; transition:opacity 0.45s cubic-bezier(0.22,1,0.36,1); z-index:0;';
   el.appendChild(s);
-  el.addEventListener('mousemove', (e) => {
+  const move = (e: MouseEvent) => {
     const r = el.getBoundingClientRect();
     const x = ((e.clientX - r.left) / r.width) * 100;
     const y = ((e.clientY - r.top) / r.height) * 100;
     s.style.background =
       'radial-gradient(200px circle at ' + x + '% ' + y + '%, rgba(255,255,255,' + peak + '), rgba(255,255,255,0) 60%)';
     s.style.opacity = '1';
-  });
-  el.addEventListener('mouseleave', () => {
-    s.style.opacity = '0';
+  };
+  const leave = () => { s.style.opacity = '0'; };
+  el.addEventListener('mousemove', move);
+  el.addEventListener('mouseleave', leave);
+  sheens.set(el, () => {
+    el.removeEventListener('mousemove', move);
+    el.removeEventListener('mouseleave', leave);
+    s.remove();
+    if (positioned && el.style.position === 'relative') el.style.position = originalPosition;
+    delete el.__lgSheen;
+    sheens.delete(el);
   });
 }
 
@@ -200,15 +275,13 @@ export function initLiquidGlass(root?: Document | HTMLElement): void {
   if (typeof window === 'undefined' || typeof document === 'undefined') return;
   // Re-scans run on every route change; first drop filters owned by elements
   // that navigation removed, so long sessions stay flat.
-  pruneRefractions();
+  pruneEffects();
   const scope: Document | HTMLElement = root ?? document;
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const reducedTransparency = window.matchMedia('(prefers-reduced-transparency: reduce)').matches;
-  const canRefract = !reducedTransparency && typeof CSS !== 'undefined' && CSS.supports('backdrop-filter', 'url(#f)');
-  scope.querySelectorAll('*').forEach((el) => {
+  const enhance = (el: Element) => {
     if (!(el instanceof HTMLElement)) return;
-    if (canRefract && el.getAttribute('data-lg-refract') !== 'off') refract(el);
-    // sheen() self-gates on the data-lg-sheen opt-in; motion-averse users get none.
-    if (!reducedMotion) sheen(el);
-  });
+    refract(el);
+    sheen(el);
+  };
+  if (scope instanceof HTMLElement) enhance(scope);
+  scope.querySelectorAll('*').forEach(enhance);
 }
