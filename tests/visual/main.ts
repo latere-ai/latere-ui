@@ -12,6 +12,7 @@ import '../../src/styles/brand.css';
 import '../../src/styles/presets.css';
 import './gallery.css';
 import './preset-gallery.css';
+import './organization-demo.css';
 import { designs, designScenarios } from './design-manifest';
 import { scenarios } from './manifest';
 import { observeToastDemo } from './toast-demo';

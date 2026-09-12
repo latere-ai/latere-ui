@@ -66,6 +66,10 @@ The host must re-render when its active organization changes. An empty ID select
 
 Style `.latere-org-switcher__button` and the `data-active`, `data-owner`, and `data-loading` attributes in your application. `renderItem(item, select)` replaces a row's button; `select()` returns the selection promise. `header` accepts a React node or a function receiving the current label. `renderError(error)` replaces error content.
 
+The visual gallery demonstrates a compact host presentation with a visible current row and keyboard focus. Wrap the chooser in `.organization-demo` and adapt the [example CSS](../tests/visual/organization-demo.css), which uses the active preset's tokens. These example styles are not part of the headless component's default appearance.
+
+![Organization chooser with the current workspace highlighted](../tests/visual/goldens/darwin-27/react-organizations-light-mobile.png)
+
 ## Documentation layout
 
 `DocsLayout` accepts the same grouped document model and navigation props as Vue: `groups`, `activeSlug`, optional `activeGroupId`, `base`, and `routerLink`. An injected router link must forward its DOM attributes and render children. `onNavigate(doc)` receives the selected `FlatDoc`.

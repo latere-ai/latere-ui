@@ -1,0 +1,25 @@
+/* Example host presentation for the headless OrgSwitcher adapter. */
+.organization-demo { max-width: 320px; }
+.organization-demo .latere-org-switcher__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.organization-demo .latere-org-switcher__button {
+  appearance: none;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 32px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--radius-sm, 6px);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.organization-demo [data-active="true"] .latere-org-switcher__button {
+  background: var(--accent-subtle);
+  color: var(--accent);
+  font-weight: 600;
+}
+.organization-demo .latere-org-switcher__button:hover { background: var(--accent-subtle); }
+.organization-demo .latere-org-switcher__button:focus-visible { outline: var(--focus-outline); outline-offset: -2px; }
+@media (pointer: coarse) { .organization-demo .latere-org-switcher__button { min-height: 44px; } }
