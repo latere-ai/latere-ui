@@ -44,6 +44,12 @@
     inset 0 -1px 0 rgba(0, 0, 0, 0.3);
 }
 
+/* A glass toolbar already blurs the backdrop; avoid a second nested blur layer. */
+.lu-bar .lu-btn-primary {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
 .lu-btn-ghost { background: transparent; color: var(--text-secondary, #666); }
 .lu-btn-ghost:hover:not(:disabled) { background: var(--accent-subtle, rgba(0, 0, 0, 0.04)); }
 
