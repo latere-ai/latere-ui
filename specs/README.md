@@ -30,3 +30,10 @@ specs/
   (`SiteFooter`, and the planned `ConsoleSidebar` / `DocsLayout`) ship token-based CSS
   as opt-in subpath entrypoints so the consoles can align visually. See
   `console-shell-v1.9.md`.
+
+## Visual verification
+
+| Spec | Status | Deliverable |
+|---|---|---|
+| [Visual regression harness](visual-regression-harness.md) | Validated | Browser gallery, committed images and comparison workflow |
+| [Component coverage](visual-component-coverage.md) | Validated | Every UI export, glass effects and responsive states |

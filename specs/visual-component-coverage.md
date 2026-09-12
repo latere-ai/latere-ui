@@ -1,0 +1,42 @@
+---
+title: Component and glass effect reference coverage
+status: validated
+depends_on:
+  - specs/visual-regression-harness.md
+affects:
+  - tests/visual/
+  - tests/visual-coverage.test.ts
+  - docs/visual-review.md
+effort: medium
+created: 2026-09-12
+updated: 2026-09-12
+author: changkun
+dispatched_task_id: null
+---
+
+# Component and glass effect reference coverage
+
+## Overview
+
+Provide inspectable reference sheets for every Vue and React UI component and every glass material/effect. Use real rendered components and representative public variants, rather than mockups.
+
+## Coverage
+
+- Five glass tiers, surface/panel/bar geometry, refraction and pointer sheen over a patterned background; light/dark, reduced motion, reduced transparency and increased contrast.
+- Buttons and icon buttons: variants, sizes, loading, disabled, hover, keyboard focus.
+- Fields, selects, checkboxes, radio, switch, segmented controls and tabs: default, selected, invalid, disabled, open and keyboard selection as applicable.
+- Badges/alerts in every tone; spinner, skeleton and progress states.
+- Table, menu, popover, tooltip, modal, drawer, toast and confirm: open states, positioning, overflow and keyboard dismissal.
+- Console sidebar expanded/collapsed, command palette, docs, account menu/preferences, organization/product switchers, footer variants and logo.
+- All public React counterparts rendered independently. Mobile sheets cover responsive shells and overlay containment.
+
+## Review and regression fixes
+
+Record audit findings and their verification in docs/visual-review.md. Fix confirmed defects in separate small commits, each with tests that fail before the fix. Inspect generated reference images before accepting them, and rerun comparisons after fixes. Coverage means all exported UI components and the listed effect/state families, not every possible prop combination or all browser engines.
+
+## Acceptance
+
+- Every exported Vue/React UI component appears in the coverage manifest and renders visibly in its fixture.
+- Committed images cover both themes and representative narrow screens.
+- Behavior tests verify keyboard interaction, focus, scrolling and reduced-motion rules that a still image cannot prove.
+- An image index lists scenarios, covered components and expected baseline paths.
