@@ -1,4 +1,4 @@
-import { test, expect, visit, prepare, setPreferences } from './fixtures';
+import { test, expect, visit, prepare, setPreferences, sheenInteraction, sampleSheen } from './fixtures';
 for (const theme of ['light', 'dark']) {
   for (const mode of ['reduced-motion', 'reduced-transparency', 'contrast'] as const) {
     test(`effects ${theme} ${mode}`, async ({ page }) => {
@@ -8,10 +8,11 @@ for (const theme of ['light', 'dark']) {
         await setPreferences(page, { transparency: 'reduce' });
       }
       await visit(page, 'vue', 'effects', theme);
-      await page.locator('[data-lg-sheen]').hover({ position: { x: 150, y: 80 } });
+      await sampleSheen(page);
       if (mode === 'reduced-motion') await expect(page.locator('[data-lg-sheen] > [aria-hidden]')).toHaveCount(0);
       if (mode === 'reduced-transparency') await expect(page.locator('[data-lg-refract]').nth(1)).toHaveCSS('backdrop-filter', 'none');
-      await expect(page).toMatchGolden(`effects-${theme}-${mode}.png`, { fullPage: true });
+      await expect(page).toMatchGolden(`effects-${theme}-${mode}.png`, { fullPage: true,
+        interaction: mode === 'contrast' ? sheenInteraction(page) : undefined });
     });
   }
   for (const state of ['hover', 'focus']) test(`buttons ${theme} ${state}`, async ({ page }) => {

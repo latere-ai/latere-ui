@@ -19,6 +19,38 @@ export const test = base.extend<{ browserErrors: string[] }>({
   }, { auto: true }],
 });
 export { expect };
+/** Sample the real mouse handler without native capture resizing its hover target. */
+export async function sampleSheen(page: Page) {
+  await page.mouse.move(0, 0);
+  const panel = page.locator('[data-lg-sheen]');
+  const point = await panel.evaluate(el => {
+    const rect = el.getBoundingClientRect();
+    const css = getComputedStyle(el);
+    // Match locator.hover's coordinates relative to the padding box.
+    return { clientX: rect.left + parseFloat(css.borderLeftWidth) + 150,
+      clientY: rect.top + parseFloat(css.borderTopWidth) + 80 };
+  });
+  await panel.dispatchEvent('mousemove', point);
+}
+
+/** A figure must retain its sampled optical state across both exact captures. */
+export function sheenInteraction(page: Page) {
+  const sheen = page.locator('[data-lg-sheen] > [aria-hidden]');
+  let background: string | undefined;
+  return {
+    restore: async () => {
+      await sampleSheen(page);
+      await expect(sheen).toHaveCSS('opacity', '1');
+    },
+    matches: async () => {
+      if (await sheen.count() !== 1) return false;
+      const current = await sheen.evaluate(el => ({ opacity: getComputedStyle(el).opacity,
+        background: (el as HTMLElement).style.backgroundImage }));
+      background ??= current.background;
+      return current.opacity === '1' && current.background === background;
+    },
+  };
+}
 export async function visit(page: Page, framework: string, scenario: string, theme = 'light', extra = '') {
   await page.goto(`/?framework=${framework}&scenario=${scenario}&theme=${theme}${extra}`);
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
@@ -37,7 +69,7 @@ export async function prepare(page: Page, framework: string, scenario: string) {
   if (scenario === 'products') await page.locator('.lu-iconbtn').first().click();
   if (scenario === 'select') await page.getByRole('combobox', { name: 'Workspace', exact: true }).click();
   if (scenario === 'effects') {
-    await page.locator('[data-lg-sheen]').hover({ position: { x: 150, y: 80 } });
+    await sampleSheen(page);
     // Matte presets intentionally disable optical enhancements. Still exercise
     // their opt-in surfaces and verify that no sheen layer is attached.
     const matte = await page.locator('html').getAttribute('data-design');

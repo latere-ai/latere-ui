@@ -1,4 +1,4 @@
-import { test, expect, visit, prepare } from './fixtures';
+import { test, expect, visit, prepare, sheenInteraction } from './fixtures';
 import { scenarios } from './manifest';
 import { designs } from './design-manifest';
 import { captureExact } from './exact-golden';
@@ -17,7 +17,8 @@ for (const design of ['default', ...designs]) for (const [scenario, components] 
         await prepare(page, framework, scenario);
         for (const name of components) await expect(page.locator(`[data-component="${name}"]`).first()).toBeVisible();
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${framework} page overflow`).toBe(true);
-        captures[framework] = await captureExact(page, { fullPage: true });
+        captures[framework] = await captureExact(page, { fullPage: true,
+          interaction: scenario === 'effects' && design === 'default' ? sheenInteraction(page) : undefined });
       }
       const comparison = comparePixels(captures.vue, captures.react);
       if (!comparison.equal) {

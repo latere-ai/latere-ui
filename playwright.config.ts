@@ -22,7 +22,9 @@ export default defineConfig({
     timezoneId: 'UTC',
     colorScheme: 'light',
     baseURL: 'http://127.0.0.1:4173',
-    trace: 'retain-on-failure',
+    // Avoid a second native capture stream during exact screenshots.
+    // Keep DOM/action traces; exact captures already attach failure images.
+    trace: { mode: 'retain-on-failure', screenshots: false, snapshots: true, sources: true },
     launchOptions: { args: ['--disable-lcd-text'] },
   },
   webServer: {

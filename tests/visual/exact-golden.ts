@@ -5,7 +5,9 @@ import { comparePixels } from './exact-pixels';
 import { withPngDensity } from './png-density';
 import { figureDpi } from './reference-settings';
 
-type CaptureOptions = Pick<NonNullable<Parameters<Page['screenshot']>[0]>, 'fullPage' | 'clip'>;
+type CaptureOptions = Pick<NonNullable<Parameters<Page['screenshot']>[0]>, 'fullPage' | 'clip'> & {
+  interaction?: { restore: () => Promise<void>; matches: () => Promise<boolean> };
+};
 /** Two identical captures are required; no channel tolerance or antialias skipping. */
 export async function captureExact(page: Page, options: CaptureOptions = {}) {
   await page.evaluate(() => document.fonts.ready);
@@ -55,6 +57,7 @@ export async function captureExact(page: Page, options: CaptureOptions = {}) {
 }
 
 async function captureStable(page: Page, options: CaptureOptions) {
+  const { interaction, ...screenshotOptions } = options;
   // Playwright's animation override changes SVG rasterization between mounts.
   // Capture the settled timeline directly, preserving exact RGBA comparison.
   const deadline = Date.now() + 15000;
@@ -62,12 +65,16 @@ async function captureStable(page: Page, options: CaptureOptions) {
   let unstable: { expected: Buffer; actual: Buffer } | undefined;
   let lastTimeout: Error | undefined;
   while (Date.now() < deadline) {
+    if (interaction && !await interaction.matches()) {
+      previous = undefined;
+      await interaction.restore();
+    }
     let next: Buffer;
     try {
       // A stalled Chromium capture must not consume the entire test timeout.
       // Playwright cancels its screenshot task on timeout and releases its queue.
       next = await page.screenshot({
-        ...options, animations: 'allow', caret: 'hide', scale: 'device',
+        ...screenshotOptions, animations: 'allow', caret: 'hide', scale: 'device',
         timeout: Math.max(1, Math.min(5000, deadline - Date.now())),
       });
     } catch (error) {
@@ -75,6 +82,12 @@ async function captureStable(page: Page, options: CaptureOptions) {
       lastTimeout = error;
       // A failed capture interrupts the consecutive pair. Compare two fresh
       // successful images; never accept the frame preceding a transport stall.
+      previous = undefined;
+      continue;
+    }
+    // Native full-page capture can dispatch mouseleave. Two identical frames
+    // are insufficient if both lost the interaction the figure must show.
+    if (interaction && !await interaction.matches()) {
       previous = undefined;
       continue;
     }
