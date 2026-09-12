@@ -12,7 +12,7 @@ Sibling panels, toolbars and tables share 14px corners. Toolbar buttons use 8px 
 
 [Dark laptop](../tests/visual/goldens/darwin-27/workspace-dark-laptop.png) · [1470px laptop](../tests/visual/goldens/darwin-27/workspace-light-laptop-large.png) · [2560px desktop](../tests/visual/goldens/darwin-27/workspace-light-studio.png) · [Mobile](../tests/visual/goldens/darwin-27/vue-workspace-light-mobile.png)
 
-Size layouts by the browser's available CSS pixels, rather than the monitor's physical resolution. A 224px console rail leaves more room for work on a laptop. Keep reading lines bounded on wide displays. `DocsLayout` responds to its own container: below 1080px the table of contents disappears, and below 720px navigation moves above the article. Setting `showToc` to false also removes its grid column.
+Size layouts by the browser's available CSS pixels, rather than the monitor's physical resolution. A 224px console rail leaves more room for work on a laptop. The rail now shares the window edge: the shell owns outer corner clipping, and navigation has a flat selected fill without a detached card rim. This follows the [supplied macOS 27 Mail reference](https://www.apple.com/v/os/g/images/macos/improvements/search__gca3sckqsxym_large_2x.jpg). Keep reading lines bounded on wide displays. `DocsLayout` responds to its own container: below 1080px the table of contents disappears, and below 720px navigation moves above the article. Setting `showToc` to false also removes its grid column.
 
 | Token | Default | Typical use |
 |---|---|---|
@@ -20,7 +20,7 @@ Size layouts by the browser's available CSS pixels, rather than the monitor's ph
 | `--radius-sm` | 6px | Menu rows |
 | `--radius-md` | 8px | Fields, navigation and compact footer controls |
 | `--radius-lg` | 14px | Panels, toolbars, tables and menus |
-| `--radius-xl` | 18px | Dialogs and sidebar |
+| `--radius-xl` | 18px | Dialogs and outer windows |
 | `--radius-2xl` | 24px | Large outer frames |
 | `--radius-pill` | 999px | Standalone buttons, badges and switches |
 
@@ -30,30 +30,44 @@ The [Apple macOS reference](https://www.apple.com/os/macos/) informs the restrai
 
 The gallery and integration examples use a neutral Workspace identity. A shell without `brandTheme` inherits its UI typography. Named product themes are opt-in; custom wordmarks and marks belong in the brand/logo slots. The product directory is a catalog, not the identity of the example application.
 
-The consuming products have different visual needs:
+Choose an importable appearance for the existing components:
 
-| Product | Existing design choices | Shared-library integration |
-|---|---|---|
-| [Replichai](https://github.com/latere-ai/replichai/blob/main/frontend/src/styles.css) | Inter, 14px reading text, blue actions, 12px cards | Map its UI font and radius tokens; keep its custom mark and semantic colors |
-| [Wallfacer](https://github.com/latere-ai/wallfacer/blob/main/frontend/src/styles/tokens.css) | Inter, dense 13px operator UI, clay actions, concentric 14px surfaces | Keep its density, palette and custom brand treatment |
-| [Origo](https://github.com/latere-ai/origo-web/blob/main/internal/web/assets/app.css) | IBM Plex Sans/Mono, corners at most 4px, 28px repository rows | Use small host radii and opaque surfaces where appropriate; preserve its typography |
+```ts
+import 'latere-ui/tokens';
+import 'latere-ui/glass';
+import 'latere-ui/console'; // when using ConsoleSidebar
+import 'latere-ui/presets';
 
-These are consumer design choices, not built-in themes or identical replicas. Import shared defaults first, then map host tokens in the scope that contains the shared components. For example, a small-corner repository surface can use:
-
-```css
-.repository-surface {
-  --font-ui: var(--font-sans, system-ui);
-  --radius-lg: 4px;
-  --radius-md: 4px;
-  --space-1-5: 2px;
-}
+document.documentElement.dataset.design = 'origo';
+document.documentElement.dataset.theme = 'dark';
 ```
 
-Panels, toolbars and tables then share 4px corners, and toolbar buttons use 2px corners. Palette, control emphasis and material choices remain the host application's responsibility. Use headless exports or host-styled components when glass is not appropriate for the surface.
+Use `replichai`, `wallfacer`, or `origo` on **the document root**. This gives teleported menus, dialogs and notifications the same appearance. Remove `data-design` to return to the default glass style. The stylesheet has no effect without a recognized value. Nested mixed presets are not supported. Set the attributes before mounting to avoid a flash of the default theme.
+
+| Preset | Typography and density | Surfaces and actions | Reference source |
+|---|---|---|---|
+| `replichai` | Inter, 14px reading text, 32px fields | Warm matte surfaces, 18px cards, 8px fields; 30px ink actions with blue hover | [Replichai styles](https://github.com/latere-ai/replichai/blob/main/frontend/src/styles.css) |
+| `wallfacer` | Inter, 13px operator UI, 32px fields | Warm matte surfaces, compact 14px cards, 10px fields; 30px ink actions with clay hover | [Wallfacer tokens](https://github.com/latere-ai/wallfacer/blob/main/frontend/src/styles/tokens.css) and [primitives](https://github.com/latere-ai/wallfacer/blob/main/frontend/src/styles/primitives.css) |
+| `origo` | IBM Plex Sans/Mono, 13px UI, 28px table rows | Opaque surfaces without shadows, 4px panels/fields, 3px standalone buttons; iris primary actions | [Origo styles](https://github.com/latere-ai/origo-web/blob/main/internal/web/assets/app.css) |
+
+These presets apply real geometry, typography, material and state changes to shared components. Replichai's actual card is 18px despite its 12px radius token; Wallfacer's preset chooses its compact 14px card rather than its generic 18px card. Toolbar actions keep concentric corners derived from their parent and inset. Circular status dots, avatars, radio indicators and switch thumbs retain their functional shapes.
+
+All three map the glass tiers to opaque surfaces and inverse emphasis. Product presets disable backdrop blur and specular highlights; do not initialize the optional optical-effects runtime on them. Brand wordmarks remain separate from UI typography. The preset does not add branding or migrate a consuming application.
+
+For readable small controls, muted text uses accessible secondary colors, controls retain clear boundaries, and clay hover actions use dark ink. These are deliberate accessibility adaptations of the source styles. Coarse-pointer controls retain at least 44px targets. Both themes have dedicated figures and interaction checks.
+
+Supply Inter for Replichai/Wallfacer and IBM Plex Sans/Mono for Origo through your own font pipeline; the preset falls back to system faces if absent. The test gallery bundles local licensed faces, waits for them before mounting, and makes no font network requests. Override `--font-ui` and `--font-mono` after the preset if your application needs another family.
+
+| Replichai | Wallfacer | Origo |
+|---|---|---|
+| [![Replichai workspace](../tests/visual/goldens/darwin-27/replichai-vue-workspace-light-desktop.png)](../tests/visual/goldens/darwin-27/replichai-vue-workspace-light-desktop.png) | [![Wallfacer workspace](../tests/visual/goldens/darwin-27/wallfacer-vue-workspace-light-desktop.png)](../tests/visual/goldens/darwin-27/wallfacer-vue-workspace-light-desktop.png) | [![Origo workspace](../tests/visual/goldens/darwin-27/origo-vue-workspace-light-desktop.png)](../tests/visual/goldens/darwin-27/origo-vue-workspace-light-desktop.png) |
+| [Dark](../tests/visual/goldens/darwin-27/replichai-vue-workspace-dark-desktop.png) · [Forms](../tests/visual/goldens/darwin-27/replichai-vue-forms-light-desktop.png) | [Dark](../tests/visual/goldens/darwin-27/wallfacer-vue-workspace-dark-desktop.png) · [Forms](../tests/visual/goldens/darwin-27/wallfacer-vue-forms-light-desktop.png) | [Dark](../tests/visual/goldens/darwin-27/origo-vue-workspace-dark-desktop.png) · [Forms](../tests/visual/goldens/darwin-27/origo-vue-forms-light-desktop.png) |
+
+Open the figures at full size or use the [complete per-style component index](visual-reference.md#product-style-variations). Run `bun run visual:dev` to explore their live gallery links.
 
 ## Start with the material
 
-Glass combines a translucent fill, backdrop blur, a highlighted edge, and a shadow. Its depth helps distinguish a control from a panel or an overlay. Product identity appears in wordmarks; controls use the shared ink palette.
+Glass combines a translucent fill, backdrop blur, a highlighted edge, and a shadow. Its depth helps distinguish a control from a panel or an overlay. The default appearance uses ink controls; optional product presets replace the material and interaction palette as described above.
 
 | Tier | CSS class | Choose it for |
 |---|---|---|

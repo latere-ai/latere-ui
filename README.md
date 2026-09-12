@@ -5,11 +5,19 @@
 [![Vue 3.5+](https://img.shields.io/badge/vue-3.5%2B-42b883.svg)](https://vuejs.org/)
 [![React 18 or 19](https://img.shields.io/badge/react-18%20%7C%2019-61dafb.svg)](https://react.dev/)
 
-Shared glass materials, interface components, and application chrome with product-neutral defaults. Build forms, navigation, dialogs, and documentation with one visual language in Vue, with a supported subset for React.
+Shared glass materials, interface components, and application chrome with product-neutral defaults. Build forms, navigation, dialogs, and documentation in Vue or the supported React subset. Choose default glass or the matte Replichai, Wallfacer and Origo appearances.
 
 ![Compact workspace with navigation, toolbar, summary panels and projects](tests/visual/goldens/darwin-27/workspace-light-laptop.png)
 
 [Design guide](docs/design-system.md) · [Product styling](docs/design-system.md#keep-product-styling-explicit) · [Integration guide](docs/api-guide.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
+
+## Choose an appearance
+
+| Replichai · reading | Wallfacer · operations | Origo · repositories |
+|---|---|---|
+| [![Replichai component appearance](tests/visual/goldens/darwin-27/replichai-vue-workspace-light-desktop.png)](tests/visual/goldens/darwin-27/replichai-vue-workspace-light-desktop.png) | [![Wallfacer component appearance](tests/visual/goldens/darwin-27/wallfacer-vue-workspace-light-desktop.png)](tests/visual/goldens/darwin-27/wallfacer-vue-workspace-light-desktop.png) | [![Origo component appearance](tests/visual/goldens/darwin-27/origo-vue-workspace-light-desktop.png)](tests/visual/goldens/darwin-27/origo-vue-workspace-light-desktop.png) |
+
+Import `latere-ui/presets` after the shared styles and set `data-design="replichai"`, `"wallfacer"`, or `"origo"` on `<html>`. Each has its own fonts, density, corners, surface treatment and interaction states. See [setup and font requirements](docs/design-system.md#keep-product-styling-explicit) and [per-style golden figures](docs/visual-reference.md#product-style-variations).
 
 ## What you can build
 
@@ -32,7 +40,7 @@ Pin a GitHub release tag:
 bun add github:latere-ai/latere-ui#v1.28.1
 ```
 
-These docs and figures track `main`. The compact template is currently unreleased; v1.28.1 retains the earlier geometry. See [Unreleased changes](CHANGELOG.md#unreleased) before adopting `main`.
+These docs and figures track `main`. The compact template, integrated sidebar and product presets are currently unreleased; v1.28.1 retains the earlier geometry. See [Unreleased changes](CHANGELOG.md#unreleased) before adopting `main`.
 
 Use Vue 3.5+ with your Vue compiler, or React 18/19 with your React toolchain. React applications import `latere-ui/react`. For server rendering with Vite, include `ssr: { noExternal: ['latere-ui'] }` so the package source is compiled for the server too.
 
@@ -101,6 +109,7 @@ Use regular glass for panels and navigation, thick glass for readable overlays, 
 | `latere-ui/console` | Console sidebar styles |
 | `latere-ui/docs` | Documentation layout and article styles |
 | `latere-ui/styles` | Footer styles for Vue; React footer imports them |
+| `latere-ui/presets` | Optional Replichai, Wallfacer and Origo component appearances |
 | `latere-ui/brand` | Product wordmark gradients |
 | `latere-ui/markdown` | Markdown helpers with TOC-compatible heading IDs |
 

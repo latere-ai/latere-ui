@@ -4,6 +4,22 @@ Precise examples for footer preferences, console navigation, documentation, glas
 
 ![Tokens, materials, components, and composed surfaces](figures/design-skeleton.svg)
 
+## Component appearance
+
+Import optional presets after the shared styles and any console/docs styles:
+
+```ts
+import 'latere-ui/tokens';
+import 'latere-ui/styles';
+import 'latere-ui/console';
+import 'latere-ui/presets';
+
+document.documentElement.dataset.design = 'origo';
+document.documentElement.dataset.theme = 'dark';
+```
+
+`data-design` accepts `replichai`, `wallfacer`, or `origo` on `<html>`. Remove the attribute to restore default glass. Root scope also styles teleported overlays; nested mixed appearances are unsupported. Supply Inter for Replichai/Wallfacer or IBM Plex Sans/Mono for Origo through the host font pipeline. See the [design guide](design-system.md#keep-product-styling-explicit) for geometry, palette and font details, and the [component figures](visual-reference.md#product-style-variations) for both themes and adapters.
+
 ## Footer preferences
 
 The footer is presentational: it takes `theme` / `locale` and emits

@@ -10,6 +10,10 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+- Add opt-in Replichai, Wallfacer and Origo component appearances with distinct typography, density, matte materials and interaction states, plus dedicated light/dark and responsive golden figures.
+- Integrate the console rail with its window edge, remove the detached sidebar rim and use a flat selected-row fill, following the supplied macOS 27 reference.
+
+
 - Compact footer links wrap without clipped labels or underlined separators; desktop preferences share a compact height and preserve touch targets.
 - Sibling panels, toolbars and tables share a radius; nested toolbar controls derive smaller corners from the inset.
 - Product-neutral shell examples and default brand typography; explicit guidance for Replichai, Wallfacer and Origo styling.
