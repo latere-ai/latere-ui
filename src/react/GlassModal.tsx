@@ -6,6 +6,7 @@ import { useId, useRef, type MouseEvent, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import '../styles/components/glass-modal.css';
 import { cx, useFocusTrap } from './internal';
+import { useCssTransition } from './useCssTransition';
 
 export interface GlassModalProps {
   open: boolean;
@@ -41,6 +42,8 @@ export function GlassModal({
   onClose,
 }: GlassModalProps) {
   const panel = useRef<HTMLDivElement>(null);
+  const scrim = useRef<HTMLDivElement>(null);
+  const present = useCssTransition(open, 'lu-modal', scrim);
   const id = useId();
 
   function close() {
@@ -52,10 +55,10 @@ export function GlassModal({
     if (e.target === e.currentTarget && closeOnScrim) close();
   }
 
-  if (!open || typeof document === 'undefined') return null;
+  if (!present || typeof document === 'undefined') return null;
 
   return createPortal(
-    <div className={cx('lu-modal-scrim', `lu-modal-scrim--${layer}`)} onClick={onScrim}>
+    <div ref={scrim} className={cx('lu-modal-scrim', `lu-modal-scrim--${layer}`)} onClick={onScrim}>
       <div
         ref={panel}
         className="lu-modal lu-glass-thick"

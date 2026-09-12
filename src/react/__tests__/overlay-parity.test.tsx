@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { act, fireEvent, render, cleanup } from '@testing-library/react';
+import { act, fireEvent, render, cleanup, waitFor } from '@testing-library/react';
 import { renderToString } from 'react-dom/server';
 import { mount } from '@vue/test-utils';
 import { nextTick } from 'vue';
@@ -174,6 +174,6 @@ describe('shared imperative hosts', () => {
     act(() => { third = confirm({ message: 'Escape request' }); });
     fireEvent.keyDown(document, { key: 'Escape' });
     await expect(third).resolves.toBe(false);
-    expect(w.queryByRole('dialog')).toBeNull();
+    await waitFor(() => expect(w.queryByRole('dialog')).toBeNull());
   });
 });

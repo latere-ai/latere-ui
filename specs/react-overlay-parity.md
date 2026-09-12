@@ -29,3 +29,9 @@ The six React overlays share the extracted Vue component stylesheets. `src/react
 `GlassPopover` supports internal trigger toggling or optional controlled `open` with `onOpenChange`/`onClose`; its trigger render function receives `{ open, toggle }` and its children render function receives `{ close }`. `GlassDrawer` uses controlled `open`/`onClose` and `header`/children in place of Vue slots. Tooltip, Menu, Toaster, and ConfirmHost preserve Vue markup and behavior.
 
 Verification: 61 unit/integration tests across nine focused files cover service snapshots, timers, FIFO promises, Vue/React interoperability, SSR, placements, menu states, drawer dismissal and focus restoration. The changed TypeScript adapters and cores reached 100% line coverage. Complete-matrix owns browser interactions, all-style captures, exact pixel comparison, and final spec completion.
+
+### Modal transition parity regression
+
+The exact paired confirm capture exposed the existing React modal's missing enter animation: Vue's scale transition and React's immediate mount produced different text rasterization despite identical final DOM, computed styles, and text bounds. React now uses the same CSS enter/leave lifecycle, retaining its portal during exit and cancelling interrupted transitions. Focus trapping still follows the controlled `open` value. The transition hook honors computed zero durations for reduced motion and cleans up frames, listeners, and timers. No comparison tolerance or visual masking was introduced.
+
+The modal transition regression fails with the hook disconnected and passes with it connected. Scoped browser comparisons for modal, confirm, and both drawer sides are exact. Canonical drawer paragraphs also use a single text node, matching Vue interpolation so browser text shaping receives the same input.
