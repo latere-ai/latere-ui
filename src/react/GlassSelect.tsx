@@ -2,8 +2,9 @@
 // trigger over a thick-glass listbox. Full listbox/option ARIA with arrow +
 // Enter keyboard support. `value` + `onChange` replace v-model.
 // Requires `import 'latere-ui/glass'`.
-import { useRef, useState, type KeyboardEvent } from 'react';
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 import type { SelectOption } from '../glass/types';
+import { initialOption, nextEnabledOption } from '../glass/selectNavigation';
 import '../styles/components/glass-select.css';
 import { cx, useClickOutside } from './internal';
 
@@ -26,7 +27,17 @@ export function GlassSelect({
 }: GlassSelectProps) {
   const root = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(-1);
+  const id = useId();
+
+  useEffect(() => {
+    if (!open) return;
+    if (!options[active] || options[active].disabled) {
+      setActive(initialOption(options, value));
+      return;
+    }
+    root.current?.querySelector('.is-active')?.scrollIntoView({ block: 'nearest' });
+  }, [open, active, options, value]);
 
   const selected = options.find((o) => o.value === value);
 
@@ -34,8 +45,7 @@ export function GlassSelect({
     if (disabled) return;
     setOpen((was) => {
       if (!was) {
-        const i = options.findIndex((o) => o.value === value);
-        setActive(i >= 0 ? i : 0);
+        setActive(initialOption(options, value));
       }
       return !was;
     });
@@ -45,15 +55,14 @@ export function GlassSelect({
   }
   useClickOutside(root, open, close);
 
-  function choose(opt: SelectOption) {
-    if (opt.disabled) return;
+  function choose(opt: SelectOption | undefined) {
+    if (!opt || opt.disabled) return;
     onChange?.(opt.value);
     close();
   }
 
   function onKey(e: KeyboardEvent<HTMLButtonElement>) {
     if (disabled) return;
-    const n = options.length;
     if (!open && (e.key === 'Enter' || e.key === 'ArrowDown' || e.key === ' ')) {
       e.preventDefault();
       toggle();
@@ -62,10 +71,10 @@ export function GlassSelect({
     if (!open) return;
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setActive((a) => (a + 1) % n);
+      setActive((a) => nextEnabledOption(options, a, 1));
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setActive((a) => (a - 1 + n) % n);
+      setActive((a) => nextEnabledOption(options, a < 0 ? 0 : a, -1));
     } else if (e.key === 'Enter') {
       e.preventDefault();
       choose(options[active]);
@@ -82,6 +91,8 @@ export function GlassSelect({
         role="combobox"
         aria-haspopup="listbox"
         aria-expanded={open}
+        aria-controls={open ? `${id}-list` : undefined}
+        aria-activedescendant={open && active >= 0 ? `${id}-option-${active}` : undefined}
         aria-label={ariaLabel}
         disabled={disabled}
         onClick={toggle}
@@ -95,10 +106,11 @@ export function GlassSelect({
         </span>
       </button>
       {open && (
-        <ul className="lu-select-list lu-glass-thick" role="listbox">
+        <ul id={`${id}-list`} className="lu-select-list lu-glass-thick" role="listbox">
           {options.map((opt, i) => (
             <li
               key={opt.value}
+              id={`${id}-option-${i}`}
               role="option"
               className={cx(
                 'lu-select-option',
@@ -109,7 +121,7 @@ export function GlassSelect({
               aria-selected={opt.value === value}
               aria-disabled={opt.disabled || undefined}
               onClick={() => choose(opt)}
-              onMouseEnter={() => setActive(i)}
+              onMouseEnter={() => !opt.disabled && setActive(i)}
             >
               {opt.label}
             </li>
