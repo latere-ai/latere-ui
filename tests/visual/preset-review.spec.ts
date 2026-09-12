@@ -1,5 +1,15 @@
 import { test, expect, visit } from './fixtures';
 
+test('collapsed mobile sidebar retains a narrow rail beside its content', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await visit(page, 'vue', 'sidebar-collapsed', 'light');
+  const rail = (await page.locator('.lu-cs').boundingBox())!;
+  const content = (await page.locator('.shell-content').boundingBox())!;
+  expect(rail.width).toBe(64);
+  expect(content.x).toBeGreaterThanOrEqual(rail.x + rail.width);
+  expect(content.width).toBeGreaterThanOrEqual(250);
+});
+
 for (const framework of ['vue', 'react']) test(`origo ${framework} smoke stays neutral while actions use iris`, async ({ page }) => {
   await visit(page, framework, 'containers', 'light', '&design=origo');
   await expect(page.locator('.lu-panel.lu-glass-smoke').first()).toHaveCSS('background-color', 'rgb(10, 10, 10)');

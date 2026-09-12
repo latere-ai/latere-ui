@@ -65,7 +65,7 @@ h2 { font-size: 18px; }
 
 /* The standalone sidebar sheet demonstrates a usable narrow host composition. */
 @media (max-width: 600px) {
-  .shell-stage:has(> .shell-content) { flex-direction: column; height: auto; }
-  .shell-stage:has(> .shell-content) > .lu-cs { width: 100%; min-height: 360px; }
+  .shell-stage:has(> .lu-cs[data-collapsed="false"]):has(> .shell-content) { flex-direction: column; height: auto; }
+  .shell-stage:has(> .shell-content) > .lu-cs[data-collapsed="false"] { width: 100%; min-height: 360px; }
   .shell-stage > .shell-content { padding: 12px; }
 }
