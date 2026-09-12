@@ -1,4 +1,4 @@
-import { test, expect, visit, prepare } from './fixtures';
+import { test, expect, visit, prepare, setPreferences } from './fixtures';
 
 for (const framework of ['vue', 'react']) {
   test(`${framework} nested modal closes only the top dialog and restores focus`, async ({ page }) => {
@@ -67,7 +67,7 @@ test('reduced motion stops skeleton shimmer and slows the busy indicator', async
   await visit(page, 'vue', 'feedback');
   await expect(page.locator('.lu-skeleton').first()).not.toHaveCSS('animation-name', 'none');
   await expect(page.locator('.lu-spinner').first()).toHaveCSS('animation-duration', '0.65s');
-  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await setPreferences(page, { motion: 'reduce' });
   await expect(page.locator('.lu-skeleton').first()).toHaveCSS('animation-name', 'none');
   await expect(page.locator('.lu-spinner').first()).toHaveCSS('animation-duration', '1.4s');
 });

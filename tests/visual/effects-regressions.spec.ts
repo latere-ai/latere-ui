@@ -1,4 +1,4 @@
-import { test, expect, visit } from './fixtures';
+import { test, expect, visit, setPreferences } from './fixtures';
 
 test('refraction follows the current theme and surface dimensions on rescan', async ({ page }) => {
   await visit(page, 'vue', 'effects');
@@ -39,17 +39,16 @@ test('refraction follows the current theme and surface dimensions on rescan', as
   expect((await read()).id).toBe(updated.id);
 });
 
-test('reduced transparency removes an existing inline refraction and permits re-enabling', async ({ page, context }) => {
+test('reduced transparency removes an existing inline refraction and permits re-enabling', async ({ page }) => {
   await visit(page, 'vue', 'effects');
   const panel = page.locator('.effect-surface[data-lg-refract=""]');
   expect(await panel.evaluate(el => (el as HTMLElement).style.backdropFilter)).toContain('url(');
-  const cdp = await context.newCDPSession(page);
-  await cdp.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-transparency', value: 'reduce' }] });
+  await setPreferences(page, { transparency: 'reduce' });
   await page.getByRole('button', { name: 'Refresh effects' }).click();
   expect(await panel.evaluate(el => (el as HTMLElement).style.backdropFilter)).toBe('');
   await expect(panel).toHaveCSS('backdrop-filter', 'none');
   await expect(page.locator('body > svg filter')).toHaveCount(0);
-  await cdp.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-transparency', value: 'no-preference' }] });
+  await setPreferences(page);
   await page.getByRole('button', { name: 'Refresh effects' }).click();
   expect(await panel.evaluate(el => (el as HTMLElement).style.backdropFilter)).toContain('url(');
 });
@@ -66,10 +65,10 @@ test('pointer sheen refreshes its theme intensity and honors changed motion pref
   await page.getByRole('button', { name: 'Refresh effects' }).evaluate(el => (el as HTMLButtonElement).click());
   await expect(sheen).toHaveCSS('background-image', /rgba\(255, 255, 255, 0\.06\)/);
   await expect(sheen).toHaveCSS('opacity', '1');
-  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await setPreferences(page, { motion: 'reduce' });
   await page.getByRole('button', { name: 'Refresh effects' }).click();
   await expect(sheen).toHaveCount(0);
-  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await setPreferences(page);
   await page.getByRole('button', { name: 'Refresh effects' }).click();
   await panel.hover({ position: { x: 150, y: 80 } });
   await expect(sheen).toHaveCount(1);

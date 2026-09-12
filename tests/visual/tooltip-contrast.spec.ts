@@ -1,11 +1,10 @@
-import { test, expect, visit } from './fixtures';
+import { test, expect, visit, setPreferences } from './fixtures';
 
 for (const theme of ['light', 'dark']) {
   for (const reducedTransparency of [false, true]) {
-    test(`tooltip text contrast in ${theme}${reducedTransparency ? ' with reduced transparency' : ''}`, async ({ page, context }) => {
+    test(`tooltip text contrast in ${theme}${reducedTransparency ? ' with reduced transparency' : ''}`, async ({ page }) => {
       if (reducedTransparency) {
-        const cdp = await context.newCDPSession(page);
-        await cdp.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-transparency', value: 'reduce' }] });
+        await setPreferences(page, { transparency: 'reduce' });
       }
       await visit(page, 'vue', 'tooltip', theme);
       await page.getByRole('button', { name: 'Top tooltip' }).focus();

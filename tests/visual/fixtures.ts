@@ -1,6 +1,7 @@
 import { test as base, expect, type Page } from '@playwright/test';
 export const test = base.extend<{ browserErrors: string[] }>({
   browserErrors: [async ({ page }, use) => {
+    await setPreferences(page);
     const errors: string[] = [];
     page.on('pageerror', error => errors.push(error.message));
     page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
@@ -38,4 +39,20 @@ export async function prepare(page: Page, framework: string, scenario: string) {
     await page.locator('[data-lg-sheen]').hover({ position: { x: 150, y: 80 } });
     await expect(page.locator('[data-lg-sheen] > [aria-hidden]')).toHaveCSS('opacity', '1');
   }
+}
+
+/** Pin the complete media set: a partial CDP update resets omitted features. */
+export async function setPreferences(page: Page, options: {
+  motion?: 'reduce' | 'no-preference';
+  transparency?: 'reduce' | 'no-preference';
+  contrast?: 'more' | 'no-preference';
+} = {}) {
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Emulation.setEmulatedMedia', { features: [
+    { name: 'prefers-color-scheme', value: 'light' },
+    { name: 'prefers-reduced-motion', value: options.motion ?? 'no-preference' },
+    { name: 'prefers-reduced-transparency', value: options.transparency ?? 'no-preference' },
+    { name: 'prefers-contrast', value: options.contrast ?? 'no-preference' },
+    { name: 'forced-colors', value: 'none' },
+  ] });
 }

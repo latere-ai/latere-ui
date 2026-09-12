@@ -1,6 +1,7 @@
 /* Fixture layout only. Do not reset component box sizing or override library rules. */
 :root { --font-mono: "JetBrains Mono", monospace; }
-body { margin: 0; font-family: Inter, sans-serif; font-size: 14px; line-height: 1.5; color: var(--text); background: var(--bg); }
+html { background: var(--bg); }
+body { min-height: 100vh; margin: 0; font-family: Inter, sans-serif; font-size: 14px; line-height: 1.5; color: var(--text); background: var(--bg); }
 #app { padding: 24px; }
 header { margin-bottom: 24px; }
 h1 { font-size: 24px; font-weight: 600; margin: 0; }

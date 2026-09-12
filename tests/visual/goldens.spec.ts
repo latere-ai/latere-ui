@@ -1,4 +1,4 @@
-import { test, expect, visit, prepare } from './fixtures';
+import { test, expect, visit, prepare, setPreferences } from './fixtures';
 import { scenarios, mobileScenarios } from './manifest';
 for (const [framework, sheets] of Object.entries(scenarios)) {
   for (const [scenario, components] of Object.entries(sheets)) {
@@ -18,12 +18,11 @@ for (const [framework, sheets] of Object.entries(scenarios)) {
 }
 for (const theme of ['light', 'dark']) {
   for (const mode of ['reduced-motion', 'reduced-transparency', 'contrast'] as const) {
-    test(`effects ${theme} ${mode}`, async ({ page, context }) => {
-      if (mode === 'reduced-motion') await page.emulateMedia({ reducedMotion: 'reduce' });
-      if (mode === 'contrast') await page.emulateMedia({ contrast: 'more' });
+    test(`effects ${theme} ${mode}`, async ({ page }) => {
+      if (mode === 'reduced-motion') await setPreferences(page, { motion: 'reduce' });
+      if (mode === 'contrast') await setPreferences(page, { contrast: 'more' });
       if (mode === 'reduced-transparency') {
-        const cdp = await context.newCDPSession(page);
-        await cdp.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-transparency', value: 'reduce' }] });
+        await setPreferences(page, { transparency: 'reduce' });
       }
       await visit(page, 'vue', 'effects', theme);
       await page.locator('[data-lg-sheen]').hover({ position: { x: 150, y: 80 } });
@@ -80,9 +79,8 @@ for (const theme of ['light', 'dark']) {
   });
 }
 
-for (const theme of ['light', 'dark']) test(`tooltip reduced transparency ${theme}`, async ({ page, context }) => {
-  const cdp = await context.newCDPSession(page);
-  await cdp.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-transparency', value: 'reduce' }] });
+for (const theme of ['light', 'dark']) test(`tooltip reduced transparency ${theme}`, async ({ page }) => {
+  await setPreferences(page, { transparency: 'reduce' });
   await visit(page, 'vue', 'tooltip', theme);
   await page.getByRole('button', { name: 'Top tooltip' }).focus();
   await expect(page).toHaveScreenshot(`tooltip-reduced-transparency-${theme}.png`);
