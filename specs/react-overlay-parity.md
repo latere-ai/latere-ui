@@ -35,3 +35,7 @@ Verification: 61 unit/integration tests across nine focused files cover service 
 The exact paired confirm capture exposed the existing React modal's missing enter animation: Vue's scale transition and React's immediate mount produced different text rasterization despite identical final DOM, computed styles, and text bounds. React now uses the same CSS enter/leave lifecycle, retaining its portal during exit and cancelling interrupted transitions. Focus trapping still follows the controlled `open` value. The transition hook honors computed zero durations for reduced motion and cleans up frames, listeners, and timers. No comparison tolerance or visual masking was introduced.
 
 The modal transition regression fails with the hook disconnected and passes with it connected. Scoped browser comparisons for modal, confirm, and both drawer sides are exact. Canonical drawer paragraphs also use a single text node, matching Vue interpolation so browser text shaping receives the same input.
+
+### Popover keyboard focus regression
+
+Both adapters now return focus to the trigger when Escape or a selection closes a panel containing the focused element. Outside-click dismissal preserves the outside target's normal focus behavior. Paired browser tests reproduced the prior focus loss; focused unit regressions cover both adapters and ensure outside clicks do not restore the trigger. The canonical menus invoke their close slot after selection and expose selected values for browser assertions without changing rendered content.

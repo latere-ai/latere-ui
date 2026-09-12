@@ -31,10 +31,17 @@ export function GlassPopover({
     if (!next) onClose?.();
   }
   const toggle = () => change(!open);
-  const close = () => change(false);
-  useClickOutside(root, open, close);
+  const close = () => {
+    if (root.current?.querySelector('.lu-pop-panel')?.contains(document.activeElement)) {
+      root.current.querySelector<HTMLElement>('.lu-pop-trigger button:not(:disabled), .lu-pop-trigger a[href], .lu-pop-trigger [tabindex]')?.focus();
+    }
+    change(false);
+  };
+  useClickOutside(root, open, () => change(false));
   return (
-    <div ref={root} className="lu-pop">
+    <div ref={root} className="lu-pop" onKeyDown={event => {
+      if (open && event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close(); }
+    }}>
       <div className="lu-pop-trigger" onClick={toggle}>
         {typeof trigger === 'function' ? trigger({ open, toggle }) : trigger}
       </div>

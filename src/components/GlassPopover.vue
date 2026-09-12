@@ -19,14 +19,22 @@ const props = withDefaults(defineProps<{
 const root = ref<HTMLElement | null>(null);
 const open = ref(false);
 function toggle() { open.value = !open.value; }
-function close() { open.value = false; }
-useClickOutside(root, () => open.value, close);
+function close(restoreFocus = true) {
+  if (restoreFocus && root.value?.querySelector('.lu-pop-panel')?.contains(document.activeElement)) {
+    root.value.querySelector<HTMLElement>('.lu-pop-trigger button:not(:disabled), .lu-pop-trigger a[href], .lu-pop-trigger [tabindex]')?.focus();
+  }
+  open.value = false;
+}
+useClickOutside(root, () => open.value, () => close(false));
+function onKey(event: KeyboardEvent) {
+  if (open.value && event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close(); }
+}
 
 const panelClass = computed(() => `lu-pop-panel--${props.placement}`);
 </script>
 
 <template>
-  <div ref="root" class="lu-pop">
+  <div ref="root" class="lu-pop" @keydown="onKey">
     <div class="lu-pop-trigger" @click="toggle">
       <slot name="trigger" :open="open" :toggle="toggle" />
     </div>
