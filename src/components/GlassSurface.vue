@@ -40,6 +40,7 @@ const classes = computed(() => [
   border-radius: var(--glass-radius, 22px);
   color: var(--text, #0a0a0a);
 }
+.lu-gs.lu-glass-smoke { color: var(--glass-smoke-ink, #fafafa); }
 .lu-gs-interactive {
   cursor: pointer;
   transition: box-shadow 0.18s ease, transform 0.18s ease;
