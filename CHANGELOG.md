@@ -10,6 +10,14 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+- Refined smoke rims and backed thick overlays with an opaque reading surface;
+  reduced transparency now also makes smoke opaque when contrast is increased.
+- Improved control boundaries, selected states, hints and product wordmarks;
+  stabilized loading buttons, switches and radios, and fixed long-label layout.
+- Corrected dialog, drawer, alert and error spacing; gave mobile footer navigation
+  its own row and removed empty collapsed-sidebar dividers.
+- Added a per-figure design review checklist alongside the visual references.
+
 - Rendered visual reference figures at 3.125× resolution with 300 DPI metadata
   for sharper enlarged and printed views.
 

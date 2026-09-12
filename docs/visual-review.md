@@ -27,6 +27,27 @@ renders used by the regression suite.
 Every listed bug has a reproducible regression that failed before its fix.
 Expected screenshots are captured after the fixes and reviewed visually.
 
+## Follow-up figure review
+
+A second review examines every named figure individually at native resolution. It
+corrects design problems that the original screenshot baselines preserved:
+
+| Area | Visible defect | Regression |
+|---|---|---|
+| Inverse material | Bright doubled top rim on smoke; heavy lower rim on pale smoke. | Both themes/adapters, including hover. |
+| Overlay material | Page and behind-dialog text ghosted through toasts and nested modals. | Hide underlying text and compare the foreground interior pixels. |
+| Reduced transparency | Smoke remained translucent; increased contrast could override opaque fills. | Both preferences together, all material tiers. |
+| Controls | White-on-white outlines, unreadable hints, weak selected states, and an invisible dark switch thumb. | Contrast and selection checks in the browser. |
+| Control geometry | Loading changed button height, toggling resized switches/radios, and long labels squeezed controls. | Before/after bounds and long-content checks. |
+| Form feedback | Browser paragraph margins inflated error and alert spacing; disabled fields lacked a visible state. | Measured gaps, disabled styling and inert hover. |
+| Dialogs and drawers | Default title margins inflated spacing; actions overflowed at narrow widths. | Title/body bounds, wrapping and viewport containment. |
+| Navigation | Compact mobile footer squeezed links beside preferences; selected navigation and small wordmarks lost contrast. | Full-width navigation row, keyboard reachability and theme contrast. |
+| Gallery examples | Broad header styling leaked into components; React account appearance was hardcoded to Light. | Scoped fixture styles and interactive theme assertions. |
+
+The [per-figure checklist](visual-audit-300dpi.md) records the findings and final
+inspection status. PNG references render at 300/96 device scale and carry 300 DPI
+metadata; their extra detail comes from browser rendering, not enlargement.
+
 ## What the references cover
 
 The manifest accounts for every exported Vue and React UI component. Reference

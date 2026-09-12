@@ -85,7 +85,12 @@ bun run test:visual:update --grep 'vue buttons'
 bun run test:visual --grep 'vue buttons'
 ```
 
-Review each changed PNG in both themes and relevant mobile states. Include the
+Review each changed PNG individually in both themes and relevant mobile states.
+Inspect the full composition and native-size details: corner clearance, text
+insets, border weight, contrast, active/disabled states, clipping and overlay
+occlusion. A matching screenshot proves consistency, not design quality. Record
+findings and corrections in the [per-figure checklist](docs/visual-audit-300dpi.md),
+and recheck the actual regenerated image after fixing its source. Include the
 source change, its regression test, and the reviewed PNGs in the same pull
 request. The README and design guide embed these files directly, so accepting a
 baseline also changes the public visual documentation.
