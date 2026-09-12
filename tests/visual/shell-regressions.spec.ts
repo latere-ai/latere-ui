@@ -61,12 +61,14 @@ test('light account preferences expose visible controls and a distinct selected 
 });
 
 for (const framework of ['vue', 'react']) {
-  test(`${framework} sidebar search and current page have visible boundaries in light mode`, async ({ page }) => {
+  test(`${framework} sidebar search has a visible boundary and current page has a flat fill in light mode`, async ({ page }) => {
     await visit(page, framework, 'sidebar');
     expect(await contrast(page.locator('.lu-cs-search'), 'borderTopColor'), 'search boundary').toBeGreaterThanOrEqual(3);
     const current = page.locator('.lu-cs-item[data-active="true"]');
-    expect(await current.evaluate(el => getComputedStyle(el).boxShadow)).toContain('0px 0px 0px 1px inset');
-    expect(await contrast(current, 'selectionEdge'), 'current page boundary').toBeGreaterThanOrEqual(3);
+    await expect(current).toHaveCSS('box-shadow', 'none');
+    await expect(current).toHaveAttribute('aria-current', 'page');
+    const inactive = page.locator('.lu-cs-item:not([data-active="true"])').first();
+    expect(await current.evaluate(el => getComputedStyle(el).backgroundColor)).not.toBe(await inactive.evaluate(el => getComputedStyle(el).backgroundColor));
   });
 }
 

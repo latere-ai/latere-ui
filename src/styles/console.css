@@ -401,3 +401,12 @@ html { overscroll-behavior: none; }
     outline: var(--focus-outline, 2px solid var(--accent, #171717));
     outline-offset: -2px;
 }
+
+/* An expanded rail reserves enough room for identity even on a narrow page.
+ * The collapsed rail still uses the avatar-only rule above. */
+.lu-cs[data-collapsed="false"] .lu-am-id {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+}
+.lu-cs[data-collapsed="false"] .lu-am-id-name { max-width: 100%; }

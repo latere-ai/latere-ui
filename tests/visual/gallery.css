@@ -62,3 +62,10 @@ h2 { font-size: 18px; }
 
 #app:has(.workspace-demo) > header h1 { font-size: 14px; font-weight: 500; color: var(--text-secondary); }
 #app:has(.workspace-demo) > header .eyebrow { display: none; }
+
+/* The standalone sidebar sheet demonstrates a usable narrow host composition. */
+@media (max-width: 600px) {
+  .shell-stage:has(> .shell-content) { flex-direction: column; height: auto; }
+  .shell-stage:has(> .shell-content) > .lu-cs { width: 100%; min-height: 360px; }
+  .shell-stage > .shell-content { padding: 12px; }
+}

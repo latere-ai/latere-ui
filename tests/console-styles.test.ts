@@ -57,13 +57,14 @@ describe('console.css', () => {
     expect(blk).toMatch(/margin-left:\s*auto/);
   });
 
-  it("v2: active row is a compact rounded rectangle", () => {
+  it("active row is a flat compact rounded rectangle", () => {
     const active = css.slice(css.indexOf('.lu-cs-item[data-active="true"] {'));
-    // Pill fill carries the active state.
-    expect(active).toMatch(/background:\s*var\(--glass-pill-fill/);
+    // Flat ink tint carries the active state inside the integrated rail.
+    expect(active).toMatch(/background:\s*color-mix\(in srgb, var\(--text/);
+    expect(active).toMatch(/box-shadow:\s*none/);
     // The v1 accent-bar pseudo-element is gone entirely.
     expect(css).not.toMatch(/\.lu-cs-item\[data-active="true"\]::before/);
-    // Nav rows are capsules.
+    // Navigation keeps compact rounded rectangles.
     const item = css.slice(css.indexOf('.lu-cs-item {'), css.indexOf('.lu-cs-item:hover'));
     expect(item).toMatch(/border-radius:\s*var\(--radius-md/);
   });
