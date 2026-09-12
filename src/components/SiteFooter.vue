@@ -81,9 +81,7 @@ function linkProps(path: string) {
 </script>
 
 <template>
-  <!-- Compact: a desktop bar with a separate mobile navigation row (copyright · scrollable links · controls) for
-       app surfaces where the full footer is too tall. Stays one line tall at any
-       width; the link strip scrolls horizontally when it does not fit. -->
+  <!-- Compact navigation wraps complete labels; preferences sit below. -->
   <footer v-if="compact" class="site-footer site-footer-compact">
     <p class="footer-compact-copy" v-html="t('footer.rights')" />
     <nav class="footer-compact-links" :aria-label="t('footer.products')">

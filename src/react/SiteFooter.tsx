@@ -151,9 +151,7 @@ export function SiteFooter({
     </div>
   );
 
-  // Compact: a desktop bar with a separate mobile navigation row (copyright, scrollable links, controls) for app
-  // surfaces where the full footer is too tall. Stays one line tall at any
-  // width; the link strip scrolls horizontally when it does not fit.
+  // Compact navigation wraps complete labels; preferences sit below.
   if (compact) {
     return (
       <footer className="site-footer site-footer-compact">

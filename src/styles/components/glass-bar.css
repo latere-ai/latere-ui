@@ -8,10 +8,15 @@
   align-items: center;
   gap: var(--space-2, 8px);
   padding: var(--space-1-5, 6px) var(--space-3, 12px);
-  border-radius: var(--radius-md, 8px);
+  border-radius: var(--radius-lg, 14px);
 }
 .lu-gs.lu-bar-sticky {
   position: sticky;
   top: 0;
   z-index: 20;
+}
+
+/* Nested controls follow the container corner minus its vertical inset. */
+.lu-bar .lu-btn {
+  border-radius: max(0px, calc(var(--radius-lg, 14px) - var(--space-1-5, 6px)));
 }

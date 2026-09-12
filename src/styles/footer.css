@@ -245,7 +245,8 @@
 .site-footer-compact {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 8px 16px;
+    flex-wrap: wrap;
     /* full-width app toolbar (matches the host header), not the marketing
        footer's centered max-width — gives the links row room on wide screens */
     padding: 8px 24px;
@@ -266,37 +267,63 @@
     white-space: nowrap;
 }
 .footer-compact-links {
-    flex: 1 1 auto;
+    flex: 1 1 100%;
     min-width: 0;
     display: flex;
-    align-items: center;
-    overflow-x: auto;
-    white-space: nowrap;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 14px;
     font-size: 13px;
-    scrollbar-width: thin;
+    line-height: 24px;
 }
 .footer-compact-links a {
     color: var(--text-secondary);
     transition: color 0.15s;
     white-space: nowrap;
+    text-decoration: none;
 }
-.footer-compact-links a:hover { color: var(--text); }
-.footer-compact-links > *:not(:last-child)::after {
-    content: "·";
-    color: var(--text-muted);
-    margin: 0 10px;
-}
+.footer-compact-links a:hover { color: var(--text); text-decoration: underline; }
 .site-footer-compact .footer-extra {
     flex-shrink: 0;
     flex-direction: row;
     align-items: center;
     gap: 16px;
+    margin-left: auto;
+}
+
+/* Equal outer heights and explicit icon boxes avoid font-dependent controls. */
+.site-footer-compact .footer-compact-links { order: -1; }
+.site-footer-compact .footer-seg {
+    box-sizing: border-box;
+    height: 28px;
+    padding: 2px;
+    border-radius: var(--radius-md, 8px);
+}
+.site-footer-compact .footer-seg-btn {
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    width: 28px;
+    min-width: 28px;
+    padding: 0;
+    border-radius: max(0px, calc(var(--radius-md, 8px) - 3px));
+}
+.site-footer-compact .footer-lang-select {
+    box-sizing: border-box;
+    height: 28px;
+    border-radius: var(--radius-md, 8px);
+}
+@media (pointer: coarse) {
+    .site-footer-compact .footer-seg { height: 50px; }
+    .site-footer-compact .footer-seg-btn { width: 44px; min-height: 44px; }
+    .site-footer-compact .footer-lang-select { height: 50px; }
+    .site-footer-compact .footer-compact-links a { min-height: 44px; display: inline-flex; align-items: center; }
 }
 
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
-    .site-footer-compact { flex-wrap: wrap; gap: 12px; padding: 10px 16px; }
-    .site-footer-compact .footer-compact-links { flex: 1 0 100%; padding-bottom: 4px; }
+    .site-footer-compact { gap: 8px; padding: 10px 16px; }
+    .site-footer-compact .footer-compact-links { flex: 1 0 100%; }
     .site-footer-compact .footer-extra { margin-left: auto; }
     /* drop the copyright on narrow screens so the wayfinding links get the room */
     .site-footer-compact .footer-compact-copy { display: none; }

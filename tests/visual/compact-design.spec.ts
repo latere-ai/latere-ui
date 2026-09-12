@@ -5,8 +5,8 @@ for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark'])
     await visit(page, framework, 'containers', theme);
     await expect(page.locator('.lu-panel').first()).toHaveCSS('border-radius', '14px');
     await expect(page.locator('.lu-panel').first()).toHaveCSS('padding', '16px');
-    await expect(page.locator('.lu-table tbody td').first()).toHaveCSS('padding', '8px 12px');
-    await expect(page.locator('.lu-bar').first()).toHaveCSS('border-radius', '8px');
+    await expect(page.locator('.lu-table tbody td').first()).toHaveCSS('padding', '8px 16px');
+    await expect(page.locator('.lu-bar').first()).toHaveCSS('border-radius', '14px');
     const shadow = await page.locator('.lu-panel').first().evaluate(el => getComputedStyle(el).boxShadow);
     expect(shadow).not.toContain('38px');
     expect(shadow).not.toContain('1.5px');
