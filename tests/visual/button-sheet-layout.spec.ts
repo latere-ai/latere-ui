@@ -1,5 +1,7 @@
 import { test, expect, visit } from './fixtures';
 import { buttonSizes, buttonVariants } from './parity-data';
+import { captureExact } from './exact-golden';
+import { comparePixels } from './exact-pixels';
 
 for (const framework of ['vue', 'react']) for (const width of [390, 1100]) {
   test(`${framework} button sheet keeps each variant with its states at ${width}px`, async ({ page }) => {
@@ -14,5 +16,19 @@ for (const framework of ['vue', 'react']) for (const width of [390, 1100]) {
       expect(boxes[1]!.x).toBeLessThan(boxes[2]!.x);
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  });
+}
+
+for (const theme of ['light', 'dark']) {
+  test(`Origo button captions have identical glyph shaping in ${theme}`, async ({ page }) => {
+    const frames: Buffer[] = [];
+    for (const framework of ['vue', 'react']) {
+      await visit(page, framework, 'buttons', theme, '&parity=1&design=origo');
+      const caption = page.locator('[data-component="GlassButton"] .sample-label').first();
+      await expect(caption).toHaveText('Buttons / md');
+      frames.push(await captureExact(page, { clip: (await caption.boundingBox())! }));
+    }
+    const comparison = comparePixels(frames[0], frames[1]);
+    expect(comparison.equal, comparison.message).toBe(true);
   });
 }

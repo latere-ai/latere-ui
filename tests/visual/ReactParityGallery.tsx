@@ -57,7 +57,7 @@ function ReactParityGallery({ scenario }: { scenario: string }) {
 
   if (scenario === 'buttons') return <div className="stack">
     {buttonSizes.map(size => <section key={size} className="sample" data-component="GlassButton">
-      <p className="sample-label">Buttons / {size}</p>
+      <p className="sample-label">{`Buttons / ${size}`}</p>
       <div className="button-variants">{buttonVariants.map(variant => <div key={variant} className="button-state-group" role="group" aria-label={`${variant} ${size} states`}>
         <UI.GlassButton variant={variant} size={size}>{variant}</UI.GlassButton>
         <UI.GlassButton variant={variant} size={size} disabled>Disabled</UI.GlassButton>
