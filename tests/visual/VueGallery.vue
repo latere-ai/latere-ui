@@ -3,6 +3,7 @@ import { ref, onMounted, nextTick } from 'vue';
 import * as UI from '../../src';
 import { options, selectOptions, nav, paletteNav, principal, locales, tiers, badgeTones, alertTones, menuItems, columns, rows, groups, article, createWorkspaceRows, buttonSizes, buttonVariants, progressValues, brands, workspaceMetrics } from './parity-data';
 const props = defineProps<{ scenario: string }>();
+const currentProduct = new URLSearchParams(location.search).get('currentProduct') ?? '';
 const showToc = new URLSearchParams(location.search).get('showToc') !== 'false';
 const matchWidth = new URLSearchParams(location.search).get('matchWidth') === 'true';
 const placement = (new URLSearchParams(location.search).get('placement') || 'bottom-start') as 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';
@@ -79,7 +80,7 @@ onMounted(async () => { await nextTick(); if (props.scenario === 'effects') UI.i
   <div v-else-if="scenario === 'docs'" data-component="DocsLayout"><UI.DocsLayout :show-toc="showToc" :groups="groups" active-slug="intro" :article-html="article"/></div>
   <form v-else-if="scenario === 'account'" data-component="AccountMenu" style="display:flex;justify-content:flex-end" @submit.prevent="text = 'Unexpected submit'"><UI.AccountMenu :principal="principal" dashboard-path="#dashboard"><template #prefs><div data-component="AccountPrefs"><UI.AccountPrefs :theme="theme" :locale="locale" :locale-options="locales" @set-theme="theme = $event" @set-locale="locale = $event"/></div></template></UI.AccountMenu></form>
   <div v-else-if="scenario === 'preferences'" class="sample" data-component="AccountPrefs"><UI.AccountPrefs :theme="theme" :locale="locale" :locale-options="locales" @set-theme="theme = $event" @set-locale="locale = $event"/></div>
-  <div v-else-if="scenario === 'products'" data-component="ProductSwitcher"><UI.ProductSwitcher current=""/></div>
+  <div v-else-if="scenario === 'products'" data-component="ProductSwitcher"><UI.ProductSwitcher :current="currentProduct"/></div>
   <div v-else-if="scenario === 'organizations'" class="sample" data-component="OrgSwitcher"><UI.OrgSwitcher :state="orgState"/></div>
   <div v-else-if="scenario.startsWith('footer')" data-component="SiteFooter"><UI.SiteFooter :theme="theme" v-model:locale="locale" :locales="locales" :compact="scenario === 'footer-compact'" @update:theme="theme = $event"/></div>
   <div v-else-if="scenario === 'logo'" class="logo-stage row" data-component="LatereLogoMark"><UI.LatereLogoMark/><span v-for="brand in brands" :key="brand" :class="`${brand}-brand`" style="font-size:28px">{{ brand }}</span></div>
