@@ -27,10 +27,10 @@ h2 { font-size: 18px; }
 @media (max-width: 600px) { .material-grid { grid-template-columns: 1fr; } }
 
 /* A composed application example uses library components at their default density. */
-.workspace-demo { display: flex; gap: 16px; max-width: 1520px; margin: 0 auto; padding: 12px; border-radius: 20px; background: linear-gradient(130deg, #839caa18, #b7a78c12), var(--bg-deep); }
-.workspace-rail { flex: none; }
-.workspace-rail .lu-cs { min-height: 580px; }
-.workspace-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px; padding: 8px; }
+.workspace-demo { display: flex; gap: 0; max-width: 1520px; margin: 0 auto; padding: 0; overflow: hidden; border-radius: 20px; background: linear-gradient(130deg, #839caa18, #b7a78c12), var(--bg-deep); }
+.workspace-rail { flex: none; display: flex; }
+.workspace-rail .lu-cs { min-height: 580px; height: auto; }
+.workspace-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px; padding: 20px; }
 .workspace-heading, .workspace-section-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .workspace-heading h2 { margin: 0; font-size: 24px; letter-spacing: -0.025em; }
 .workspace-heading .sample-label { margin-bottom: 2px; }
@@ -47,11 +47,11 @@ h2 { font-size: 18px; }
 .workspace-note p { margin: 4px 0; }
 .workspace-note p span { color: var(--text-secondary); }
 @media (max-width: 720px) {
-  .workspace-demo { flex-direction: column; padding: 8px; gap: 12px; }
+  .workspace-demo { flex-direction: column; }
   .workspace-rail .lu-cs { min-height: 0; width: 100%; }
   .workspace-rail .lu-cs[data-collapsed="true"] .lu-cs-nav, .workspace-rail .lu-cs[data-collapsed="true"] .lu-cs-search { display: none; }
   .workspace-rail .lu-cs[data-collapsed="true"] .lu-cs-head { flex-direction: row; justify-content: space-between; }
-  .workspace-main { padding: 4px; gap: 12px; }
+  .workspace-main { padding: 12px; gap: 12px; }
   .workspace-heading { align-items: start; }
   .workspace-status { display: none; }
   .workspace-metrics { grid-template-columns: 1fr; gap: 8px; }
