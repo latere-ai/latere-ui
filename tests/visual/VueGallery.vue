@@ -10,6 +10,8 @@ const placement = (new URLSearchParams(location.search).get('placement') || 'bot
 const text = ref('Studio workspace');
 const checked = ref(true);
 const selected = ref('daily');
+const menuSelection = ref('');
+const confirmResult = ref('');
 const open = ref(false);
 const workspaceCollapsed = ref(matchMedia('(max-width: 720px)').matches);
 const workspaceRows = ref(createWorkspaceRows());
@@ -21,7 +23,7 @@ const selectValue = ref('0');
 const organization = ref('studio');
 const orgState = UI.createOrgSwitcher({ getOrgs: async () => principal.orgs.slice(0, 3), getCurrentOrgID: () => organization.value, switchOrg: async (id) => { organization.value = id; }, eager: true });
 function notify() { UI.message.clear(); if (new URLSearchParams(location.search).get('long') === 'true') { UI.message.error('Workspace_' + 'x'.repeat(180), { duration: 0 }); return; } for (const tone of alertTones) UI.message(tone, tone === 'error' ? 'The workspace could not be saved. Try again.' : `${tone}: Your workspace is ready.`, { duration: 0 }); }
-function ask() { void UI.confirm({ title: 'Delete workspace?', message: 'This removes the workspace and its saved settings.', danger: true, confirmText: 'Delete workspace' }); }
+function ask() { confirmResult.value = 'pending'; void UI.confirm({ title: 'Delete workspace?', message: 'This removes the workspace and its saved settings.', danger: true, confirmText: 'Delete workspace' }).then(accepted => { confirmResult.value = accepted ? 'accepted' : 'cancelled'; }); }
 onMounted(async () => { await nextTick(); if (props.scenario === 'effects') UI.initLiquidGlass(document.getElementById('stage')!); });
 </script>
 
@@ -69,12 +71,12 @@ onMounted(async () => { await nextTick(); if (props.scenario === 'effects') UI.i
     <div data-component="GlassBar"><UI.GlassBar header>Workspace toolbar <UI.GlassButton size="sm">New project</UI.GlassButton></UI.GlassBar></div>
     <div data-component="GlassTable"><UI.GlassTable :columns="columns" :rows="rows"/></div>
   </div>
-  <div v-else-if="scenario === 'popover'" class="popover-stage" data-component="GlassPopover"><UI.GlassPopover :placement="placement" :match-width="matchWidth"><template #trigger><UI.GlassButton>Open menu</UI.GlassButton></template><template #default><div data-component="GlassMenu"><UI.GlassMenu :items="menuItems"/></div></template></UI.GlassPopover></div>
+  <div v-else-if="scenario === 'popover'" class="popover-stage" data-component="GlassPopover" :data-selection="menuSelection"><UI.GlassPopover :placement="placement" :match-width="matchWidth"><template #trigger><UI.GlassButton>Open menu</UI.GlassButton></template><template #default="{ close }"><div data-component="GlassMenu"><UI.GlassMenu :items="menuItems" @select="menuSelection = $event; close()"/></div></template></UI.GlassPopover></div>
   <div v-else-if="scenario === 'tooltip'" class="popover-stage row" data-component="GlassTooltip"><UI.GlassTooltip text="Copy workspace link"><UI.GlassButton>Top tooltip</UI.GlassButton></UI.GlassTooltip><UI.GlassTooltip text="More information" placement="bottom"><UI.GlassButton>Bottom tooltip</UI.GlassButton></UI.GlassTooltip></div>
   <div v-else-if="scenario === 'modal'" data-component="GlassModal"><UI.GlassButton @click="open = true">Open modal</UI.GlassButton><UI.GlassModal v-model:open="open" title="Workspace settings"><UI.GlassField v-model="text" label="Workspace name"/><p>Update the details your team sees.</p><UI.GlassButton @click="innerOpen = true">Open nested modal</UI.GlassButton><template #footer><UI.GlassButton @click="open = false">Cancel</UI.GlassButton><UI.GlassButton variant="primary" @click="open = false">Save changes</UI.GlassButton></template></UI.GlassModal><UI.GlassModal v-model:open="innerOpen" title="Nested settings"><UI.GlassButton @click="innerOpen = false">Close nested</UI.GlassButton></UI.GlassModal></div>
   <div v-else-if="scenario.startsWith('drawer-')" data-component="GlassDrawer"><UI.GlassButton @click="open = true">Open drawer</UI.GlassButton><UI.GlassDrawer v-model:open="open" title="Workspace details" :side="scenario === 'drawer-left' ? 'left' : 'right'"><UI.GlassField v-model="text" label="Name"/><p v-for="n in 16" :key="n">Detail {{ n }}: Workspace activity and settings.</p><UI.GlassButton @click="open = false">Done</UI.GlassButton></UI.GlassDrawer></div>
   <div v-else-if="scenario === 'toast'" data-component="GlassToaster"><UI.GlassButton @click="notify">Show notifications</UI.GlassButton><UI.GlassToaster/></div>
-  <div v-else-if="scenario === 'confirm'" data-component="GlassConfirmHost"><UI.GlassButton @click="ask">Delete workspace</UI.GlassButton><UI.GlassConfirmHost/></div>
+  <div v-else-if="scenario === 'confirm'" data-component="GlassConfirmHost" :data-result="confirmResult"><UI.GlassButton @click="ask">Delete workspace</UI.GlassButton><UI.GlassConfirmHost/></div>
   <div v-else-if="scenario.startsWith('sidebar')" class="shell-stage" data-component="ConsoleSidebar"><UI.ConsoleSidebar :model="nav" active-key="jobs" brand-name="Workspace" brand-sub="Console" search :collapsed="scenario === 'sidebar-collapsed'"><template #logo><UI.LatereLogoMark/></template></UI.ConsoleSidebar><div class="shell-content"><h2>Workspace overview</h2><p>Projects and activity appear beside the navigation.</p></div></div>
   <div v-else-if="scenario === 'palette'" data-component="ConsolePalette"><UI.GlassButton @click="open = true">Open palette</UI.GlassButton><UI.ConsolePalette :open="open" :model="paletteNav" @close="open = false"/></div>
   <div v-else-if="scenario === 'docs'" data-component="DocsLayout"><UI.DocsLayout :show-toc="showToc" :groups="groups" active-slug="intro" :article-html="article"/></div>
