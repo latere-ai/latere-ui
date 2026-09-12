@@ -50,23 +50,28 @@
     --glass-bg-ultrathin: rgba(255, 255, 255, 0.28);
     --glass-bg-thin:      rgba(255, 255, 255, 0.38);
     --glass-bg:           rgba(255, 255, 255, 0.42);  /* regular */
-    /* Thick = the OVERLAY tier: dropdowns, popovers, palettes, modals, drawers,
-     * footers — glass that floats over arbitrary, busy content. The Latere
-     * handoff sets this at 0.65 because its canonical recipe adds a per-element
-     * SVG displacement/lensing map in the backdrop chain (direction 1b) that
-     * refracts the content beneath into illegibility. We composite blur only —
-     * no lensing — so 0.65 lets sharp text (headings, attractor lines, model
-     * pills) read straight through. Raise the fill to near-opaque so overlays
-     * OCCLUDE rather than reveal; the blur + specular edge keep the glass read.
-     * On-surface tiers (ultrathin/thin/regular) stay translucent — they never
-     * sit over unrelated content. */
+    /* Thick is the reading tier for overlays. Its tint is composited over an
+     * opaque base: nested backdrop roots can neutralize blur, and translucent
+     * tint alone lets underlying text ghost through dialogs and notifications. */
     --glass-bg-thick:     rgba(255, 255, 255, 0.90);
+    --glass-overlay-base: var(--bg-surface, #fff);
 
     /* Smoked ink glass — near-solid stays intentional (primary buttons). */
     --glass-smoke:        rgba(10, 10, 10, 0.68);
     --glass-smoke-strong: rgba(10, 10, 10, 0.82);
     /* Label color on smoke capsules — NEVER hardcode white; dark flips it. */
     --glass-smoke-ink:    #fafafa;
+    --glass-smoke-border: rgba(255, 255, 255, 0.15);
+    /* Inverse fills need their own rim: the white-glass highlight draws an
+     * opaque double outline on dark smoke. Keep one subtle optical edge. */
+    --shadow-glass-smoke:
+        0 14px 38px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.12);
+    --shadow-glass-smoke-hover:
+        0 26px 60px rgba(0, 0, 0, 0.13),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.12);
 
     /* Blur radius per tier. */
     --glass-blur-ultrathin: 14px;
@@ -126,12 +131,24 @@
     --glass-bg-ultrathin: rgba(30, 30, 34, 0.36);
     --glass-bg-thin:      rgba(30, 30, 34, 0.50);
     --glass-bg:           rgba(30, 30, 34, 0.56);
-    /* Overlay tier — near-opaque so it occludes busy content (see :root note). */
+    /* Overlay tint and its opaque reading surface (see :root note). */
     --glass-bg-thick:     rgba(24, 24, 28, 0.92);
+    --glass-overlay-base: var(--bg-surface, #111113);
 
     --glass-smoke:        rgba(250, 250, 250, 0.10);
     --glass-smoke-strong: rgba(250, 250, 250, 0.88);
     --glass-smoke-ink:    #0a0a0a;
+    --glass-smoke-border: rgba(0, 0, 0, 0.12);
+    /* Dark-theme smoke is pale: retain its light rim without the dark
+     * material's heavy bottom inset cutting a second outline into the fill. */
+    --shadow-glass-smoke:
+        0 14px 38px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.65),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.10);
+    --shadow-glass-smoke-hover:
+        0 24px 56px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.75),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.10);
 
     --glass-blur-ultrathin: 14px;
     --glass-blur-thin:      24px;
@@ -193,15 +210,24 @@
 .lu-glass-thick {
     -webkit-backdrop-filter: blur(var(--glass-blur-thick)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness, 1));
             backdrop-filter: blur(var(--glass-blur-thick)) saturate(var(--glass-saturate)) brightness(var(--glass-brightness, 1));
-    background: var(--glass-bg-thick, var(--bg-surface, #fff));
+    background:
+        linear-gradient(var(--glass-bg-thick, rgba(255, 255, 255, 0.90)),
+                        var(--glass-bg-thick, rgba(255, 255, 255, 0.90))),
+        var(--glass-overlay-base, #fff);
 }
 
 /* Smoked ink glass — primary buttons and inverse emphasis. Near-solid fill,
  * ink-on-paper label that flips with the theme. */
 .lu-glass-smoke {
     background: var(--glass-smoke-strong, rgba(10, 10, 10, 0.82));
-    border-color: rgba(255, 255, 255, 0.15);
+    border-color: var(--glass-smoke-border);
+    box-shadow: var(--shadow-glass-smoke);
     color: var(--glass-smoke-ink, #fafafa);
+}
+
+/* Preserve the inverse rim when GlassSurface adds its interactive lift. */
+.lu-gs.lu-glass-smoke.lu-gs-interactive:hover {
+    box-shadow: var(--shadow-glass-smoke-hover);
 }
 
 /* ---------- Accessibility / capability fallbacks ---------- */
@@ -211,15 +237,11 @@
 /* Reduce Transparency → fully opaque surfaces, filter off. Zeroing the blur +
  * saturate tokens turns EVERY token-driven backdrop-filter into a no-op, so a
  * consumer that hand-rolls `backdrop-filter: blur(var(--glass-blur))` on its own
- * selector (not a .lu-glass* class) also degrades. Smoke stays its own near-
- * solid ink so primary buttons keep their inverse contrast. */
+ * selector (not a .lu-glass* class) also degrades. The opaque fill tokens below
+ * the contrast rules preserve each material's foreground polarity. */
 @media (prefers-reduced-transparency: reduce) {
     :root,
     [data-theme="dark"] {
-        --glass-bg-ultrathin: var(--bg-raised, #f5f5f5);
-        --glass-bg-thin:  var(--bg-raised, #f5f5f5);
-        --glass-bg:       var(--bg-surface, #fff);
-        --glass-bg-thick: var(--bg-surface, #fff);
         --glass-border:   var(--border, rgba(0, 0, 0, 0.08));
         --glass-blur-ultrathin: 0px;
         --glass-blur-thin:   0px;
@@ -264,6 +286,26 @@
         --glass-blur-thick:  0px;
         --glass-saturate:  100%;
         --glass-brightness: 1;
+    }
+}
+
+/* Opacity wins when both accessibility preferences are enabled. Keep this
+ * after the contrast fills while preserving the stronger contrast borders. */
+@media (prefers-reduced-transparency: reduce) {
+    :root,
+    [data-theme="dark"] {
+        --glass-bg-ultrathin: var(--bg-raised, #f5f5f5);
+        --glass-bg-thin: var(--bg-raised, #f5f5f5);
+        --glass-bg: var(--bg-surface, #fff);
+        --glass-bg-thick: var(--bg-surface, #fff);
+    }
+    :root {
+        --glass-smoke: #0a0a0a;
+        --glass-smoke-strong: #0a0a0a;
+    }
+    [data-theme="dark"] {
+        --glass-smoke: #fafafa;
+        --glass-smoke-strong: #fafafa;
     }
 }
 
