@@ -15,17 +15,37 @@ describe('GlassSpinner', () => {
 });
 
 describe('GlassProgress', () => {
-  it('exposes progressbar ARIA values and clamps the fill width', () => {
-    const w = mount(GlassProgress, { props: { value: 150, max: 100 } });
+  it.each([
+    { value: 150, max: 100, now: 100, width: '100%' },
+    { value: -10, max: 100, now: 0, width: '0%' },
+    { value: 0, max: 100, now: 0, width: '0%' },
+    { value: 100, max: 100, now: 100, width: '100%' },
+    { value: 2.5, max: 10, now: 2.5, width: '25%' },
+    { value: 15, max: 10, now: 10, width: '100%' },
+    { value: 5, max: 0, now: 0, width: '0%' },
+  ])('keeps ARIA and fill consistent for value=$value, max=$max', ({ value, max, now, width }) => {
+    const w = mount(GlassProgress, { props: { value, max, label: 'Upload' } });
     expect(w.attributes('role')).toBe('progressbar');
-    expect(w.attributes('aria-valuenow')).toBe('150');
-    expect(w.attributes('aria-valuemax')).toBe('100');
-    // clamped to 100%
-    expect((w.get('.lu-progress-fill').element as HTMLElement).style.width).toBe('100%');
+    expect(w.attributes('aria-label')).toBe('Upload');
+    expect(w.attributes('aria-valuemin')).toBe('0');
+    expect(w.attributes('aria-valuemax')).toBe(String(max));
+    expect(w.attributes('aria-valuenow')).toBe(String(now));
+    expect((w.get('.lu-progress-fill').element as HTMLElement).style.width).toBe(width);
   });
 
-  it('handles max=0 without dividing by zero', () => {
-    const w = mount(GlassProgress, { props: { value: 5, max: 0 } });
+  it('updates ARIA and fill together when value or max changes', async () => {
+    const w = mount(GlassProgress, { props: { value: 150 } });
+    expect(w.attributes('aria-valuemax')).toBe('100');
+    expect(w.attributes('aria-valuenow')).toBe('100');
+    expect((w.get('.lu-progress-fill').element as HTMLElement).style.width).toBe('100%');
+
+    await w.setProps({ max: 200 });
+    expect(w.attributes('aria-valuemax')).toBe('200');
+    expect(w.attributes('aria-valuenow')).toBe('150');
+    expect((w.get('.lu-progress-fill').element as HTMLElement).style.width).toBe('75%');
+
+    await w.setProps({ value: -10 });
+    expect(w.attributes('aria-valuenow')).toBe('0');
     expect((w.get('.lu-progress-fill').element as HTMLElement).style.width).toBe('0%');
   });
 });
