@@ -31,7 +31,7 @@ onMounted(async () => { await nextTick(); if (props.scenario === 'effects') UI.i
   <div v-if="scenario === 'buttons'" class="stack">
     <section v-for="size in buttonSizes" :key="size" class="sample" data-component="GlassButton">
       <p class="sample-label">Buttons / {{ size }}</p>
-      <div class="row"><template v-for="variant in buttonVariants" :key="variant"><UI.GlassButton :variant="variant" :size="size">{{ variant }}</UI.GlassButton><UI.GlassButton :variant="variant" :size="size" disabled>Disabled</UI.GlassButton><UI.GlassButton :variant="variant" :size="size" loading>Saving</UI.GlassButton></template></div>
+      <div class="button-variants"><div v-for="variant in buttonVariants" :key="variant" class="button-state-group" role="group" :aria-label="`${variant} ${size} states`"><UI.GlassButton :variant="variant" :size="size">{{ variant }}</UI.GlassButton><UI.GlassButton :variant="variant" :size="size" disabled>Disabled</UI.GlassButton><UI.GlassButton :variant="variant" :size="size" loading>Saving</UI.GlassButton></div></div>
     </section>
     <section class="sample" data-component="GlassIconButton"><p class="sample-label">Icon buttons</p><div class="row"><UI.GlassIconButton label="Add">+</UI.GlassIconButton><UI.GlassIconButton label="Small add" size="sm">+</UI.GlassIconButton><UI.GlassIconButton label="Pinned" pressed>★</UI.GlassIconButton><UI.GlassIconButton label="Unavailable" disabled>+</UI.GlassIconButton></div></section>
   </div>

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import * as UI from '../../src/react';
 import { initLiquidGlass } from '../../src/react';
@@ -57,11 +57,11 @@ function ReactParityGallery({ scenario }: { scenario: string }) {
   if (scenario === 'buttons') return <div className="stack">
     {buttonSizes.map(size => <section key={size} className="sample" data-component="GlassButton">
       <p className="sample-label">Buttons / {size}</p>
-      <div className="row">{buttonVariants.map(variant => <Fragment key={variant}>
+      <div className="button-variants">{buttonVariants.map(variant => <div key={variant} className="button-state-group" role="group" aria-label={`${variant} ${size} states`}>
         <UI.GlassButton variant={variant} size={size}>{variant}</UI.GlassButton>
         <UI.GlassButton variant={variant} size={size} disabled>Disabled</UI.GlassButton>
         <UI.GlassButton variant={variant} size={size} loading>Saving</UI.GlassButton>
-      </Fragment>)}</div>
+      </div>)}</div>
     </section>)}
     <section className="sample" data-component="GlassIconButton"><p className="sample-label">Icon buttons</p><div className="row"><UI.GlassIconButton label="Add">+</UI.GlassIconButton><UI.GlassIconButton label="Small add" size="sm">+</UI.GlassIconButton><UI.GlassIconButton label="Pinned" pressed>★</UI.GlassIconButton><UI.GlassIconButton label="Unavailable" disabled>+</UI.GlassIconButton></div></section>
   </div>;

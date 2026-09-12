@@ -8,6 +8,8 @@ h1 { font-size: 24px; font-weight: 600; margin: 0; }
 h2 { font-size: 18px; }
 .eyebrow { font-size: 10px; letter-spacing: 2px; color: var(--text-secondary); margin: 0 0 8px; }
 .row { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; }
+.button-variants { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; }
+.button-state-group { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 .stack { display: flex; flex-direction: column; gap: 16px; }
 .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .sample { padding: 16px; border: 1px solid var(--border); border-radius: 12px; min-width: 0; }
