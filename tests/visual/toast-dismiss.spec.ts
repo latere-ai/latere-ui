@@ -1,6 +1,21 @@
 import { writeFileSync } from 'node:fs';
 import { test, expect, visit, prepare } from './fixtures';
 import { captureExact } from './exact-golden';
+import type { Page } from '@playwright/test';
+
+async function waitForToastEntrance(page: Page) {
+  await expect(page.locator('.lu-toast-enter-active')).toHaveCount(0);
+}
+
+test('toast geometry waits for every staggered entrance', async ({ page }) => {
+  await visit(page, 'react', 'toast', 'dark', '&parity=1&design=wallfacer');
+  await page.addStyleTag({ content: '.lu-toast-enter-active:not(:first-child) { transition-duration: 1s; }' });
+  await prepare(page, 'react', 'toast');
+  await expect(page.locator('.lu-toast')).toHaveCount(4);
+  await waitForToastEntrance(page);
+  expect(await page.locator('.lu-toast-enter-active').count()).toBe(0);
+  expect(await page.locator('.lu-toast').evaluateAll(rows => rows.map(row => getComputedStyle(row).transform))).toEqual(['none', 'none', 'none', 'none']);
+});
 
 for (const framework of ['vue', 'react']) for (const design of ['default', 'replichai', 'wallfacer', 'origo']) {
   for (const theme of ['light', 'dark']) for (const width of [390, 1100]) {
@@ -11,7 +26,7 @@ for (const framework of ['vue', 'react']) for (const design of ['default', 'repl
       const rows = page.locator('.lu-toast');
       const buttons = page.getByRole('button', { name: 'Dismiss notification', exact: true });
       await expect(buttons).toHaveCount(4);
-      await expect(rows.first()).not.toHaveClass(/lu-toast-enter-active/);
+      await waitForToastEntrance(page);
       await expect(page.getByRole('status')).toHaveCount(3);
       await expect(page.getByRole('alert')).toHaveCount(1);
       for (let i = 0; i < 4; i++) {
