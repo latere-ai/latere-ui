@@ -1,5 +1,7 @@
 # Product appearance review · September 2026
 
+This is the initial rollout record. Its counts and adapter exclusions describe that historical batch. The [complete component review](complete-visual-review.md) documents the expanded matrix and current verification.
+
 The shared components now support three optional matte appearances alongside default glass. The [design guide](design-system.md#keep-product-styling-explicit) explains installation, font ownership and intentional adaptations from each product. The [reference index](visual-reference.md#product-style-variations) links every rendered sheet.
 
 ## What changed

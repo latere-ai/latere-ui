@@ -65,6 +65,8 @@ No backend, remote images, or web font service is needed.
 
 Each capture waits for finite transitions to finish, pauses looping animations at their first frame, hides the text caret, and requires two identical decoded RGBA images. It restores the previous animation state afterward. Avoid Playwright's global animation override: repeated SVG captures exposed raster differences with that override. For every scenario, the suite compares Vue directly with React before checking either committed golden. Explicit recording cannot bypass this adapter parity check.
 
+Optical figures send a fixed pointer sample through the component's mouse handler, with the native cursor outside the panel. Native full-page captures can temporarily resize Chromium to 1×1 and dispatch an unrelated mouse-leave event. The fixture avoids that input disturbance; capture also checks the sampled opacity and gradient before accepting each frame. Separate browser tests verify that the sample matches real pointer input and that real pointer exit fades the sheen. DOM/action traces remain enabled; background trace screencast images are disabled to avoid a second native capture stream.
+
 The matrix includes every public visual component in both frameworks, all four appearances (default, Replichai, Wallfacer and Origo), desktop/mobile, and light/dark. Fixed logos, headless organization lists, collapsed sidebars and optical-effects examples also participate; a preset may intentionally leave a fixed identity unchanged.
 
 Normal verification also checks the 300 DPI metadata without modifying files.
