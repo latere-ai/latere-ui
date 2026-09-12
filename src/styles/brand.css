@@ -19,9 +19,17 @@
 }
 /* Use background-image (not the `background` shorthand, which would reset
    background-clip back to border-box and break the text clipping above). */
-.cella-brand { background-image: linear-gradient(135deg, #8fb894 0%, #6b9e7c 60%, #4a7558 100%); }
-.wallfacer-brand { background-image: linear-gradient(135deg, #d97757 0%, #c4623f 60%, #a84e2e 100%); }
-.lux-brand { background-image: linear-gradient(135deg, #6577d6 0%, #3a4ed1 60%, #2b3fb8 100%); }
-.topos-brand { background-image: linear-gradient(135deg, #55707a 0%, #6f8a56 58%, #a07045 100%); }
-.lectio-brand { background-image: linear-gradient(135deg, #c89a64 0%, #b87333 60%, #8a5523 100%); }
-.drive-brand { background-image: linear-gradient(135deg, #e0bd55 0%, #c9a227 60%, #93711a 100%); }
+.cella-brand { background-image: linear-gradient(135deg, #456f50 0%, #386344 60%, #2c5538 100%); }
+.wallfacer-brand { background-image: linear-gradient(135deg, #b45133 0%, #9f432b 60%, #883520 100%); }
+.lux-brand { background-image: linear-gradient(135deg, #4d5ec0 0%, #3a4ed1 60%, #2b3fb8 100%); }
+.topos-brand { background-image: linear-gradient(135deg, #49616a 0%, #536c3f 60%, #805831 100%); }
+.lectio-brand { background-image: linear-gradient(135deg, #90602f 0%, #885121 60%, #734418 100%); }
+.drive-brand { background-image: linear-gradient(135deg, #806015 0%, #765812 60%, #674b10 100%); }
+
+/* Theme-specific stops keep small navigation wordmarks readable. */
+[data-theme="dark"] .cella-brand { background-image: linear-gradient(135deg, #9bcfa5 0%, #86be92 60%, #75ad82 100%); }
+[data-theme="dark"] .wallfacer-brand { background-image: linear-gradient(135deg, #ed9a7d 0%, #df886a 60%, #d27b60 100%); }
+[data-theme="dark"] .lux-brand { background-image: linear-gradient(135deg, #aab5ff 0%, #92a0f3 60%, #8290e8 100%); }
+[data-theme="dark"] .topos-brand { background-image: linear-gradient(135deg, #9abcc4 0%, #a9be8d 60%, #c5a47d 100%); }
+[data-theme="dark"] .lectio-brand { background-image: linear-gradient(135deg, #dfbd91 0%, #cfa577 60%, #be9566 100%); }
+[data-theme="dark"] .drive-brand { background-image: linear-gradient(135deg, #ead080 0%, #dcc268 60%, #cfb65e 100%); }

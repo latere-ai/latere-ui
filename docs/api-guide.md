@@ -34,7 +34,7 @@ const { theme, locale } = storeToRefs(prefs);
 | `theme`      | `'light' \| 'dark' \| 'auto'` | required              | Drives the active state of the theme toggle.                          |
 | `locale`     | `string` (bundled: `en`, `zh`, `de`)                | required              | Selects footer copy and the active language toggle.                   |
 | `locales`    | `LocaleOption[]`              | `[en, zh]`            | Languages in the locale dropdown (`{ code, label, name? }`).          |
-| `compact`    | `boolean`                     | `false`               | Use a single-row footer with horizontally scrollable links.                    |
+| `compact`    | `boolean`                     | `false`               | Compact footer with scrollable links; navigation gets its own row on mobile.                    |
 | `messages`   | `Record<string, Dict>`        | `undefined`           | Per-locale string overrides, merged over the bundled footer copy.     |
 | `baseUrl`    | `string`                      | `'https://latere.ai'` | Origin for the site's own links (Team, Blog, Legal, home).            |
 | `routerLink` | `Component`                   | `undefined`           | Pass `RouterLink` to keep SPA navigation for internal links on-site.  |
@@ -436,7 +436,7 @@ import { SiteFooter } from 'latere-ui/react';
 />
 ```
 
-`compact` swaps the product columns for a single-row bar with horizontally scrollable links, for app surfaces where
+`compact` swaps the product columns for a bar with horizontally scrollable links (a separate navigation row on mobile), for app surfaces where
 the full footer is too tall. `routerLink` keeps internal links inside your SPA
 (relative `to`); without it they are absolute under `baseUrl`. An app that
 ships one language should pass `locales` with just that one, so the dropdown

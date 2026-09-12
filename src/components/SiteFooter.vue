@@ -81,7 +81,7 @@ function linkProps(path: string) {
 </script>
 
 <template>
-  <!-- Compact: a single-line bar (copyright · scrollable links · controls) for
+  <!-- Compact: a desktop bar with a separate mobile navigation row (copyright · scrollable links · controls) for
        app surfaces where the full footer is too tall. Stays one line tall at any
        width; the link strip scrolls horizontally when it does not fit. -->
   <footer v-if="compact" class="site-footer site-footer-compact">

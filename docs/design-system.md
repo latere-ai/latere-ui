@@ -46,7 +46,7 @@ The sidebar supports a collapsed rail and custom brand, row, and footer content.
 
 ![Compact footer on a narrow viewport](../tests/visual/goldens/darwin-27/vue-footer-compact-light-mobile.png)
 
-The compact footer keeps its controls visible while its links scroll horizontally on narrow screens.
+On narrow screens, the compact footer gives navigation a full-width scrolling row, with theme and language controls below it.
 
 Footer language and theme choices belong to the host's preferences. Supply the language options your application supports; English, Chinese, and German footer copy ships in the package. Resolve an automatic theme to a concrete light or dark theme before applying it to the document.
 

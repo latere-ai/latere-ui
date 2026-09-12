@@ -23,7 +23,7 @@
     /* Foreground ramp + semantic text aliases */
     --fg-1: #0a0a0a;
     --fg-2: #666666;
-    --fg-3: #a0a0a0;
+    --fg-3: #707070;
     --text:           var(--fg-1);
     --text-secondary: var(--fg-2);
     --text-muted:     var(--fg-3);
