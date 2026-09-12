@@ -1,4 +1,5 @@
 import { PNG } from 'pngjs';
+import { errors } from '@playwright/test';
 import { test, expect, visit, prepare } from './fixtures';
 import { captureExact } from './exact-golden';
 import { comparePixels } from './exact-pixels';
@@ -76,4 +77,56 @@ test('capture follows chained finite animations and handles cancellation', async
   const scale = await page.evaluate(() => devicePixelRatio);
   const offset = (Math.floor(10 * scale) * png.width + Math.floor(10 * scale)) * 4;
   expect([...png.data.subarray(offset, offset + 4)]).toEqual([0, 255, 0, 255]);
+});
+
+test('capture recovers screenshot timeouts and requires two fresh exact captures afterward', async ({ page }) => {
+  await page.setContent('<div style="width:20px;height:20px;background:blue"></div>');
+  const screenshot = page.screenshot.bind(page);
+  let calls = 0;
+  page.screenshot = async options => {
+    calls++;
+    expect(options?.timeout).toBeGreaterThan(0);
+    expect(options?.timeout).toBeLessThanOrEqual(5000);
+    expect(options).toMatchObject({ animations: 'allow', scale: 'device', fullPage: true });
+    if (calls === 1 || calls === 3) throw new errors.TimeoutError('Simulated stalled screenshot transport');
+    return screenshot(options);
+  };
+  try {
+    const actual = await captureExact(page, { fullPage: true });
+    expect(PNG.sync.read(actual).width).toBeGreaterThan(0);
+    expect(calls).toBe(5);
+  } finally { page.screenshot = screenshot; }
+});
+
+test('capture bounds an initial screenshot timeout with the stability deadline', async ({ page }) => {
+  await page.setContent('<div>Static content</div>');
+  const screenshot = page.screenshot.bind(page);
+  const now = Date.now;
+  let elapsed = 0;
+  let calls = 0;
+  Date.now = () => now() + elapsed;
+  page.screenshot = async () => {
+    calls++;
+    elapsed = 16000;
+    throw new errors.TimeoutError('Simulated unresponsive renderer');
+  };
+  try {
+    await expect(captureExact(page)).rejects.toThrow(/exactly identical RGBA captures within 15 seconds.*screenshot timed out/s);
+    expect(calls).toBe(1);
+  } finally { Date.now = now; page.screenshot = screenshot; }
+});
+
+test('capture preserves a non-timeout screenshot failure when page cleanup also fails', async ({ page }) => {
+  await page.setContent('<div>Static content</div>');
+  const screenshot = page.screenshot.bind(page);
+  let calls = 0;
+  page.screenshot = async () => {
+    calls++;
+    await page.close();
+    throw new Error('Original screenshot transport failure');
+  };
+  try {
+    await expect(captureExact(page)).rejects.toThrow('Original screenshot transport failure');
+    expect(calls).toBe(1);
+  } finally { page.screenshot = screenshot; }
 });
