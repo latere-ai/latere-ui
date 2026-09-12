@@ -20,7 +20,7 @@
 
 /* Default: thin glass (the .lu-glass-thin class supplies bg/blur/edge/border). */
 .lu-btn-glass { color: var(--text-secondary, #666); }
-.lu-btn-glass:hover { box-shadow: var(--glass-edge-thick, var(--glass-edge)); }
+.lu-btn-glass:hover:not(:disabled) { box-shadow: var(--glass-edge-thick, var(--glass-edge)); }
 
 /* Primary: smoked ink glass — a translucent dark capsule, not a flat accent fill. */
 .lu-btn-primary {
@@ -34,7 +34,7 @@
     inset 0 1.5px 0 rgba(255, 255, 255, 0.25),
     inset 0 -1px 0 rgba(0, 0, 0, 0.3);
 }
-.lu-btn-primary:hover {
+.lu-btn-primary:hover:not(:disabled) {
   box-shadow:
     0 18px 42px rgba(0, 0, 0, 0.3),
     inset 0 1.5px 0 rgba(255, 255, 255, 0.25),
@@ -42,7 +42,7 @@
 }
 
 .lu-btn-ghost { background: transparent; color: var(--text-secondary, #666); }
-.lu-btn-ghost:hover { background: var(--accent-subtle, rgba(0, 0, 0, 0.04)); }
+.lu-btn-ghost:hover:not(:disabled) { background: var(--accent-subtle, rgba(0, 0, 0, 0.04)); }
 
 .lu-btn-danger {
   background: var(--state-error, #a8412e);
@@ -52,7 +52,7 @@
     inset 0 1.5px 0 rgba(255, 255, 255, 0.25),
     inset 0 -1px 0 rgba(0, 0, 0, 0.2);
 }
-.lu-btn-danger:hover { filter: brightness(0.94); }
+.lu-btn-danger:hover:not(:disabled) { filter: brightness(0.94); }
 
 .lu-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .lu-btn:focus-visible {
@@ -61,6 +61,8 @@
 }
 
 .lu-btn-spin {
+  box-sizing: border-box;
+  flex: none;
   width: 0.85em;
   height: 0.85em;
   border: 2px solid currentColor;

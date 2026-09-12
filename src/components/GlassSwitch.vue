@@ -47,12 +47,17 @@ function toggle() {
 }
 .lu-switch-track {
   position: relative;
+  flex: none;
   width: 40px;
   height: 23px;
+  border: 1px solid transparent;
   border-radius: var(--radius-pill, 999px);
   /* OFF: .lu-glass-ultrathin supplies the fill; flatten the resting track. */
   box-shadow: none;
   transition: background 0.18s ease, box-shadow 0.18s ease;
+}
+.lu-switch:not(.is-on) .lu-switch-track {
+  border-color: var(--lu-control-border, color-mix(in srgb, var(--text, #0a0a0a) 45%, transparent));
 }
 .lu-switch.is-on .lu-switch-track {
   background: var(--glass-smoke-strong, rgba(10, 10, 10, 0.82));
@@ -65,7 +70,7 @@ function toggle() {
   width: 19px;
   height: 19px;
   border-radius: 50%;
-  background: var(--bg-surface, #fff);
+  background: var(--lu-switch-thumb, #fff);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
   transition: transform 0.18s ease, background 0.18s ease;
 }

@@ -39,9 +39,11 @@ const checked = computed(() => props.modelValue === props.value);
 .lu-radio-native { position: absolute; opacity: 0; width: 0; height: 0; }
 .lu-radio-dot {
   position: relative;
+  flex: none;
   width: 19px;
   height: 19px;
   border-radius: 50%;
+  border-color: var(--lu-control-border, color-mix(in srgb, var(--text, #0a0a0a) 45%, transparent));
   box-shadow: none;
   transition: border-color 0.14s ease;
 }

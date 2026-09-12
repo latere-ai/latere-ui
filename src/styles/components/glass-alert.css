@@ -14,7 +14,7 @@
   font-weight: var(--fw-semibold, 600);
   font-size: var(--fs-body-sm, 13px);
   color: var(--text, #0a0a0a);
-  margin-bottom: 2px;
+  margin: 0 0 2px;
 }
 .lu-alert-text { font-size: var(--fs-body-sm, 13px); color: var(--text-secondary, #666); }
 .lu-alert-close {

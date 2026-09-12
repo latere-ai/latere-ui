@@ -16,12 +16,14 @@
   font-family: inherit;
   font-size: var(--fs-body-sm, 13px);
   color: var(--text, #0a0a0a);
+  border-color: var(--lu-control-border, color-mix(in srgb, var(--text, #0a0a0a) 45%, transparent));
   /* .lu-glass-ultrathin supplies background/blur/border; override the box-shadow
    * so a resting field is flat, lifting only on focus. */
   box-shadow: none;
   transition: box-shadow 0.16s ease, border-color 0.16s ease;
 }
-.lu-field-control::placeholder { color: var(--text-muted, #a0a0a0); }
+.lu-field-control::placeholder { color: var(--text-muted, #707070); }
+.lu-field-control:disabled { opacity: 0.5; cursor: not-allowed; }
 .lu-field-control:focus {
   outline: none;
   border-color: var(--accent, #171717);
@@ -33,7 +35,11 @@
 .lu-field.is-invalid .lu-field-control:focus {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--state-error, #a8412e) 25%, transparent);
 }
-.lu-field-error { font-size: var(--fs-micro, 12px); color: var(--state-error, #a8412e); }
+.lu-field-error {
+  margin: 0;
+  font-size: var(--fs-micro, 12px);
+  color: var(--state-error-text, color-mix(in srgb, var(--state-error, #a8412e) 70%, var(--text, #0a0a0a)));
+}
 @media (prefers-reduced-motion: reduce) {
   .lu-field-control { transition: none; }
 }

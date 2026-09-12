@@ -12,13 +12,15 @@
   font: inherit;
   font-size: var(--fs-body-sm, 13px);
   color: var(--text, #0a0a0a);
+  border-color: var(--lu-control-border, color-mix(in srgb, var(--text, #0a0a0a) 45%, transparent));
   cursor: pointer;
   box-shadow: none;
 }
 .lu-select-trigger:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: 2px; }
 .lu-select-trigger:disabled { opacity: 0.5; cursor: not-allowed; }
-.lu-select-value.is-placeholder { color: var(--text-muted, #a0a0a0); }
-.lu-select-chevron { color: var(--text-muted, #a0a0a0); font-size: 10px; }
+.lu-select-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; }
+.lu-select-value.is-placeholder { color: var(--text-muted, #707070); }
+.lu-select-chevron { flex: none; color: var(--text-muted, #707070); font-size: 10px; }
 .lu-select-list {
   position: absolute;
   top: calc(100% + 4px);
@@ -33,6 +35,7 @@
   margin: 0;
 }
 .lu-select-option {
+  overflow-wrap: anywhere;
   padding: 7px 10px;
   border-radius: var(--radius-sm, 12px);
   font-size: var(--fs-body-sm, 13px);

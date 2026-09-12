@@ -32,6 +32,7 @@ const pct = computed(() => props.max === 0 ? 0 : (clamped.value / props.max) * 1
   width: 100%;
   height: 10px;
   border-radius: 999px;
+  border-color: var(--lu-control-border, color-mix(in srgb, var(--text, #0a0a0a) 45%, transparent));
   overflow: hidden;
   box-shadow: none;
 }
