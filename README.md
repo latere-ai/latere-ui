@@ -7,7 +7,7 @@
 
 Shared glass materials, interface components, and application chrome for Latere products. Build forms, navigation, dialogs, and documentation with one visual language in Vue, with a supported subset for React.
 
-![Glass surfaces, panels, a toolbar, and a data table in the light theme](tests/visual/goldens/darwin/vue-containers-light-desktop.png)
+![Glass surfaces, panels, a toolbar, and a data table in the light theme](tests/visual/goldens/darwin-27/vue-containers-light-desktop.png)
 
 [Design guide](docs/design-system.md) · [Integration guide](docs/api-guide.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
 
@@ -106,7 +106,7 @@ For exact props, events, router integration, footer locales, and session setup, 
 
 ## Review the visuals
 
-![Button variants, sizes, disabled states, and loading states](tests/visual/goldens/darwin/vue-buttons-light-desktop.png)
+![Button variants, sizes, disabled states, and loading states](tests/visual/goldens/darwin-27/vue-buttons-light-desktop.png)
 
 The repository keeps golden PNGs of real components in light and dark themes. Desktop figures cover each visual export; selected mobile figures cover responsive layouts. Vue and React have separate baselines against the shared styles.
 

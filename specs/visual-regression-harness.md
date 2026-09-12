@@ -29,7 +29,7 @@ Vitest uses happy-dom and checks markup and CSS source, but cannot detect layout
 ## Design
 
 - Serve deterministic Vue and React fixtures directly from source under tests/visual. No backend or external requests.
-- Pin Playwright and its Chromium build. Record platform in golden paths; run CI on the same macOS environment used for initial baselines. Other platforms require separately reviewed baselines, never silently approve new images during verification.
+- Pin Playwright and its Chromium build. Record platform and macOS major in golden paths; maintain reviewed references for macOS 15 CI and macOS 27 local captures. Other platforms require separately reviewed baselines, never silently approve new images during verification.
 - Fix viewport, device scale, locale, timezone and fonts. Wait for fonts and stable screenshots; freeze animations only for image comparisons. Test motion behavior separately.
 - Store expected PNGs under tests/visual/goldens and actual/diff/trace artifacts in ignored output/playwright. A manifest drives cases and a coverage test rejects exported UI components without fixtures.
 - Provide preview, verification and explicit baseline-update commands. Normal tests fail on missing or changed images. CI uploads comparison reports on failure and never updates expected images.

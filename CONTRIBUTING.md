@@ -49,11 +49,15 @@ bun run test:visual      # Browser behavior and golden comparisons
 bun run test:visual:report
 ```
 
-Expected PNGs live in `tests/visual/goldens/darwin/`. The initial reference
-platform is macOS with the exact Chromium build installed by the pinned
-Playwright version. CI runs on `macos-15`. The viewport is 1100 × 850 for
-desktop (1280 × 850 for the three-column docs layout) and 390 × 844 for mobile, at device scale 1. Fonts are bundled locally;
-no backend, remote images, or web font service is needed.
+Expected PNGs live in `tests/visual/goldens/<platform>/`. macOS paths include
+its Darwin major: `darwin-24` for macOS 15 (CI), `darwin-27` for macOS 27 (the
+local documentation figures). Chromium is installed by the pinned Playwright
+version. CoreText and blur rendering can differ between macOS releases, so
+these references remain separate and comparisons allow zero differing pixels.
+The viewport is 1100 × 850 for desktop (1280 × 850 for the three-column docs
+layout) and 390 × 844 for mobile, at device scale 1. Fonts are bundled locally;
+media preferences are explicit, with dedicated accessibility scenarios.
+No backend, remote images, or web font service is needed.
 
 Playwright compares stable screenshots with animations disabled for capture.
 Separate interaction tests check focus, keyboard navigation, scrolling, and
@@ -64,7 +68,7 @@ Safari rendering compatibility.
 A normal run fails on a missing or changed image. Inspect the HTML report's
 expected, actual, and diff images before deciding whether a change is intended.
 Actual images, differences, and traces stay under ignored `output/playwright/`.
-CI uploads that folder on failure and never regenerates expected images.
+CI uploads that folder on failure. Push and pull-request checks never regenerate expected images.
 
 ## Update a reference deliberately
 
@@ -80,12 +84,15 @@ source change, its regression test, and the reviewed PNGs in the same pull
 request. The README and design guide embed these files directly, so accepting a
 baseline also changes the public visual documentation.
 
-Run updates on the reference platform. Playwright keeps other operating
-systems in separate golden directories: a Linux run must not overwrite the
-macOS references or automatically accept its own missing images. To adopt
-another platform, generate its full matrix, inspect it, and commit that baseline
-with an explicit CI job. Browser or font upgrades also require a reviewed full
-regeneration.
+Run updates on the reference platform. Other OS versions require their own
+reviewed references. A Linux run must not overwrite macOS figures or silently
+accept missing images. Browser or font upgrades require a reviewed regeneration.
+
+To record candidates on the hosted macOS 15 runner, manually dispatch **UI
+verification** with `record_goldens` enabled (or run `gh workflow run visual.yml -f record_goldens=true`). Download the `golden-candidates` artifact, inspect the
+PNG changes, and commit approved files under `tests/visual/goldens/darwin-24/`.
+This explicit recording run never commits files or replaces normal verification;
+the subsequent push must pass comparison without update mode.
 
 ## Add a component or state
 

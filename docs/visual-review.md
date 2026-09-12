@@ -41,7 +41,7 @@ composition diagram. Component PNGs are actual renders, not illustrations.
 
 ## Practical limits
 
-- The initial goldens target pinned Chromium on macOS. They are not a claim of
+- The goldens target pinned Chromium on macOS 15 and 27, with separate OS-version directories. They are not a claim of
   pixel parity across operating systems, Firefox, or Safari.
 - Images cover named states, not every prop combination, viewport, translation,
   or application-supplied content. Custom palettes still need contrast checks.

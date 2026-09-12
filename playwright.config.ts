@@ -1,9 +1,14 @@
 import { defineConfig } from '@playwright/test';
+import { release } from 'node:os';
+
+// CoreText and backdrop compositing differ across macOS major releases.
+const referencePlatform = process.platform === 'darwin'
+  ? `darwin-${release().split('.')[0]}` : process.platform;
 export default defineConfig({
   testDir: './tests/visual',
   testMatch: '**/*.spec.ts',
   outputDir: './output/playwright/results',
-  snapshotPathTemplate: '{testDir}/goldens/{platform}/{arg}{ext}',
+  snapshotPathTemplate: `{testDir}/goldens/${referencePlatform}/{arg}{ext}`,
   updateSnapshots: 'none',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
