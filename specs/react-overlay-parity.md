@@ -39,3 +39,7 @@ The modal transition regression fails with the hook disconnected and passes with
 ### Popover keyboard focus regression
 
 Both adapters now return focus to the trigger when Escape or a selection closes a panel containing the focused element. Outside-click dismissal preserves the outside target's normal focus behavior. Paired browser tests reproduced the prior focus loss; focused unit regressions cover both adapters and ensure outside clicks do not restore the trigger. The canonical menus invoke their close slot after selection and expose selected values for browser assertions without changing rendered content.
+
+### Toast transition parity regression
+
+Mobile paired captures exposed stale hover styling on the opener beneath React toasts. Vue's entering toast moves beneath the pointer and updates hit testing; the previous React host mounted notifications immediately, leaving the covered opener hovered. React now runs the shared toast enter/leave CSS lifecycle, retains departing items through exit, and renders pre-existing messages immediately when a host mounts, matching Vue's behavior. Browser tests assert that a mobile toast clears the opener's hover state. Exact light/dark desktop/mobile toast comparisons pass; transition lifecycle regressions fail before the fix and pass afterward.

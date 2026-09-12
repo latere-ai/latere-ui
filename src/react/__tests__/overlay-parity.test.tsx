@@ -120,7 +120,7 @@ describe('React drawer', () => {
 });
 
 describe('shared imperative hosts', () => {
-  it('React toaster responds to Vue service calls, roles, colors and click dismissal', () => {
+  it('React toaster responds to Vue service calls, roles, colors and click dismissal', async () => {
     const w = render(<GlassToaster />);
     act(() => {
       vueMessage.info('Info', { duration: 0 });
@@ -133,9 +133,9 @@ describe('shared imperative hosts', () => {
     expect(w.getByRole('alert').textContent).toBe('Error');
     expect(w.getByRole('alert').getAttribute('style')).toContain('--state-error');
     fireEvent.click(w.getByText('Info'));
-    expect(w.queryByText('Info')).toBeNull();
+    await waitFor(() => expect(w.queryByText('Info')).toBeNull());
     act(() => message.clear());
-    expect(w.queryByRole('alert')).toBeNull();
+    await waitFor(() => expect(w.queryByRole('alert')).toBeNull());
   });
 
   it('React calls render in Vue toaster and Vue confirm host', async () => {

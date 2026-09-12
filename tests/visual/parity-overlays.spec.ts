@@ -103,6 +103,7 @@ for (const framework of ['vue', 'react']) for (const layout of ['desktop', 'mobi
       await expect(region).toHaveAttribute('aria-live', 'polite');
       await expect(region.getByRole('status')).toHaveCount(3);
       await expect(region.getByRole('alert')).toHaveCount(1);
+      if (layout === 'mobile') await expect.poll(() => show.evaluate(element => element.matches(':hover'))).toBe(false);
       await region.getByRole('alert').click();
       await expect(region.getByRole('alert')).toHaveCount(0);
       await expect(region.getByRole('status')).toHaveCount(3);
