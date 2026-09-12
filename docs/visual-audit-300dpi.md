@@ -1,5 +1,8 @@
 # Individual figure review at 300 DPI
 
+This records the first 300 DPI audit. The subsequent [compact template revision](design-system.md#fit-the-available-space) changes spacing, fonts, corners and shadows; figure links show the current references.
+
+
 All 150 named states were reviewed individually, then rechecked after the source fixes on both macOS 27 and macOS 15 (300 PNGs). The review covered text, spacing, corners, edges, selection, clipping and material behavior. A matching screenshot alone is not design approval.
 
 Open each figure at full resolution. PNG density is 300 DPI, with 3.125 rendered pixels per CSS pixel. Both sets were captured natively; neither was enlarged from a lower-resolution image.

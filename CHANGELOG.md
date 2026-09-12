@@ -10,6 +10,10 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+- Compact design defaults: smaller panel/control corners, tighter insets and tables, a 224px sidebar, system UI shell typography, and softer glass edges/shadows.
+- Docs layout adapts to its available container width and removes the unused TOC track. Its root now includes `.lu-docs-frame`; update direct-child CSS selectors if needed.
+- Populated workspace references at laptop, desktop and mobile sizes, rendered at 300 DPI. Pointer-aware controls retain touch target size.
+
 - Refined smoke rims and backed thick overlays with an opaque reading surface;
   reduced transparency now also makes smoke opaque when contrast is increased.
 - Improved control boundaries, selected states, hints and product wordmarks;

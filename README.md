@@ -7,7 +7,7 @@
 
 Shared glass materials, interface components, and application chrome for Latere products. Build forms, navigation, dialogs, and documentation with one visual language in Vue, with a supported subset for React.
 
-![Glass surfaces, panels, a toolbar, and a data table in the light theme](tests/visual/goldens/darwin-27/vue-containers-light-desktop.png)
+![Compact workspace with navigation, toolbar, summary panels and projects](tests/visual/goldens/darwin-27/workspace-light-laptop.png)
 
 [Design guide](docs/design-system.md) · [Integration guide](docs/api-guide.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
 

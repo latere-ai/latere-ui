@@ -8,6 +8,7 @@ These documentation figures use macOS 27 and pinned Chromium. The [macOS 15 CI r
 
 | Sheet | Components | Light | Dark | Mobile |
 |---|---|---|---|---|
+| workspace | ConsoleSidebar, GlassBar, GlassPanel, GlassTable | [View](../tests/visual/goldens/darwin-27/vue-workspace-light-desktop.png) | [View](../tests/visual/goldens/darwin-27/vue-workspace-dark-desktop.png) | [Light](../tests/visual/goldens/darwin-27/vue-workspace-light-mobile.png) · [Dark](../tests/visual/goldens/darwin-27/vue-workspace-dark-mobile.png) |
 | buttons | GlassButton, GlassIconButton | [View](../tests/visual/goldens/darwin-27/vue-buttons-light-desktop.png) | [View](../tests/visual/goldens/darwin-27/vue-buttons-dark-desktop.png) | — |
 | forms | GlassField, GlassCheckbox, GlassRadio, GlassSwitch, GlassSegmented, GlassTabs | [View](../tests/visual/goldens/darwin-27/vue-forms-light-desktop.png) | [View](../tests/visual/goldens/darwin-27/vue-forms-dark-desktop.png) | [Light](../tests/visual/goldens/darwin-27/vue-forms-light-mobile.png) · [Dark](../tests/visual/goldens/darwin-27/vue-forms-dark-mobile.png) |
 | select | GlassSelect | [View](../tests/visual/goldens/darwin-27/vue-select-light-desktop.png) | [View](../tests/visual/goldens/darwin-27/vue-select-dark-desktop.png) | [Light](../tests/visual/goldens/darwin-27/vue-select-light-mobile.png) · [Dark](../tests/visual/goldens/darwin-27/vue-select-dark-mobile.png) |
@@ -87,5 +88,11 @@ Additional figures cover focus, hover, nested dialogs, keyboard selection, popov
 - [tooltip-reduced-transparency-light](../tests/visual/goldens/darwin-27/tooltip-reduced-transparency-light.png)
 - [vue-modal-nested-dark](../tests/visual/goldens/darwin-27/vue-modal-nested-dark.png)
 - [vue-modal-nested-light](../tests/visual/goldens/darwin-27/vue-modal-nested-light.png)
+- [workspace-dark-laptop-large](../tests/visual/goldens/darwin-27/workspace-dark-laptop-large.png)
+- [workspace-dark-laptop](../tests/visual/goldens/darwin-27/workspace-dark-laptop.png)
+- [workspace-dark-studio](../tests/visual/goldens/darwin-27/workspace-dark-studio.png)
+- [workspace-light-laptop-large](../tests/visual/goldens/darwin-27/workspace-light-laptop-large.png)
+- [workspace-light-laptop](../tests/visual/goldens/darwin-27/workspace-light-laptop.png)
+- [workspace-light-studio](../tests/visual/goldens/darwin-27/workspace-light-studio.png)
 
 Generated from [the fixture manifest](../tests/visual/manifest.ts) with `bun run visual:index`.

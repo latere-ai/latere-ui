@@ -4,6 +4,28 @@ Use the same material, spacing, and interface patterns across product surfaces. 
 
 ![Tokens feed materials, materials support components, and components compose a shell](figures/design-skeleton.svg)
 
+## Fit the available space
+
+The default template uses 14px panel corners, 18px window corners, and 8px fields and navigation rows. Panel padding is 16px; table cells use 8px vertical and 12px horizontal insets. Desktop controls are compact while coarse-pointer buttons and fields retain 44px targets. Use `--font-ui` to customize shell typography; the default is the platform system font. Generic controls inherit the host font, and product wordmarks retain their serif identity.
+
+![Compact workspace at 1280×720 CSS pixels](../tests/visual/goldens/darwin-27/workspace-light-laptop.png)
+
+[Dark laptop](../tests/visual/goldens/darwin-27/workspace-dark-laptop.png) · [1470px laptop](../tests/visual/goldens/darwin-27/workspace-light-laptop-large.png) · [2560px desktop](../tests/visual/goldens/darwin-27/workspace-light-studio.png) · [Mobile](../tests/visual/goldens/darwin-27/vue-workspace-light-mobile.png)
+
+Size layouts by the browser's available CSS pixels, rather than the monitor's physical resolution. A 224px console rail leaves more room for work on a laptop. Keep reading lines bounded on wide displays. `DocsLayout` responds to its own container: below 1080px the table of contents disappears, and below 720px navigation moves above the article. Setting `showToc` to false also removes its grid column.
+
+| Token | Default | Typical use |
+|---|---|---|
+| `--radius-xs` | 4px | Checkboxes and inline code |
+| `--radius-sm` | 6px | Menu rows |
+| `--radius-md` | 8px | Fields, navigation and tables |
+| `--radius-lg` | 14px | Panels and menus |
+| `--radius-xl` | 18px | Dialogs and sidebar |
+| `--radius-2xl` | 24px | Large outer frames |
+| `--radius-pill` | 999px | Buttons, badges and switches |
+
+The [Apple macOS reference](https://www.apple.com/os/macos/) informs the restrained chrome and readable material hierarchy. Our web implementation approximates the appearance through CSS blur, tint and light edges; it does not reproduce Apple's native Liquid Glass renderer.
+
 ## Start with the material
 
 Glass combines a translucent fill, backdrop blur, a highlighted edge, and a shadow. Its depth helps distinguish a control from a panel or an overlay. Product identity appears in wordmarks; controls use the shared ink palette.
@@ -60,7 +82,7 @@ Test effects over a recognizable backdrop so refraction is visible. Check both t
 
 ## Keep the figures reviewable
 
-Golden figures are committed PNGs from the browser fixtures, using fixed content, bundled fonts, and named viewport/theme combinations. They render at 3.125× the CSS layout size and carry 300 DPI metadata for clear enlarged and printed views. The design skeleton is SVG and scales without pixelation. Their filenames identify the framework, scenario, theme, and viewport. For example, `react-buttons-dark-desktop.png` shows the React button fixture in dark mode at the desktop size.
+Golden figures are committed PNGs from the browser fixtures, using fixed content, platform UI fonts with bundled brand/code fonts, and named viewport/theme combinations. They render at 3.125× the CSS layout size and carry 300 DPI metadata for clear enlarged and printed views. The design skeleton is SVG and scales without pixelation. Their filenames identify the framework, scenario, theme, and viewport. For example, `react-buttons-dark-desktop.png` shows the React button fixture in dark mode at the desktop size.
 
 The [reference index](visual-reference.md) maps components to their figures. The [review findings](visual-review.md) record corrected defects and coverage limits. Follow [Contributing](../CONTRIBUTING.md) to compare them, inspect a difference, and update a baseline only after reviewing the intended change.
 

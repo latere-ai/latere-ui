@@ -166,7 +166,7 @@ console reads as one coherent surface. This section covers the material
 foundation; the `Glass*` component library is layered on top.
 
 **v1.20 (Liquid Glass v2)** firms the recipe: a **five-step material ladder**,
-capsule geometry on a radii ladder, **ink as the only accent** (product colors
+compact rounded geometry on a radii ladder, **ink as the only accent** (product colors
 survive only as gradient wordmarks), and a layered floating-glass shadow. See
 [Liquid Glass v2 spec](../specs/liquid-glass-v2-v1.20.md). Migrating from v1.10.x: the `.lu-glass-clear`
 Clear tier and the `.lu-glass-dim` utility are removed (the `--glass-dim` modal
@@ -231,7 +231,7 @@ themes. Verify overrides against the background where your app uses them.
 import { useGlass, concentricRadius } from 'latere-ui';
 const { glassClass, reducedTransparency } = useGlass();
 // :class="glassClass('regular')" : reducedTransparency is a reactive ref
-// concentricRadius('8px') → calc(var(--glass-radius,22px) - 8px)
+// concentricRadius('8px') → calc(var(--glass-radius,14px) - 8px)
 ```
 
 Adoption requirements:
@@ -480,3 +480,11 @@ Liquid Glass change did.
 
 Vue is the primary target and gets every component. The React bindings cover a
 subset and grow as React consumers need them.
+
+### Compact layout defaults
+
+Import `latere-ui/tokens` for the 4/6/8/14/18/24px radius ladder and `--font-ui` system font. Component CSS includes matching radius fallbacks when the token entrypoint is omitted. Existing host token overrides take precedence. Panels now consume `--space-4` (16px fallback), and toolbars use `--space-1-5`/`--space-3` (6px/12px fallbacks).
+
+Glass buttons and icon buttons use `--lu-button-border` when provided; the default mixes 20% text color into transparent to keep the control boundary visible. Check custom borders in both themes and against the intended backdrop.
+
+`DocsLayout` has a `.lu-docs-frame` containment wrapper around `.lu-docs`. Size the component normally through its parent; the inner grid uses container queries at 1080px and 720px. Consumers with direct-child selectors should account for the new wrapper. The optional TOC contributes no column when `showToc=false`.
