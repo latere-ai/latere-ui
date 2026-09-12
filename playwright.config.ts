@@ -13,7 +13,7 @@ export default defineConfig({
   retries: 0,
   workers: 2,
   reporter: [['list'], ['html', { outputFolder: 'output/playwright/report', open: 'never' }]],
-  expect: { timeout: 15000, toHaveScreenshot: { animations: 'disabled', caret: 'hide', scale: 'device', maxDiffPixels: 0 } },
+  expect: { timeout: 15000, toHaveScreenshot: { animations: 'disabled', caret: 'hide', scale: 'device', threshold: 0, maxDiffPixels: 0 } },
   use: {
     browserName: 'chromium',
     viewport: { width: 1100, height: 850 },

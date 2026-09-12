@@ -40,7 +40,7 @@ for (const [design, recipe] of Object.entries(recipes)) for (const framework of 
     await secondary.focus();
     await expect(secondary).toHaveCSS('outline-style', 'solid');
     await expect(secondary).toHaveCSS('outline-color', recipe.accent[mode]);
-    await expect(page).toHaveScreenshot(`${design}-${framework}-buttons-states-${theme}.png`, { fullPage: true });
+    await expect(page).toMatchGolden(`${design}-${framework}-buttons-states-${theme}.png`, { fullPage: true });
 
     await visit(page, framework, 'forms', theme, `&design=${design}`);
     const input = page.locator('.lu-field-control').first();

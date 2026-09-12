@@ -11,7 +11,7 @@ for (const design of designs) for (const [framework, sheets] of Object.entries(d
         await prepare(page, framework, scenario);
         for (const name of components) await expect(page.locator(`[data-component="${name}"]`).first()).toBeVisible();
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'No page overflow').toBe(true);
-        await expect(page).toHaveScreenshot(`${design}-${framework}-${scenario}-${theme}-${layout}.png`, { fullPage: true });
+        await expect(page).toMatchGolden(`${design}-${framework}-${scenario}-${theme}-${layout}.png`, { fullPage: true });
       });
     }
   }
