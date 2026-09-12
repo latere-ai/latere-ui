@@ -12,6 +12,7 @@
       <feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#161c18" flood-opacity=".08"/>
     </filter>
     <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M1 1 6 4 1 7" fill="none" stroke="#838983" stroke-width="1.5"/></marker>
+    <clipPath id="shell-clip"><rect x="40" y="306" width="735" height="357" rx="18"/></clipPath>
   </defs>
   <style>
     text { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #171917; }
@@ -58,13 +59,11 @@
     <path d="M284 179h17"/><path d="M552 179h17"/><path d="M820 179h17"/>
   </g>
   <text x="40" y="285" class="eyebrow">A SCREEN BUILT FROM THESE LAYERS</text>
-  <rect x="40" y="306" width="735" height="357" rx="22" fill="url(#canvas)" stroke="#dce2dc"/>
-  <g filter="url(#shadow)">
-    <rect x="56" y="322" width="160" height="325" rx="18" fill="url(#glass)" stroke="#fff"/>
-  </g>
+  <rect x="40" y="306" width="735" height="357" rx="18" fill="url(#canvas)" stroke="#dce2dc"/>
+  <rect x="40" y="306" width="176" height="357" fill="url(#glass)" clip-path="url(#shell-clip)"/>
   <circle cx="82" cy="348" r="10" fill="#202620"/>
   <text x="100" y="353" font-size="15" font-weight="600">Workspace</text>
-  <rect x="70" y="377" width="132" height="29" rx="14" fill="#fff"/>
+  <rect x="70" y="377" width="132" height="29" rx="8" fill="#dfe5df"/>
   <text x="83" y="396" font-size="12" font-weight="600">Overview</text>
   <text x="83" y="435" class="small">Projects</text>
   <text x="83" y="473" class="small">Activity</text>
@@ -84,11 +83,11 @@
   <g stroke="#e5e9e4" stroke-width="7" stroke-linecap="round">
     <path d="M518 451h202"/><path d="M518 475h158"/><path d="M518 499h202"/>
   </g>
-  <rect x="243" y="611" width="505" height="30" rx="15" fill="url(#glass)" stroke="#fff"/>
+  <rect x="243" y="611" width="505" height="30" rx="8" fill="url(#glass)" stroke="#fff"/>
   <text x="259" y="630" font-size="11" fill="#646c65">Latere</text>
   <text x="450" y="630" font-size="11" fill="#646c65">Products · Help · Language · Theme</text>
   <g filter="url(#shadow)">
-    <rect x="397" y="445" width="326" height="142" rx="21" fill="#fcfdfb" fill-opacity=".98" stroke="#fff"/>
+    <rect x="397" y="445" width="326" height="142" rx="18" fill="#fcfdfb" fill-opacity=".98" stroke="#fff"/>
   </g>
   <text x="419" y="477" font-size="16" font-weight="600">Create project</text>
   <text x="419" y="503" class="small">A focused decision above the workspace.</text>
@@ -105,7 +104,7 @@
   <g transform="translate(808 329)">
     <text class="heading" x="0" y="0">Compose with purpose</text>
     <text x="0" y="37" font-size="14" font-weight="600">1  Sidebar</text>
-    <text x="0" y="60" class="body">Navigation and account context</text>
+    <text x="0" y="60" class="body">Integrated navigation and account</text>
     <text x="0" y="102" font-size="14" font-weight="600">2  Main content</text>
     <text x="0" y="125" class="body">A stable reading surface</text>
     <text x="0" y="167" font-size="14" font-weight="600">3  Overlay</text>
