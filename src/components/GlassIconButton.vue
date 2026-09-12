@@ -31,6 +31,7 @@ defineEmits<{ (e: 'click', ev: MouseEvent): void }>();
 
 <style scoped>
 .lu-iconbtn {
+  border-color: var(--lu-button-border, color-mix(in srgb, var(--text, #0a0a0a) 20%, transparent));
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -43,7 +44,7 @@ defineEmits<{ (e: 'click', ev: MouseEvent): void }>();
 .lu-iconbtn-md { width: 36px; height: 36px; }
 .lu-iconbtn-sm { width: 28px; height: 28px; }
 .lu-iconbtn:hover { color: var(--text, #0a0a0a); }
-.lu-iconbtn.is-pressed { color: var(--accent, #171717); }
+.lu-iconbtn.is-pressed { color: var(--accent, #171717); background: var(--accent-glow-strong, rgba(0, 0, 0, 0.15)); }
 .lu-iconbtn:disabled { opacity: 0.45; cursor: not-allowed; }
 .lu-iconbtn:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: 2px; }
 :slotted(svg) { width: 1.05em; height: 1.05em; }
