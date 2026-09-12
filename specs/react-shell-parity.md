@@ -1,6 +1,6 @@
 ---
 title: React shell and account parity
-status: drafted
+status: complete
 depends_on:
   - specs/react-basic-parity.md
 affects:
@@ -10,7 +10,7 @@ affects:
   - src/session/
 effort: medium
 created: 2026-09-12
-updated: 2026-09-12
+updated: 2026-09-13
 author: changkun
 dispatched_task_id: null
 ---
@@ -29,4 +29,8 @@ Adapters and shared logic are implemented in b46a540, b8612a0, a718f3e and 0cb22
 
 `src/react/shell.ts` exports the adapters and their types for the public entrypoint. React organization state uses `useOrgSwitcher` with plain values; latest-refresh results win and unmounted requests are ignored. DocsLayout memoizes its rendered HTML so outline updates preserve enhanced markup and generated IDs. Builder usage and slot mappings are in `docs/react-shell.md`.
 
-Focused unit tests cover keyboard/focus behavior, slot and prop updates, TOC observers, request races/errors, product collision placement and sidebar integration. Typecheck passes. Complete-matrix owns the remaining public entrypoint integration and cross-adapter browser/pixel verification; this spec remains open until that verification is complete.
+Focused unit tests cover keyboard/focus behavior, slot and prop updates, TOC observers, request races/errors, product collision placement and sidebar integration. Typecheck passes. Public entrypoint integration and cross-adapter browser/pixel verification are complete under the complete-matrix spec.
+
+## Outcome
+
+ConsolePalette, DocsLayout, AccountPrefs, ProductSwitcher and OrgSwitcher are available from the public React entrypoint, including sidebar product switching. [Browser shell tests](../tests/visual/parity-shell.spec.ts) verify navigation, selection and responsive interactions in both adapters. Every shell sheet has exact light/dark desktop/mobile figures under all four appearances. The [complete visual review](../docs/complete-visual-review.md) records both native platforms and source coverage.

@@ -1,6 +1,6 @@
 # latere-ui Specs
 
-Design specs for the shared Vue and framework-agnostic UI, auth, and session code used by the Latere product frontends.
+Design specs for the shared Vue, React and framework-agnostic UI, auth, and session code used by the Latere product frontends.
 
 ## Tree
 
@@ -52,7 +52,7 @@ specs/
 
 | Spec | Status | Deliverable |
 |---|---|---|
-| [React basic component parity](react-basic-parity.md) | In progress | React basic component parity |
-| [React overlay and service parity](react-overlay-parity.md) | In progress | React overlay and service parity |
-| [React shell and account parity](react-shell-parity.md) | In progress | React shell and account parity |
-| [Complete component visual matrix](complete-visual-matrix.md) | In progress | Complete component visual matrix |
+| [React basic component parity](react-basic-parity.md) | Complete | React basic component parity |
+| [React overlay and service parity](react-overlay-parity.md) | Complete | React overlay and service parity |
+| [React shell and account parity](react-shell-parity.md) | Complete | React shell and account parity |
+| [Complete component visual matrix](complete-visual-matrix.md) | Complete | Complete component visual matrix |

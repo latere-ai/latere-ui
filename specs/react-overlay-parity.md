@@ -1,6 +1,6 @@
 ---
 title: React overlay and service parity
-status: drafted
+status: complete
 depends_on:
   - specs/react-basic-parity.md
 affects:
@@ -9,7 +9,7 @@ affects:
   - src/styles/components/
 effort: medium
 created: 2026-09-12
-updated: 2026-09-12
+updated: 2026-09-13
 author: changkun
 dispatched_task_id: null
 ---
@@ -28,7 +28,7 @@ The six React overlays share the extracted Vue component stylesheets. `src/react
 
 `GlassPopover` supports internal trigger toggling or optional controlled `open` with `onOpenChange`/`onClose`; its trigger render function receives `{ open, toggle }` and its children render function receives `{ close }`. `GlassDrawer` uses controlled `open`/`onClose` and `header`/children in place of Vue slots. Tooltip, Menu, Toaster, and ConfirmHost preserve Vue markup and behavior.
 
-Verification: 61 unit/integration tests across nine focused files cover service snapshots, timers, FIFO promises, Vue/React interoperability, SSR, placements, menu states, drawer dismissal and focus restoration. The changed TypeScript adapters and cores reached 100% line coverage. Complete-matrix owns browser interactions, all-style captures, exact pixel comparison, and final spec completion.
+Verification: 61 unit/integration tests across nine focused files cover service snapshots, timers, FIFO promises, Vue/React interoperability, SSR, placements, menu states, drawer dismissal and focus restoration. The changed TypeScript adapters and cores reached 100% line coverage. Complete-matrix supplies the completed browser interactions, all-style captures and exact pixel comparison.
 
 ### Modal transition parity regression
 
@@ -43,3 +43,7 @@ Both adapters now return focus to the trigger when Escape or a selection closes 
 ### Toast transition parity regression
 
 Mobile paired captures exposed stale hover styling on the opener beneath React toasts. Vue's entering toast moves beneath the pointer and updates hit testing; the previous React host mounted notifications immediately, leaving the covered opener hovered. React now runs the shared toast enter/leave CSS lifecycle, retains departing items through exit, and renders pre-existing messages immediately when a host mounts, matching Vue's behavior. Browser tests assert that a mobile toast clears the opener's hover state. Exact light/dark desktop/mobile toast comparisons pass; transition lifecycle regressions fail before the fix and pass afterward.
+
+## Outcome
+
+The six overlay adapters and framework-free toast/confirm stores are integrated through the public React entrypoint. [Browser regressions](../tests/visual/parity-overlays.spec.ts) verify placement, dismissal, focus restoration and transition parity in both adapters; [toast dismissal](../tests/visual/toast-dismiss.spec.ts) also verifies keyboard access. All overlay figures match between adapters in every appearance, theme and viewport. The [complete visual review](../docs/complete-visual-review.md) records native baseline and coverage evidence.
