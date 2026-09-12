@@ -100,6 +100,7 @@ describe('liquid glass runtime', () => {
 
 describe('liquid glass updates', () => {
   let baseFilter: string;
+  let background: string;
   let width: number;
   let reducedMotion: boolean;
   let reducedTransparency: boolean;
@@ -110,6 +111,7 @@ describe('liquid glass updates', () => {
   beforeEach(() => {
     document.body.innerHTML = '';
     baseFilter = 'blur(24px) saturate(1.5)';
+    background = 'rgb(255,255,255)';
     width = 80;
     reducedMotion = false;
     reducedTransparency = false;
@@ -129,7 +131,7 @@ describe('liquid glass updates', () => {
     vi.stubGlobal('getComputedStyle', (el: HTMLElement) => ({
       backdropFilter: el.style.backdropFilter || baseFilter,
       borderTopLeftRadius: '22px',
-      backgroundColor: 'rgb(255,255,255)',
+      backgroundColor: background,
       position: 'relative',
     }));
     vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue({
@@ -179,6 +181,25 @@ describe('liquid glass updates', () => {
     refract(panel);
     sheen(panel);
     expect(panel.style.backdropFilter).toContain('url(');
+    expect(panel.querySelectorAll('[aria-hidden]')).toHaveLength(1);
+  });
+
+  it('refreshes a visible sheen intensity when the theme changes', () => {
+    vi.spyOn(panel, 'getBoundingClientRect').mockReturnValue({ left: 0, top: 0, width: 80, height: 40 } as DOMRect);
+    sheen(panel);
+    const highlight = panel.querySelector<HTMLElement>('[aria-hidden]')!;
+    // happy-dom does not parse radial gradients; capture the assigned CSS.
+    let gradient = '';
+    Object.defineProperty(highlight.style, 'background', {
+      get: () => gradient,
+      set: (value: string) => { gradient = value; },
+    });
+    panel.dispatchEvent(new MouseEvent('mousemove', { clientX: 40, clientY: 20 }));
+    expect(highlight.style.background).toContain('0.16');
+    background = 'rgb(24,24,24)';
+    sheen(panel);
+    expect(highlight.style.background).toContain('0.06');
+    expect(highlight.style.opacity).toBe('1');
     expect(panel.querySelectorAll('[aria-hidden]')).toHaveLength(1);
   });
 

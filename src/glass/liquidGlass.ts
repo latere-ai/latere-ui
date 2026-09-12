@@ -40,7 +40,7 @@ interface Refraction {
   signature: string;
 }
 const refractions = new Map<LGElement, Refraction>();
-const sheens = new Map<LGElement, () => void>();
+const sheens = new Map<LGElement, { cleanup: () => void; refresh: () => void }>();
 
 function restoreFilter(el: LGElement, state: Refraction): void {
   if (el.style.backdropFilter === state.applied) {
@@ -61,8 +61,8 @@ function pruneEffects(): void {
   refractions.forEach((_state, el) => {
     if (!el.isConnected) removeRefraction(el);
   });
-  sheens.forEach((cleanup, el) => {
-    if (!el.isConnected) cleanup();
+  sheens.forEach((state, el) => {
+    if (!el.isConnected) state.cleanup();
   });
 }
 
@@ -221,22 +221,26 @@ export function sheen(el: LGElement): void {
   if (typeof window === 'undefined' || typeof document === 'undefined') return;
   const attr = el.getAttribute('data-lg-sheen');
   if (prefersReduced('motion') || attr === null || attr === 'off') {
-    sheens.get(el)?.();
+    sheens.get(el)?.cleanup();
     return;
   }
   const cs = getComputedStyle(el);
   const bf = cs.backdropFilter || (cs as unknown as { webkitBackdropFilter?: string }).webkitBackdropFilter || 'none';
   if (bf === 'none') {
-    sheens.get(el)?.();
+    sheens.get(el)?.cleanup();
     return;
   }
-  if (el.__lgSheen) return;
+  if (el.__lgSheen) {
+    sheens.get(el)?.refresh();
+    return;
+  }
   el.__lgSheen = true;
-  let dark = false;
-  const bgc = cs.backgroundColor.match(/rgba?\((\d+)/);
-  if (bgc && parseInt(bgc[1], 10) < 128) dark = true;
   // Restrained peak + a tighter radius: a soft specular hint, not a spotlight.
-  const peak = dark ? 0.06 : 0.16;
+  const readPeak = () => {
+    const bgc = getComputedStyle(el).backgroundColor.match(/rgba?\((\d+)/);
+    return bgc && parseInt(bgc[1], 10) < 128 ? 0.06 : 0.16;
+  };
+  let peak = readPeak();
   const originalPosition = el.style.position;
   const positioned = cs.position === 'static';
   if (positioned) el.style.position = 'relative';
@@ -245,24 +249,35 @@ export function sheen(el: LGElement): void {
   s.style.cssText =
     'position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:0; transition:opacity 0.45s cubic-bezier(0.22,1,0.36,1); z-index:0;';
   el.appendChild(s);
-  const move = (e: MouseEvent) => {
-    const r = el.getBoundingClientRect();
-    const x = ((e.clientX - r.left) / r.width) * 100;
-    const y = ((e.clientY - r.top) / r.height) * 100;
+  let x = 50;
+  let y = 50;
+  const paint = () => {
     s.style.background =
       'radial-gradient(200px circle at ' + x + '% ' + y + '%, rgba(255,255,255,' + peak + '), rgba(255,255,255,0) 60%)';
+  };
+  const move = (e: MouseEvent) => {
+    const r = el.getBoundingClientRect();
+    x = ((e.clientX - r.left) / r.width) * 100;
+    y = ((e.clientY - r.top) / r.height) * 100;
+    paint();
     s.style.opacity = '1';
   };
   const leave = () => { s.style.opacity = '0'; };
   el.addEventListener('mousemove', move);
   el.addEventListener('mouseleave', leave);
-  sheens.set(el, () => {
-    el.removeEventListener('mousemove', move);
-    el.removeEventListener('mouseleave', leave);
-    s.remove();
-    if (positioned && el.style.position === 'relative') el.style.position = originalPosition;
-    delete el.__lgSheen;
-    sheens.delete(el);
+  sheens.set(el, {
+    refresh: () => {
+      peak = readPeak();
+      if (s.style.opacity === '1') paint();
+    },
+    cleanup: () => {
+      el.removeEventListener('mousemove', move);
+      el.removeEventListener('mouseleave', leave);
+      s.remove();
+      if (positioned && el.style.position === 'relative') el.style.position = originalPosition;
+      delete el.__lgSheen;
+      sheens.delete(el);
+    },
   });
 }
 
