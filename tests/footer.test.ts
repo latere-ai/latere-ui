@@ -5,12 +5,25 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { SiteFooter } from '../src';
 import { LATERE_PRODUCTS } from '../src/components/productSwitcher';
+import { en, zh, de } from '../src/i18n/footer';
 
 function render(props: Record<string, unknown> = {}) {
   return mount(SiteFooter, {
     props: { theme: 'auto', locale: 'en', ...props },
   });
 }
+
+describe('footer dictionaries', () => {
+  it.each(Object.entries({ zh, de }))('%s has the same keys as English', (_locale, dict) => {
+    expect(Object.keys(dict).sort()).toEqual(Object.keys(en).sort());
+  });
+
+  it.each(Object.entries({ en, zh, de }))('%s has no blank translations', (locale, dict) => {
+    for (const [key, value] of Object.entries(dict)) {
+      expect(value.trim(), `${locale}: ${key}`).not.toBe('');
+    }
+  });
+});
 
 describe('SiteFooter', () => {
   it('renders every product name and cross-product link', () => {
