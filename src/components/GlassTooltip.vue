@@ -25,7 +25,7 @@ withDefaults(defineProps<{
   padding: 5px 13px;
   border-radius: var(--radius-pill, 999px);
   font-size: var(--fs-micro, 12px);
-  background: var(--glass-smoke, rgba(10, 10, 10, 0.68));
+  background: var(--glass-smoke-strong, rgba(10, 10, 10, 0.82));
   color: var(--glass-smoke-ink, #fafafa);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
           backdrop-filter: blur(24px) saturate(180%);
@@ -43,6 +43,14 @@ withDefaults(defineProps<{
 .lu-tip-wrap:focus-within .lu-tip {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .lu-tip {
+    background: var(--text, #0a0a0a);
+    -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+  }
+  :global([data-theme="dark"]) .lu-tip { background: var(--text, #fafafa); }
 }
 @media (prefers-reduced-motion: reduce) { .lu-tip { transition: opacity 0.14s ease; } }
 </style>
