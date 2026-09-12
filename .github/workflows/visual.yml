@@ -15,7 +15,8 @@ jobs:
   verify:
     # Golden paths include the OS: do not compare a Linux render to a macOS PNG.
     runs-on: macos-15
-    timeout-minutes: 20
+    # 400 paired high-resolution captures plus behavioral/state regressions.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
