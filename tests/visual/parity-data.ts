@@ -1,4 +1,8 @@
 // Canonical content shared by the Vue and React visual galleries.
+export function effectCaptions(matte: boolean) {
+  return matte ? ['Matte surface · refraction off', 'Refraction opt-in · matte preset', 'Sheen opt-in · matte preset']
+    : ['Frosted glass · refraction off', 'Edge refraction · patterned backdrop', 'Pointer sheen · move across this surface'];
+}
 export const options = [{ value: 'daily', label: 'Daily' }, { value: 'weekly', label: 'Weekly' }, { value: 'monthly', label: 'Monthly' }];
 export const selectOptions = Array.from({ length: 20 }, (_, i) => ({ value: String(i), label: `Workspace ${String(i + 1).padStart(2, '0')}`, disabled: i === 1 }));
 export const nav = { groups: [{ label: 'Workspace', items: [{ id: 'overview', label: 'Overview', to: '#overview', icon: 'home' }, { id: 'jobs', label: 'Jobs', to: '#jobs', badge: 12 }, { id: 'live', label: 'Activity', to: '#activity', badge: 'live' as const }, { id: 'future', label: 'Coming soon', disabled: true }] }, { pin: 'bottom' as const, items: [{ id: 'settings', label: 'Settings', to: '#settings' }] }] };

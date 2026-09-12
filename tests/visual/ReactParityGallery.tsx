@@ -5,12 +5,13 @@ import { initLiquidGlass } from '../../src/react';
 import {
   options, selectOptions, nav, paletteNav, principal, locales, tiers, badgeTones,
   alertTones, menuItems, columns, rows, groups, article, createWorkspaceRows,
-  buttonSizes, buttonVariants, progressValues, brands, workspaceMetrics,
+  buttonSizes, buttonVariants, progressValues, brands, workspaceMetrics, effectCaptions,
 } from './parity-data';
 
 /** The same examples as VueGallery, rendered through actual React adapters. */
 function ReactParityGallery({ scenario }: { scenario: string }) {
   const params = new URLSearchParams(location.search);
+  const effectText = effectCaptions(!!document.documentElement.dataset.design);
   const currentProduct = params.get('currentProduct') ?? '';
   const showToc = params.get('showToc') !== 'false';
   const matchWidth = params.get('matchWidth') === 'true';
@@ -116,7 +117,7 @@ function ReactParityGallery({ scenario }: { scenario: string }) {
   if (scenario === 'organizations') return <div className="sample organization-demo" data-component="OrgSwitcher"><UI.OrgSwitcher state={orgState} header={<p className="sample-label">Switch workspace</p>} /></div>;
   if (scenario.startsWith('footer')) return <div data-component="SiteFooter"><UI.SiteFooter theme={theme} locale={locale} locales={locales} compact={scenario === 'footer-compact'} onThemeChange={setTheme} onLocaleChange={setLocale} /></div>;
   if (scenario === 'logo') return <div className="logo-stage row" data-component="LatereLogoMark"><UI.LatereLogoMark />{brands.map(brand => <span key={brand} className={`${brand}-brand`} style={{ fontSize: 28 }}>{brand}</span>)}</div>;
-  if (scenario === 'effects') return <div className="material-stage" data-component="GlassSurface"><UI.GlassButton onClick={() => initLiquidGlass()}>Refresh effects</UI.GlassButton><UI.GlassSurface className="effect-surface" data-lg-refract="off">Frosted glass · refraction off</UI.GlassSurface><UI.GlassSurface className="effect-surface" data-lg-refract="">Edge refraction · patterned backdrop</UI.GlassSurface><UI.GlassSurface className="effect-surface" data-lg-sheen="" data-lg-refract="off">Pointer sheen · move across this surface</UI.GlassSurface></div>;
+  if (scenario === 'effects') return <div className="material-stage" data-component="GlassSurface"><UI.GlassButton onClick={() => initLiquidGlass()}>Refresh effects</UI.GlassButton><UI.GlassSurface className="effect-surface" data-lg-refract="off">{effectText[0]}</UI.GlassSurface><UI.GlassSurface className="effect-surface" data-lg-refract="">{effectText[1]}</UI.GlassSurface><UI.GlassSurface className="effect-surface" data-lg-sheen="" data-lg-refract="off">{effectText[2]}</UI.GlassSurface></div>;
   return <div>Unknown scenario: {scenario}</div>;
 }
 
