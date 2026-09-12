@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 730" role="img" aria-labelledby="title description">
+  <title id="title">Latere UI design skeleton</title>
+  <desc id="description">Tokens define palette and geometry. Glass materials add fill, blur, edge, and shadow. Components provide controls, feedback, and overlays. Application shells arrange these into a sidebar, main content, dialog, and footer. The host owns content, routing, and preferences.</desc>
+  <defs>
+    <linearGradient id="canvas" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#eef2ef"/><stop offset="1" stop-color="#f5f3f0"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#ffffff" stop-opacity=".94"/><stop offset="1" stop-color="#ffffff" stop-opacity=".56"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#161c18" flood-opacity=".08"/>
+    </filter>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M1 1 6 4 1 7" fill="none" stroke="#838983" stroke-width="1.5"/></marker>
+  </defs>
+  <style>
+    text { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #171917; }
+    .eyebrow { font-size: 11px; font-weight: 650; letter-spacing: 2px; fill: #687268; }
+    .heading { font-size: 20px; font-weight: 600; }
+    .body { font-size: 14px; fill: #646c65; }
+    .small { font-size: 12px; fill: #646c65; }
+    .line { stroke: #dbe0db; stroke-width: 1; fill: none; }
+    .card { fill: #fff; stroke: #e2e6e1; }
+  </style>
+  <rect width="1120" height="730" rx="24" fill="#fafbf9"/>
+  <text x="40" y="44" class="eyebrow">LATERE UI / DESIGN SKELETON</text>
+  <text x="40" y="82" font-size="28" font-weight="600">From a shared palette to a complete screen</text>
+  <!-- Keep these layers aligned with src/styles, src/glass, src/components, and src/react. -->
+  <g transform="translate(40 112)">
+    <rect width="238" height="133" rx="16" class="card"/>
+    <text x="20" y="30" class="eyebrow">01 / FOUNDATION</text>
+    <text x="20" y="61" class="heading">Tokens</text>
+    <text x="20" y="87" class="body">Palette, radii, and focus</text>
+    <text x="20" y="110" class="small">Light and dark themes</text>
+  </g>
+  <g transform="translate(308 112)">
+    <rect width="238" height="133" rx="16" class="card"/>
+    <text x="20" y="30" class="eyebrow">02 / MATERIAL</text>
+    <text x="20" y="61" class="heading">Glass tiers</text>
+    <text x="20" y="87" class="body">Fill, blur, edge, and shadow</text>
+    <text x="20" y="110" class="small">Ultrathin through smoke</text>
+  </g>
+  <g transform="translate(576 112)">
+    <rect width="238" height="133" rx="16" class="card"/>
+    <text x="20" y="30" class="eyebrow">03 / INTERFACE</text>
+    <text x="20" y="61" class="heading">Components</text>
+    <text x="20" y="87" class="body">Controls, forms, feedback</text>
+    <text x="20" y="110" class="small">Overlays and data tables</text>
+  </g>
+  <g transform="translate(844 112)">
+    <rect width="236" height="133" rx="16" class="card"/>
+    <text x="20" y="30" class="eyebrow">04 / COMPOSITION</text>
+    <text x="20" y="61" class="heading">Shells</text>
+    <text x="20" y="87" class="body">Console, docs, and site</text>
+    <text x="20" y="110" class="small">Content and navigation</text>
+  </g>
+  <g stroke="#838983" stroke-width="1.5" marker-end="url(#arrow)">
+    <path d="M284 179h17"/><path d="M552 179h17"/><path d="M820 179h17"/>
+  </g>
+  <text x="40" y="285" class="eyebrow">A SCREEN BUILT FROM THESE LAYERS</text>
+  <rect x="40" y="306" width="735" height="357" rx="22" fill="url(#canvas)" stroke="#dce2dc"/>
+  <g filter="url(#shadow)">
+    <rect x="56" y="322" width="160" height="325" rx="18" fill="url(#glass)" stroke="#fff"/>
+  </g>
+  <circle cx="82" cy="348" r="10" fill="#202620"/>
+  <text x="100" y="353" font-size="15" font-weight="600">Workspace</text>
+  <rect x="70" y="377" width="132" height="29" rx="14" fill="#fff"/>
+  <text x="83" y="396" font-size="12" font-weight="600">Overview</text>
+  <text x="83" y="435" class="small">Projects</text>
+  <text x="83" y="473" class="small">Activity</text>
+  <path d="M70 590h132" class="line"/>
+  <circle cx="83" cy="619" r="10" fill="#e1e6e1"/>
+  <text x="101" y="623" class="small">Account</text>
+  <text x="244" y="353" font-size="18" font-weight="600">Project overview</text>
+  <text x="244" y="379" class="small">Your content stays in the main reading area.</text>
+  <rect x="243" y="400" width="238" height="195" rx="14" fill="#fff" stroke="#e3e7e2"/>
+  <text x="260" y="426" font-size="13" font-weight="600">Recent activity</text>
+  <g stroke="#e5e9e4" stroke-width="7" stroke-linecap="round">
+    <path d="M263 451h126"/><path d="M263 475h192"/><path d="M263 499h162"/>
+    <path d="M263 536h126"/><path d="M263 560h183"/>
+  </g>
+  <rect x="497" y="400" width="251" height="195" rx="14" fill="#fff" stroke="#e3e7e2"/>
+  <text x="515" y="426" font-size="13" font-weight="600">Projects</text>
+  <g stroke="#e5e9e4" stroke-width="7" stroke-linecap="round">
+    <path d="M518 451h202"/><path d="M518 475h158"/><path d="M518 499h202"/>
+  </g>
+  <rect x="243" y="611" width="505" height="30" rx="15" fill="url(#glass)" stroke="#fff"/>
+  <text x="259" y="630" font-size="11" fill="#646c65">Latere</text>
+  <text x="450" y="630" font-size="11" fill="#646c65">Products · Help · Language · Theme</text>
+  <g filter="url(#shadow)">
+    <rect x="397" y="445" width="326" height="142" rx="21" fill="#fcfdfb" fill-opacity=".98" stroke="#fff"/>
+  </g>
+  <text x="419" y="477" font-size="16" font-weight="600">Create project</text>
+  <text x="419" y="503" class="small">A focused decision above the workspace.</text>
+  <rect x="592" y="532" width="108" height="32" rx="16" fill="#202620"/>
+  <text x="618" y="553" font-size="12" style="fill:#fafbf9">Continue</text>
+  <g fill="#fff" stroke="#a2aba2">
+    <circle cx="203" cy="349" r="11"/><circle cx="747" cy="348" r="11"/>
+    <circle cx="722" cy="462" r="11"/><circle cx="748" cy="626" r="11"/>
+  </g>
+  <g font-size="11" font-weight="650" text-anchor="middle">
+    <text x="203" y="353">1</text><text x="747" y="352">2</text>
+    <text x="722" y="466">3</text><text x="748" y="630">4</text>
+  </g>
+  <g transform="translate(808 329)">
+    <text class="heading" x="0" y="0">Compose with purpose</text>
+    <text x="0" y="37" font-size="14" font-weight="600">1  Sidebar</text>
+    <text x="0" y="60" class="body">Navigation and account context</text>
+    <text x="0" y="102" font-size="14" font-weight="600">2  Main content</text>
+    <text x="0" y="125" class="body">A stable reading surface</text>
+    <text x="0" y="167" font-size="14" font-weight="600">3  Overlay</text>
+    <text x="0" y="190" class="body">Thick glass for focused tasks</text>
+    <text x="0" y="232" font-size="14" font-weight="600">4  Footer</text>
+    <text x="0" y="255" class="body">Links and reader preferences</text>
+    <text x="0" y="304" class="small">The host owns routing, content,</text>
+    <text x="0" y="323" class="small">and preference persistence.</text>
+  </g>
+  <text x="40" y="701" class="small">Schematic composition. Real component figures and their visual baselines live in tests/visual/goldens.</text>
+</svg>

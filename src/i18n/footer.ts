@@ -1,8 +1,8 @@
 // Self-contained dictionary for the shared footer. Mirrors the footer.* and
 // nav.cat.* keys from the marketing site so consuming apps need not provide them.
 //
-// `Locale` is an open string: the package bundles en + zh, and hosts can support
-// additional locales (e.g. de) by passing a `messages` override to the footer.
+// `Locale` is an open string: the package bundles en, zh and de. Hosts can
+// supply additional locales through the footer's `messages` overrides.
 export type Locale = string;
 
 type Dict = Record<string, string>;

@@ -1,8 +1,8 @@
 // React entrypoint (`latere-ui/react`). Source-shipped tsx, compiled by the
 // consuming React app exactly as Vue hosts compile the SFCs. Each component
-// imports its shared stylesheet from src/styles/components/*, so Vue and
-// React render pixel-identical output. Nothing in here may import `vue` —
-// react/react-dom are optional peers and vue stays Vue-side.
+// imports its shared stylesheet from src/styles/components/*; Vue and
+// React have separate visual baselines for adapter-specific markup. Nothing
+// here may import `vue`; react/react-dom are optional peers.
 
 export { GlassButton, type GlassButtonProps } from './GlassButton';
 export { GlassPanel, type GlassPanelProps } from './GlassPanel';
