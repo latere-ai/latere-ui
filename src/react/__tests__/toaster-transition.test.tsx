@@ -41,3 +41,21 @@ it('renders existing messages immediately when the host mounts and cancels work 
   view.unmount();
   expect(vi.getTimerCount()).toBe(0);
 });
+
+it('provides a native dismiss button and preserves sibling notification roles and click-anywhere dismissal', () => {
+  message.info('Saved', { duration: 0 });
+  message.error('Failed', { duration: 0 });
+  const view = render(<GlassToaster />);
+  const button = view.getByRole('status').querySelector<HTMLButtonElement>('button[aria-label="Dismiss notification"]');
+  expect(button).not.toBeNull();
+  expect(button!.type).toBe('button');
+  button!.focus();
+  expect(document.activeElement).toBe(button);
+  act(() => button!.click());
+  act(() => vi.advanceTimersByTime(233));
+  expect(view.queryByText('Saved')).toBeNull();
+  expect(view.getByRole('alert').textContent).toContain('Failed');
+  act(() => view.getByText('Failed').click());
+  act(() => vi.advanceTimersByTime(233));
+  expect(view.queryByRole('alert')).toBeNull();
+});

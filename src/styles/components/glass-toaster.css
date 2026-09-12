@@ -33,6 +33,23 @@
   background: var(--tone);
 }
 .lu-toast-text { min-width: 0; overflow-wrap: anywhere; font-size: var(--fs-body-sm, 13px); }
+.lu-toast-dismiss {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill, 999px);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.lu-toast-dismiss:hover { background: color-mix(in srgb, currentColor 8%, transparent); }
+.lu-toast-dismiss:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: 2px; }
 .lu-toast-enter-active, .lu-toast-leave-active { transition: opacity 0.2s ease, transform 0.2s ease; }
 .lu-toast-enter-from, .lu-toast-leave-to { opacity: 0; transform: translateY(-8px); }
 @media (prefers-reduced-motion: reduce) {

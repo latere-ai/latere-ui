@@ -117,6 +117,28 @@ describe('message() service', () => {
     dismissToast(toasts[0].id);
     w.unmount();
   });
+
+  it('provides a native dismiss button without changing notification roles or sibling messages', async () => {
+    const w = mount(GlassToaster, { attachTo: document.body });
+    try {
+      message.info('Saved', { duration: 0 });
+      message.error('Failed', { duration: 0 });
+      await nextTick();
+      const status = document.querySelector('[role="status"]')!;
+      const button = status.querySelector<HTMLButtonElement>('button[aria-label="Dismiss notification"]');
+      expect(button).not.toBeNull();
+      expect(button!.type).toBe('button');
+      button!.focus();
+      expect(document.activeElement).toBe(button);
+      button!.click();
+      await nextTick();
+      expect(toasts.map(toast => toast.text)).toEqual(['Failed']);
+      expect(document.querySelector('[role="alert"]')!.textContent).toContain('Failed');
+      (document.querySelector('.lu-toast-text') as HTMLElement).click();
+      await nextTick();
+      expect(toasts).toHaveLength(0);
+    } finally { w.unmount(); message.clear(); }
+  });
 });
 
 describe('confirm() service', () => {

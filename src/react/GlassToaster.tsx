@@ -28,6 +28,9 @@ function ToastRow({ entry, onExited }: { entry: ToastEntry; onExited: (id: numbe
   >
     <span className="lu-toast-bar" aria-hidden="true" />
     <span className="lu-toast-text">{toast.text}</span>
+    <button className="lu-toast-dismiss" type="button" aria-label="Dismiss notification" onClick={event => { event.stopPropagation(); dismissToast(toast.id); }}>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="m3 3 6 6M9 3 3 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+    </button>
   </div>;
 }
 
