@@ -7,6 +7,20 @@ import { GlassRadio } from '../GlassRadio';
 import { GlassTabs } from '../GlassTabs';
 
 describe('GlassIconButton', () => {
+  it('forwards popup semantics and caller styling without losing button classes', () => {
+    const { getByRole, rerender } = render(<GlassIconButton label="Products" aria-expanded={false}
+      aria-haspopup="menu" aria-controls="products" className="toolbar-action" style={{ margin: 4 }} />);
+    const button = getByRole('button', { name: 'Products' });
+    expect(button.getAttribute('aria-expanded')).toBe('false');
+    expect(button.getAttribute('aria-haspopup')).toBe('menu');
+    expect(button.getAttribute('aria-controls')).toBe('products');
+    expect(button.classList.contains('lu-iconbtn')).toBe(true);
+    expect(button.classList.contains('toolbar-action')).toBe(true);
+    expect(button.style.margin).toBe('4px');
+    rerender(<GlassIconButton label="Products" aria-expanded />);
+    expect(button.getAttribute('aria-expanded')).toBe('true');
+  });
+
   it('keeps label, icon and toggle state on a non-submitting button', () => {
     const click = vi.fn();
     const { getByRole, rerender } = render(<GlassIconButton label="Pin" onClick={click}><svg /></GlassIconButton>);
