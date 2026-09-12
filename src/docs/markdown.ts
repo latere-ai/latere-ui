@@ -12,7 +12,7 @@
 import type MarkdownIt from 'markdown-it';
 import type { Options as MarkdownItOptions } from 'markdown-it';
 
-import { headingSlugSource, slugify } from './toc';
+import { headingSlugSource, slugify } from './tocCore';
 
 export interface MarkdownConfig {
   /** markdown-it options, merged over the defaults (html+linkify on). */
