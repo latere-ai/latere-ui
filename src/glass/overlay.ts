@@ -2,21 +2,7 @@
 // a focus trap that also handles Escape and restores focus on close. Kept
 // framework-thin and SSR-safe (no-ops without `document`).
 import { watch, nextTick, onScopeDispose, type Ref } from 'vue';
-
-const FOCUSABLE = [
-  'a[href]',
-  'button:not([disabled])',
-  'input:not([disabled])',
-  'textarea:not([disabled])',
-  'select:not([disabled])',
-  '[tabindex]:not([tabindex="-1"])',
-].join(',');
-
-function focusable(container: HTMLElement): HTMLElement[] {
-  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
-    (el) => el.offsetParent !== null || el === document.activeElement,
-  );
-}
+import { activateFocusTrap } from './focusTrap';
 
 export interface FocusTrapOptions {
   /** Reactive open state; the trap engages while true. */
@@ -41,54 +27,26 @@ export interface FocusTrapOptions {
 export function useFocusTrap(opts: FocusTrapOptions): void {
   if (typeof document === 'undefined') return;
 
-  let previouslyFocused: HTMLElement | null = null;
-
-  function onKeydown(e: KeyboardEvent) {
-    if (!opts.active.value) return;
-    if (e.key === 'Escape') {
-      e.stopPropagation();
-      opts.onEscape?.();
-      return;
-    }
-    if (e.key !== 'Tab') return;
-    const el = opts.container.value;
-    if (!el) return;
-    const items = focusable(el);
-    if (items.length === 0) {
-      e.preventDefault();
-      return;
-    }
-    const first = items[0];
-    const last = items[items.length - 1];
-    const activeEl = document.activeElement as HTMLElement | null;
-    if (e.shiftKey && activeEl === first) {
-      e.preventDefault();
-      last.focus();
-    } else if (!e.shiftKey && activeEl === last) {
-      e.preventDefault();
-      first.focus();
-    }
-  }
+  let trap: ReturnType<typeof activateFocusTrap> | undefined;
 
   watch(
     () => opts.active.value,
     async (open) => {
       if (open) {
-        previouslyFocused = document.activeElement as HTMLElement | null;
-        document.addEventListener('keydown', onKeydown, true);
+        trap = activateFocusTrap(() => opts.container.value, opts.onEscape, () => opts.initialFocus?.value);
+        const openedTrap = trap;
         await nextTick();
-        const el = opts.container.value;
-        if (el) (opts.initialFocus?.value ?? focusable(el)[0] ?? el).focus();
+        if (opts.active.value && trap === openedTrap) trap.focus();
       } else {
-        document.removeEventListener('keydown', onKeydown, true);
-        previouslyFocused?.focus?.();
-        previouslyFocused = null;
+        trap?.dispose();
+        trap = undefined;
       }
     },
     { immediate: true },
   );
 
   onScopeDispose(() => {
-    document.removeEventListener('keydown', onKeydown, true);
+    trap?.dispose();
+    trap = undefined;
   });
 }
