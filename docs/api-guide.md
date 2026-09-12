@@ -210,6 +210,23 @@ The **five-step material ladder**: pick a tier by prominence, never decoration:
 `smoke` is near-solid ink glass; its label color is `--glass-smoke-ink` (flips
 per theme): never hardcode white on it.
 
+The thick tier composites its tint over `--glass-overlay-base` (default:
+`--bg-surface`) so background text cannot show through reading overlays.
+Reduced transparency makes every tier opaque, including smoke.
+
+Control colors can be customized without replacing component rules:
+
+| Custom property | Purpose |
+|---|---|
+| `--lu-control-border` | Resting control boundaries and selected-state inset edges. |
+| `--state-error-text` | Error messages and destructive menu text, separate from solid danger fills. |
+| `--state-neutral` | Neutral solid badge fill, independent of muted text colors. |
+| `--lu-switch-thumb` | Switch thumb fill. |
+| `--lu-switch-thumb-border` | Switch thumb inset edge. |
+
+Defaults are checked for readable text and distinct controls in both gallery
+themes. Verify overrides against the background where your app uses them.
+
 ```ts
 import { useGlass, concentricRadius } from 'latere-ui';
 const { glassClass, reducedTransparency } = useGlass();
@@ -463,4 +480,3 @@ Liquid Glass change did.
 
 Vue is the primary target and gets every component. The React bindings cover a
 subset and grow as React consumers need them.
-
