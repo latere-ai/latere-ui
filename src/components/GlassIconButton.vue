@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../styles/components/glass-icon-button.css';
 // A square, icon-only glass button for toolbars. Requires an accessible label.
 // Requires `import 'latere-ui/glass'`.
 withDefaults(defineProps<{
@@ -28,25 +29,3 @@ defineEmits<{ (e: 'click', ev: MouseEvent): void }>();
     <slot />
   </button>
 </template>
-
-<style scoped>
-.lu-iconbtn {
-  border-color: var(--lu-button-border, color-mix(in srgb, var(--text, #0a0a0a) 20%, transparent));
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-pill, 999px);
-  color: var(--text-secondary, #666);
-  cursor: pointer;
-  box-shadow: none;
-  transition: color 0.16s ease, background 0.16s ease;
-}
-.lu-iconbtn-md { width: 36px; height: 36px; }
-.lu-iconbtn-sm { width: 28px; height: 28px; }
-.lu-iconbtn:hover { color: var(--text, #0a0a0a); }
-.lu-iconbtn.is-pressed { color: var(--accent, #171717); background: var(--accent-glow-strong, rgba(0, 0, 0, 0.15)); }
-.lu-iconbtn:disabled { opacity: 0.45; cursor: not-allowed; }
-.lu-iconbtn:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: 2px; }
-:slotted(svg) { width: 1.05em; height: 1.05em; }
-@media (prefers-reduced-motion: reduce) { .lu-iconbtn { transition: none; } }
-</style>
