@@ -1,6 +1,6 @@
 # React console and account components
 
-Import the shell components from `latere-ui/react`. They use the same component styles and models as the Vue adapters. Import the layout and material styles once in your app:
+These APIs are available on unreleased `main`; v1.28.1 predates the complete shell adapters. Import the shell components from `latere-ui/react`. They use the same component styles and models as the Vue adapters. Import the layout and material styles once in your app:
 
 ```tsx
 import 'latere-ui/tokens';
@@ -12,6 +12,10 @@ import {
   ProductSwitcher, OrgSwitcher, useOrgSwitcher,
 } from 'latere-ui/react';
 ```
+
+The same components support default glass, Replichai, Wallfacer and Origo. To select a preset, import `latere-ui/presets` after these styles and set `data-design` on `<html>` before mounting. Set `data-theme` to `light` or `dark`; this also styles portals. Load the preset fonts through your application: Inter for Replichai/Wallfacer, IBM Plex Sans and Mono for Origo. See [appearance setup](design-system.md#keep-product-styling-explicit).
+
+The visual matrix includes every shell component in both frameworks, both themes and desktop/mobile. Canonical Vue and React examples must have identical decoded RGBA pixels, including antialiasing, before their references can be recorded. Behavior tests separately exercise the controls described below.
 
 ## Navigation and product switching
 

@@ -10,9 +10,13 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+- Complete the React visual component set: add surfaces, icon buttons, switches, radios, tabs, progress/skeleton feedback, tooltips, menus, popovers, drawers, toast/confirm hosts, command palette, documentation layout, preferences, product switching and organization selection. Restore the sidebar's optional product switcher.
+- Share toast/confirmation services and component styles across Vue and React. React controls use values and callbacks; `GlassRadio` uses `value` for the group selection and `optionValue` for each option.
+- Extend the visual matrix to every component in both adapters, all four appearances, light/dark and desktop/mobile. Require exact decoded RGBA equality between adapters and against platform goldens, with no channel or antialiasing tolerance; recording cannot bypass adapter parity.
+- Preserve organization owner-label spacing and handle text shaping in React account menus, and retain enhanced article content and heading anchors during React TOC updates.
+
 - Add opt-in Replichai, Wallfacer and Origo component appearances with distinct typography, density, matte materials and interaction states, plus dedicated light/dark and responsive golden figures.
 - Integrate the console rail with its window edge, remove the detached sidebar rim and use a flat selected-row fill, following the supplied macOS 27 reference.
-
 
 - Compact footer links wrap without clipped labels or underlined separators; desktop preferences share a compact height and preserve touch targets.
 - Sibling panels, toolbars and tables share a radius; nested toolbar controls derive smaller corners from the inset.

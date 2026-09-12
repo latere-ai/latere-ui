@@ -1,6 +1,6 @@
 # Integration guide
 
-Precise examples for footer preferences, console navigation, documentation, glass materials, and session bindings. Start with the [README](../README.md) for installation or the [design guide](design-system.md) for visual composition.
+Precise examples for footer preferences, console navigation, documentation, glass materials, and session bindings. This guide tracks unreleased `main`; v1.28.1 predates complete React coverage and the new appearances. Start with the [README](../README.md) for installation or the [design guide](design-system.md) for visual composition.
 
 ![Tokens, materials, components, and composed surfaces](figures/design-skeleton.svg)
 
@@ -188,7 +188,8 @@ survive only as gradient wordmarks), and a layered floating-glass shadow. See
 Clear tier and the `.lu-glass-dim` utility are removed (the `--glass-dim` modal
 scrim token stays); `.lu-glass-ultrathin` and `.lu-glass-smoke` are new; the
 `GlassTier` union is now `ultrathin | thin | regular | thick | smoke`; and
-`--accent` resolves to ink: drop any per-product chromatic accent.
+`--accent` resolves to ink for the default glass appearance. The optional presets
+provide their own action palettes; import them after the material styles.
 
 Import the material once, then set a canvas for glass to refract against:
 
@@ -280,7 +281,7 @@ JS, because no CSS primitive can displace the backdrop (it needs an SVG
 ```ts
 import { useLiquidGlass } from 'latere-ui';   // Vue
 useLiquidGlass({ watchSource: () => route.fullPath }); // re-scan on navigation
-// …or framework-free: import { initLiquidGlass } from 'latere-ui';
+// …or framework-free: import { initLiquidGlass } from 'latere-ui/react';
 //                     initLiquidGlass();  // call again after the DOM changes
 ```
 
@@ -320,6 +321,8 @@ reading surface when legibility must not depend on blur.
 
 ### Component library
 
+Every component below is available from `latere-ui` for Vue and `latere-ui/react` for React. Both adapters use the shared material and component styles.
+
 | Group | Components |
 |-------|-----------|
 | Surfaces | `GlassSurface`, `GlassPanel`, `GlassBar` |
@@ -328,6 +331,10 @@ reading surface when legibility must not depend on blur.
 | Feedback | `GlassBadge`, `GlassAlert`, `GlassSpinner`, `GlassProgress`, `GlassSkeleton`, `GlassTooltip` |
 | Overlays | `GlassModal`, `GlassDrawer`, `GlassPopover`, `GlassMenu` |
 | Data | `GlassTable` |
+| Service hosts | `GlassToaster`, `GlassConfirmHost` |
+| Shell and docs | `ConsoleSidebar`, `ConsolePalette`, `DocsLayout` |
+| Account | `AccountMenu`, `AccountPrefs`, `OrgSwitcher`, `ProductSwitcher` |
+| Site chrome | `SiteFooter`, `LatereLogoMark` |
 
 `GlassBadge` keeps glass labels in the text color and uses the dot for tone. Solid badges pair each default fill with contrasting ink. If you override a semantic fill, set its matching `--state-<tone>-ink` when needed and verify contrast in both themes.
 
@@ -342,19 +349,9 @@ if (await confirm({ message: 'Delete this sandbox?', danger: true })) { /* … *
 
 ## React
 
-Vue is the primary target, but a subset of the library: the twelve Glass
-primitives, the console shell, the site footer, and the session client: also
-ships as React bindings from `latere-ui/react`. Source-shipped `.tsx`, compiled by the host
-app exactly as Vue hosts compile the SFCs; both frameworks import the same
-`src/styles/components/*.css` sheets. Separate visual baselines verify each
-adapter; shared CSS does not guarantee identical rendering or interaction.
-`react` / `react-dom` are **optional peer dependencies**: install them
-yourself (`^18` or `^19`) if your app doesn't already have them; nothing in
-`latere-ui/react` imports `vue` or `pinia`.
+All 34 visual components ship from `latere-ui/react`, including controls, overlays, service hosts, console/account components and DocsLayout. The host compiles the source `.tsx`; React and Vue share component styles and framework-free logic. The visual suite compares matching examples by decoded RGBA pixels, with no channel or antialiasing tolerance, then compares each adapter to its platform baseline.
 
-```sh
-bun add github:latere-ai/latere-ui#v1.28.1 react react-dom
-```
+Install React 18 or 19 and React DOM in your application. They are optional peers of this package. The React entrypoint does not import Vue or Pinia at runtime. The install example in the [README](../README.md#install) pins the latest documented release; the complete adapters described here are on unreleased `main`.
 
 ### Session
 
@@ -421,38 +418,65 @@ function Rail() {
 }
 ```
 
-`routerLink` must forward `className`/`title`/`onClick`/`children` itself ,
+`routerLink` must forward `className`/`title`/`onClick`/`children` itself;
 React has no Vue-style attrs fallthrough onto a child component's root
 element; real router `Link` components already do this. Collapse is
 `collapsed`/`onCollapsedChange` (controlled) or uncontrolled if omitted.
-`product`/`productLabels` (the ProductSwitcher head integration) are not
-ported: use `brandExtra` for a custom head control.
+`product` and `productLabels` add the built-in ProductSwitcher to the expanded head. `brandExtra` accepts custom head content. See [React shell APIs](react-shell.md) for the palette, docs layout, preferences and organization state hook.
 
 ### Glass primitives
 
-`GlassButton, GlassPanel, GlassBar, GlassField, GlassBadge, GlassAlert,
-GlassSpinner, GlassSelect, GlassCheckbox, GlassTable, GlassModal,
-GlassSegmented`: same names and class output as the Vue components, `v-model`
-becomes `value`/`onChange`, slots become `children` or a render-prop function.
-Requires `import 'latere-ui/glass'` for the material CSS, same as Vue.
+All Glass components listed above are exported. Import `latere-ui/glass` for the material; components import their own shared styles. Controlled React components report proposed values through callbacks; the host must pass the new value back to update the control:
+
+| Component | Controlled props and callback |
+|---|---|
+| `GlassField` | `value` and `onChange(text)` |
+| `GlassCheckbox`, `GlassSwitch` | Boolean `value` and `onChange(checked)` |
+| `GlassSelect`, `GlassSegmented` | `value`, `options`, `onChange(value)`; `ariaLabel` names the group/control |
+| `GlassTabs` | `value`, `tabs`, `onChange(value)`; the host renders the active panel |
+| `GlassRadio` | Selected group `value`, option identity `optionValue`, shared `name`, `onChange(value)` |
+| `GlassModal`, `GlassDrawer`, `ConsolePalette` | `open` and `onClose()`; the host updates `open` |
+| `GlassPopover` | Optional `open` / `onOpenChange(open)`; omit `open` for internal state |
+| `GlassMenu` | `items` and `onSelect(value)`; disabled items cannot select |
+
+For radio groups, Vue's `modelValue` becomes React's `value`, while Vue's option `value` becomes React's `optionValue`:
 
 ```tsx
 import { useState } from 'react';
-import { GlassButton, GlassModal } from 'latere-ui/react';
-import 'latere-ui/glass';
+import { GlassRadio } from 'latere-ui/react';
 
-function Example() {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <GlassButton onClick={() => setOpen(true)}>Open</GlassButton>
-      <GlassModal open={open} title="Confirm" onClose={() => setOpen(false)}>
-        Body content.
-      </GlassModal>
-    </>
-  );
+function Schedule() {
+  const [frequency, setFrequency] = useState('daily');
+  return <>
+    <GlassRadio name="frequency" value={frequency} optionValue="daily"
+      label="Daily" onChange={setFrequency} />
+    <GlassRadio name="frequency" value={frequency} optionValue="weekly"
+      label="Weekly" onChange={setFrequency} />
+  </>;
 }
 ```
+
+### Overlays and services
+
+`GlassModal` and `GlassDrawer` portal to the document body, trap focus while open, and request closure through `onClose`. Their `header` prop replaces the default title; modal `footer` accepts a React node or `(close) => ReactNode`. Drawer `side` is `left` or `right` and `width` defaults to `20rem`.
+
+`GlassPopover` accepts a `trigger` node or `({ open, toggle }) => ReactNode`; its wrapper already toggles on click. Its content is `children` or `({ close }) => ReactNode`. Use `close` after handling a menu choice. `placement` accepts `bottom-start`, `bottom-end`, `top-start`, or `top-end`; `matchWidth` follows the trigger width. `GlassTooltip` wraps its trigger in `children` and takes `text` plus optional `placement="top" | "bottom"`.
+
+Mount one `GlassToaster` and one `GlassConfirmHost` near the application root:
+
+```tsx
+import { GlassToaster, GlassConfirmHost, message, confirm } from 'latere-ui/react';
+
+function FeedbackHosts() {
+  return <><GlassToaster /><GlassConfirmHost /></>;
+}
+
+const dismiss = message.success('Saved', { duration: 4000 });
+// dismiss() closes this toast; duration: 0 keeps it until dismissed.
+const approved = await confirm({ message: 'Delete this workspace?', danger: true });
+```
+
+Vue and React use the same framework-free message and confirmation stores. `message.info/success/warning/error` return a closer; `message.clear()` removes all toasts. `confirm()` queues requests and resolves `true` on confirmation or `false` on cancellation. Mount a single host for each service per application, using its framework adapter.
 
 ### Footer
 
@@ -480,10 +504,6 @@ the `--glass-*` set. If your app already has its own palette, alias them on
 `.site-footer` rather than importing `latere-ui/tokens`, which would redefine
 `--bg-*` for the whole page.
 
-Everything else in the library (Drawer, Toaster, Popover, DocsLayout,
-ProductSwitcher, ConsolePalette, …) is Vue-only for now: ported incrementally
-as React consumers need it.
-
 ## Status and stability
 
 The package ships source and is pinned by tag, so a consumer upgrades only when
@@ -493,8 +513,7 @@ signatures are the compatibility surface. A breaking change to any of them
 comes with a note in this guide's migration paragraphs, as the v1.10 to v1.20
 Liquid Glass change did.
 
-Vue is the primary target and gets every component. The React bindings cover a
-subset and grow as React consumers need them.
+Vue and React expose the same visual component set. Framework state bindings remain idiomatic: Vue refs and events, React values, hooks and callbacks. The full appearance matrix includes both frameworks at desktop and mobile sizes in light and dark themes; see the [visual reference](visual-reference.md).
 
 ### Compact layout defaults
 

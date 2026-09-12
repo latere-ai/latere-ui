@@ -1,6 +1,6 @@
 # A shared visual language
 
-Use the same material, spacing, and interface patterns across product surfaces. This guide helps builders choose a surface, compose a screen, and inspect its reference figure. For props and code examples, use the [integration guide](api-guide.md).
+Use the same material, spacing, and interface patterns across product surfaces. This guide helps builders choose a surface, compose a screen, and inspect its reference figure. For props and code examples, use the [integration guide](api-guide.md) or [React shell guide](react-shell.md). These docs describe unreleased `main`.
 
 ![Tokens feed materials, materials support components, and components compose a shell](figures/design-skeleton.svg)
 
@@ -36,7 +36,8 @@ Choose an importable appearance for the existing components:
 import 'latere-ui/tokens';
 import 'latere-ui/glass';
 import 'latere-ui/console'; // when using ConsoleSidebar
-import 'latere-ui/presets';
+import 'latere-ui/docs'; // when using DocsLayout
+import 'latere-ui/presets'; // after all shared/layout styles
 
 document.documentElement.dataset.design = 'origo';
 document.documentElement.dataset.theme = 'dark';
@@ -56,14 +57,14 @@ All three map the glass tiers to opaque surfaces and inverse emphasis. Product p
 
 For readable small controls, muted text uses accessible secondary colors, controls retain clear boundaries, and clay hover actions use dark ink. These are deliberate accessibility adaptations of the source styles. Coarse-pointer controls retain at least 44px targets. Both themes have dedicated figures and interaction checks.
 
-Supply Inter for Replichai/Wallfacer and IBM Plex Sans/Mono for Origo through your own font pipeline; the preset falls back to system faces if absent. The test gallery bundles local licensed faces, waits for them before mounting, and makes no font network requests. Override `--font-ui` and `--font-mono` after the preset if your application needs another family.
+Supply Inter for Replichai/Wallfacer and IBM Plex Sans/Mono for Origo through your own font pipeline; the preset falls back to system faces if absent. Stylesheets select font families but do not download them. Product wordmarks use Instrument Serif with serif fallbacks; load that face separately when you use those marks. The test gallery bundles local licensed faces, waits for them before mounting, and makes no font network requests. Override `--font-ui` and `--font-mono` after the preset if your application needs another family.
 
 | Replichai | Wallfacer | Origo |
 |---|---|---|
 | [![Replichai workspace](../tests/visual/goldens/darwin-27/replichai-vue-workspace-light-desktop.png)](../tests/visual/goldens/darwin-27/replichai-vue-workspace-light-desktop.png) | [![Wallfacer workspace](../tests/visual/goldens/darwin-27/wallfacer-vue-workspace-light-desktop.png)](../tests/visual/goldens/darwin-27/wallfacer-vue-workspace-light-desktop.png) | [![Origo workspace](../tests/visual/goldens/darwin-27/origo-vue-workspace-light-desktop.png)](../tests/visual/goldens/darwin-27/origo-vue-workspace-light-desktop.png) |
 | [Dark](../tests/visual/goldens/darwin-27/replichai-vue-workspace-dark-desktop.png) · [Forms](../tests/visual/goldens/darwin-27/replichai-vue-forms-light-desktop.png) | [Dark](../tests/visual/goldens/darwin-27/wallfacer-vue-workspace-dark-desktop.png) · [Forms](../tests/visual/goldens/darwin-27/wallfacer-vue-forms-light-desktop.png) | [Dark](../tests/visual/goldens/darwin-27/origo-vue-workspace-dark-desktop.png) · [Forms](../tests/visual/goldens/darwin-27/origo-vue-forms-light-desktop.png) |
 
-Open the figures at full size or use the [complete per-style component index](visual-reference.md#product-style-variations). Run `bun run visual:dev` to explore their live gallery links.
+The appearance matrix renders every component in Vue and React, in desktop/light, desktop/dark, mobile/light and mobile/dark. Open the figures at full size or use the [complete per-style component index](visual-reference.md#product-style-variations). Run `bun run visual:dev` to explore their live gallery links.
 
 ## Start with the material
 
@@ -113,7 +114,7 @@ Footer language and theme choices belong to the host's preferences. Supply the l
 
 ## Add optical effects deliberately
 
-The CSS material works without JavaScript. The optional Liquid Glass runtime adds edge refraction where the browser supports it and a cursor-following sheen on opted-in surfaces. Use sheen on a deliberate feature panel, where pointer movement helps explain the surface.
+The CSS material works without JavaScript. The optional Liquid Glass runtime adds edge refraction where the browser supports it and a cursor-following sheen on opted-in surfaces. React exports `initLiquidGlass`, `refract` and `sheen`; Vue also provides its lifecycle composable. Use sheen on a deliberate feature panel, where pointer movement helps explain the surface.
 
 ![Glass refraction and sheen fixture in the light theme](../tests/visual/goldens/darwin-27/vue-effects-light-desktop.png)
 
@@ -127,4 +128,4 @@ The [reference index](visual-reference.md) maps components to their figures. The
 
 The [compact template review](compact-design-review.md) records the latest spacing, control and responsive-layout corrections.
 
-Shared styles keep Vue and React aligned; each adapter has its own baseline. A screenshot verifies appearance at one point in a scenario. Interaction tests verify what happens when a reader types, selects, opens, dismisses, or navigates.
+Shared styles define the appearance for both adapters. Canonical examples must match every decoded RGBA pixel across Vue and React before either adapter baseline is accepted; no channel differences or antialiased pixels are ignored. Baselines remain separate by framework and rendering platform. A screenshot verifies appearance at one point in a scenario. Interaction tests verify what happens when a reader types, selects, opens, dismisses, or navigates.

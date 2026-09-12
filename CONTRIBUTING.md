@@ -37,7 +37,7 @@ bun run visual:dev
 ```
 
 Open <http://127.0.0.1:4173>. Choose an appearance, framework, component sheet, and theme.
-Each page mounts source components with local fonts and fixed sample content.
+Each page mounts source components with local fonts and fixed sample content. Canonical comparisons use `VueGallery.vue` and `ReactParityGallery.tsx`, with fixture data shared in `parity-data.ts`; the `parity=1` query selects those React examples.
 The gallery is a development fixture; it is not included in the published package.
 
 ## Compare visual references
@@ -53,7 +53,7 @@ Expected PNGs live in `tests/visual/goldens/<platform>/`. macOS paths include
 its Darwin major: `darwin-24` for macOS 15 (CI), `darwin-27` for macOS 27 (the
 local documentation figures). Chromium is installed by the pinned Playwright
 version. CoreText and blur rendering can differ between macOS releases, so
-these references remain separate and comparisons allow zero differing pixels.
+these references remain separate. Comparisons decode PNGs and require equal dimensions and every RGBA channel to match exactly. There is no channel threshold, antialiasing exclusion, pixel allowance, mask, or adapter-specific tolerance; PNG compression differences do not count as visual changes.
 The viewport is 1100 × 850 for default desktop sheets (1280 × 850 for three-column docs
 and product appearances) and 390 × 844 for mobile in CSS pixels. Captures render at 3.125×
 (300/96), retain device pixels, and store 300 DPI PNG metadata. A standard
@@ -63,7 +63,10 @@ Fonts are bundled locally;
 media preferences are explicit, with dedicated accessibility scenarios.
 No backend, remote images, or web font service is needed.
 
-Playwright compares stable screenshots with animations disabled for capture.
+Each capture must settle to two identical decoded RGBA images, with animations disabled and the text caret hidden. For every scenario, the suite compares Vue directly with React before checking either committed golden. Explicit recording cannot bypass this adapter parity check.
+
+The matrix includes every public visual component in both frameworks, all four appearances (default, Replichai, Wallfacer and Origo), desktop/mobile, and light/dark. Fixed logos, headless organization lists, collapsed sidebars and optical-effects examples also participate; a preset may intentionally leave a fixed identity unchanged.
+
 Normal verification also checks the 300 DPI metadata without modifying files.
 Explicit updates stamp density after capture; they never enlarge old pixels.
 Separate interaction tests check focus, keyboard navigation, scrolling, and
@@ -80,15 +83,15 @@ CI uploads that folder on failure. Push and pull-request checks never regenerate
 
 ```sh
 # Narrow the update to the component you changed.
-bun run test:visual:update --grep 'vue buttons'
+bun run test:visual:update --grep 'parity default buttons '
 # Then compare the result without update mode.
-bun run test:visual --grep 'vue buttons'
+bun run test:visual --grep 'parity default buttons '
 # Review a specific appearance in both adapters and themes.
-bun run test:visual:update --grep 'origo .* forms'
-bun run test:visual --grep 'origo .* forms'
+bun run test:visual:update --grep 'parity origo forms '
+bun run test:visual --grep 'parity origo forms '
 ```
 
-Review each changed PNG individually in both themes and relevant mobile states.
+Review each changed PNG individually in both themes and both layouts for every affected appearance and adapter.
 Inspect the full composition and native-size details: corner clearance, text
 insets, border weight, contrast, active/disabled states, clipping and overlay
 occlusion. A matching screenshot proves consistency, not design quality. Record
@@ -110,14 +113,21 @@ the subsequent push must pass comparison without update mode.
 
 ## Add a component or state
 
-1. Add a real Vue or React example in `tests/visual/VueGallery.vue` or
-   `tests/visual/ReactGallery.tsx`.
-2. Register its export in `tests/visual/manifest.ts`. The unit inventory test
-   fails when a new public UI component has no scenario.
-3. Add representative states and browser interactions. Include open overlays,
-   disabled/error states, keyboard focus, and narrow layouts where relevant.
-4. Generate and inspect its figures, rerun comparisons, and update the
-   [design guide](docs/design-system.md) or [reference index](docs/visual-reference.md).
+1. Add equivalent source-component examples to `tests/visual/VueGallery.vue` and
+   `tests/visual/ReactParityGallery.tsx`. Share data in `parity-data.ts`; preserve
+   equivalent DOM, whitespace and content so the pixel comparison is meaningful.
+2. Register the public export in `tests/visual/manifest.ts`. The inventory test
+   requires a scenario; `design-manifest.ts` applies the same set to every appearance
+   and mobile layout without exclusions.
+3. Add representative states and browser interactions for both adapters. Include
+   open overlays, disabled/error states, keyboard focus and narrow layouts. The
+   shell behavior suite is `tests/visual/parity-shell.spec.ts`.
+4. Resolve any Vue/React pixel differences in source or canonical fixture content
+   before recording. Investigate font loading, inline text shaping, dimensions
+   and compositing; keep the zero-tolerance comparison intact.
+5. Generate and inspect the figures, rerun comparisons, and update the
+   [design guide](docs/design-system.md). Run `bun run visual:index` to regenerate
+   the [reference index](docs/visual-reference.md); do not hand-edit its tables.
 
 See [Playwright's visual comparison guide](https://playwright.dev/docs/test-snapshots)
 for how stable screenshots and platform-specific rendering work.

@@ -5,7 +5,7 @@
 [![Vue 3.5+](https://img.shields.io/badge/vue-3.5%2B-42b883.svg)](https://vuejs.org/)
 [![React 18 or 19](https://img.shields.io/badge/react-18%20%7C%2019-61dafb.svg)](https://react.dev/)
 
-Shared glass materials, interface components, and application chrome with product-neutral defaults. Build forms, navigation, dialogs, and documentation in Vue or the supported React subset. Choose default glass or the matte Replichai, Wallfacer and Origo appearances.
+Shared glass materials, interface components, and application chrome with product-neutral defaults. Build forms, navigation, dialogs, and documentation in Vue or React. Choose default glass or the matte Replichai, Wallfacer and Origo appearances.
 
 ![Compact workspace with navigation, toolbar, summary panels and projects](tests/visual/goldens/darwin-27/workspace-light-laptop.png)
 
@@ -23,14 +23,14 @@ Import `latere-ui/presets` after the shared styles and set `data-design="replich
 
 | Surface | Included | Framework |
 |---|---|---|
-| Controls and forms | Buttons, fields, choices, tabs, status, and tables | Vue; [React subset](docs/api-guide.md#glass-primitives) |
-| Overlays | Dialogs, drawers, popovers, menus, tooltips, toasts, and confirms | Vue; modal in React |
-| Console | Grouped navigation, collapsible sidebar, account menu, command palette | Vue; sidebar and account menu in React |
-| Documentation | Grouped index, article, table of contents, previous/next navigation | Vue |
+| Controls and forms | Buttons, fields, choices, tabs, status, and tables | Vue and React |
+| Overlays | Dialogs, drawers, popovers, menus, tooltips, toasts, and confirms | Vue and React |
+| Console | Grouped navigation, collapsible sidebar, account menu, command palette | Vue and React |
+| Documentation | Grouped index, article, table of contents, previous/next navigation | Vue and React |
 | Site chrome | Full and compact footer, theme and language controls, logo | Vue and React |
 | Session | API client, account resolution, organization switching, session bindings | Vue and React |
 
-The package ships `.vue`, `.tsx`, `.ts`, and `.css` source. Your application compiles it with its own toolchain. Vue has the complete component set; React exports are listed in [src/react/index.ts](src/react/index.ts).
+The package ships `.vue`, `.tsx`, `.ts`, and `.css` source. Your application compiles it with its own toolchain. Both adapters expose all 34 visual components. React imports come from [latere-ui/react](src/react/index.ts); the [API guide](docs/api-guide.md#react) explains controlled values and callbacks.
 
 ## Install
 
@@ -40,7 +40,7 @@ Pin a GitHub release tag:
 bun add github:latere-ai/latere-ui#v1.28.1
 ```
 
-These docs and figures track `main`. The compact template, integrated sidebar and product presets are currently unreleased; v1.28.1 retains the earlier geometry. See [Unreleased changes](CHANGELOG.md#unreleased) before adopting `main`.
+These docs and figures track `main`. Complete React component coverage, the compact template, integrated sidebar and product presets are currently unreleased; v1.28.1 predates these additions. See [Unreleased changes](CHANGELOG.md#unreleased) before adopting `main`.
 
 Use Vue 3.5+ with your Vue compiler, or React 18/19 with your React toolchain. React applications import `latere-ui/react`. For server rendering with Vite, include `ssr: { noExternal: ['latere-ui'] }` so the package source is compiled for the server too.
 
@@ -113,13 +113,18 @@ Use regular glass for panels and navigation, thick glass for readable overlays, 
 | `latere-ui/brand` | Product wordmark gradients |
 | `latere-ui/markdown` | Markdown helpers with TOC-compatible heading IDs |
 
-For exact props, events, router integration, footer locales, and session setup, see the [integration guide](docs/api-guide.md). English, Chinese, and German footer dictionaries are bundled; the default language dropdown offers English and Chinese.
+For exact props, events, router integration, footer locales, and session setup, see the [integration guide](docs/api-guide.md) and [React shell examples](docs/react-shell.md). English, Chinese, and German footer dictionaries are bundled; the default language dropdown offers English and Chinese.
 
 ## Review the visuals
 
 ![Button variants, sizes, disabled states, and loading states](tests/visual/goldens/darwin-27/vue-buttons-light-desktop.png)
 
-The repository keeps 300 DPI golden PNGs of real components in light and dark themes, rendered at 3.125× resolution for clear enlarged views. Desktop figures cover each visual export; selected mobile figures cover responsive layouts. Vue and React have separate baselines against the shared styles.
+The repository keeps 300 DPI golden PNGs of real components in light and dark themes, rendered at 3.125× resolution for clear enlarged views. The matrix includes every visual component in desktop/light, desktop/dark, mobile/light and mobile/dark for default glass, Replichai, Wallfacer and Origo, in both adapters. Matching Vue and React examples must have identical decoded RGBA pixels before either baseline can be recorded. Comparisons allow no channel or antialiasing tolerance.
+
+| Workspace references | Vue | React |
+|---|---|---|
+| Desktop | [Light](tests/visual/goldens/darwin-27/vue-workspace-light-desktop.png) · [Dark](tests/visual/goldens/darwin-27/vue-workspace-dark-desktop.png) | [Light](tests/visual/goldens/darwin-27/react-workspace-light-desktop.png) · [Dark](tests/visual/goldens/darwin-27/react-workspace-dark-desktop.png) |
+| Mobile | [Light](tests/visual/goldens/darwin-27/vue-workspace-light-mobile.png) · [Dark](tests/visual/goldens/darwin-27/vue-workspace-dark-mobile.png) | [Light](tests/visual/goldens/darwin-27/react-workspace-light-mobile.png) · [Dark](tests/visual/goldens/darwin-27/react-workspace-dark-mobile.png) |
 
 Use the [visual reference index](docs/visual-reference.md) to find a component and browse its golden figures, and follow [Contributing](CONTRIBUTING.md) to run comparisons or review an intentional update. The figures show fixed test content and rendering conditions; they complement interaction tests.
 
