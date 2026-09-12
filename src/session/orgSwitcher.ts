@@ -13,32 +13,8 @@ import { computed, ref, type ComputedRef, type Ref } from 'vue';
 
 import type { OrgEntry } from './types';
 
-/** A single item the switcher renders. */
-export interface OrgSwitcherItem {
-  /** Org id; empty string for the personal context. */
-  id: string;
-  /** Display name. */
-  name: string;
-  /** Optional slug for URL-style displays. */
-  slug?: string;
-  /** True for the currently-active row. */
-  active: boolean;
-  /** Carried through from OrgEntry for badge rendering. */
-  owner?: boolean;
-}
-
-export interface OrgSwitcherDeps {
-  /** Fetch the principal's orgs. Defaults to `orgs(client)` in callers. */
-  getOrgs: () => Promise<OrgEntry[]>;
-  /** Returns the currently-active org id. */
-  getCurrentOrgID: () => string | undefined;
-  /** Switch to the chosen org. Empty string switches to Personal. */
-  switchOrg: (orgID: string) => Promise<void>;
-  /** Label rendered for the Personal row. Default: `'Personal'`. */
-  personalLabel?: string;
-  /** If true, fetch orgs eagerly during construction. Default: `false`. */
-  eager?: boolean;
-}
+import { orgSwitcherItems, orgSwitcherLabel, type OrgSwitcherDeps, type OrgSwitcherItem } from './orgSwitcherModel';
+export type { OrgSwitcherDeps, OrgSwitcherItem } from './orgSwitcherModel';
 
 export interface OrgSwitcherState {
   items: ComputedRef<OrgSwitcherItem[]>;
@@ -74,29 +50,8 @@ export function createOrgSwitcher(deps: OrgSwitcherDeps): OrgSwitcherState {
     void refresh();
   }
 
-  const items = computed<OrgSwitcherItem[]>(() => {
-    const current = deps.getCurrentOrgID() ?? '';
-    const out: OrgSwitcherItem[] = [
-      { id: '', name: personalLabel, active: current === '' },
-    ];
-    for (const o of list.value) {
-      out.push({
-        id: o.id,
-        name: o.name,
-        slug: o.slug,
-        owner: o.owner,
-        active: current === o.id,
-      });
-    }
-    return out;
-  });
-
-  const currentLabel = computed(() => {
-    const current = deps.getCurrentOrgID() ?? '';
-    if (current === '') return personalLabel;
-    const hit = list.value.find((o) => o.id === current);
-    return hit?.name ?? current;
-  });
+  const items = computed<OrgSwitcherItem[]>(() => orgSwitcherItems(list.value, deps.getCurrentOrgID() ?? '', personalLabel));
+  const currentLabel = computed(() => orgSwitcherLabel(list.value, deps.getCurrentOrgID() ?? '', personalLabel));
 
   return {
     items,
