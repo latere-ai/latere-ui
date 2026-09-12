@@ -51,7 +51,8 @@ const panelClass = computed(() => `lu-pop-panel--${props.placement}`);
   padding: 6px;
   border-radius: var(--radius-md, 16px);
 }
-.lu-pop-panel--match { min-width: 100%; }
+.lu-pop-panel--match { box-sizing: border-box; width: 100%; min-width: 0; overflow-wrap: anywhere; }
+.lu-pop-panel--match :deep(.lu-menu) { min-width: 0; }
 .lu-pop-panel--bottom-start { top: calc(100% + 6px); left: 0; }
 .lu-pop-panel--bottom-end   { top: calc(100% + 6px); right: 0; }
 .lu-pop-panel--top-start    { bottom: calc(100% + 6px); left: 0; }

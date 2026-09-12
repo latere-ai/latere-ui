@@ -42,6 +42,8 @@ const TONE_VAR: Record<MessageTone, string> = {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: max-content;
+  max-width: calc(100vw - 32px);
   pointer-events: none;
 }
 .lu-toast {
@@ -49,8 +51,9 @@ const TONE_VAR: Record<MessageTone, string> = {
   display: flex;
   align-items: center;
   gap: 10px;
-  min-width: 220px;
-  max-width: 420px;
+  box-sizing: border-box;
+  min-width: min(220px, calc(100vw - 32px));
+  max-width: min(420px, calc(100vw - 32px));
   padding: 10px 14px;
   border-radius: var(--radius-pill, 999px);
   cursor: pointer;
@@ -64,7 +67,7 @@ const TONE_VAR: Record<MessageTone, string> = {
   border-radius: 50%;
   background: var(--tone);
 }
-.lu-toast-text { font-size: var(--fs-body-sm, 13px); }
+.lu-toast-text { min-width: 0; overflow-wrap: anywhere; font-size: var(--fs-body-sm, 13px); }
 .lu-toast-enter-active, .lu-toast-leave-active { transition: opacity 0.2s ease, transform 0.2s ease; }
 .lu-toast-enter-from, .lu-toast-leave-to { opacity: 0; transform: translateY(-8px); }
 @media (prefers-reduced-motion: reduce) {

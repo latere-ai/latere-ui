@@ -15,7 +15,7 @@
 // Escape / outside click close via useClickOutside, tiles are keyboard
 // reachable in tab order, z-layering rides the --lu-z ladder. Requires
 // `import 'latere-ui/glass'` (for the trigger button material).
-import { computed, nextTick, ref } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 
 import GlassIconButton from './GlassIconButton.vue';
 import { useClickOutside } from '../composables/useClickOutside';
@@ -62,6 +62,8 @@ useClickOutside(root, () => open.value, close);
 // flip alignment/side only when the default would clip AND the flip fits.
 const side = ref<'bottom' | 'top'>('bottom');
 const align = ref<'start' | 'end'>('start');
+const shiftX = ref(0);
+const shiftY = ref(0);
 const MARGIN = 8; // gap to the trigger and minimum inset from the viewport
 
 function reposition() {
@@ -74,7 +76,24 @@ function reposition() {
   const bottomClips = anchor.bottom + MARGIN + pane.height > window.innerHeight - MARGIN;
   const topFits = anchor.top - MARGIN - pane.height >= MARGIN;
   side.value = bottomClips && topFits ? 'top' : 'bottom';
+  // When neither alignment fits (e.g. a centered mobile trigger), shift the
+  // preferred placement into the viewport. CSS caps oversized panels first.
+  const left = align.value === 'end' ? anchor.right - pane.width : anchor.left;
+  const top = side.value === 'top' ? anchor.top - MARGIN - pane.height : anchor.bottom + MARGIN;
+  shiftX.value = Math.max(MARGIN, Math.min(left, window.innerWidth - MARGIN - pane.width)) - left;
+  shiftY.value = Math.max(MARGIN, Math.min(top, window.innerHeight - MARGIN - pane.height)) - top;
 }
+
+watch(open, (isOpen, _previous, onCleanup) => {
+  if (!isOpen) return;
+  window.addEventListener('resize', reposition);
+  // Capture scrolling inside host containers as well as the document.
+  window.addEventListener('scroll', reposition, true);
+  onCleanup(() => {
+    window.removeEventListener('resize', reposition);
+    window.removeEventListener('scroll', reposition, true);
+  });
+});
 
 async function toggle() {
   open.value = !open.value;
@@ -83,6 +102,8 @@ async function toggle() {
     // bottom/start placement, so there is no flash of a wrong position.
     side.value = 'bottom';
     align.value = 'start';
+    shiftX.value = 0;
+    shiftY.value = 0;
     await nextTick();
     reposition();
   }
@@ -114,6 +135,7 @@ function close() {
         class="lu-ps-panel"
         :data-side="side"
         :data-align="align"
+        :style="{ '--lu-ps-shift-x': `${shiftX}px`, '--lu-ps-shift-y': `${shiftY}px` }"
       >
         <nav class="lu-ps-grid" :aria-label="t.products">
           <template v-for="p in products" :key="p.slug">
@@ -142,6 +164,12 @@ function close() {
 }
 .lu-ps-panel {
   position: absolute;
+  box-sizing: border-box;
+  max-width: calc(100vw - 16px);
+  max-height: calc(100vh - 16px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  translate: var(--lu-ps-shift-x, 0px) var(--lu-ps-shift-y, 0px);
   z-index: var(--lu-z-popover, 900);
   /* Opaque reading surface: glass tint composited over a solid base, so the
    * nav beneath never bleeds through even when a nested backdrop-filter
@@ -163,10 +191,11 @@ function close() {
 .lu-ps-panel[data-align='end'] { right: 0; }
 .lu-ps-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 4px;
-  /* Fixed width: three 84px columns, so tiles never clip or reflow. */
+  /* Three 84px columns normally; shrink them only on very narrow screens. */
   width: 264px;
+  max-width: 100%;
 }
 .lu-ps-tile {
   display: flex;

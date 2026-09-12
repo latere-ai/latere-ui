@@ -13,6 +13,8 @@
  * already below — dropped rather than carried over dead. */
 .lu-am {
   position: relative;
+  display: inline-block;
+  max-width: 100%;
 }
 .lu-am-trigger {
   display: flex;
