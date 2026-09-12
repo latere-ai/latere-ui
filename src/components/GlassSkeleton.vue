@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../styles/components/glass-skeleton.css';
 // A loading placeholder with a subtle shimmer. Set width/height/radius to match
 // the content it stands in for. Shimmer stops under reduced motion.
 withDefaults(defineProps<{
@@ -22,24 +23,3 @@ withDefaults(defineProps<{
     :style="{ width, height, borderRadius: circle ? '50%' : radius }"
   />
 </template>
-
-<style scoped>
-.lu-skeleton {
-  display: block;
-  background: linear-gradient(
-    90deg,
-    var(--bg-raised, #ececec) 25%,
-    var(--bg-surface, #f4f4f4) 37%,
-    var(--bg-raised, #ececec) 63%
-  );
-  background-size: 400% 100%;
-  animation: lu-shimmer 1.4s ease infinite;
-}
-@keyframes lu-shimmer {
-  0% { background-position: 100% 50%; }
-  100% { background-position: 0 50%; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .lu-skeleton { animation: none; }
-}
-</style>

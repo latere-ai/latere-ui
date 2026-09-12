@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '../styles/components/glass-progress.css';
 // A determinate progress bar on a glass track. role=progressbar with the ARIA
 // value attributes; clamps value to [0, max].
 import { computed } from 'vue';
@@ -25,23 +26,3 @@ const pct = computed(() => props.max === 0 ? 0 : (clamped.value / props.max) * 1
     <span class="lu-progress-fill" :style="{ width: `${pct}%` }" />
   </div>
 </template>
-
-<style scoped>
-.lu-progress {
-  position: relative;
-  width: 100%;
-  height: 10px;
-  border-radius: 999px;
-  border-color: var(--lu-control-border, color-mix(in srgb, var(--text, #0a0a0a) 45%, transparent));
-  overflow: hidden;
-  box-shadow: none;
-}
-.lu-progress-fill {
-  display: block;
-  height: 100%;
-  border-radius: 999px;
-  background: var(--glass-smoke-strong, #171717);
-  transition: width 0.24s ease;
-}
-@media (prefers-reduced-motion: reduce) { .lu-progress-fill { transition: none; } }
-</style>
