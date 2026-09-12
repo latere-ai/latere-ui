@@ -39,7 +39,7 @@ interface Props {
   homeTo?: string;
   /** Gradient wordmark theme for the default brand. */
   brandTheme?: BrandTheme;
-  /** Product name shown in the default brand (e.g. "Lux"). */
+  /** Display name shown in the default brand (e.g. "Workspace"). */
   brandName?: string;
   /** Subtitle under the brand (e.g. "Console"). */
   brandSub?: string;
@@ -49,7 +49,7 @@ interface Props {
    * Provide the mark itself via the #logo slot.
    */
   brandColor?: string;
-  /** When collapsed, clicking the brand expands the rail (wallfacer affordance). */
+  /** When collapsed, clicking the brand expands the rail (optional). */
   expandOnBrandClick?: boolean;
   /** Show the built-in search bar (emits `search`; ⌘K/Ctrl-K also emits it). */
   search?: boolean;
@@ -63,7 +63,7 @@ interface Props {
   expandLabel?: string;
   collapseLabel?: string;
   /**
-   * Slug of this console in the shared product registry (e.g. "lux"). When
+   * Slug of this console in the shared product registry. When
    * set, a ProductSwitcher (cross-console app grid) renders in the head next
    * to the brand; when omitted the head is byte-for-byte what it was, so
    * existing adopters are unaffected until they opt in. Requires the

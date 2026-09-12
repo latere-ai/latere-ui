@@ -35,3 +35,12 @@ test('mobile workspace primary action raster stays stable across mounts', async 
     expected ??= actual;
   }
 });
+
+for (const framework of ['vue', 'react']) test(`${framework} shell examples have neutral branding`, async ({ page }) => {
+  for (const scenario of framework === 'vue' ? ['sidebar', 'workspace'] : ['sidebar']) {
+    await visit(page, framework, scenario);
+    await expect(page.locator('.lu-cs-brand-name')).toHaveText('Workspace');
+    await expect(page.locator('.lu-cs-brand-name')).toHaveCSS('font-style', 'normal');
+    await expect(page.locator('.lu-cs-brand-name')).not.toHaveClass(/(?:lux|cella|topos|wallfacer|lectio)-brand/);
+  }
+});

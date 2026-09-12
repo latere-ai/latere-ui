@@ -84,13 +84,13 @@ export interface ConsoleSidebarProps {
   homeTo?: string;
   /** Gradient wordmark theme for the default brand. */
   brandTheme?: BrandTheme;
-  /** Product name shown in the default brand (e.g. "Lux"). */
+  /** Display name shown in the default brand (e.g. "Workspace"). */
   brandName?: string;
   /** Subtitle under the brand (e.g. "Console"). */
   brandSub?: string;
   /** Background for the logo box (any CSS color/gradient). */
   brandColor?: string;
-  /** When collapsed, clicking the brand expands the rail (wallfacer affordance). */
+  /** When collapsed, clicking the brand expands the rail (optional). */
   expandOnBrandClick?: boolean;
   /** Show the built-in search bar (fires `onSearch`; also Cmd/Ctrl-K). */
   search?: boolean;

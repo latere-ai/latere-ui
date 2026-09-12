@@ -117,9 +117,10 @@ html { overscroll-behavior: none; }
     line-height: 1.2;
 }
 .lu-cs-brand-name {
-    font-family: 'Instrument Serif', Georgia, serif;
-    font-style: italic;
-    font-size: 18px;
+    font-family: inherit;
+    font-style: normal;
+    font-size: 16px;
+    font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
