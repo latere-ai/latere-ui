@@ -6,7 +6,7 @@ Use the same material, spacing, and interface patterns across product surfaces. 
 
 ## Fit the available space
 
-The default template uses 14px panel corners, 18px window corners, and 8px fields and navigation rows. Panel padding is 16px; table cells use 8px vertical and 12px horizontal insets. Desktop controls are compact while coarse-pointer buttons and fields retain 44px targets. Use `--font-ui` to customize shell typography; the default is the platform system font. Generic controls inherit the host font, and product wordmarks retain their serif identity.
+Sibling panels, toolbars and tables share 14px corners. Toolbar buttons use 8px corners: the outer 14px radius minus the 6px vertical inset. Windows use 18px corners; fields and navigation rows use 8px. Panel padding is 16px; table cells use 8px vertical and 16px horizontal insets. Desktop controls are compact while coarse-pointer buttons and fields retain 44px targets. Use `--font-ui` to customize shell typography; the default is the platform system font. Generic controls inherit the host font, and product wordmarks retain their serif identity.
 
 ![Compact workspace at 1280×720 CSS pixels](../tests/visual/goldens/darwin-27/workspace-light-laptop.png)
 
@@ -18,13 +18,38 @@ Size layouts by the browser's available CSS pixels, rather than the monitor's ph
 |---|---|---|
 | `--radius-xs` | 4px | Checkboxes and inline code |
 | `--radius-sm` | 6px | Menu rows |
-| `--radius-md` | 8px | Fields, navigation and tables |
-| `--radius-lg` | 14px | Panels and menus |
+| `--radius-md` | 8px | Fields, navigation and compact footer controls |
+| `--radius-lg` | 14px | Panels, toolbars, tables and menus |
 | `--radius-xl` | 18px | Dialogs and sidebar |
 | `--radius-2xl` | 24px | Large outer frames |
-| `--radius-pill` | 999px | Buttons, badges and switches |
+| `--radius-pill` | 999px | Standalone buttons, badges and switches |
 
 The [Apple macOS reference](https://www.apple.com/os/macos/) informs the restrained chrome and readable material hierarchy. Our web implementation approximates the appearance through CSS blur, tint and light edges; it does not reproduce Apple's native Liquid Glass renderer.
+
+## Keep product styling explicit
+
+The gallery and integration examples use a neutral Workspace identity. A shell without `brandTheme` inherits its UI typography. Named product themes are opt-in; custom wordmarks and marks belong in the brand/logo slots. The product directory is a catalog, not the identity of the example application.
+
+The consuming products have different visual needs:
+
+| Product | Existing design choices | Shared-library integration |
+|---|---|---|
+| [Replichai](https://github.com/latere-ai/replichai/blob/main/frontend/src/styles.css) | Inter, 14px reading text, blue actions, 12px cards | Map its UI font and radius tokens; keep its custom mark and semantic colors |
+| [Wallfacer](https://github.com/latere-ai/wallfacer/blob/main/frontend/src/styles/tokens.css) | Inter, dense 13px operator UI, clay actions, concentric 14px surfaces | Keep its density, palette and custom brand treatment |
+| [Origo](https://github.com/latere-ai/origo-web/blob/main/internal/web/assets/app.css) | IBM Plex Sans/Mono, corners at most 4px, 28px repository rows | Use small host radii and opaque surfaces where appropriate; preserve its typography |
+
+These are consumer design choices, not built-in themes or identical replicas. Import shared defaults first, then map host tokens in the scope that contains the shared components. For example, a small-corner repository surface can use:
+
+```css
+.repository-surface {
+  --font-ui: var(--font-sans, system-ui);
+  --radius-lg: 4px;
+  --radius-md: 4px;
+  --space-1-5: 2px;
+}
+```
+
+Panels, toolbars and tables then share 4px corners, and toolbar buttons use 2px corners. Palette, control emphasis and material choices remain the host application's responsibility. Use headless exports or host-styled components when glass is not appropriate for the surface.
 
 ## Start with the material
 
@@ -68,7 +93,7 @@ The sidebar supports a collapsed rail and custom brand, row, and footer content.
 
 ![Compact footer on a narrow viewport](../tests/visual/goldens/darwin-27/vue-footer-compact-light-mobile.png)
 
-On narrow screens, the compact footer gives navigation a full-width scrolling row, with theme and language controls below it.
+Compact footer links wrap as complete labels, with theme and language controls below them. No horizontal scrolling is required to discover the links. Desktop preference controls share a 28px height; touch devices receive larger targets.
 
 Footer language and theme choices belong to the host's preferences. Supply the language options your application supports; English, Chinese, and German footer copy ships in the package. Resolve an automatic theme to a concrete light or dark theme before applying it to the document.
 

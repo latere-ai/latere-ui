@@ -10,6 +10,10 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+- Compact footer links wrap without clipped labels or underlined separators; desktop preferences share a compact height and preserve touch targets.
+- Sibling panels, toolbars and tables share a radius; nested toolbar controls derive smaller corners from the inset.
+- Product-neutral shell examples and default brand typography; explicit guidance for Replichai, Wallfacer and Origo styling.
+
 - Compact design defaults: smaller panel/control corners, tighter insets and tables, a 224px sidebar, system UI shell typography, and softer glass edges/shadows.
 - Docs layout adapts to its available container width and removes the unused TOC track. Its root now includes `.lu-docs-frame`; update direct-child CSS selectors if needed.
 - Populated workspace references at laptop, desktop and mobile sizes, rendered at 300 DPI. Pointer-aware controls retain touch target size.

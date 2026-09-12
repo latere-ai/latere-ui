@@ -5,11 +5,11 @@
 [![Vue 3.5+](https://img.shields.io/badge/vue-3.5%2B-42b883.svg)](https://vuejs.org/)
 [![React 18 or 19](https://img.shields.io/badge/react-18%20%7C%2019-61dafb.svg)](https://react.dev/)
 
-Shared glass materials, interface components, and application chrome for Latere products. Build forms, navigation, dialogs, and documentation with one visual language in Vue, with a supported subset for React.
+Shared glass materials, interface components, and application chrome with product-neutral defaults. Build forms, navigation, dialogs, and documentation with one visual language in Vue, with a supported subset for React.
 
 ![Compact workspace with navigation, toolbar, summary panels and projects](tests/visual/goldens/darwin-27/workspace-light-laptop.png)
 
-[Design guide](docs/design-system.md) · [Integration guide](docs/api-guide.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
+[Design guide](docs/design-system.md) · [Product styling](docs/design-system.md#keep-product-styling-explicit) · [Integration guide](docs/api-guide.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
 
 ## What you can build
 

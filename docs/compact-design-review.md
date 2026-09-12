@@ -29,10 +29,18 @@ Each of the 160 figures on macOS 27 and macOS 15 was opened individually: 320 re
 | Modals, palettes, accounts, product/organization identity and logos | 42 | Nested surfaces, wrapping, selection and scrolling |
 | Navigation, docs, footers and populated workspaces | 42 | Available width, reading flow, alignment and laptop/mobile density |
 
-The button and select findings above were caught during this pass; their 14 affected figures were inspected again after correction. Headless organization controls intentionally retain host/native presentation. Mobile examples may scroll vertically; no horizontal page overflow is expected.
+The button and select findings above were caught during this pass; their 14 affected figures were inspected again after correction. Headless organization controls intentionally retain host/native presentation. Mobile examples may scroll vertically; no horizontal page overflow is expected. The follow-up below supersedes the original acceptance of horizontally scrolling compact-footer links.
 
 References render at 3.125× CSS size with 300 DPI metadata. Separate native macOS baselines preserve platform font rendering. The Apple macOS site informed material and geometry choices; the supplied Figma frame could not be inspected because its URL returned HTTP 403.
 
 ## Verification
 
 The complete local comparison passed all 304 browser checks with zero differing pixels permitted. The [native macOS recording](https://github.com/latere-ai/latere-ui/actions/runs/34700953601) passed the same 304 checks; its final changed images were inspected before acceptance. Type checking and all 446 unit tests passed, with 92.74% line coverage. Every PNG passed chunk-integrity and 300 DPI metadata checks, and both platforms contain the same 160 named states.
+
+## Follow-up: footer, corner relationships and neutral examples
+
+The initial review missed clipped footer navigation, underlined separators and inconsistent sibling/nested corners. The compact footer now wraps every complete link, removes decorative separators, and aligns both preference controls at 28px on desktop while preserving touch targets. Panels, toolbars and tables share one radius; toolbar controls derive their radius from the outer corner and inset. Table text insets remain outside the rounded corner.
+
+`footer-geometry.spec.ts` checks complete link visibility at 320, 390, 768 and 1100px in both frameworks and themes, preference interaction and alignment, touch targets, and sibling/nested geometry under three host token configurations. The original footer and corner regressions failed before correction. `workspace.spec.ts` reproduced the Lux-specific branding before the examples became neutral. Product styling guidance now considers Replichai, Wallfacer and Origo explicitly.
+
+The follow-up passed 330 browser checks in both local recording and comparison modes. All 42 changed local figures were inspected individually, using complete compositions for the reported footer/workspace issues and enlarged changed-region views for remaining updates. Type checking and 446 unit tests passed; line coverage remains 92.74%.

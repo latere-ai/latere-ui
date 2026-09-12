@@ -34,7 +34,7 @@ const { theme, locale } = storeToRefs(prefs);
 | `theme`      | `'light' \| 'dark' \| 'auto'` | required              | Drives the active state of the theme toggle.                          |
 | `locale`     | `string` (bundled: `en`, `zh`, `de`)                | required              | Selects footer copy and the active language toggle.                   |
 | `locales`    | `LocaleOption[]`              | `[en, zh]`            | Languages in the locale dropdown (`{ code, label, name? }`).          |
-| `compact`    | `boolean`                     | `false`               | Compact footer with scrollable links; navigation gets its own row on mobile.                    |
+| `compact`    | `boolean`                     | `false`               | Compact footer with wrapping links and aligned preferences below.                    |
 | `messages`   | `Record<string, Dict>`        | `undefined`           | Per-locale string overrides, merged over the bundled footer copy.     |
 | `baseUrl`    | `string`                      | `'https://latere.ai'` | Origin for the site's own links (Team, Blog, Legal, home).            |
 | `routerLink` | `Component`                   | `undefined`           | Pass `RouterLink` to keep SPA navigation for internal links on-site.  |
@@ -84,7 +84,7 @@ const model: ConsoleNavModel = {
   <ConsoleSidebar
     :model="model"
     :active-key="String(route.name)"
-    brand-name="Lux" brand-sub="Console" brand-theme="lux"
+    brand-name="Workspace" brand-sub="Console"
     :router-link="RouterLink"
     @navigate="(it) => router.push(it.to!)"
   >
@@ -396,7 +396,7 @@ function Rail() {
     <ConsoleSidebar
       model={model}
       activeKey={location.pathname.split('/')[1]}
-      brandName="Lux" brandSub="Console" brandTheme="lux"
+      brandName="Workspace" brandSub="Console"
       routerLink={Link}
       onNavigate={(item) => item.to && navigate(item.to)}
       foot={<AccountMenu placement="bottom-start" />}
@@ -453,8 +453,7 @@ import { SiteFooter } from 'latere-ui/react';
 />
 ```
 
-`compact` swaps the product columns for a bar with horizontally scrollable links (a separate navigation row on mobile), for app surfaces where
-the full footer is too tall. `routerLink` keeps internal links inside your SPA
+`compact` swaps the product columns for wrapping navigation followed by compact preferences. Every label remains visible without horizontal scrolling. `routerLink` keeps internal links inside your SPA
 (relative `to`); without it they are absolute under `baseUrl`. An app that
 ships one language should pass `locales` with just that one, so the dropdown
 tells the truth.
@@ -488,3 +487,7 @@ Import `latere-ui/tokens` for the 4/6/8/14/18/24px radius ladder and `--font-ui`
 Glass buttons and icon buttons use `--lu-button-border` when provided; the default mixes 20% text color into transparent to keep the control boundary visible. Check custom borders in both themes and against the intended backdrop.
 
 `DocsLayout` has a `.lu-docs-frame` containment wrapper around `.lu-docs`. Size the component normally through its parent; the inner grid uses container queries at 1080px and 720px. Consumers with direct-child selectors should account for the new wrapper. The optional TOC contributes no column when `showToc=false`.
+
+### Product-neutral shell styling
+
+Omit `brandTheme` for neutral UI typography, set `brandName` to the host application name, and use the brand/logo slots for a custom identity. Named brand themes remain opt-in. See the [product styling guidance](design-system.md#keep-product-styling-explicit) for Replichai, Wallfacer and Origo integration choices.
