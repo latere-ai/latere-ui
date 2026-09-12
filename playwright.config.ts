@@ -1,11 +1,9 @@
 import { defineConfig } from '@playwright/test';
-import { release } from 'node:os';
+import { figureScale, referencePlatform } from './tests/visual/reference-settings';
 
-// CoreText and backdrop compositing differ across macOS major releases.
-const referencePlatform = process.platform === 'darwin'
-  ? `darwin-${release().split('.')[0]}` : process.platform;
 export default defineConfig({
   testDir: './tests/visual',
+  globalTeardown: './tests/visual/finish-references.ts',
   testMatch: '**/*.spec.ts',
   outputDir: './output/playwright/results',
   snapshotPathTemplate: `{testDir}/goldens/${referencePlatform}/{arg}{ext}`,
@@ -15,11 +13,11 @@ export default defineConfig({
   retries: 0,
   workers: 2,
   reporter: [['list'], ['html', { outputFolder: 'output/playwright/report', open: 'never' }]],
-  expect: { timeout: 15000, toHaveScreenshot: { animations: 'disabled', caret: 'hide', scale: 'css', maxDiffPixels: 0 } },
+  expect: { timeout: 15000, toHaveScreenshot: { animations: 'disabled', caret: 'hide', scale: 'device', maxDiffPixels: 0 } },
   use: {
     browserName: 'chromium',
     viewport: { width: 1100, height: 850 },
-    deviceScaleFactor: 1,
+    deviceScaleFactor: figureScale,
     locale: 'en-US',
     timezoneId: 'UTC',
     colorScheme: 'light',

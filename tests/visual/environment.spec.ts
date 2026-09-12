@@ -18,3 +18,14 @@ test('fixture paints a full viewport even for a short component sheet', async ({
   const body = await page.locator('body').boundingBox();
   expect(body!.height).toBeGreaterThanOrEqual(page.viewportSize()!.height);
 });
+
+test('reference capture renders native pixels at 300 DPI equivalent', async ({ page }) => {
+  await visit(page, 'vue', 'buttons');
+  const scale = 300 / 96;
+  expect(await page.evaluate(() => devicePixelRatio)).toBe(scale);
+  const png = await page.screenshot({ scale: 'device', animations: 'disabled' });
+  const viewport = page.viewportSize()!;
+  // PNG IHDR dimensions; fractional CSS-to-device bounds round to whole pixels.
+  expect(Math.abs(png.readUInt32BE(16) - viewport.width * scale)).toBeLessThanOrEqual(1);
+  expect(Math.abs(png.readUInt32BE(20) - viewport.height * scale)).toBeLessThanOrEqual(1);
+});
