@@ -10,6 +10,9 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+- Balanced table corner radii and cell spacing, removed the nested header outline,
+  and kept the glass header attached to its labels while scrolling.
+
 - Added an interactive Vue/React component gallery, reviewed visual reference
   images, and browser screenshot comparisons for both themes and mobile layouts.
 - Added a visual design guide and composition diagram; moved detailed usage

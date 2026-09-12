@@ -10,6 +10,7 @@ renders used by the regression suite.
 | Area | What was wrong | Verification |
 |---|---|---|
 | Smoke surfaces | Surface foreground overrode inverse ink, producing dark-on-dark or light-on-light labels. | Browser computed-color checks in both adapters and themes. |
+| Tables | Large outer corners crowded header labels, a separately rounded header created a second outline, and scrolling detached the header material from its labels. | Vue/React browser geometry and scroll regressions in both themes, plus updated container figures. |
 | Fields | Padding and borders added 30px beyond the container without a host box-sizing reset. | Browser bounding-box assertions for inputs and textareas. |
 | Selects | Empty options crashed on Enter; disabled choices received keyboard selection; long lists hid the active option. | Vue/React regressions plus real keyboard and scrolling tests. |
 | Dialogs | Escape closed multiple stacked dialogs; focus could escape or restore to the wrong overlay. | Shared focus ownership, unit regressions and nested-dialog browser tests. |

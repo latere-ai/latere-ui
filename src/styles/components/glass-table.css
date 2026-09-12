@@ -1,9 +1,9 @@
 /* GlassTable — de-scoped from the SFC so the Vue and React adapters share one
  * stylesheet. Load after `latere-ui/glass`. The th/td element selectors stay
  * anchored under the lu-prefixed table classes, so global scope is safe. */
-.lu-table-wrap {
+.lu-table-wrap.lu-glass {
   overflow-x: auto;
-  border-radius: var(--radius-xl, 28px);
+  border-radius: var(--radius-md, 16px);
 }
 .lu-table {
   width: 100%;
@@ -11,12 +11,19 @@
   border-spacing: 0;
   font-size: var(--fs-body-sm, 13px);
 }
-.lu-table-head th {
+/* Clip one flat header to the wrapper's corners. Keep its material and text
+ * in the same sticky layer so scrolling cannot separate them. */
+.lu-table-head.lu-glass {
   position: sticky;
   top: 0;
   z-index: 2;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.lu-table-head th {
   text-align: left;
-  padding: 9px 12px;
+  padding: 12px 16px;
   font-family: var(--font-mono, ui-monospace, 'SF Mono', Menlo, monospace);
   font-size: 10.5px;
   font-weight: 500;
@@ -27,8 +34,10 @@
   white-space: nowrap;
 }
 .lu-table-row td {
-  padding: 9px 12px;
+  padding: 12px 16px;
   color: var(--text, #0a0a0a);
   border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.06));
 }
 .lu-table-row:hover td { background: var(--accent-subtle, rgba(0, 0, 0, 0.03)); }
+
+.lu-table-row:last-child td { border-bottom: 0; }
