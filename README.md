@@ -32,6 +32,8 @@ Pin a GitHub release tag:
 bun add github:latere-ai/latere-ui#v1.28.1
 ```
 
+These docs and figures track `main`. The compact template is currently unreleased; v1.28.1 retains the earlier geometry. See [Unreleased changes](CHANGELOG.md#unreleased) before adopting `main`.
+
 Use Vue 3.5+ with your Vue compiler, or React 18/19 with your React toolchain. React applications import `latere-ui/react`. For server rendering with Vite, include `ssr: { noExternal: ['latere-ui'] }` so the package source is compiled for the server too.
 
 ## Start with a panel
