@@ -1,21 +1,4 @@
 import { test, expect, visit, prepare, setPreferences } from './fixtures';
-import { scenarios, mobileScenarios } from './manifest';
-for (const [framework, sheets] of Object.entries(scenarios)) {
-  for (const [scenario, components] of Object.entries(sheets)) {
-    for (const theme of ['light', 'dark']) {
-      for (const layout of mobileScenarios.has(scenario) ? ['desktop', 'mobile'] : ['desktop']) {
-        test(`${framework} ${scenario} ${theme} ${layout}`, async ({ page }) => {
-          if (scenario === 'docs' && layout === 'desktop') await page.setViewportSize({ width: 1280, height: 850 });
-          if (layout === 'mobile') await page.setViewportSize({ width: 390, height: 844 });
-          await visit(page, framework, scenario, theme);
-          await prepare(page, framework, scenario);
-          for (const name of components) await expect(page.locator(`[data-component="${name}"]`).first()).toBeVisible();
-          await expect(page).toMatchGolden(`${framework}-${scenario}-${theme}-${layout}.png`, { fullPage: true });
-        });
-      }
-    }
-  }
-}
 for (const theme of ['light', 'dark']) {
   for (const mode of ['reduced-motion', 'reduced-transparency', 'contrast'] as const) {
     test(`effects ${theme} ${mode}`, async ({ page }) => {

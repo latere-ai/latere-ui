@@ -77,7 +77,7 @@ function registeredGoldens(file: string) {
       if (specifier === './fixtures') return { test };
       if (specifier === './manifest') return manifest;
       if (specifier === './design-manifest') return designManifest;
-      if (specifier === './exact-golden' || specifier === './exact-pixels') return {};
+      if (specifier === './exact-golden' || specifier === './exact-pixels' || specifier === 'node:fs') return {};
       throw new Error(`Unexpected golden registration dependency: ${specifier}`);
     },
   }, { filename: file, timeout: 5000 });

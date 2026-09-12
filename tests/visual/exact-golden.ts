@@ -11,21 +11,26 @@ export async function captureExact(page: Page, options: CaptureOptions = {}) {
   await page.evaluate(() => document.fonts.ready);
   const capture = () => page.screenshot({ ...options, animations: 'disabled', caret: 'hide', scale: 'device' });
   let previous = await capture();
+  let unstable: { expected: Buffer; actual: Buffer } | undefined;
   const deadline = Date.now() + 15000;
   do {
     const next = await capture();
     if (previous.equals(next) || comparePixels(previous, next).equal) return next;
+    unstable = { expected: previous, actual: next };
     previous = next;
   } while (Date.now() < deadline);
+  if (unstable) {
+    for (const [name, data] of Object.entries(unstable)) writeFileSync(test.info().outputPath(`unstable-${name}.png`), data);
+  }
   throw new Error('Rendering did not settle to two exactly identical RGBA captures within 15 seconds');
 }
 
 export const expect = baseExpect.extend({
-  async toMatchGolden(page: Page, name: string, options: CaptureOptions = {}) {
+  async toMatchGolden(page: Page | Buffer, name: string, options: CaptureOptions = {}) {
     if (this.isNot) throw new Error('Golden verification does not support negation');
     const info = test.info();
     const path = info.snapshotPath(name);
-    const actual = await captureExact(page, options);
+    const actual = Buffer.isBuffer(page) ? page : await captureExact(page, options);
     const update = info.config.updateSnapshots;
     const exists = existsSync(path);
     const expected = exists ? readFileSync(path) : undefined;

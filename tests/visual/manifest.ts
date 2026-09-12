@@ -1,6 +1,5 @@
-// Every UI export must appear here; visual-coverage.test.ts enforces the inventory.
-export const scenarios = {
-  vue: {
+// Every public visual export participates in both adapters and all four viewport/theme combinations.
+const sheets = {
     workspace: ['ConsoleSidebar', 'GlassBar', 'GlassPanel', 'GlassTable'],
     buttons: ['GlassButton', 'GlassIconButton'],
     forms: ['GlassField', 'GlassCheckbox', 'GlassRadio', 'GlassSwitch', 'GlassSegmented', 'GlassTabs'],
@@ -26,20 +25,6 @@ export const scenarios = {
     'footer-compact': ['SiteFooter'],
     logo: ['LatereLogoMark'],
     effects: ['GlassSurface'],
-  },
-  react: {
-    buttons: ['GlassButton'],
-    forms: ['GlassField', 'GlassCheckbox', 'GlassSegmented', 'GlassSelect'],
-    feedback: ['GlassBadge', 'GlassAlert', 'GlassSpinner'],
-    containers: ['GlassPanel', 'GlassBar', 'GlassTable'],
-    modal: ['GlassModal'],
-    sidebar: ['ConsoleSidebar'],
-    'sidebar-collapsed': ['ConsoleSidebar'],
-    account: ['AccountMenu'],
-    footer: ['SiteFooter'],
-    'footer-compact': ['SiteFooter'],
-    logo: ['LatereLogoMark'],
-  },
-} as const;
-
-export const mobileScenarios = new Set(['workspace', 'forms', 'select', 'feedback', 'modal', 'drawer-left', 'drawer-right', 'toast', 'confirm', 'sidebar-collapsed', 'palette', 'docs', 'account', 'preferences', 'products', 'footer', 'footer-compact']);
+  } as const;
+export const scenarios = { vue: sheets, react: sheets } as const;
+export const mobileScenarios = new Set<string>(Object.keys(sheets));

@@ -75,3 +75,9 @@ export type {
   SwitchOrgMode,
 } from '../session/types';
 export type { FrontChannelLogoutOptions, FrontChannelLogoutResponse } from '../session/frontChannel';
+
+// Complete visual component adapters, sharing styles and framework-free services.
+export * from './basic';
+export * from './overlays';
+export * from './shell';
+export { initLiquidGlass, refract, sheen } from '../glass/liquidGlass';
