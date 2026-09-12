@@ -1,17 +1,12 @@
 import { Fragment, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import * as Base from '../../src/react';
-import * as Basic from '../../src/react/basic';
-import * as Shell from '../../src/react/shell';
-import * as Overlays from '../../src/react/overlays';
-import { initLiquidGlass } from '../../src/glass/liquidGlass';
+import * as UI from '../../src/react';
+import { initLiquidGlass } from '../../src/react';
 import {
   options, selectOptions, nav, paletteNav, principal, locales, tiers, badgeTones,
   alertTones, menuItems, columns, rows, groups, article, createWorkspaceRows,
   buttonSizes, buttonVariants, progressValues, brands, workspaceMetrics,
 } from './parity-data';
-
-const UI = { ...Base, ...Basic, ...Shell, ...Overlays };
 
 /** The same examples as VueGallery, rendered through actual React adapters. */
 function ReactParityGallery({ scenario }: { scenario: string }) {
@@ -97,7 +92,7 @@ function ReactParityGallery({ scenario }: { scenario: string }) {
     </main>
   </div>;
   if (scenario === 'containers') return <div className="stack">
-    <div className="material-stage material-grid" data-component="GlassSurface">{tiers.map(tier => <UI.GlassSurface key={tier} tier={tier} interactive className="material">{tier} surface · The quick brown fox</UI.GlassSurface>)}</div>
+    <div className="material-stage material-grid" data-component="GlassSurface">{tiers.map(tier => <UI.GlassSurface key={tier} tier={tier} interactive className="material">{`${tier} surface · The quick brown fox`}</UI.GlassSurface>)}</div>
     <div className="grid" data-component="GlassPanel"><UI.GlassPanel>Regular panel</UI.GlassPanel><UI.GlassPanel tier="smoke">Smoke panel</UI.GlassPanel><UI.GlassPanel flush><div style={{ padding: 20 }}>Flush panel with host padding</div></UI.GlassPanel></div>
     <div data-component="GlassBar"><UI.GlassBar header>Workspace toolbar <UI.GlassButton size="sm">New project</UI.GlassButton></UI.GlassBar></div>
     <div data-component="GlassTable"><UI.GlassTable columns={columns} rows={rows} /></div>
@@ -105,7 +100,7 @@ function ReactParityGallery({ scenario }: { scenario: string }) {
   if (scenario === 'popover') return <div className="popover-stage" data-component="GlassPopover"><UI.GlassPopover placement={placement} matchWidth={matchWidth} trigger={<UI.GlassButton>Open menu</UI.GlassButton>}><div data-component="GlassMenu"><UI.GlassMenu items={menuItems} /></div></UI.GlassPopover></div>;
   if (scenario === 'tooltip') return <div className="popover-stage row" data-component="GlassTooltip"><UI.GlassTooltip text="Copy workspace link"><UI.GlassButton>Top tooltip</UI.GlassButton></UI.GlassTooltip><UI.GlassTooltip text="More information" placement="bottom"><UI.GlassButton>Bottom tooltip</UI.GlassButton></UI.GlassTooltip></div>;
   if (scenario === 'modal') return <div data-component="GlassModal"><UI.GlassButton onClick={() => setOpen(true)}>Open modal</UI.GlassButton><UI.GlassModal open={open} onClose={() => setOpen(false)} title="Workspace settings" footer={<><UI.GlassButton onClick={() => setOpen(false)}>Cancel</UI.GlassButton><UI.GlassButton variant="primary" onClick={() => setOpen(false)}>Save changes</UI.GlassButton></>}><UI.GlassField value={text} onChange={setText} label="Workspace name" /><p>Update the details your team sees.</p><UI.GlassButton onClick={() => setInnerOpen(true)}>Open nested modal</UI.GlassButton></UI.GlassModal><UI.GlassModal open={innerOpen} onClose={() => setInnerOpen(false)} title="Nested settings"><UI.GlassButton onClick={() => setInnerOpen(false)}>Close nested</UI.GlassButton></UI.GlassModal></div>;
-  if (scenario.startsWith('drawer-')) return <div data-component="GlassDrawer"><UI.GlassButton onClick={() => setOpen(true)}>Open drawer</UI.GlassButton><UI.GlassDrawer open={open} onClose={() => setOpen(false)} title="Workspace details" side={scenario === 'drawer-left' ? 'left' : 'right'}><UI.GlassField value={text} onChange={setText} label="Name" />{Array.from({ length: 16 }, (_, i) => <p key={i + 1}>Detail {i + 1}: Workspace activity and settings.</p>)}<UI.GlassButton onClick={() => setOpen(false)}>Done</UI.GlassButton></UI.GlassDrawer></div>;
+  if (scenario.startsWith('drawer-')) return <div data-component="GlassDrawer"><UI.GlassButton onClick={() => setOpen(true)}>Open drawer</UI.GlassButton><UI.GlassDrawer open={open} onClose={() => setOpen(false)} title="Workspace details" side={scenario === 'drawer-left' ? 'left' : 'right'}><UI.GlassField value={text} onChange={setText} label="Name" />{Array.from({ length: 16 }, (_, i) => <p key={i + 1}>{`Detail ${i + 1}: Workspace activity and settings.`}</p>)}<UI.GlassButton onClick={() => setOpen(false)}>Done</UI.GlassButton></UI.GlassDrawer></div>;
   if (scenario === 'toast') return <div data-component="GlassToaster"><UI.GlassButton onClick={notify}>Show notifications</UI.GlassButton><UI.GlassToaster /></div>;
   if (scenario === 'confirm') return <div data-component="GlassConfirmHost"><UI.GlassButton onClick={ask}>Delete workspace</UI.GlassButton><UI.GlassConfirmHost /></div>;
   if (scenario.startsWith('sidebar')) return <div className="shell-stage" data-component="ConsoleSidebar"><UI.ConsoleSidebar model={nav} activeKey="jobs" brandName="Workspace" brandSub="Console" search collapsed={scenario === 'sidebar-collapsed'} logo={<UI.LatereLogoMark />} /><div className="shell-content"><h2>Workspace overview</h2><p>Projects and activity appear beside the navigation.</p></div></div>;
