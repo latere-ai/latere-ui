@@ -74,7 +74,7 @@ function onKey(e: KeyboardEvent, i: number) {
 .lu-tab.is-active {
   color: var(--text, #0a0a0a);
   background: var(--glass-pill-fill);
-  box-shadow: var(--shadow, 0 1px 2px rgba(0, 0, 0, 0.06)), var(--glass-edge-top);
+  box-shadow: inset 0 0 0 1px var(--lu-control-border, color-mix(in srgb, var(--text, #0a0a0a) 45%, transparent)), var(--shadow, 0 1px 2px rgba(0, 0, 0, 0.06)), var(--glass-edge-top);
 }
 /* The indicator span is superseded by the pill; keep markup, drop the bar. */
 .lu-tab-ind {

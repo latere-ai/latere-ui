@@ -162,3 +162,19 @@ for (const theme of ['light', 'dark']) {
     }
   });
 }
+
+for (const theme of ['light', 'dark']) {
+  test(`vue ${theme} active tab indicator remains visible with independent focus`, async ({ page }) => {
+    await visit(page, 'vue', 'forms', theme);
+    const tab = page.locator('.lu-tab.is-active');
+    expect.soft(await contrast(tab, 'boxShadow'), 'selected tab edge').toBeGreaterThanOrEqual(3);
+    const next = page.locator('.lu-tab').nth(1);
+    await next.click();
+    await expect(next).toHaveClass(/is-active/);
+    await next.evaluate(el => (el as HTMLElement).style.setProperty('--focus-outline', '3px solid rgb(127, 45, 233)'));
+    await page.keyboard.press('Tab');
+    await next.focus();
+    await expect(next).toHaveCSS('outline-width', '3px');
+    await expect(next).toHaveCSS('outline-color', 'rgb(127, 45, 233)');
+  });
+}
