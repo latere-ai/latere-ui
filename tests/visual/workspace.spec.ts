@@ -25,7 +25,8 @@ test('mobile workspace primary action raster stays stable across mounts', async 
   for (let mount = 0; mount < 8; mount++) {
     await visit(page, 'vue', 'workspace', 'dark');
     await expect(page.getByRole('button', { name: 'New project', exact: true })).toHaveCSS('backdrop-filter', 'none');
-    const actual = await page.screenshot({ fullPage: true, animations: 'disabled', scale: 'device' });
+    // Isolate nested toolbar compositing; the golden suite covers the whole page.
+    const actual = await page.locator('.lu-bar').screenshot({ animations: 'disabled', scale: 'device' });
     if (expected && !actual.equals(expected)) {
       await testInfo.attach('first', { body: expected, contentType: 'image/png' });
       await testInfo.attach('repeat', { body: actual, contentType: 'image/png' });
