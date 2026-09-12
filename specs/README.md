@@ -39,3 +39,11 @@ specs/
 | [Component coverage](visual-component-coverage.md) | Complete | Every UI export, glass effects and responsive states |
 | [Reference resolution](visual-reference-resolution.md) | Complete | Native browser figures at 300 DPI, verified density and individual review on both platforms |
 | [Compact desktop template](compact-design-template.md) | Complete | Smaller corners, restrained glass and layouts sized to available space |
+
+## Product appearances
+
+| Spec | Status | Deliverable |
+|---|---|---|
+| [Product style presets](product-style-presets.md) | In progress | Importable Replichai, Wallfacer and Origo component appearances |
+| [Product style figures](product-style-figures.md) | In progress | Per-style component references and visual regression matrix |
+| [Integrated sidebar](integrated-sidebar.md) | In progress | macOS 27 window-integrated navigation geometry |
