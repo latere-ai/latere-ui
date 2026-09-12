@@ -43,3 +43,11 @@ for (const framework of ['vue', 'react']) {
     });
   }
 }
+
+for (const framework of ['vue', 'react']) test(`${framework} neutral status fill is independent of muted text ink`, async ({ page }) => {
+  await visit(page, framework, 'feedback');
+  const neutral = page.locator('.lu-badge.is-solid').filter({ hasText: /^neutral$/ }).first();
+  const before = await neutral.evaluate(el => getComputedStyle(el).backgroundColor);
+  await page.locator('html').evaluate(el => (el as HTMLElement).style.setProperty('--text-muted', '#555555'));
+  await expect(neutral).toHaveCSS('background-color', before);
+});

@@ -7,7 +7,7 @@ import { cx } from './internal';
 export type GlassBadgeTone = 'neutral' | 'running' | 'idle' | 'stopped' | 'error' | 'creating';
 
 const TONE_VAR: Record<string, string> = {
-  neutral: 'var(--text-muted, #a0a0a0)',
+  neutral: 'var(--state-neutral, #92948c)',
   running: 'var(--state-running, #4a7558)',
   idle: 'var(--state-idle, #b48a4a)',
   stopped: 'var(--state-stopped, #92948c)',
