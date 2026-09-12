@@ -38,7 +38,12 @@ export async function prepare(page: Page, framework: string, scenario: string) {
   if (scenario === 'select') await page.getByRole('combobox', { name: 'Workspace', exact: true }).click();
   if (scenario === 'effects') {
     await page.locator('[data-lg-sheen]').hover({ position: { x: 150, y: 80 } });
-    await expect(page.locator('[data-lg-sheen] > [aria-hidden]')).toHaveCSS('opacity', '1');
+    // Matte presets intentionally disable optical enhancements. Still exercise
+    // their opt-in surfaces and verify that no sheen layer is attached.
+    const matte = await page.locator('html').getAttribute('data-design');
+    const sheen = page.locator('[data-lg-sheen] > [aria-hidden]');
+    if (matte) await expect(sheen).toHaveCount(0);
+    else await expect(sheen).toHaveCSS('opacity', '1');
   }
 }
 
