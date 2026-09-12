@@ -1,6 +1,6 @@
 ---
 title: Compact desktop design template
-status: in-progress
+status: complete
 depends_on:
   - specs/visual-reference-resolution.md
 affects:
@@ -36,3 +36,13 @@ The [Apple macOS reference](https://www.apple.com/os/macos/) uses glass for func
 ## Acceptance and verification
 
 Add browser regressions before implementation, record failures, then prove corrected geometry, compact controls, softer effects, container-based docs reflow and hidden-TOC track removal. Include Vue/React and light/dark where supported, plus coarse-pointer targets. Add 300 DPI workspace goldens across the three desktop sizes. Inspect updated component figures and run the full visual suite, type checking and unit coverage (>90% lines). Refresh both native macOS reference sets; commit reviewed figures only.
+
+## Outcome
+
+Implemented compact tokens, shared component geometry, system shell typography, responsive docs and populated workspace examples. Individual visual review additionally corrected weak button/selection boundaries, a clipped select row and redundant toolbar blur. Each correction has a reproducible browser regression; geometry and affordance checks were verified failing before their fixes.
+
+All 304 local browser checks passed in comparison mode; the native macOS recording passed 304 checks. Type checking and 446 unit tests passed with 92.74% line coverage. Reviewed and committed 160 figures per platform, including ten workspace figures per platform, with verified 300 DPI metadata. See the [review record](../docs/compact-design-review.md) and [design guide](../docs/design-system.md).
+
+## Design evolution
+
+Kept capsules for actions and switches while making content containers rectangular with smaller corners. Preserved coarse-pointer targets instead of applying desktop density to touch. Used available CSS width for layouts, including container queries for embedded documentation. Figma access returned HTTP 403, so the supplied frame could not be compared directly; the Apple macOS reference informed the web approximation.

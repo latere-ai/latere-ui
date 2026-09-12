@@ -86,4 +86,6 @@ Golden figures are committed PNGs from the browser fixtures, using fixed content
 
 The [reference index](visual-reference.md) maps components to their figures. The [review findings](visual-review.md) record corrected defects and coverage limits. Follow [Contributing](../CONTRIBUTING.md) to compare them, inspect a difference, and update a baseline only after reviewing the intended change.
 
+The [compact template review](compact-design-review.md) records the latest spacing, control and responsive-layout corrections.
+
 Shared styles keep Vue and React aligned; each adapter has its own baseline. A screenshot verifies appearance at one point in a scenario. Interaction tests verify what happens when a reader types, selects, opens, dismisses, or navigates.

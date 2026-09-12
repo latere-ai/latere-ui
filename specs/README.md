@@ -38,4 +38,4 @@ specs/
 | [Visual regression harness](visual-regression-harness.md) | Complete | Browser gallery, committed images and comparison workflow |
 | [Component coverage](visual-component-coverage.md) | Complete | Every UI export, glass effects and responsive states |
 | [Reference resolution](visual-reference-resolution.md) | Complete | Native browser figures at 300 DPI, verified density and individual review on both platforms |
-| [Compact desktop template](compact-design-template.md) | In progress | Smaller corners, restrained glass and layouts sized to available space |
+| [Compact desktop template](compact-design-template.md) | Complete | Smaller corners, restrained glass and layouts sized to available space |
