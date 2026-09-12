@@ -9,7 +9,45 @@ type CaptureOptions = Pick<NonNullable<Parameters<Page['screenshot']>[0]>, 'full
 /** Two identical captures are required; no channel tolerance or antialias skipping. */
 export async function captureExact(page: Page, options: CaptureOptions = {}) {
   await page.evaluate(() => document.fonts.ready);
-  const capture = () => page.screenshot({ ...options, animations: 'disabled', caret: 'hide', scale: 'device' });
+  const paused = await page.evaluateHandle(async () => {
+    const frame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+    // Vue starts entering transitions on the second animation frame. Observe
+    // that lifecycle before checking actual animations, including chained ones.
+    while (true) {
+      await frame(); await frame();
+      const finite = document.getAnimations().filter(animation =>
+        animation.effect?.getComputedTiming().iterations !== Infinity &&
+        (animation.playState === 'running' || animation.pending));
+      if (!finite.length) break;
+      await Promise.all(finite.map(animation => animation.finished.catch(() => {})));
+    }
+    const saved = document.getAnimations()
+      .filter(animation => animation.effect?.getComputedTiming().iterations === Infinity)
+      .map(animation => ({ animation, time: animation.currentTime, state: animation.playState }));
+    for (const { animation } of saved) { animation.pause(); animation.currentTime = 0; }
+    await Promise.all(saved.map(({ animation }) => animation.ready));
+    return saved;
+  });
+  try {
+    return await captureStable(page, options);
+  } finally {
+    try {
+      await page.evaluate(saved => {
+        for (const { animation, time, state } of saved) {
+          animation.currentTime = time;
+          if (state === 'running') animation.play();
+          else if (state === 'idle') animation.cancel();
+          else animation.pause();
+        }
+      }, paused);
+    } finally { await paused.dispose(); }
+  }
+}
+
+async function captureStable(page: Page, options: CaptureOptions) {
+  // Playwright's animation override changes SVG rasterization between mounts.
+  // Capture the settled timeline directly, preserving exact RGBA comparison.
+  const capture = () => page.screenshot({ ...options, animations: 'allow', caret: 'hide', scale: 'device' });
   let previous = await capture();
   let unstable: { expected: Buffer; actual: Buffer } | undefined;
   const deadline = Date.now() + 15000;
