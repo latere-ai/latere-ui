@@ -1,11 +1,10 @@
-// Base Liquid Glass primitive, React adapter of GlassSurface.vue. Internal to
-// src/react/ — the ported components compose it; it is not exported from the
-// entrypoint (mirroring the v1.27 ported set). The tier map is duplicated from
+// Base Liquid Glass primitive, React adapter of GlassSurface.vue.
+// The tier map is duplicated from
 // glass/useGlass.ts because that module imports `vue`, which a React host
 // does not install.
 //
 // Requires the material CSS: `import 'latere-ui/glass'` once in the app.
-import type { ElementType, ReactNode } from 'react';
+import type { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react';
 import '../styles/components/glass-surface.css';
 import { cx } from './internal';
 
@@ -25,26 +24,28 @@ export function glassClass(tier: GlassTier = 'regular'): string {
   return TIER_CLASS[tier];
 }
 
-export interface GlassSurfaceProps {
+export type GlassSurfaceProps<T extends ElementType = 'div'> = {
   /** HTML tag to render as. */
-  as?: ElementType;
+  as?: T;
   /** Material depth. thin = controls, regular = panels/chrome, thick = overlays. */
   tier?: GlassTier;
   /** Lift the specular highlight on hover — for clickable surfaces. */
   interactive?: boolean;
   className?: string;
   children?: ReactNode;
-}
+} & Omit<ComponentPropsWithoutRef<T>, 'as' | 'tier' | 'interactive' | 'className' | 'children'>;
 
-export function GlassSurface({
-  as: Tag = 'div',
+export function GlassSurface<T extends ElementType = 'div'>({
+  as,
   tier = 'regular',
   interactive = false,
   className,
   children,
-}: GlassSurfaceProps) {
+  ...attributes
+}: GlassSurfaceProps<T>) {
+  const Tag: ElementType = as ?? 'div';
   return (
-    <Tag className={cx('lu-gs', glassClass(tier), interactive && 'lu-gs-interactive', className)}>
+    <Tag {...attributes} className={cx('lu-gs', glassClass(tier), interactive && 'lu-gs-interactive', className)}>
       {children}
     </Tag>
   );

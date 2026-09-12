@@ -1,8 +1,4 @@
-/* GlassSurface box rules for the React adapter. GlassSurface.vue is not yet
- * de-scoped (it is not in the v1.27 ported set), so its scoped block remains
- * the source for Vue; this sheet mirrors it verbatim for React-rendered
- * surfaces, which carry no scope attribute. Keep the two in sync until
- * GlassSurface itself is ported. Load after `latere-ui/glass`. */
+/* Shared GlassSurface box rules. Load after latere-ui/glass. */
 .lu-gs {
   position: relative;
   border-radius: var(--glass-radius, 14px);

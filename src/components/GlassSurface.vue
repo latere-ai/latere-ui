@@ -6,6 +6,7 @@
 //
 // Requires the material CSS: `import 'latere-ui/glass'` once in the app.
 import { computed } from 'vue';
+import '../styles/components/glass-surface.css';
 import { glassClass, type GlassTier } from '../glass/useGlass';
 
 const props = withDefaults(defineProps<{
@@ -33,22 +34,3 @@ const classes = computed(() => [
     <slot />
   </component>
 </template>
-
-<style scoped>
-.lu-gs {
-  position: relative;
-  border-radius: var(--glass-radius, 14px);
-  color: var(--text, #0a0a0a);
-}
-.lu-gs.lu-glass-smoke { color: var(--glass-smoke-ink, #fafafa); }
-.lu-gs-interactive {
-  cursor: pointer;
-  transition: box-shadow 0.18s ease, transform 0.18s ease;
-}
-.lu-gs-interactive:hover {
-  box-shadow: var(--glass-edge-thick, var(--glass-edge));
-}
-@media (prefers-reduced-motion: reduce) {
-  .lu-gs-interactive { transition: none; }
-}
-</style>
