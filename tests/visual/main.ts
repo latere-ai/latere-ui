@@ -14,6 +14,7 @@ import './gallery.css';
 import './preset-gallery.css';
 import { designs, designScenarios } from './design-manifest';
 import { scenarios } from './manifest';
+import { observeToastDemo } from './toast-demo';
 
 // Load every fixture face before mounting: late font swaps can leave glass
 // compositing layers with fractional text positions from the fallback font.
@@ -33,6 +34,7 @@ document.documentElement.style.colorScheme = theme;
 const design = params.get('design');
 if (design && ['replichai', 'wallfacer', 'origo'].includes(design)) document.documentElement.dataset.design = design;
 const root = document.getElementById('app')!;
+if (scenario === 'toast') observeToastDemo(root);
 if (!scenario) {
   root.innerHTML = '<header><h1>Latere UI visual references</h1><p>Choose a sheet. Each uses real components and local assets.</p></header>';
   for (const [adapter, cases] of Object.entries(scenarios)) {

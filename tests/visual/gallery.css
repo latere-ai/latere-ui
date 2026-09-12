@@ -3,6 +3,7 @@
 html { background: var(--bg); }
 body { min-height: 100vh; margin: 0; font-family: var(--font-ui, system-ui, sans-serif); font-size: 14px; line-height: 1.5; color: var(--text); background: var(--bg); }
 #app { padding: 16px; }
+#app[data-demo="toast"] { padding-top: calc(16px + var(--toast-demo-offset, 0px)); }
 #app > header { margin-bottom: 16px; }
 h1 { font-size: 24px; font-weight: 600; margin: 0; }
 h2 { font-size: 18px; }
