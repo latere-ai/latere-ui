@@ -52,6 +52,13 @@ describe('AccountMenu (react)', () => {
     expect(container.textContent).toContain('Personal');
   });
 
+  it('separates the organization name from its owner label', () => {
+    const { container } = mountOpen({ ...base, orgs: [{ id: 'o1', name: 'Design studio', slug: 'workspace-0', owner: true }] });
+    const name = container.querySelector('.lu-am-org-team + .lu-am-org-text .lu-am-org-name');
+    expect(name?.textContent).toBe('Design studio owner');
+    expect(container.querySelector('.lu-am-org-team + .lu-am-org-text .lu-am-org-meta')?.textContent).toBe('@workspace-0');
+  });
+
   it('calls onSwitchOrg when a membership row is clicked', () => {
     const onSwitchOrg = vi.fn();
     const { container } = render(

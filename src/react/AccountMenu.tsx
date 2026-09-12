@@ -283,10 +283,10 @@ export function AccountMenu({
                       </span>
                       <span className="lu-am-org-text">
                         <span className="lu-am-org-name">
-                          {o.name || o.id}
+                          {`${o.name || o.id}${o.owner ? ' ' : ''}`}
                           {o.owner && <span className="lu-am-owner">{t.owner}</span>}
                         </span>
-                        {o.slug && <span className="lu-am-org-meta">@{o.slug}</span>}
+                        {o.slug && <span className="lu-am-org-meta">{`@${o.slug}`}</span>}
                       </span>
                       {o.id === activeOrgId ? (
                         <svg
