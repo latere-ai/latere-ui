@@ -71,7 +71,7 @@ function toggle() {
   height: 19px;
   border-radius: 50%;
   background: var(--lu-switch-thumb, #fff);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 0 0 1px var(--lu-switch-thumb-border, rgba(10, 10, 10, 0.45)), 0 1px 3px rgba(0, 0, 0, 0.25);
   transition: transform 0.18s ease, background 0.18s ease;
 }
 .lu-switch.is-on .lu-switch-thumb {

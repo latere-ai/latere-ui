@@ -112,6 +112,7 @@ for (const theme of ['light', 'dark']) {
     expect.soft(await contrast(track, 'borderTopColor'), 'off switch boundary').toBeGreaterThanOrEqual(3);
     const thumb = control.locator('.lu-switch-thumb');
     if (theme === 'dark') expect.soft(await contrast(thumb, 'backgroundColor'), 'off switch thumb').toBeGreaterThanOrEqual(3);
+    else expect.soft(await contrast(thumb, 'boxShadow'), 'off switch thumb edge').toBeGreaterThanOrEqual(3);
     for (const [parent, indicator, label] of [[radio, '.lu-radio-dot', '.lu-radio-label'], [control, '.lu-switch-track', '.lu-switch-label']] as const) {
       const before = (await parent.locator(indicator).boundingBox())!.width;
       await parent.evaluate((el, label) => { (el as HTMLElement).style.width = '160px'; el.querySelector(label)!.textContent = 'Receive notifications about all workspace activity'; }, label);
