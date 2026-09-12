@@ -150,7 +150,7 @@ export function AccountMenu({
 
   return (
     <div ref={root} className={cx('lu-am', opensUp && 'lu-am-up')}>
-      <button
+      <button type="button"
         className="lu-am-trigger"
         onClick={onTrigger}
         aria-expanded={hasDropdown ? open : undefined}
@@ -228,7 +228,7 @@ export function AccountMenu({
               {/* Dashboard link */}
               {dashboardPath && (
                 <div className="lu-am-section">
-                  <button className="lu-am-item" onClick={() => goto(dashboardPath)}>
+                  <button type="button" className="lu-am-item" onClick={() => goto(dashboardPath)}>
                     <span>{t.openDashboard}</span>
                   </button>
                 </div>
@@ -241,7 +241,7 @@ export function AccountMenu({
                   <div className="lu-am-section-label">{t.organizations}</div>
 
                   {/* Personal (no-org): present so the user can switch back. */}
-                  <button
+                  <button type="button"
                     className={cx('lu-am-item', 'lu-am-org', isPersonal && 'is-active')}
                     style={{ opacity: rowOpacity('') }}
                     onClick={() => pickOrg('')}
@@ -272,7 +272,7 @@ export function AccountMenu({
                   </button>
 
                   {orgs.map((o) => (
-                    <button
+                    <button type="button"
                       key={o.id}
                       className={cx('lu-am-item', 'lu-am-org', o.id === activeOrgId && 'is-active')}
                       style={{ opacity: rowOpacity(o.id) }}
@@ -334,7 +334,7 @@ export function AccountMenu({
                     <span>{item.label}</span>
                   </a>
                 ) : (
-                  <button
+                  <button type="button"
                     key={item.id || item.href || item.to || i}
                     className={cx('lu-am-item', item.danger && 'lu-am-danger')}
                     onClick={() => onExtraItem(item)}
@@ -351,11 +351,11 @@ export function AccountMenu({
 
           <div className="lu-am-section">
             {principal ? (
-              <button className="lu-am-item lu-am-danger" onClick={onSignOut}>
+              <button type="button" className="lu-am-item lu-am-danger" onClick={onSignOut}>
                 <span>{t.signOut}</span>
               </button>
             ) : (
-              <button className="lu-am-item" onClick={onSignIn}>
+              <button type="button" className="lu-am-item" onClick={onSignIn}>
                 <span>{t.signIn}</span>
               </button>
             )}

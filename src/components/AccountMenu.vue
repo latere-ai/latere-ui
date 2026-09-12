@@ -150,7 +150,7 @@ function onSignIn() {
   emit('login');
 }
 function onExtraItem(item: AccountMenuItem) {
-  // Only reached from the `<button v-else>` branch (rendered when !item.href);
+  // Only reached from the `<button type="button" v-else>` branch (rendered when !item.href);
   // href rows go through the native `<a>` branch, which never calls this.
   open.value = false;
   if (item.to) emit('navigate', item.to);
@@ -165,7 +165,7 @@ function onExtraItem(item: AccountMenuItem) {
     :class="{ 'lu-am-up': opensUp }"
     ref="root"
   >
-    <button
+    <button type="button"
       class="lu-am-trigger"
       @click="onTrigger"
       :aria-expanded="hasDropdown ? open : undefined"
@@ -235,7 +235,7 @@ function onExtraItem(item: AccountMenuItem) {
       <template v-if="principal">
         <!-- Dashboard link -->
         <div v-if="dashboardPath" class="lu-am-section">
-          <button class="lu-am-item" @click="goto(dashboardPath)">
+          <button type="button" class="lu-am-item" @click="goto(dashboardPath)">
             <span>{{ t.openDashboard }}</span>
           </button>
         </div>
@@ -246,7 +246,7 @@ function onExtraItem(item: AccountMenuItem) {
           <div class="lu-am-section-label">{{ t.organizations }}</div>
 
           <!-- Personal (no-org): present so the user can switch back. -->
-          <button
+          <button type="button"
             class="lu-am-item lu-am-org"
             :class="{ 'is-active': isPersonal }"
             :style="{ opacity: rowOpacity('') }"
@@ -275,7 +275,7 @@ function onExtraItem(item: AccountMenuItem) {
             <span v-else-if="switchingOrgId === ''" class="lu-am-spin">…</span>
           </button>
 
-          <button
+          <button type="button"
             v-for="o in orgs"
             :key="o.id"
             class="lu-am-item lu-am-org"
@@ -332,7 +332,7 @@ function onExtraItem(item: AccountMenuItem) {
           >
             <span>{{ item.label }}</span>
           </a>
-          <button
+          <button type="button"
             v-else
             class="lu-am-item"
             :class="{ 'lu-am-danger': item.danger }"
@@ -350,10 +350,10 @@ function onExtraItem(item: AccountMenuItem) {
       </div>
 
       <div class="lu-am-section">
-        <button v-if="principal" class="lu-am-item lu-am-danger" @click="onSignOut">
+        <button type="button" v-if="principal" class="lu-am-item lu-am-danger" @click="onSignOut">
           <span>{{ t.signOut }}</span>
         </button>
-        <button v-else class="lu-am-item" @click="onSignIn">
+        <button type="button" v-else class="lu-am-item" @click="onSignIn">
           <span>{{ t.signIn }}</span>
         </button>
       </div>
