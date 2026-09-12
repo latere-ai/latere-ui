@@ -1,6 +1,6 @@
 ---
 title: Component and glass effect reference coverage
-status: validated
+status: complete
 depends_on:
   - specs/visual-regression-harness.md
 affects:
@@ -40,3 +40,7 @@ Record audit findings and their verification in docs/visual-review.md. Fix confi
 - Committed images cover both themes and representative narrow screens.
 - Behavior tests verify keyboard interaction, focus, scrolling and reduced-motion rules that a still image cannot prove.
 - An image index lists scenarios, covered components and expected baseline paths.
+
+## Outcome
+
+The checked-in manifest and 150 reviewed PNGs cover all 34 Vue and 16 React visual exports, five glass tiers, refraction, sheen, both themes, and representative mobile, interaction, and accessibility states. All 180 browser tests passed without updating expected images. Thirteen defect categories were corrected with failing-before/passing-after regression tests and recorded in docs/visual-review.md. The README and design guide embed actual figures plus a design skeleton SVG; docs/visual-reference.md indexes every baseline. All 191 local documentation links and figures resolve. Coverage intentionally excludes exhaustive prop combinations and cross-browser pixel parity.

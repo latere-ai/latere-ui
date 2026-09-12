@@ -35,5 +35,5 @@ specs/
 
 | Spec | Status | Deliverable |
 |---|---|---|
-| [Visual regression harness](visual-regression-harness.md) | Validated | Browser gallery, committed images and comparison workflow |
-| [Component coverage](visual-component-coverage.md) | Validated | Every UI export, glass effects and responsive states |
+| [Visual regression harness](visual-regression-harness.md) | Complete | Browser gallery, committed images and comparison workflow |
+| [Component coverage](visual-component-coverage.md) | Complete | Every UI export, glass effects and responsive states |

@@ -1,6 +1,6 @@
 ---
 title: Repeatable browser visual regression tests
-status: validated
+status: complete
 depends_on: []
 affects:
   - package.json
@@ -40,3 +40,7 @@ Vitest uses happy-dom and checks markup and CSS source, but cannot detect layout
 - An intentional visible CSS mutation fails a screenshot assertion; restoration passes.
 - Browser tests fail on runtime errors and accidental external requests.
 - Golden updates are explicit, documented, and reviewable in git.
+
+## Outcome
+
+The local Vue/React gallery, pinned Chromium comparison runner, explicit update commands, macOS CI job, and contributor workflow are implemented. Normal verification passed all 180 browser tests, including 150 golden comparisons. An intentional magenta button CSS mutation failed comparison; restoring the stylesheet passed. Fonts are loaded before mounting fixtures. Type checking passed, and 413 unit tests passed with 92.73% source line coverage; CI enforces a 90% line floor. The initial reference platform is macOS/Chromium; other engines and operating systems require separately reviewed images.
