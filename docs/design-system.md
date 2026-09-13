@@ -114,6 +114,8 @@ Compact footer links wrap as complete labels, with theme and language controls b
 
 Both footer layouts show navigation and wordmarks without resting underlines. Hovering a navigation link adds an underline; keyboard focus shows an outline. These styles belong to the footer and need no page-wide link reset. Article links outside the footer retain the host's styling.
 
+The full footer balances its tagline across available lines, keeping short copy visually coherent as the column changes width. At desktop widths, the English tagline reads “Human intelligence” / “in the loop.” Supply ordinary text or inline emphasis through `messages`; translations and custom taglines receive the same wrapping behavior.
+
 Footer language and theme choices belong to the host's preferences. Supply the language options your application supports; English, Chinese, and German footer copy ships in the package. Resolve an automatic theme to a concrete light or dark theme before applying it to the document.
 
 ## Add optical effects deliberately

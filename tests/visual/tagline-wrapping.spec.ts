@@ -2,7 +2,7 @@ import type { Locator } from '@playwright/test';
 import { test, expect, visit } from './fixtures';
 import { designs } from './design-manifest';
 
-// Read actual line boxes, including words split across inline markup. Checking
+// Read actual line boxes, including text inside inline markup. Checking
 // the CSS property alone would accept a baseline with the same orphaned word.
 async function renderedLines(locator: Locator) {
   return locator.evaluate(element => {
