@@ -60,3 +60,13 @@ The comparator accepts zero changed pixels and zero channel tolerance, including
 - Native macOS 15 recording passed all 827 browser tests in 22.6 minutes in [run 34723912848](https://github.com/latere-ai/latere-ui/actions/runs/34723912848). All 852 native figures were individually reviewed, have valid PNG checksums and 300 DPI metadata, and retain their reviewed hashes. All 400 stored Vue/React pairs match exactly. The main-branch workflow checks subsequent renders against these committed native references without recording or accepting changes.
 
 This expands the [initial appearance rollout](product-style-review.md), which recorded a smaller, selective matrix.
+
+### Footer decoration follow-up — 2026-09-13
+
+The earlier review missed browser-default underlines in the full footer. Compact links had their own reset, so the two layouts differed across every appearance. The shared footer now resets decoration on the anchors themselves, including brand and social links. Navigation retains hover underlines and keyboard focus outlines.
+
+The new regression visits eight link-bearing sheets across both adapters, all four appearances, both themes and both widths: 256 page visits. It checks resting decoration, a later host anchor rule, footer hover and focus, and unchanged host prose styling. The Origo dark desktop case fails against the previous stylesheet and passes with the fix. Account-menu fixtures opt into a real hyperlink row for this check.
+
+All 73 focused local browser checks passed, followed by 32 strict full/compact footer comparisons. Native [run 34756280559](https://github.com/latere-ai/latere-ui/actions/runs/34756280559) passed the 32 link regressions and 32 paired footer captures, plus type checking and all 540 unit tests. Source line coverage remains 94.37%.
+
+All 16 changed compositions were inspected separately on each platform, with exact Vue/React RGBA parity and 300 DPI metadata verified. The 64 updated files change only underline rows; text shapes, geometry and controls retain their pixels. The other 1,640 figures retain their previous hashes, including every compact-footer reference. Main CI continues to compare against committed figures with zero pixel tolerance.
