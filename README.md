@@ -1,5 +1,6 @@
 # latere-ui
 
+[![UI verification](https://github.com/latere-ai/latere-ui/actions/workflows/visual.yml/badge.svg)](https://github.com/latere-ai/latere-ui/actions/workflows/visual.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Latest tag](https://img.shields.io/github/v/tag/latere-ai/latere-ui?label=version)](https://github.com/latere-ai/latere-ui/tags)
 [![Vue 3.5+](https://img.shields.io/badge/vue-3.5%2B-42b883.svg)](https://vuejs.org/)

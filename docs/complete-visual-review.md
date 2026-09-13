@@ -54,7 +54,7 @@ The comparator accepts zero changed pixels and zero channel tolerance, including
 ## Verification record
 
 - Type checking passes; 540 unit tests pass with 94.37% source line coverage.
-- Local recording contains all 852 figures, with valid PNG checksums and 300 DPI metadata. All 400 stored Vue/React pairs match exactly. The final strict run passed all 827 browser tests in 15.5 minutes without changing the references. Every current figure hash matches its individual review record.
+- Local recording contains all 852 figures, with valid PNG checksums and 300 DPI metadata. All 400 stored Vue/React pairs match exactly. The final strict run with isolated golden browsers passed all 831 browser tests in 15.8 minutes without changing the references. Every current figure hash matches its individual review record.
 - Browser isolation passed 16 focused native checks, including repeated laptop references, fresh-process pixel equality, viewport resets and pulse-phase changes, in [run 34727571023](https://github.com/latere-ai/latere-ui/actions/runs/34727571023). The regression fails when a golden inherits the previous test's live browser. Trace checks preserve DOM snapshots, screenshot actions and source files.
 - Native macOS 15 recording passed all 827 browser tests in 22.6 minutes in [run 34723912848](https://github.com/latere-ai/latere-ui/actions/runs/34723912848). All 852 native figures were individually reviewed, have valid PNG checksums and 300 DPI metadata, and retain their reviewed hashes. All 400 stored Vue/React pairs match exactly. The main-branch workflow checks subsequent renders against these committed native references without recording or accepting changes.
 
