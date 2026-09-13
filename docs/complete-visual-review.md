@@ -23,6 +23,7 @@ The references are native to macOS 27 (`darwin-27`) and macOS 15 (`darwin-24`). 
 | Problem | Result | Reproduction and regression |
 |---|---|---|
 | Full footer inherited browser underlines while compact navigation removed them | Both layouts reset decoration on their anchors, including wordmarks and social links; navigation hover and keyboard focus remain visible. | [Link decoration across adapters, appearances, themes and widths](../tests/visual/link-decoration.spec.ts) |
+| Full-footer theme and language controls had different heights | Both layouts share explicit outer heights, centered segments and matching corner insets, including larger touch targets. | [Preference geometry across layouts, adapters, appearances and input types](../tests/visual/preference-geometry.spec.ts) |
 | Detached sidebar rim and outlined selection | The rail sits flush with its host; the window owns outer corner clipping and selection stays flat. | [Integrated sidebar](../tests/visual/sidebar-integrated.spec.ts) |
 | Design skeleton retained the old detached rail | The scalable illustration now shows the same integrated geometry and flat selection. | [Documentation skeleton](../tests/visual/documentation-skeleton.spec.ts) |
 | Button examples split variants from their disabled/loading states | Each variant keeps its three states together at both widths. | [Button layout](../tests/visual/button-sheet-layout.spec.ts) |
@@ -72,3 +73,11 @@ All 73 focused local browser checks passed, followed by 32 strict full/compact f
 All 16 changed compositions were inspected separately on each platform, with exact Vue/React RGBA parity and 300 DPI metadata verified. The 64 updated files change only underline rows; text shapes, geometry and controls retain their pixels. The other 1,640 figures retain their previous hashes, including every compact-footer reference. Main CI continues to compare against committed figures with zero pixel tolerance.
 
 The first full [main run](https://github.com/latere-ai/latere-ui/actions/runs/34756542808) passed 862 checks, including every golden comparison and link-decoration case. Its sole failure measured a 24px toast dismiss button as 23.999998px. A new regression reproduces a residual transform after transition classes disappear; it fails with the previous waiter. The waiter now follows actual finite animations and two rendered frames before measuring. All 34 local toast checks pass. The 24px requirement, screenshot comparator and golden files remain unchanged by this test synchronization fix.
+
+### Preference height follow-up — 2026-09-13
+
+The full footer retained intrinsic control sizing after the compact footer gained explicit dimensions. Its theme selector measured 28px while the language dropdown measured 24px, offsetting both edges by 2px. The shared footer rules now give both controls a 28px outer height, matching corner insets and centered theme icons. Coarse-pointer devices use 50px outer heights with 44px theme-button targets.
+
+The [regression](../tests/visual/preference-geometry.spec.ts) fails against the previous stylesheet. Its 32 cases check both footer layouts at 320px and 1280px, both adapters, four appearances, both themes and both pointer types, before and after changing preferences. It also checks equal pill heights in standalone and account-menu preferences. All 73 focused browser checks pass locally and in native [run 34760931088](https://github.com/latere-ai/latere-ui/actions/runs/34760931088), alongside type checking and 540 unit tests with 94.37% source line coverage. All 64 strict local footer/account/preference comparisons pass.
+
+The 16 changed full-footer compositions were inspected separately on each platform, including control details at native resolution. All 64 updated files retain 300 DPI metadata and exact Vue/React pixel parity. The other 1,640 figures, including every compact-footer reference, retain their previous hashes.
