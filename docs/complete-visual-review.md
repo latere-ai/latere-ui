@@ -97,3 +97,13 @@ The full footer's English tagline left “loop.” alone on its last line. Share
 The [wrapping regression](../tests/visual/tagline-wrapping.spec.ts) fails against the previous stylesheet. It measures actual text lines across both adapters, all four appearances, both themes and four widths, with English, German, Chinese and custom inline copy. Local verification passes all 40 wrapping/geometry checks and eight strict paired desktop comparisons. Native [run 34763510415](https://github.com/latere-ai/latere-ui/actions/runs/34763510415) passes the same 40 behavior checks, 32 paired full/compact captures, type checking and 540 unit tests with 94.37% source line coverage.
 
 All eight changed compositions were inspected at native resolution separately on each platform. The 32 updated desktop PNGs retain 300 DPI metadata and exact Vue/React pixel parity. The other 1,672 references retain their previous hashes, including every mobile and compact-footer figure.
+
+### Account typography — 2026-09-13
+
+The account trigger's 1px name-to-metadata gap crowded the role badge against the display name. Shared styling now reserves 4px in standalone and sidebar triggers. Preference pills centered the font's line box, leaving the visible capitals slightly below the control's center. Their labels now use cap-height and alphabetic-baseline trimming inside a centered flex container; controls retain their 24px outer height. Browsers without CSS text-box support keep ordinary flex centering.
+
+Both regressions fail against the preceding implementation. The [identity regression](../tests/visual/account-identity-spacing.spec.ts) measures the rendered gap, edge insets and menu separation at three widths across both adapters, all four appearances and both themes. An opt-in gallery fixture places the actual account component in the sidebar slot, including its collapsed state. The [label regression](../tests/visual/preference-label-alignment.spec.ts) measures the actual baseline against font cap metrics in standalone and account-menu preferences, before and after selecting each language and theme.
+
+All 34 focused local behavior checks and 34 strict visual comparisons pass. Native [run 34766453734](https://github.com/latere-ai/latere-ui/actions/runs/34766453734) passes 66 typography/preference checks and 34 capture cases. Both environments pass type checking and 540 unit tests, with 94.38% source line coverage.
+
+The changed details of all 22 compositions were inspected separately on each platform, including the scrolled account menu. All 84 updated PNGs have valid 300 DPI metadata and exact Vue/React parity where paired. The other 1,620 references retain their previous hashes.

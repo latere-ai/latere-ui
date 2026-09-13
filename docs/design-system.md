@@ -116,6 +116,8 @@ Both footer layouts show navigation and wordmarks without resting underlines. Ho
 
 The full footer balances its tagline across available lines, keeping short copy visually coherent as the column changes width. At desktop widths, the English tagline reads “Human intelligence” / “in the loop.” Supply ordinary text or inline emphasis through `messages`; translations and custom taglines receive the same wrapping behavior.
 
+Account triggers separate the display name from role and workspace metadata with a 4px gap. Preference pills center their labels by cap height and alphabetic baseline, keeping selected and unselected labels aligned across fonts. Browsers without CSS `text-box` support retain ordinary flex centering.
+
 Footer language and theme choices belong to the host's preferences. Supply the language options your application supports; English, Chinese, and German footer copy ships in the package. Resolve an automatic theme to a concrete light or dark theme before applying it to the document.
 
 ## Add optical effects deliberately
