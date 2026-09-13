@@ -233,6 +233,11 @@
 
 /* Repository surfaces use small rectangular controls; circular status marks,
  * avatars, radio dots and switch thumbs retain their semantic geometry. */
+/* Nested selections need a visible 3px corner. Include the track's border and
+ * padding in its outer radius: 3px in footers, 4px in form segmented controls. */
+:root[data-design="origo"] :is(.footer-seg-btn, .lu-seg-item) { border-radius: 3px; }
+:root[data-design="origo"] :is(.footer-seg, .footer-lang-select) { border-radius: 6px; }
+:root[data-design="origo"] .lu-seg { border-radius: 7px; }
 :root[data-design="origo"] .lu-btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
 :root[data-design="origo"] :is(.lu-iconbtn, .lu-am-trigger, .lu-am-item, .lu-cs-fold, .lu-cs-search-hint, .lu-cs-badge) { border-radius: 3px; }
 :root[data-design="origo"] .lu-cs-item { min-height: 28px; padding: 4px 8px; border-radius: 3px; }
