@@ -74,7 +74,7 @@ function registeredGoldens(file: string) {
   runInNewContext(javascript, {
     exports: {},
     require: (specifier: string) => {
-      if (specifier === './fixtures') return { test };
+      if (specifier === './fixtures') return { test, goldenTest: test };
       if (specifier === './manifest') return manifest;
       if (specifier === './design-manifest') return designManifest;
       if (specifier === './exact-golden' || specifier === './exact-pixels' || specifier === 'node:fs') return {};

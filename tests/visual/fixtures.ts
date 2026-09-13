@@ -94,3 +94,17 @@ export async function setPreferences(page: Page, options: {
     { name: 'forced-colors', value: 'none' },
   ] });
 }
+
+/** Golden renders must not inherit a previous test's browser paint caches. */
+export const goldenTest = test.extend({
+  context: async ({ playwright, browserName }, use) => {
+    // Playwright's configured launch/context options and trace hooks also apply
+    // to browsers and contexts created through its instrumented public API.
+    const browser = await playwright[browserName].launch();
+    try {
+      const context = await browser.newContext();
+      try { await use(context); }
+      finally { await context.close(); }
+    } finally { await browser.close(); }
+  },
+});

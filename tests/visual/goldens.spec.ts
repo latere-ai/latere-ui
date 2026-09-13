@@ -1,4 +1,4 @@
-import { test, expect, visit, prepare, setPreferences, sheenInteraction, sampleSheen } from './fixtures';
+import { goldenTest as test, expect, visit, prepare, setPreferences, sheenInteraction, sampleSheen } from './fixtures';
 for (const theme of ['light', 'dark']) {
   for (const mode of ['reduced-motion', 'reduced-transparency', 'contrast'] as const) {
     test(`effects ${theme} ${mode}`, async ({ page }) => {

@@ -1,4 +1,4 @@
-import { test, expect, visit, prepare, sheenInteraction } from './fixtures';
+import { goldenTest as test, expect, visit, prepare, sheenInteraction } from './fixtures';
 import { scenarios } from './manifest';
 import { designs } from './design-manifest';
 import { captureExact } from './exact-golden';
