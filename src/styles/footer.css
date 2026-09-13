@@ -77,6 +77,9 @@
     padding: 32px 0 0;
     font-family: var(--font-ui, system-ui, sans-serif);
 }
+/* Both layouts own their link decoration, including brand and social anchors.
+ * Reset the anchor itself: a descendant wordmark cannot undo its underline. */
+.site-footer a { text-decoration: none; }
 .footer-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -141,7 +144,7 @@
     color: var(--text-secondary);
     transition: color 0.15s;
 }
-.footer-col a:hover { color: var(--text); }
+.footer-col a:hover { color: var(--text); text-decoration: underline; }
 .footer-col-note {
     font-size: 12px;
     line-height: 1.45;
@@ -280,7 +283,6 @@
     color: var(--text-secondary);
     transition: color 0.15s;
     white-space: nowrap;
-    text-decoration: none;
 }
 .footer-compact-links a:hover { color: var(--text); text-decoration: underline; }
 .site-footer-compact .footer-extra {

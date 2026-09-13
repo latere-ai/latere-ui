@@ -22,6 +22,7 @@ The references are native to macOS 27 (`darwin-27`) and macOS 15 (`darwin-24`). 
 
 | Problem | Result | Reproduction and regression |
 |---|---|---|
+| Full footer inherited browser underlines while compact navigation removed them | Both layouts reset decoration on their anchors, including wordmarks and social links; navigation hover and keyboard focus remain visible. | [Link decoration across adapters, appearances, themes and widths](../tests/visual/link-decoration.spec.ts) |
 | Detached sidebar rim and outlined selection | The rail sits flush with its host; the window owns outer corner clipping and selection stays flat. | [Integrated sidebar](../tests/visual/sidebar-integrated.spec.ts) |
 | Design skeleton retained the old detached rail | The scalable illustration now shows the same integrated geometry and flat selection. | [Documentation skeleton](../tests/visual/documentation-skeleton.spec.ts) |
 | Button examples split variants from their disabled/loading states | Each variant keeps its three states together at both widths. | [Button layout](../tests/visual/button-sheet-layout.spec.ts) |

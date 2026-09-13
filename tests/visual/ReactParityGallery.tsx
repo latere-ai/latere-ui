@@ -12,6 +12,7 @@ import {
 function ReactParityGallery({ scenario }: { scenario: string }) {
   const params = new URLSearchParams(location.search);
   const effectText = effectCaptions(!!document.documentElement.dataset.design);
+  const accountLinks = params.get('accountLinks') === 'true' ? [{ label: 'Account help', href: '#account-help' }] : [];
   const currentProduct = params.get('currentProduct') ?? '';
   const showToc = params.get('showToc') !== 'false';
   const matchWidth = params.get('matchWidth') === 'true';
@@ -111,7 +112,7 @@ function ReactParityGallery({ scenario }: { scenario: string }) {
   if (scenario.startsWith('sidebar')) return <div className="shell-stage" data-component="ConsoleSidebar"><UI.ConsoleSidebar model={nav} activeKey="jobs" brandName="Workspace" brandSub="Console" search collapsed={scenario === 'sidebar-collapsed'} logo={<UI.LatereLogoMark />} /><div className="shell-content"><h2>Workspace overview</h2><p>Projects and activity appear beside the navigation.</p></div></div>;
   if (scenario === 'palette') return <div data-component="ConsolePalette"><UI.GlassButton onClick={() => setOpen(true)}>Open palette</UI.GlassButton><UI.ConsolePalette open={open} model={paletteNav} onClose={() => setOpen(false)} /></div>;
   if (scenario === 'docs') return <div data-component="DocsLayout"><UI.DocsLayout showToc={showToc} groups={groups} activeSlug="intro" articleHtml={article} /></div>;
-  if (scenario === 'account') return <form data-component="AccountMenu" style={{ display: 'flex', justifyContent: 'flex-end' }} onSubmit={event => { event.preventDefault(); setText('Unexpected submit'); }}><UI.AccountMenu principal={principal} dashboardPath="#dashboard" prefs={<div data-component="AccountPrefs">{prefs}</div>} /></form>;
+  if (scenario === 'account') return <form data-component="AccountMenu" style={{ display: 'flex', justifyContent: 'flex-end' }} onSubmit={event => { event.preventDefault(); setText('Unexpected submit'); }}><UI.AccountMenu principal={principal} extraItems={accountLinks} dashboardPath="#dashboard" prefs={<div data-component="AccountPrefs">{prefs}</div>} /></form>;
   if (scenario === 'preferences') return <div className="sample" data-component="AccountPrefs">{prefs}</div>;
   if (scenario === 'products') return <div data-component="ProductSwitcher"><UI.ProductSwitcher current={currentProduct} /></div>;
   if (scenario === 'organizations') return <div className="sample organization-demo" data-component="OrgSwitcher"><UI.OrgSwitcher state={orgState} header={<p className="sample-label">Switch workspace</p>} /></div>;

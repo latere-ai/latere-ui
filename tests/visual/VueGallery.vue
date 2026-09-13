@@ -4,6 +4,7 @@ import * as UI from '../../src';
 import { options, selectOptions, nav, paletteNav, principal, locales, tiers, badgeTones, alertTones, menuItems, columns, rows, groups, article, createWorkspaceRows, buttonSizes, buttonVariants, progressValues, brands, workspaceMetrics, effectCaptions } from './parity-data';
 const effectText = effectCaptions(!!document.documentElement.dataset.design);
 const props = defineProps<{ scenario: string }>();
+const accountLinks = new URLSearchParams(location.search).get('accountLinks') === 'true' ? [{ label: 'Account help', href: '#account-help' }] : [];
 const currentProduct = new URLSearchParams(location.search).get('currentProduct') ?? '';
 const showToc = new URLSearchParams(location.search).get('showToc') !== 'false';
 const matchWidth = new URLSearchParams(location.search).get('matchWidth') === 'true';
@@ -81,7 +82,7 @@ onMounted(async () => { await nextTick(); if (props.scenario === 'effects') UI.i
   <div v-else-if="scenario.startsWith('sidebar')" class="shell-stage" data-component="ConsoleSidebar"><UI.ConsoleSidebar :model="nav" active-key="jobs" brand-name="Workspace" brand-sub="Console" search :collapsed="scenario === 'sidebar-collapsed'"><template #logo><UI.LatereLogoMark/></template></UI.ConsoleSidebar><div class="shell-content"><h2>Workspace overview</h2><p>Projects and activity appear beside the navigation.</p></div></div>
   <div v-else-if="scenario === 'palette'" data-component="ConsolePalette"><UI.GlassButton @click="open = true">Open palette</UI.GlassButton><UI.ConsolePalette :open="open" :model="paletteNav" @close="open = false"/></div>
   <div v-else-if="scenario === 'docs'" data-component="DocsLayout"><UI.DocsLayout :show-toc="showToc" :groups="groups" active-slug="intro" :article-html="article"/></div>
-  <form v-else-if="scenario === 'account'" data-component="AccountMenu" style="display:flex;justify-content:flex-end" @submit.prevent="text = 'Unexpected submit'"><UI.AccountMenu :principal="principal" dashboard-path="#dashboard"><template #prefs><div data-component="AccountPrefs"><UI.AccountPrefs :theme="theme" :locale="locale" :locale-options="locales" @set-theme="theme = $event" @set-locale="locale = $event"/></div></template></UI.AccountMenu></form>
+  <form v-else-if="scenario === 'account'" data-component="AccountMenu" style="display:flex;justify-content:flex-end" @submit.prevent="text = 'Unexpected submit'"><UI.AccountMenu :principal="principal" :extra-items="accountLinks" dashboard-path="#dashboard"><template #prefs><div data-component="AccountPrefs"><UI.AccountPrefs :theme="theme" :locale="locale" :locale-options="locales" @set-theme="theme = $event" @set-locale="locale = $event"/></div></template></UI.AccountMenu></form>
   <div v-else-if="scenario === 'preferences'" class="sample" data-component="AccountPrefs"><UI.AccountPrefs :theme="theme" :locale="locale" :locale-options="locales" @set-theme="theme = $event" @set-locale="locale = $event"/></div>
   <div v-else-if="scenario === 'products'" data-component="ProductSwitcher"><UI.ProductSwitcher :current="currentProduct"/></div>
   <div v-else-if="scenario === 'organizations'" class="sample organization-demo" data-component="OrgSwitcher"><UI.OrgSwitcher :state="orgState"><template #header><p class="sample-label">Switch workspace</p></template></UI.OrgSwitcher></div>

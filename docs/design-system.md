@@ -110,6 +110,8 @@ The sidebar supports a collapsed rail and custom brand, row, and footer content.
 
 Compact footer links wrap as complete labels, with theme and language controls below them. No horizontal scrolling is required to discover the links. Desktop preference controls share a 28px height; touch devices receive larger targets.
 
+Both footer layouts show navigation and wordmarks without resting underlines. Hovering a navigation link adds an underline; keyboard focus shows an outline. These styles belong to the footer and need no page-wide link reset. Article links outside the footer retain the host's styling.
+
 Footer language and theme choices belong to the host's preferences. Supply the language options your application supports; English, Chinese, and German footer copy ships in the package. Resolve an automatic theme to a concrete light or dark theme before applying it to the document.
 
 ## Add optical effects deliberately

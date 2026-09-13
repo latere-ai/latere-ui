@@ -61,6 +61,8 @@ footer strings via `messages`, e.g. `:messages="{ fr: { 'footer.tagline': '…' 
 
 The footer reports theme choices; the host applies them to `data-theme` and resolves `auto` with `matchMedia('(prefers-color-scheme: dark)')`. It also persists preferences if needed. German copy is bundled, but the default dropdown lists English and Chinese; include `de` in `locales` to offer German.
 
+The shared stylesheet scopes link decoration to `.site-footer a` in both layouts, including router links that render anchors. Navigation links underline on hover; keyboard focus retains its outline. No global anchor reset is required.
+
 Cross-product links (Wallfacer, Topos, …) are always absolute. Internal links
 resolve against `baseUrl` as plain `<a>` unless `routerLink` is supplied, in
 which case they render through it with a relative `to`.
