@@ -63,6 +63,8 @@ Fonts are bundled locally;
 media preferences are explicit, with dedicated accessibility scenarios.
 No backend, remote images, or web font service is needed.
 
+Golden tests use the `goldenTest` fixture from `tests/visual/fixtures.ts`. Each test launches and closes its own Chromium process so paint caches do not carry over from earlier examples; its Vue and React renders still share the same fresh page. Configured fonts, DPR, viewport, browser arguments and tracing remain in effect. Use the ordinary `test` fixture for behavior checks that do not need a committed visual reference.
+
 Each capture waits for finite transitions to finish, pauses looping animations at their first frame, hides the text caret, and requires two identical decoded RGBA images. It restores the previous animation state afterward. Avoid Playwright's global animation override: repeated SVG captures exposed raster differences with that override. For every scenario, the suite compares Vue directly with React before checking either committed golden. Explicit recording cannot bypass this adapter parity check.
 
 Optical figures send a fixed pointer sample through the component's mouse handler, with the native cursor outside the panel. Native full-page captures can temporarily resize Chromium to 1×1 and dispatch an unrelated mouse-leave event. The fixture avoids that input disturbance; capture also checks the sampled opacity and gradient before accepting each frame. Separate browser tests verify that the sample matches real pointer input and that real pointer exit fades the sheen. DOM/action traces remain enabled; background trace screencast images are disabled to avoid a second native capture stream.
