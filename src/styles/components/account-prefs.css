@@ -23,6 +23,9 @@
   outline-offset: 1px;
 }
 .lu-ap-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font: inherit;
   font-size: 11px;
   line-height: 1;
@@ -44,4 +47,10 @@
   color: var(--text, #111);
   border-color: var(--accent, #171717);
   font-weight: 600;
+}
+
+/* Center visible capitals on the control; font ascent/descent otherwise biases
+ * these short labels downward. Unsupported browsers retain flex centering. */
+.lu-ap-pill-label {
+  text-box: trim-both cap alphabetic;
 }

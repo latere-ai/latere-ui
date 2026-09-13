@@ -61,7 +61,7 @@ const themes = computed<{ v: Theme; label: string }[]>(() => [
         :aria-pressed="locale === opt.code"
         @click="emit('set-locale', opt.code)"
       >
-        {{ opt.label }}
+        <span class="lu-ap-pill-label">{{ opt.label }}</span>
       </button>
     </div>
 
@@ -77,7 +77,7 @@ const themes = computed<{ v: Theme; label: string }[]>(() => [
         :aria-pressed="theme === opt.v"
         @click="emit('set-theme', opt.v)"
       >
-        {{ opt.label }}
+        <span class="lu-ap-pill-label">{{ opt.label }}</span>
       </button>
     </div>
   </div>
