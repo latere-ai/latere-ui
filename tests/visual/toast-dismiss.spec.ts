@@ -5,6 +5,19 @@ import type { Page } from '@playwright/test';
 
 async function waitForToastEntrance(page: Page) {
   await expect(page.locator('.lu-toast-enter-active')).toHaveCount(0);
+  await page.locator('.lu-toast').evaluateAll(async rows => {
+    const frame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+    // Class cleanup can precede the final rendered transform. Settle the
+    // actual timeline and compositor before reading exact target bounds.
+    while (true) {
+      await frame(); await frame();
+      const animations = rows.flatMap(row => row.getAnimations({ subtree: true })).filter(animation =>
+        animation.effect?.getComputedTiming().iterations !== Infinity &&
+        (animation.playState === 'running' || animation.pending));
+      if (!animations.length) break;
+      await Promise.all(animations.map(animation => animation.finished.catch(() => {})));
+    }
+  });
 }
 
 test('toast geometry waits for every staggered entrance', async ({ page }) => {
@@ -15,6 +28,25 @@ test('toast geometry waits for every staggered entrance', async ({ page }) => {
   await waitForToastEntrance(page);
   expect(await page.locator('.lu-toast-enter-active').count()).toBe(0);
   expect(await page.locator('.lu-toast').evaluateAll(rows => rows.map(row => getComputedStyle(row).transform))).toEqual(['none', 'none', 'none', 'none']);
+});
+
+test('toast geometry waits for residual transforms after transition classes clear', async ({ page }) => {
+  await visit(page, 'react', 'toast', 'light', '&parity=1&design=wallfacer');
+  await prepare(page, 'react', 'toast');
+  await expect(page.locator('.lu-toast')).toHaveCount(4);
+  await waitForToastEntrance(page);
+  const row = page.locator('.lu-toast').first();
+  await row.evaluate(async element => {
+    // A tiny residual translation reproduces the CI bound of 23.999998px
+    // for a real 24px target, even with no transition class remaining.
+    element.animate([{ transform: 'translateY(0.000001px)' }, { transform: 'translateY(0.000001px)' }], { duration: 1000 });
+    await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+  });
+  await expect(page.locator('.lu-toast-enter-active')).toHaveCount(0);
+  await waitForToastEntrance(page);
+  expect(await row.evaluate(element => getComputedStyle(element).transform)).toBe('none');
+  const button = row.getByRole('button', { name: 'Dismiss notification' });
+  expect((await button.boundingBox())!.height).toBeGreaterThanOrEqual(24);
 });
 
 for (const framework of ['vue', 'react']) for (const design of ['default', 'replichai', 'wallfacer', 'origo']) {
