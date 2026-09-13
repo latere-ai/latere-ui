@@ -176,26 +176,33 @@
     align-items: center;
     gap: 8px;
 }
+/* Both footer layouts own their control boxes instead of native font metrics. */
 .footer-seg {
     display: inline-flex;
+    box-sizing: border-box;
+    height: 28px;
     gap: 2px;
-    padding: 3px;
+    padding: 2px;
     border: 1px solid var(--text-muted);
-    border-radius: var(--radius-pill, 999px);
+    border-radius: var(--radius-md, 8px);
     background: var(--glass-bg-ultrathin, var(--bg-surface));
 }
 .footer-seg-btn {
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    width: 28px;
     appearance: none;
     background: transparent;
     border: 0;
-    padding: 4px 12px;
+    padding: 0;
     font: inherit;
     font-size: 12px;
     color: var(--text-muted);
     cursor: pointer;
     line-height: 1;
     min-width: 28px;
-    border-radius: var(--radius-pill, 999px);
+    border-radius: max(0px, calc(var(--radius-md, 8px) - 3px));
     transition: color 0.13s, background 0.13s;
 }
 .footer-seg-btn:hover { color: var(--text); }
@@ -208,10 +215,12 @@
     display: inline-flex;
 }
 .footer-lang-select {
+    box-sizing: border-box;
+    height: 28px;
     appearance: none;
     -webkit-appearance: none;
     border: 1px solid var(--text-muted);
-    border-radius: var(--radius-pill, 999px);
+    border-radius: var(--radius-md, 8px);
     background: var(--glass-bg-ultrathin, var(--bg-surface));
     color: var(--text-muted);
     font: inherit;
@@ -293,32 +302,12 @@
     margin-left: auto;
 }
 
-/* Equal outer heights and explicit icon boxes avoid font-dependent controls. */
 .site-footer-compact .footer-compact-links { order: -1; }
-.site-footer-compact .footer-seg {
-    box-sizing: border-box;
-    height: 28px;
-    padding: 2px;
-    border-radius: var(--radius-md, 8px);
-}
-.site-footer-compact .footer-seg-btn {
-    display: grid;
-    place-items: center;
-    box-sizing: border-box;
-    width: 28px;
-    min-width: 28px;
-    padding: 0;
-    border-radius: max(0px, calc(var(--radius-md, 8px) - 3px));
-}
-.site-footer-compact .footer-lang-select {
-    box-sizing: border-box;
-    height: 28px;
-    border-radius: var(--radius-md, 8px);
-}
+/* Both layouts keep equal outer heights and 44px segment targets on touch. */
 @media (pointer: coarse) {
-    .site-footer-compact .footer-seg { height: 50px; }
-    .site-footer-compact .footer-seg-btn { width: 44px; min-height: 44px; }
-    .site-footer-compact .footer-lang-select { height: 50px; }
+    .footer-seg { height: 50px; }
+    .footer-seg-btn { width: 44px; min-height: 44px; }
+    .footer-lang-select { height: 50px; }
     .site-footer-compact .footer-compact-links a { min-height: 44px; display: inline-flex; align-items: center; }
 }
 

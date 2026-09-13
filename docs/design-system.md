@@ -108,7 +108,7 @@ The sidebar supports a collapsed rail and custom brand, row, and footer content.
 
 ![Compact footer on a narrow viewport](../tests/visual/goldens/darwin-27/vue-footer-compact-light-mobile.png)
 
-Compact footer links wrap as complete labels, with theme and language controls below them. No horizontal scrolling is required to discover the links. Desktop preference controls share a 28px height; touch devices receive larger targets.
+Compact footer links wrap as complete labels, with theme and language controls below them. No horizontal scrolling is required to discover the links. Both full and compact footers align their preference controls at a 28px outer height. Touch devices use 50px controls with 44px theme-button targets.
 
 Both footer layouts show navigation and wordmarks without resting underlines. Hovering a navigation link adds an underline; keyboard focus shows an outline. These styles belong to the footer and need no page-wide link reset. Article links outside the footer retain the host's styling.
 

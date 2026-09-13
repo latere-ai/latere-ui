@@ -63,6 +63,8 @@ The footer reports theme choices; the host applies them to `data-theme` and reso
 
 The shared stylesheet scopes link decoration to `.site-footer a` in both layouts, including router links that render anchors. Navigation links underline on hover; keyboard focus retains its outline. No global anchor reset is required.
 
+Both footer layouts use 28px outer heights for the theme selector and language dropdown. On coarse-pointer devices, both become 50px high so each inset theme button has a 44px touch target. The selected segment keeps the same geometry as the other segments.
+
 Cross-product links (Wallfacer, Topos, …) are always absolute. Internal links
 resolve against `baseUrl` as plain `<a>` unless `routerLink` is supplied, in
 which case they render through it with a relative `to`.
