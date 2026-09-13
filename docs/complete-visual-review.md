@@ -81,3 +81,11 @@ The full footer retained intrinsic control sizing after the compact footer gaine
 The [regression](../tests/visual/preference-geometry.spec.ts) fails against the previous stylesheet. Its 32 cases check both footer layouts at 320px and 1280px, both adapters, four appearances, both themes and both pointer types, before and after changing preferences. It also checks equal pill heights in standalone and account-menu preferences. All 73 focused browser checks pass locally and in native [run 34760931088](https://github.com/latere-ai/latere-ui/actions/runs/34760931088), alongside type checking and 540 unit tests with 94.37% source line coverage. All 64 strict local footer/account/preference comparisons pass.
 
 The 16 changed full-footer compositions were inspected separately on each platform, including control details at native resolution. All 64 updated files retain 300 DPI metadata and exact Vue/React pixel parity. The other 1,640 figures, including every compact-footer reference, retain their previous hashes.
+
+### Origo selected corners — 2026-09-13
+
+Subtracting an inset from Origo's 4px radius left selected segments with nearly square 1px corners. Both footer layouts and the form segmented control now use a visible 3px inner radius. Their outer radii include the actual border and padding: 6px for footer controls and 7px for form segments.
+
+The [corner regression](../tests/visual/segment-corners.spec.ts) fails against the previous stylesheet and checks every selected position across both adapters, all four appearances and both themes. All 48 corner/preference checks and 48 strict local figure comparisons pass. Native [run 34761662874](https://github.com/latere-ai/latere-ui/actions/runs/34761662874) passes the same 48 behavior checks and 48 paired captures, plus type checking and 540 unit tests. Line coverage remains 94.37%.
+
+The changed regions of all 12 compositions were inspected at native resolution separately on each platform. All 48 updated Origo PNGs retain 300 DPI metadata and exact Vue/React pixel parity. The other 1,656 references retain their previous hashes.
