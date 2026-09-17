@@ -26,7 +26,14 @@ export interface OrgEntry {
  */
 export type PlatformRole = 'platform_admin' | 'org_admin' | 'org_member' | 'individual';
 
-/** The authenticated principal, as consumed by the store + AccountMenu. */
+/**
+ * The authenticated principal, as consumed by the store + AccountMenu.
+ *
+ * Access is decided by role name (identity rule R9, leaf id-09): `role` is the
+ * only channel for "this person administers the platform". The retired
+ * `is_superadmin` flag is deliberately absent, so a product cannot read it
+ * through this type; a backend still sending it maps its roles into `role`.
+ */
 export interface Principal {
   principal_id: string;
   email: string;
@@ -39,7 +46,6 @@ export interface Principal {
   org_id: string;
   org_name?: string;
   orgs: OrgEntry[];
-  is_superadmin?: boolean;
   /**
    * Canonical account role. When set, AccountMenu renders a role badge next
    * to the identity and uses the role for the no-org subline ("Individual").

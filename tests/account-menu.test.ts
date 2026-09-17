@@ -220,6 +220,16 @@ describe('AccountMenu role badge (shared four-role account model)', () => {
     expect(w.find('.lu-am-id-sub-text').text()).toBe('Personal');
   });
 
+  // Identity rule R9 (leaf id-09): the badge is decided by the role name.
+  // A principal whose JSON still carries the retired `is_superadmin` flag is
+  // not an administrator, and the menu reads nothing from it.
+  it('ignores a retired is_superadmin flag left on the wire', () => {
+    const legacy = { ...base, is_superadmin: true } as unknown as Principal;
+    const w = mount(AccountMenu, { props: { principal: legacy } });
+    expect(w.find('.lu-am-role').exists()).toBe(false);
+    expect(w.find('.lu-am-id-sub-text').text()).toBe('Personal');
+  });
+
   it('honors custom role labels', () => {
     const w = mount(AccountMenu, {
       props: {

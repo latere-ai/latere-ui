@@ -190,3 +190,18 @@ describe('logout() / login()', () => {
     expect(hrefSpy).toHaveBeenCalledWith('/login');
   });
 });
+
+// Identity rule R9 (leaf id-09): access is decided by role name. The retired
+// `is_superadmin` flag is not a key of the shared principal, so a product
+// cannot keep reading it through the shared type. This guard is a typecheck
+// assertion: with the key back on `Principal` the assignment is legal and the
+// directive below is unused, which fails `vue-tsc`.
+describe('Principal shape', () => {
+  it('carries no is_superadmin key; the role channel is `role`', () => {
+    // @ts-expect-error id-09: the retired flag is not part of `Principal`.
+    const retired: Principal = { ...PRINCIPAL, is_superadmin: true };
+    expect(retired.principal_id).toBe('p1');
+    const admin: Principal = { ...PRINCIPAL, role: 'platform_admin' };
+    expect(admin.role === 'platform_admin').toBe(true);
+  });
+});
