@@ -10,6 +10,7 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+- The shared `Principal` no longer carries `is_superadmin`. Read platform administration from the role instead: `principal.role === 'platform_admin'`. An application whose backend still sends the flag maps it into `role` in its `mapMe`, or declares the wire field on its own type.
 - Add keyboard-accessible toast dismiss buttons and restore popover trigger focus after keyboard dismissal. Match React modal and toast transition lifecycles with Vue.
 - Keep visual-reference button states grouped, show the selected organization in a styled headless example, preserve toast caption readability, and label inactive matte effects explicitly.
 - Complete the React visual component set: add surfaces, icon buttons, switches, radios, tabs, progress/skeleton feedback, tooltips, menus, popovers, drawers, toast/confirm hosts, command palette, documentation layout, preferences, product switching and organization selection. Restore the sidebar's optional product switcher.
