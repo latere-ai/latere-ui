@@ -118,14 +118,14 @@ for (const framework of ['vue', 'react']) for (const layout of ['desktop', 'mobi
     });
 
     test('product switcher marks current, closes links and handles Escape', async ({ page }) => {
-      await visit(page, framework, 'products', 'light', '&parity=1&currentProduct=drive');
+      await visit(page, framework, 'products', 'light', '&parity=1&currentProduct=lectio');
       const trigger = page.getByRole('button', { name: 'Switch product', exact: true });
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
       await trigger.click();
       const current = page.locator('.lu-ps-tile[aria-current="true"]');
-      await expect(current).toContainText('Drive');
+      await expect(current).toContainText('Lectio');
       expect(await current.evaluate(element => element.tagName)).toBe('SPAN');
-      await expect(page.locator('.lu-ps-grid a')).toHaveCount(6);
+      await expect(page.locator('.lu-ps-grid a')).toHaveCount(5);
       await page.keyboard.press('Escape');
       await expect(page.locator('.lu-ps-panel')).toHaveCount(0);
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
