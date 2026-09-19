@@ -8,6 +8,7 @@ import { resolve } from 'node:path';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { SiteFooter, type SiteFooterProps } from '../SiteFooter';
 import { LATERE_PRODUCTS } from '../../components/productSwitcher';
+import { en, zh, de } from '../../i18n/footer';
 
 function mount(props: Partial<SiteFooterProps> = {}) {
   return render(<SiteFooter theme="auto" locale="en" {...props} />);
@@ -19,11 +20,11 @@ const hrefs = (c: HTMLElement) =>
 describe('SiteFooter (React)', () => {
   it('renders every product name and cross-product link', () => {
     const { container } = mount();
-    for (const name of ['Wallfacer', 'Topos', 'Cella', 'Lux', 'Lectio', 'Drive']) {
+    for (const name of ['Wallfacer', 'Topos', 'Cella', 'Lux', 'Lectio']) {
       expect(container.textContent).toContain(name);
     }
     expect(hrefs(container)).toContain('https://wf.latere.ai/');
-    expect(hrefs(container)).toContain('https://drive.latere.ai/');
+    expect(hrefs(container)).toContain('https://lectio.latere.ai/');
     expect(hrefs(container)).toContain('https://auth.latere.ai/');
   });
 
@@ -149,6 +150,15 @@ describe('SiteFooter (React)', () => {
     expect(svg.getAttribute('fill')).toBe('currentColor');
     expect(svg.querySelectorAll('path').length).toBe(6);
   });
+
+  // Drive shut down on 2026-09-19; durable storage is the platform's Storage
+  // section, so the retired console must not survive in either variant.
+  it.each([false, true])('offers no retired Drive console (compact=%s)', (compact) => {
+    const { container } = mount({ compact });
+    expect(hrefs(container)).not.toContain('https://drive.latere.ai/');
+    expect(container.textContent).not.toContain('Drive');
+  });
+
 });
 
 describe('the two logo marks stay one mark', () => {

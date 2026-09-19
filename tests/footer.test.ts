@@ -29,11 +29,11 @@ describe('SiteFooter', () => {
   it('renders every product name and cross-product link', () => {
     const w = render();
     const html = w.html();
-    for (const name of ['Wallfacer', 'Topos', 'Cella', 'Lux', 'Lectio', 'Drive']) {
+    for (const name of ['Wallfacer', 'Topos', 'Cella', 'Lux', 'Lectio']) {
       expect(html).toContain(name);
     }
     expect(html).toContain('https://wf.latere.ai/');
-    expect(html).toContain('https://drive.latere.ai/');
+    expect(html).toContain('https://lectio.latere.ai/');
     expect(html).toContain('https://auth.latere.ai/');
   });
 
@@ -152,6 +152,16 @@ describe('SiteFooter', () => {
       .findAll('.footer-seg-btn.is-active').map((b) => b.text());
     expect(active).toContain('☾');
   });
+
+  // Drive shut down on 2026-09-19; durable storage is the platform's Storage
+  // section, so the retired console must not survive in either variant.
+  it.each([false, true])('offers no retired Drive console (compact=%s)', (compact) => {
+    const w = render({ compact });
+    const urls = w.findAll('a').map((a) => a.attributes('href') ?? '');
+    expect(urls).not.toContain('https://drive.latere.ai/');
+    expect(w.text()).not.toContain('Drive');
+  });
+
 });
 
 describe('brand wordmark styles', () => {

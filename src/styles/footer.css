@@ -36,6 +36,9 @@
 }
 
 /* ===== Product brand names ===== */
+/* `.drive-brand` outlives the retired Drive console: the platform's Storage
+ * section keeps the gold as its accent, so hosts still resolve the class even
+ * though no component in this package emits it. */
 /* Kept inline (no cross-file include) so `latere-ui/styles` stays a single
  * resolvable file for every marketing/SSG consumer. The console sidebar uses
  * the same values via the shared brand.css partial; these few static lines are

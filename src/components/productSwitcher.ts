@@ -17,7 +17,6 @@ export type ProductSlug =
   | 'cella'
   | 'lux'
   | 'lectio'
-  | 'drive'
   | 'identity';
 
 export interface ProductInfo {
@@ -83,14 +82,6 @@ export const LATERE_PRODUCTS: readonly ProductInfo[] = [
     color: '#b87333',
     brandClass: 'lectio-brand',
     icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b87333" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3 H14 L18 7 V21 H6 Z"/><path d="M14 3 V7 H18"/><path d="M9 12 H15M9 15.5 H15" opacity="0.7"/></svg>',
-  },
-  {
-    slug: 'drive',
-    name: 'Drive',
-    url: 'https://drive.latere.ai',
-    color: '#c9a227',
-    brandClass: 'drive-brand',
-    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a227" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 7.2a1.2 1.2 0 011.2-1.2h4.6l2 2.4h8a1.2 1.2 0 011.2 1.2v8.2a1.2 1.2 0 01-1.2 1.2H4.7a1.2 1.2 0 01-1.2-1.2z"/><path d="M8 14.6h8" opacity="0.7"/></svg>',
   },
   {
     slug: 'identity',

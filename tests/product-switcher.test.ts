@@ -9,18 +9,27 @@ import {
 } from '../src/components/productSwitcher';
 
 describe('product registry', () => {
-  it('lists all seven consoles with unique slugs', () => {
+  it('lists all six consoles with unique slugs', () => {
     const slugs = LATERE_PRODUCTS.map((p) => p.slug);
     expect(new Set(slugs).size).toBe(slugs.length);
     expect([...slugs].sort()).toEqual([
       'cella',
-      'drive',
       'identity',
       'lectio',
       'lux',
       'topos',
       'wallfacer',
     ]);
+  });
+
+  // Drive shut down on 2026-09-19; durable storage is the platform's Storage
+  // section, so nothing in the registry may still point a reader at it.
+  it('no longer carries the retired Drive console', () => {
+    expect(LATERE_PRODUCTS.map((p) => p.slug)).not.toContain('drive');
+    for (const p of LATERE_PRODUCTS) {
+      expect(new URL(p.url).hostname).not.toBe('drive.latere.ai');
+      expect(p.name).not.toBe('Drive');
+    }
   });
 
   it('points every product at an https latere.ai origin with no trailing slash', () => {
@@ -56,7 +65,6 @@ describe('product registry', () => {
     expect(bySlug.lux).toContain('stroke="#3a4ed1"');
     expect(bySlug.lux).toContain('M12 4l8 14H4z'); // the Lux prism triangle
     expect(bySlug.lectio).toContain('stroke="#b87333"');
-    expect(bySlug.drive).toContain('stroke="#c9a227"'); // gold folder
     expect(bySlug.identity).toContain('stroke="#6b5fc0"');
   });
 
@@ -106,25 +114,25 @@ describe('<ProductSwitcher />', () => {
     const w = render();
     await w.find('button.lu-iconbtn').trigger('click');
     const hrefs = w.findAll('a.lu-ps-tile').map((a) => a.attributes('href'));
-    expect(hrefs).toContain('https://drive.latere.ai');
+    expect(hrefs).toContain('https://lectio.latere.ai');
     expect(hrefs).toContain('https://auth.latere.ai');
     expect(hrefs.length).toBe(LATERE_PRODUCTS.length - 1);
   });
 
   it('marks the current product with a ring and renders it non-navigating', async () => {
-    const w = render({ current: 'drive' });
+    const w = render({ current: 'lectio' });
     await w.find('button.lu-iconbtn').trigger('click');
     const current = w.find('.lu-ps-tile.is-current');
     expect(current.exists()).toBe(true);
     expect(current.element.tagName).toBe('SPAN');
     expect(current.attributes('href')).toBeUndefined();
     expect(current.attributes('aria-current')).toBe('true');
-    expect(current.text()).toContain('Drive');
+    expect(current.text()).toContain('Lectio');
     // Screen readers get an explicit current marker.
     expect(current.find('.lu-ps-sr').text()).toBe('Current product');
     // And no anchor points back at the console we are already in.
     const hrefs = w.findAll('a.lu-ps-tile').map((a) => a.attributes('href'));
-    expect(hrefs).not.toContain('https://drive.latere.ai');
+    expect(hrefs).not.toContain('https://lectio.latere.ai');
   });
 
   it('closes on Escape', async () => {
@@ -146,7 +154,7 @@ describe('<ProductSwitcher />', () => {
 
   it('accepts a products override for filtered lineups', async () => {
     const products: ProductInfo[] = LATERE_PRODUCTS.filter(
-      (p) => p.slug === 'lux' || p.slug === 'drive',
+      (p) => p.slug === 'lux' || p.slug === 'lectio',
     );
     const w = render({ products });
     await w.find('button.lu-iconbtn').trigger('click');

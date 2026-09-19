@@ -3,6 +3,9 @@
  * marketing footer and every product console sidebar. */
 
 /* ===== Product brand names ===== */
+/* `.drive-brand` outlives the retired Drive console: the platform's Storage
+ * section keeps the gold as its accent, so hosts still resolve the class even
+ * though no component in this package emits it. */
 .cella-brand,
 .wallfacer-brand,
 .lux-brand,
