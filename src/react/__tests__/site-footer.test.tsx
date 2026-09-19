@@ -159,6 +159,21 @@ describe('SiteFooter (React)', () => {
     expect(container.textContent).not.toContain('Drive');
   });
 
+  // The open source page is a company link, so it carries translated copy in
+  // every bundled locale and appears in both variants.
+  for (const compact of [false, true]) {
+    it.each(Object.entries({ en, zh, de }))(
+      `links the open source page in %s (compact=${compact})`,
+      (locale, dict) => {
+        const { container } = mount({ locale, compact, locales: [{ code: locale, label: locale.toUpperCase() }] });
+        const link = Array.from(container.querySelectorAll('a')).find(
+          (a) => a.getAttribute('href') === 'https://latere.ai/open-source',
+        );
+        expect(link, `${locale}: open source link`).toBeTruthy();
+        expect(link!.textContent).toBe(dict['footer.openSource']);
+      },
+    );
+  }
 });
 
 describe('the two logo marks stay one mark', () => {

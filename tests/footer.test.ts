@@ -162,6 +162,19 @@ describe('SiteFooter', () => {
     expect(w.text()).not.toContain('Drive');
   });
 
+  // The open source page is a company link, so it carries translated copy in
+  // every bundled locale and appears in both variants.
+  for (const compact of [false, true]) {
+    it.each(Object.entries({ en, zh, de }))(
+      `links the open source page in %s (compact=${compact})`,
+      (locale, dict) => {
+        const w = render({ locale, compact, locales: [{ code: locale, label: locale.toUpperCase() }] });
+        const link = w.findAll('a').find((a) => a.attributes('href') === 'https://latere.ai/open-source');
+        expect(link, `${locale}: open source link`).toBeTruthy();
+        expect(link!.text()).toBe(dict['footer.openSource']);
+      },
+    );
+  }
 });
 
 describe('brand wordmark styles', () => {

@@ -89,6 +89,7 @@ function linkProps(path: string) {
       <a href="https://auth.latere.ai/" v-html="t('footer.identity')" />
       <component :is="linkTag" v-bind="linkProps('/about')">{{ t('footer.team') }}</component>
       <component :is="linkTag" v-bind="linkProps('/blog')">{{ t('footer.blog') }}</component>
+      <component :is="linkTag" v-bind="linkProps('/open-source')">{{ t('footer.openSource') }}</component>
       <a href="mailto:contact@latere.ai" v-html="t('footer.contact')" />
       <component :is="linkTag" v-bind="linkProps('/legal/privacy')">{{ t('footer.privacy') }}</component>
       <component :is="linkTag" v-bind="linkProps('/legal/terms')">{{ t('footer.terms') }}</component>
@@ -153,6 +154,7 @@ function linkProps(path: string) {
           <h4 class="footer-col-title" v-html="t('footer.latere')" />
           <component :is="linkTag" v-bind="linkProps('/about')">{{ t('footer.about') }}</component>
           <component :is="linkTag" v-bind="linkProps('/blog/why-latere')">{{ t('footer.whyLatere') }}</component>
+          <component :is="linkTag" v-bind="linkProps('/open-source')">{{ t('footer.openSource') }}</component>
           <component :is="linkTag" v-bind="linkProps('/blog')">{{ t('footer.blog') }}</component>
           <a href="mailto:contact@latere.ai" v-html="t('footer.contact')" />
           <a href="https://auth.latere.ai/" v-html="t('footer.identity')" />

@@ -165,6 +165,7 @@ export function SiteFooter({
           <Html as="a" href="https://auth.latere.ai/" html={t('footer.identity')} />
           {link('/about', 'footer.team')}
           {link('/blog', 'footer.blog')}
+          {link('/open-source', 'footer.openSource')}
           <Html as="a" href="mailto:contact@latere.ai" html={t('footer.contact')} />
           {link('/legal/privacy', 'footer.privacy')}
           {link('/legal/terms', 'footer.terms')}
@@ -204,6 +205,7 @@ export function SiteFooter({
             <Html as="h4" className="footer-col-title" html={t('footer.latere')} />
             {link('/about', 'footer.about')}
             {link('/blog/why-latere', 'footer.whyLatere')}
+            {link('/open-source', 'footer.openSource')}
             {link('/blog', 'footer.blog')}
             <Html as="a" href="mailto:contact@latere.ai" html={t('footer.contact')} />
             <Html as="a" href="https://auth.latere.ai/" html={t('footer.identity')} />
