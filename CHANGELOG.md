@@ -8,7 +8,7 @@ release. A tag without one fails the release workflow. Write under
 A section says what changed for whoever uses the release, not what was
 committed: the commit log already holds that.
 
-## Unreleased
+## v1.29.0 - 2026-09-20
 
 - Drive left the product lineup. The console shut down on 2026-09-19 and durable storage is now the platform's Storage section, so the product switcher and both footer variants no longer offer it, and `drive` is gone from the exported `ProductSlug` union. The `.drive-brand` wordmark class stays in `brand.css` and `footer.css`: the Storage section keeps the gold as its accent.
 - The footer links an Open source page at `/open-source`, in the company column and in the compact row, translated in English, Chinese and German. It resolves against `baseUrl` and routes through `routerLink` like the other site links.
