@@ -10,6 +10,8 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+- Drive left the product lineup. The console shut down on 2026-09-19 and durable storage is now the platform's Storage section, so the product switcher and both footer variants no longer offer it, and `drive` is gone from the exported `ProductSlug` union. The `.drive-brand` wordmark class stays in `brand.css` and `footer.css`: the Storage section keeps the gold as its accent.
+- The footer links an Open source page at `/open-source`, in the company column and in the compact row, translated in English, Chinese and German. It resolves against `baseUrl` and routes through `routerLink` like the other site links.
 - The shared `Principal` no longer carries `is_superadmin`. Read platform administration from the role instead: `principal.role === 'platform_admin'`. An application whose backend still sends the flag maps it into `role` in its `mapMe`, or declares the wire field on its own type.
 - Add keyboard-accessible toast dismiss buttons and restore popover trigger focus after keyboard dismissal. Match React modal and toast transition lifecycles with Vue.
 - Keep visual-reference button states grouped, show the selected organization in a styled headless example, preserve toast caption readability, and label inactive matte effects explicitly.
