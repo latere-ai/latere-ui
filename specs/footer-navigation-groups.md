@@ -1,6 +1,6 @@
 ---
 title: Group footer navigation by Applications, Research, and Platform
-status: drafted
+status: complete
 depends_on:
   - specs/react-site-footer-v1.28.md
 affects:
@@ -45,3 +45,11 @@ Both footer adapters derive a flat list from `LATERE_PRODUCTS`, mixing capabilit
 - Browser checks cover default, Replichai, Wallfacer, and Origo designs, light/dark, desktop/mobile, full/compact, and both adapters. Group headings and links remain visible without horizontal overflow.
 - Update and review affected native visual references with exact Vue/React parity. Do not regenerate unrelated references or other operating systems' images.
 - Run footer unit tests, type checking, and coverage. Verify the consuming website's footer and the separately requested global hover changes.
+
+## Outcome
+
+Implemented one shared navigation model for Vue and React, full and compact footers, with translations for English, German, and Chinese. All four designs retain their typography and colors. Full footers use six desktop columns and two mobile columns; compact footers label and wrap the three groups.
+
+Verification: 65 unit tests, type checking, 98.75% footer line coverage, 33 browser checks, and 32 exact Vue/React visual comparisons passed. Updated 64 affected macOS visual references and reviewed representative images for every design.
+
+The website consumes revision `2b72012`, loads the shared footer stylesheet, and removes obsolete capability URL rewriting. Its build and 15 browser checks passed. A new layout regression assertion failed without the shared stylesheet and passed with it; desktop and mobile screenshots were reviewed.

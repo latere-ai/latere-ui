@@ -56,4 +56,4 @@ specs/
 | [React overlay and service parity](react-overlay-parity.md) | Complete | React overlay and service parity |
 | [React shell and account parity](react-shell-parity.md) | Complete | React shell and account parity |
 | [Complete component visual matrix](complete-visual-matrix.md) | Complete | Complete component visual matrix |
-| [Footer navigation groups](footer-navigation-groups.md) | In progress | Applications, Research, and Platform in both footer adapters and all designs |
+| [Footer navigation groups](footer-navigation-groups.md) | Complete | Applications, Research, and Platform in both footer adapters and all designs |
