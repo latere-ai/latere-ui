@@ -9,7 +9,7 @@ function ratio(a: number[], b: number[]) {
 for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark']) {
   test(`${framework} ${theme} footer labels and controls have readable contrast`, async ({ page }) => {
     await visit(page, framework, 'footer', theme);
-    const samples = await page.locator('.footer-tagline, .footer-col-title, .footer-lang-select, .footer-seg-btn:not(.is-active), .footer-bottom p').evaluateAll(elements => elements.map(el => {
+    const samples = await page.locator('.footer-tagline, .footer-col-title, .footer-group-title, .footer-lang-select, .footer-seg-btn:not(.is-active), .footer-bottom p').evaluateAll(elements => elements.map(el => {
       const cs = getComputedStyle(el);
       return { label: el.className, color: cs.color.match(/[\d.]+/g)!.map(Number), bg: getComputedStyle(document.body).backgroundColor.match(/[\d.]+/g)!.map(Number) };
     }));
@@ -47,7 +47,7 @@ for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark'])
       name: el.textContent, gradient: getComputedStyle(el).backgroundImage,
       background: getComputedStyle(document.body).backgroundColor.match(/[\d.]+/g)!.map(Number),
     })));
-    expect(brands).toHaveLength(5);
+    expect(brands.map(b => b.name)).toEqual(['Wallfacer', 'Lectio']);
     for (const brand of brands) for (const color of brand.gradient.match(/rgb\([^)]+\)/g) ?? []) {
       expect.soft(ratio(color.match(/[\d.]+/g)!.map(Number), brand.background), `${brand.name}: ${color}`).toBeGreaterThanOrEqual(4.5);
     }

@@ -8,6 +8,11 @@ release. A tag without one fails the release workflow. Write under
 A section says what changed for whoever uses the release, not what was
 committed: the commit log already holds that.
 
+## Unreleased
+
+- Separate footer navigation into Applications, Research, and Platform in Vue and React, including compact layouts. Link the unified platform console and ReplicHAI, and remove the separate capability entries from the footer.
+- Make the six-column full footer responsive, retain theme and language controls, and use background highlights instead of hover underlines across all design presets.
+
 ## v1.29.0 - 2026-09-20
 
 - Drive left the product lineup. The console shut down on 2026-09-19 and durable storage is now the platform's Storage section, so the product switcher and both footer variants no longer offer it, and `drive` is gone from the exported `ProductSlug` union. The `.drive-brand` wordmark class stays in `brand.css` and `footer.css`: the Storage section keeps the gold as its accent.

@@ -4,7 +4,7 @@ import { defineComponent, h } from 'vue';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { SiteFooter } from '../src';
-import { LATERE_PRODUCTS } from '../src/components/productSwitcher';
+import { FOOTER_GROUPS } from '../src/components/footerNavigation';
 import { en, zh, de } from '../src/i18n/footer';
 
 function render(props: Record<string, unknown> = {}) {
@@ -26,10 +26,23 @@ describe('footer dictionaries', () => {
 });
 
 describe('SiteFooter', () => {
+  for (const compact of [false, true]) for (const [locale, dict] of Object.entries({ en, zh, de })) {
+    it(`groups destinations in ${locale}, compact=${compact}`, () => {
+      const w = render({ compact, locale });
+      const groups = w.findAll('[data-footer-group]');
+      expect(groups.map(g => g.attributes('data-footer-group'))).toEqual(['applications', 'research', 'platform']);
+      expect(groups.map(g => g.find('h4, .footer-group-title').text())).toEqual([dict['footer.applications'], dict['footer.research'], dict['footer.platform']]);
+      expect(groups.map(g => g.findAll('a').map(a => a.attributes('href')))).toEqual([
+        ['https://wf.latere.ai/', 'https://lectio.latere.ai/'], ['https://replichai.latere.ai/'], ['https://platform.latere.ai/console'],
+      ]);
+      expect(w.text()).not.toMatch(/Topos|Cella|Lux/);
+    });
+  }
+
   it('renders every product name and cross-product link', () => {
     const w = render();
     const html = w.html();
-    for (const name of ['Wallfacer', 'Topos', 'Cella', 'Lux', 'Lectio']) {
+    for (const name of ['Wallfacer', 'Lectio', 'ReplicHAI', 'Latere Platform']) {
       expect(html).toContain(name);
     }
     expect(html).toContain('https://wf.latere.ai/');
@@ -42,7 +55,7 @@ describe('SiteFooter', () => {
   // so a hardcoded link in either one is invisible to a single render.
   it.each([false, true])('links to no site outside the registry (compact=%s)', (compact) => {
     const allowed = new Set([
-      ...LATERE_PRODUCTS.map((p) => `${p.url}/`),
+      ...FOOTER_GROUPS.flatMap(group => group.links.map(p => p.href)),
       'https://auth.latere.ai/',
     ]);
     const hrefs = render({ compact })
@@ -139,7 +152,7 @@ describe('SiteFooter', () => {
     const links = w.find('.footer-compact-links');
     expect(links.exists()).toBe(true);
     const html = links.html();
-    for (const name of ['Wallfacer', 'Topos', 'Cella', 'Lux']) {
+    for (const name of ['Wallfacer', 'Lectio', 'ReplicHAI', 'Latere Platform']) {
       expect(html).toContain(name);
     }
     // still has the theme toggle + locale dropdown

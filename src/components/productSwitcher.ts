@@ -8,8 +8,7 @@
 // primary brand color. The marks are copied verbatim from the marketing
 // site's product registry, with only sizing attributes adjusted, so the
 // switcher, the library footer, and the site all show the same logos.
-// SiteFooter renders its product links from this registry too, so adding or
-// retiring a product is a one-place change.
+// Footer application links reuse these URLs; footerNavigation owns their grouping.
 
 export type ProductSlug =
   | 'wallfacer'
@@ -39,8 +38,8 @@ export interface ProductInfo {
 }
 
 /**
- * All Latere product consoles, in the same order the SiteFooter lists them
- * (Identity last, as the platform-wide sign-in rather than a product).
+ * Built-in product-switcher destinations. Footer navigation selects and groups
+ * its destinations separately in footerNavigation.ts.
  */
 export const LATERE_PRODUCTS: readonly ProductInfo[] = [
   {

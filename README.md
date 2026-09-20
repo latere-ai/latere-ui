@@ -118,6 +118,8 @@ Use regular glass for panels and navigation, thick glass for readable overlays, 
 
 For exact props, events, router integration, footer locales, and session setup, see the [integration guide](docs/api-guide.md) and [React shell examples](docs/react-shell.md). English, Chinese, and German footer dictionaries are bundled; the default language dropdown offers English and Chinese.
 
+Both footer layouts group destinations into Applications (Wallfacer and Lectio), Research (ReplicHAI), and Platform (Latere Platform). The full layout also has Latere, Legal, and Community columns. Compact groups wrap on small screens. These groups and their translations are shared by Vue and React across all design presets.
+
 ## Review the visuals
 
 ![Button variants, sizes, disabled states, and loading states](tests/visual/goldens/darwin-27/vue-buttons-light-desktop.png)

@@ -8,7 +8,7 @@ import {
   type LocaleOption,
 } from '../i18n/footer';
 import LatereLogoMark from './LatereLogoMark.vue';
-import { LATERE_PRODUCTS } from './productSwitcher';
+import { FOOTER_GROUPS } from './footerNavigation';
 
 // Types now live in ../i18n/footer (a .ts module) and the package entrypoint
 // re-exports them from there — never re-export types from a .vue file, since a
@@ -68,11 +68,6 @@ function onLocaleChange(e: Event) {
   emit('update:locale', (e.target as HTMLSelectElement).value);
 }
 
-// Product links come from the shared registry (also used by ProductSwitcher)
-// so the lineup lives in one place; Identity stays a separate row because the
-// footer presents it as the platform sign-in, not a product.
-const footerProducts = LATERE_PRODUCTS.filter((p) => p.slug !== 'identity');
-
 // Internal link rendering: relative `to` for routerLink, absolute href otherwise.
 const linkTag = computed<Component | 'a'>(() => props.routerLink ?? 'a');
 function linkProps(path: string) {
@@ -85,7 +80,10 @@ function linkProps(path: string) {
   <footer v-if="compact" class="site-footer site-footer-compact">
     <p class="footer-compact-copy" v-html="t('footer.rights')" />
     <nav class="footer-compact-links" :aria-label="t('footer.products')">
-      <a v-for="p in footerProducts" :key="p.slug" :href="`${p.url}/`"><span :class="p.brandClass">{{ t(`footer.products.${p.slug}`) }}</span></a>
+      <div v-for="group in FOOTER_GROUPS" :key="group.id" class="footer-compact-group" :data-footer-group="group.id" role="group" :aria-label="t(group.labelKey)">
+        <span class="footer-group-title" aria-hidden="true">{{ t(group.labelKey) }}</span>
+        <a v-for="p in group.links" :key="p.slug" :href="p.href"><span :class="p.brandClass">{{ t(p.labelKey) }}</span></a>
+      </div>
       <a href="https://auth.latere.ai/" v-html="t('footer.identity')" />
       <component :is="linkTag" v-bind="linkProps('/about')">{{ t('footer.team') }}</component>
       <component :is="linkTag" v-bind="linkProps('/blog')">{{ t('footer.blog') }}</component>
@@ -146,9 +144,9 @@ function linkProps(path: string) {
       </div>
 
       <div class="footer-cols">
-        <div class="footer-col">
-          <h4 class="footer-col-title" v-html="t('footer.products')" />
-          <a v-for="p in footerProducts" :key="p.slug" :href="`${p.url}/`"><span :class="p.brandClass">{{ t(`footer.products.${p.slug}`) }}</span></a>
+        <div v-for="group in FOOTER_GROUPS" :key="group.id" class="footer-col" :data-footer-group="group.id">
+          <h4 class="footer-col-title">{{ t(group.labelKey) }}</h4>
+          <a v-for="p in group.links" :key="p.slug" :href="p.href"><span :class="p.brandClass">{{ t(p.labelKey) }}</span></a>
         </div>
         <div class="footer-col">
           <h4 class="footer-col-title" v-html="t('footer.latere')" />

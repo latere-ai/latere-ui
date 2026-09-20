@@ -7,7 +7,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { SiteFooter, type SiteFooterProps } from '../SiteFooter';
-import { LATERE_PRODUCTS } from '../../components/productSwitcher';
+import { FOOTER_GROUPS } from '../../components/footerNavigation';
 import { en, zh, de } from '../../i18n/footer';
 
 function mount(props: Partial<SiteFooterProps> = {}) {
@@ -18,9 +18,22 @@ const hrefs = (c: HTMLElement) =>
   Array.from(c.querySelectorAll('a')).map((a) => a.getAttribute('href'));
 
 describe('SiteFooter (React)', () => {
+  for (const compact of [false, true]) for (const [locale, dict] of Object.entries({ en, zh, de })) {
+    it(`groups destinations in ${locale}, compact=${compact}`, () => {
+      const { container } = mount({ compact, locale });
+      const groups = Array.from(container.querySelectorAll('[data-footer-group]'));
+      expect(groups.map(g => g.getAttribute('data-footer-group'))).toEqual(['applications', 'research', 'platform']);
+      expect(groups.map(g => g.querySelector('h4, .footer-group-title')?.textContent)).toEqual([dict['footer.applications'], dict['footer.research'], dict['footer.platform']]);
+      expect(groups.map(g => Array.from(g.querySelectorAll('a')).map(a => a.getAttribute('href')))).toEqual([
+        ['https://wf.latere.ai/', 'https://lectio.latere.ai/'], ['https://replichai.latere.ai/'], ['https://platform.latere.ai/console'],
+      ]);
+      expect(container.textContent).not.toMatch(/Topos|Cella|Lux/);
+    });
+  }
+
   it('renders every product name and cross-product link', () => {
     const { container } = mount();
-    for (const name of ['Wallfacer', 'Topos', 'Cella', 'Lux', 'Lectio']) {
+    for (const name of ['Wallfacer', 'Lectio', 'ReplicHAI', 'Latere Platform']) {
       expect(container.textContent).toContain(name);
     }
     expect(hrefs(container)).toContain('https://wf.latere.ai/');
@@ -33,7 +46,7 @@ describe('SiteFooter (React)', () => {
   // hardcoded link in either one is invisible to a single render.
   it.each([false, true])('links to no site outside the registry (compact=%s)', (compact) => {
     const allowed = new Set([
-      ...LATERE_PRODUCTS.map((p) => `${p.url}/`),
+      ...FOOTER_GROUPS.flatMap(group => group.links.map(p => p.href)),
       'https://auth.latere.ai/',
     ]);
     const { container } = mount({ compact });
@@ -132,7 +145,7 @@ describe('SiteFooter (React)', () => {
     expect(container.querySelector('.footer-bottom')).toBeNull(); // copyright lives inline
     expect(container.querySelector('.footer-compact-copy')).not.toBeNull();
     const links = container.querySelector('.footer-compact-links')!;
-    for (const name of ['Wallfacer', 'Topos', 'Cella', 'Lux']) {
+    for (const name of ['Wallfacer', 'Lectio', 'ReplicHAI', 'Latere Platform']) {
       expect(links.textContent).toContain(name);
     }
     expect(container.querySelector('.footer-lang-select')).not.toBeNull();
