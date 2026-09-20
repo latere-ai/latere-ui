@@ -87,7 +87,7 @@ describe('SiteFooter (React)', () => {
     const onThemeChange = vi.fn();
     const onLocaleChange = vi.fn();
     const { container } = mount({ onThemeChange, onLocaleChange });
-    const dark = Array.from(container.querySelectorAll('.footer-seg-btn')).find((b) => b.textContent === '☾')!;
+    const dark = Array.from(container.querySelectorAll('.footer-seg-btn')).find((b) => b.getAttribute('aria-label') === 'dark')!;
     fireEvent.click(dark);
     fireEvent.change(container.querySelector('.footer-lang-select')!, { target: { value: 'zh' } });
     expect(onThemeChange).toHaveBeenCalledWith('dark');
@@ -154,8 +154,8 @@ describe('SiteFooter (React)', () => {
 
   it('marks the active theme in the segmented control', () => {
     const { container } = mount({ theme: 'dark' });
-    const active = Array.from(container.querySelectorAll('.footer-seg-btn.is-active')).map((b) => b.textContent);
-    expect(active).toEqual(['☾']);
+    const active = Array.from(container.querySelectorAll('.footer-seg-btn.is-active')).map((b) => b.getAttribute('aria-label'));
+    expect(active).toEqual(['dark']);
   });
 
   it('renders the brand mark as a painting SVG', () => {

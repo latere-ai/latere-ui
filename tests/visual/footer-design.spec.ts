@@ -47,7 +47,7 @@ for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark'])
       name: el.textContent, gradient: getComputedStyle(el).backgroundImage,
       background: getComputedStyle(document.body).backgroundColor.match(/[\d.]+/g)!.map(Number),
     })));
-    expect(brands.map(b => b.name)).toEqual(['Wallfacer', 'Lectio']);
+    expect(brands.map(b => b.name)).toEqual(['Wallfacer', 'Lectio', 'ReplicHAI', 'Latere Platform']);
     for (const brand of brands) for (const color of brand.gradient.match(/rgb\([^)]+\)/g) ?? []) {
       expect.soft(ratio(color.match(/[\d.]+/g)!.map(Number), brand.background), `${brand.name}: ${color}`).toBeGreaterThanOrEqual(4.5);
     }

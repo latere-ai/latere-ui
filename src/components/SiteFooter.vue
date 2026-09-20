@@ -8,6 +8,7 @@ import {
   type LocaleOption,
 } from '../i18n/footer';
 import LatereLogoMark from './LatereLogoMark.vue';
+import { footerThemeIcons } from './footerTheme';
 import { FOOTER_GROUPS } from './footerNavigation';
 
 // Types now live in ../i18n/footer (a .ts module) and the package entrypoint
@@ -102,7 +103,8 @@ function linkProps(path: string) {
             type="button"
             class="footer-seg-btn"
             :class="{ 'is-active': theme === opt.v }"
-            @click="emit('update:theme', opt.v)">{{ opt.label }}</button>
+            :aria-label="opt.v" :aria-pressed="theme === opt.v"
+            @click="emit('update:theme', opt.v)"><span class="footer-theme-icon" v-html="footerThemeIcons[opt.v]" /></button>
         </div>
         <div class="footer-lang">
           <select
@@ -144,9 +146,11 @@ function linkProps(path: string) {
       </div>
 
       <div class="footer-cols">
-        <div v-for="group in FOOTER_GROUPS" :key="group.id" class="footer-col" :data-footer-group="group.id">
-          <h4 class="footer-col-title">{{ t(group.labelKey) }}</h4>
-          <a v-for="p in group.links" :key="p.slug" :href="p.href"><span :class="p.brandClass">{{ t(p.labelKey) }}</span></a>
+        <div class="footer-product-groups">
+          <div v-for="group in FOOTER_GROUPS" :key="group.id" class="footer-col" :data-footer-group="group.id">
+            <h4 class="footer-col-title">{{ t(group.labelKey) }}</h4>
+            <a v-for="p in group.links" :key="p.slug" :href="p.href"><span :class="p.brandClass">{{ t(p.labelKey) }}</span></a>
+          </div>
         </div>
         <div class="footer-col">
           <h4 class="footer-col-title" v-html="t('footer.latere')" />
@@ -181,7 +185,8 @@ function linkProps(path: string) {
               type="button"
               class="footer-seg-btn"
               :class="{ 'is-active': theme === opt.v }"
-              @click="emit('update:theme', opt.v)">{{ opt.label }}</button>
+              :aria-label="opt.v" :aria-pressed="theme === opt.v"
+            @click="emit('update:theme', opt.v)"><span class="footer-theme-icon" v-html="footerThemeIcons[opt.v]" /></button>
           </div>
           <div class="footer-lang">
             <select

@@ -36,3 +36,10 @@
 [data-theme="dark"] .topos-brand { background-image: linear-gradient(135deg, #9abcc4 0%, #a9be8d 60%, #c5a47d 100%); }
 [data-theme="dark"] .lectio-brand { background-image: linear-gradient(135deg, #dfbd91 0%, #cfa577 60%, #be9566 100%); }
 [data-theme="dark"] .drive-brand { background-image: linear-gradient(135deg, #ead080 0%, #dcc268 60%, #cfb65e 100%); }
+
+/* Research keeps its blue wordmark; the unified platform uses violet. */
+.replichai-brand, .platform-brand { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; }
+.replichai-brand { color: #2369bd; }
+[data-theme="dark"] .replichai-brand { color: #78b1ed; }
+.platform-brand { color: #6b5fc0; }
+[data-theme="dark"] .platform-brand { color: #b1a6ed; }

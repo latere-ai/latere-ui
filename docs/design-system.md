@@ -114,7 +114,7 @@ Compact footer links wrap as complete labels, with theme and language controls b
 
 Both footer layouts show navigation and wordmarks without resting underlines. Hovering a navigation link adds an underline; keyboard focus shows an outline. These styles belong to the footer and need no page-wide link reset. Article links outside the footer retain the host's styling.
 
-The full footer places brand and preferences above six navigation columns: Applications, Research, Platform, Latere, Legal, and Community. On narrow screens the columns form two tracks and preferences follow them. Compact footers label the same three destination groups and wrap their links. Supply ordinary text or inline emphasis for the tagline through `messages`; its wrapping follows the available width.
+The full footer places brand, four navigation columns, and preferences in one desktop row. Applications, Research, and Platform stack within the first navigation column, followed by Latere, Legal, and Community. On narrow screens the columns form two tracks and preferences follow them. Compact footers label the same three destination groups and wrap their links. Supply ordinary text or inline emphasis for the tagline through `messages`; its wrapping follows the available width.
 
 Account triggers separate the display name from role and workspace metadata with a 4px gap. Preference pills center their labels by cap height and alphabetic baseline, keeping selected and unselected labels aligned across fonts. Browsers without CSS `text-box` support retain ordinary flex centering.
 

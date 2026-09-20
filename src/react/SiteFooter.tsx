@@ -9,6 +9,7 @@
 import { type ComponentType, type ReactNode } from 'react';
 import '../styles/footer.css';
 import { translator, type Locale, type Messages, type Theme, type LocaleOption } from '../i18n/footer';
+import { footerThemeIcons } from '../components/footerTheme';
 import { FOOTER_GROUPS } from '../components/footerNavigation';
 import { LatereLogoMark } from './LatereLogoMark';
 
@@ -123,9 +124,11 @@ export function SiteFooter({
             key={opt.v}
             type="button"
             className={theme === opt.v ? 'footer-seg-btn is-active' : 'footer-seg-btn'}
+            aria-label={opt.v}
+            aria-pressed={theme === opt.v}
             onClick={() => onThemeChange?.(opt.v)}
           >
-            {opt.label}
+            <span className="footer-theme-icon" dangerouslySetInnerHTML={{ __html: footerThemeIcons[opt.v] }} />
           </button>
         ))}
       </div>
@@ -189,12 +192,14 @@ export function SiteFooter({
         </div>
 
         <div className="footer-cols">
-          {FOOTER_GROUPS.map(group => (
-            <div key={group.id} className="footer-col" data-footer-group={group.id}>
-              <h4 className="footer-col-title">{t(group.labelKey)}</h4>
-              {group.links.map(p => <a key={p.slug} href={p.href}><span className={p.brandClass}>{t(p.labelKey)}</span></a>)}
-            </div>
-          ))}
+          <div className="footer-product-groups">
+            {FOOTER_GROUPS.map(group => (
+              <div key={group.id} className="footer-col" data-footer-group={group.id}>
+                <h4 className="footer-col-title">{t(group.labelKey)}</h4>
+                {group.links.map(p => <a key={p.slug} href={p.href}><span className={p.brandClass}>{t(p.labelKey)}</span></a>)}
+              </div>
+            ))}
+          </div>
           <div className="footer-col">
             <Html as="h4" className="footer-col-title" html={t('footer.latere')} />
             {link('/about', 'footer.about')}

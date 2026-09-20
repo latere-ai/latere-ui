@@ -90,7 +90,7 @@ describe('SiteFooter', () => {
 
   it('emits update:theme from the theme toggle and update:locale from the dropdown', async () => {
     const w = render({ theme: 'auto', locale: 'en' });
-    await w.findAll('.footer-seg-btn').find((b) => b.text() === '☾')!.trigger('click');
+    await w.findAll('.footer-seg-btn').find((b) => b.attributes('aria-label') === 'dark')!.trigger('click');
     await w.find('.footer-lang-select').setValue('zh');
     expect(w.emitted('update:theme')?.[0]).toEqual(['dark']);
     expect(w.emitted('update:locale')?.[0]).toEqual(['zh']);
@@ -162,8 +162,8 @@ describe('SiteFooter', () => {
 
   it('marks the active theme in the segmented control', () => {
     const active = render({ theme: 'dark', locale: 'zh' })
-      .findAll('.footer-seg-btn.is-active').map((b) => b.text());
-    expect(active).toContain('☾');
+      .findAll('.footer-seg-btn.is-active').map((b) => b.attributes('aria-label'));
+    expect(active).toContain('dark');
   });
 
   // Drive shut down on 2026-09-19; durable storage is the platform's Storage

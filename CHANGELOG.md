@@ -11,7 +11,8 @@ committed: the commit log already holds that.
 ## Unreleased
 
 - Separate footer navigation into Applications, Research, and Platform in Vue and React, including compact layouts. Link the unified platform console and ReplicHAI, and remove the separate capability entries from the footer.
-- Make the six-column full footer responsive, retain theme and language controls, and use background highlights instead of hover underlines across all design presets.
+- Stack Applications, Research, and Platform in one navigation column, alongside Latere, Legal, and Community. Retain entry colors and use text-color hover feedback without underlines.
+- Center theme icons with fixed SVG geometry and align language text within equally sized controls.
 
 ## v1.29.0 - 2026-09-20
 
