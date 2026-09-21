@@ -1,5 +1,6 @@
 export { default as SiteFooter } from './components/SiteFooter.vue';
 export { default as LatereLogoMark } from './components/LatereLogoMark.vue';
+export { default as PlatformLogoMark } from './components/PlatformLogoMark.vue';
 
 // Console shell: headless nav model + collapse primitive, and the Vue adapter.
 // Styles ship separately as the `latere-ui/console` entrypoint.

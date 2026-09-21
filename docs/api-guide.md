@@ -338,7 +338,9 @@ Every component below is available from `latere-ui` for Vue and `latere-ui/react
 | Service hosts | `GlassToaster`, `GlassConfirmHost` |
 | Shell and docs | `ConsoleSidebar`, `ConsolePalette`, `DocsLayout` |
 | Account | `AccountMenu`, `AccountPrefs`, `OrgSwitcher`, `ProductSwitcher` |
-| Site chrome | `SiteFooter`, `LatereLogoMark` |
+| Site chrome | `SiteFooter`, `LatereLogoMark`, `PlatformLogoMark` |
+
+`PlatformLogoMark` identifies the platform with the Latere symbol above stacked layers. It inherits `currentColor`, accepts native SVG attributes and merges caller classes. It is decorative by default (`aria-hidden="true"`, `focusable="false"`); place it beside a visible product name, or override the accessibility attributes when it needs its own label. `LatereLogoMark` remains the corporate identity.
 
 `GlassBadge` keeps glass labels in the text color and uses the dot for tone. Solid badges pair each default fill with contrasting ink. If you override a semantic fill, set its matching `--state-<tone>-ink` when needed and verify contrast in both themes.
 

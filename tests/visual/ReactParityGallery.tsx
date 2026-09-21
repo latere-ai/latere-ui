@@ -117,7 +117,7 @@ function ReactParityGallery({ scenario }: { scenario: string }) {
   if (scenario === 'products') return <div data-component="ProductSwitcher"><UI.ProductSwitcher current={currentProduct} /></div>;
   if (scenario === 'organizations') return <div className="sample organization-demo" data-component="OrgSwitcher"><UI.OrgSwitcher state={orgState} header={<p className="sample-label">Switch workspace</p>} /></div>;
   if (scenario.startsWith('footer')) return <div data-component="SiteFooter"><UI.SiteFooter theme={theme} locale={locale} locales={locales} compact={scenario === 'footer-compact'} onThemeChange={setTheme} onLocaleChange={setLocale} /></div>;
-  if (scenario === 'logo') return <div className="logo-stage row" data-component="LatereLogoMark"><UI.LatereLogoMark />{brands.map(brand => <span key={brand} className={`${brand}-brand`} style={{ fontSize: 28 }}>{brand}</span>)}</div>;
+  if (scenario === 'logo') return <div className="logo-stage row" data-component="LatereLogoMark"><UI.LatereLogoMark /><UI.PlatformLogoMark data-component="PlatformLogoMark" width={48} height={48} />{brands.map(brand => <span key={brand} className={`${brand}-brand`} style={{ fontSize: 28 }}>{brand}</span>)}</div>;
   if (scenario === 'effects') return <div className="material-stage" data-component="GlassSurface"><UI.GlassButton onClick={() => initLiquidGlass()}>Refresh effects</UI.GlassButton><UI.GlassSurface className="effect-surface" data-lg-refract="off">{effectText[0]}</UI.GlassSurface><UI.GlassSurface className="effect-surface" data-lg-refract="">{effectText[1]}</UI.GlassSurface><UI.GlassSurface className="effect-surface" data-lg-sheen="" data-lg-refract="off">{effectText[2]}</UI.GlassSurface></div>;
   return <div>Unknown scenario: {scenario}</div>;
 }

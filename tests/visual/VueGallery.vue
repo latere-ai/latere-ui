@@ -88,7 +88,7 @@ onMounted(async () => { await nextTick(); if (props.scenario === 'effects') UI.i
   <div v-else-if="scenario === 'products'" data-component="ProductSwitcher"><UI.ProductSwitcher :current="currentProduct"/></div>
   <div v-else-if="scenario === 'organizations'" class="sample organization-demo" data-component="OrgSwitcher"><UI.OrgSwitcher :state="orgState"><template #header><p class="sample-label">Switch workspace</p></template></UI.OrgSwitcher></div>
   <div v-else-if="scenario.startsWith('footer')" data-component="SiteFooter"><UI.SiteFooter :theme="theme" v-model:locale="locale" :locales="locales" :compact="scenario === 'footer-compact'" @update:theme="theme = $event"/></div>
-  <div v-else-if="scenario === 'logo'" class="logo-stage row" data-component="LatereLogoMark"><UI.LatereLogoMark/><span v-for="brand in brands" :key="brand" :class="`${brand}-brand`" style="font-size:28px">{{ brand }}</span></div>
+  <div v-else-if="scenario === 'logo'" class="logo-stage row" data-component="LatereLogoMark"><UI.LatereLogoMark/><UI.PlatformLogoMark data-component="PlatformLogoMark" width="48" height="48"/><span v-for="brand in brands" :key="brand" :class="`${brand}-brand`" style="font-size:28px">{{ brand }}</span></div>
   <div v-else-if="scenario === 'effects'" class="material-stage" data-component="GlassSurface"><UI.GlassButton @click="UI.initLiquidGlass()">Refresh effects</UI.GlassButton><UI.GlassSurface class="effect-surface" data-lg-refract="off">{{ effectText[0] }}</UI.GlassSurface><UI.GlassSurface class="effect-surface" data-lg-refract>{{ effectText[1] }}</UI.GlassSurface><UI.GlassSurface class="effect-surface" data-lg-sheen data-lg-refract="off">{{ effectText[2] }}</UI.GlassSurface></div>
   <div v-else>Unknown scenario: {{ scenario }}</div>
 </template>

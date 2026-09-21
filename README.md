@@ -33,7 +33,7 @@ Import `latere-ui/presets` after the shared styles and set `data-design="replich
 | Site chrome | Full and compact footer, theme and language controls, logo | Vue and React |
 | Session | API client, account resolution, organization switching, session bindings | Vue and React |
 
-The package ships `.vue`, `.tsx`, `.ts`, and `.css` source. Your application compiles it with its own toolchain. Both adapters expose all 34 visual components. React imports come from [latere-ui/react](src/react/index.ts); the [API guide](docs/api-guide.md#react) explains controlled values and callbacks.
+The package ships `.vue`, `.tsx`, `.ts`, and `.css` source. Your application compiles it with its own toolchain. Both adapters expose all 35 visual components. React imports come from [latere-ui/react](src/react/index.ts); the [API guide](docs/api-guide.md#react) explains controlled values and callbacks.
 
 ## Install
 

@@ -37,6 +37,7 @@ export type { NavItem, NavGroup, FlatNavItem, ConsoleNavModel } from '../console
 // product lineup come from the same framework-free modules the SFC reads.
 export { SiteFooter, type SiteFooterProps } from './SiteFooter';
 export { LatereLogoMark } from './LatereLogoMark';
+export { PlatformLogoMark } from './PlatformLogoMark';
 export { translator, en, zh, de } from '../i18n/footer';
 export type { Locale, Messages, Theme, LocaleOption } from '../i18n/footer';
 export { LATERE_PRODUCTS, type ProductInfo, type ProductSlug } from '../components/productSwitcher';

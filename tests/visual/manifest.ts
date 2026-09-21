@@ -23,7 +23,7 @@ const sheets = {
     organizations: ['OrgSwitcher'],
     footer: ['SiteFooter'],
     'footer-compact': ['SiteFooter'],
-    logo: ['LatereLogoMark'],
+    logo: ['LatereLogoMark', 'PlatformLogoMark'],
     effects: ['GlassSurface'],
   } as const;
 export const scenarios = { vue: sheets, react: sheets } as const;
