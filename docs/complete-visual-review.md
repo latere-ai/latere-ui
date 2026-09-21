@@ -112,3 +112,7 @@ The platform identity mark now shares its geometry between adapters. The logo
 sheets were reviewed in all four appearances, light/dark, and desktop/mobile on
 macOS 27; all 16 paired captures match exactly (32 adapter references). Corporate
 logo geometry and production footer appearance are unchanged.
+
+The same 32 logo references were reviewed separately on macOS 15 from
+[CI run 35582723366](https://github.com/latere-ai/latere-ui/actions/runs/35582723366).
+All 16 paired browser checks passed; the artifact changed only these logo sheets.
