@@ -9,6 +9,10 @@ on:
         description: 'Record review artifacts only; never commit or approve them automatically'
         type: boolean
         default: false
+      record_grep:
+        description: 'Optional Playwright title pattern for candidate recording; blank records all tests'
+        type: string
+        default: ''
 permissions:
   contents: read
 jobs:
@@ -31,8 +35,10 @@ jobs:
       - run: bun run test:coverage
       - run: bun run test:visual
         if: ${{ !inputs.record_goldens }}
-      - run: bun run test:visual:update
+      - run: bun run test:visual:update --grep "${RECORDING_GREP:-.*}"
         if: ${{ inputs.record_goldens }}
+        env:
+          RECORDING_GREP: ${{ inputs.record_grep }}
       - uses: actions/upload-artifact@v4
         if: ${{ inputs.record_goldens }}
         with:
