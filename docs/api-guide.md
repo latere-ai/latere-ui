@@ -355,7 +355,7 @@ if (await confirm({ message: 'Delete this sandbox?', danger: true })) { /* … *
 
 ## React
 
-All 34 visual components ship from `latere-ui/react`, including controls, overlays, service hosts, console/account components and DocsLayout. The host compiles the source `.tsx`; React and Vue share component styles and framework-free logic. The visual suite compares matching examples by decoded RGBA pixels, with no channel or antialiasing tolerance, then compares each adapter to its platform baseline.
+All 35 visual components ship from `latere-ui/react`, including controls, overlays, service hosts, console/account components and DocsLayout. The host compiles the source `.tsx`; React and Vue share component styles and framework-free logic. The visual suite compares matching examples by decoded RGBA pixels, with no channel or antialiasing tolerance, then compares each adapter to its platform baseline.
 
 Install React 18 or 19 and React DOM in your application. They are optional peers of this package. The React entrypoint does not import Vue or Pinia at runtime. The install example in the [README](../README.md#install) pins the latest documented release; the complete adapters described here are on unreleased `main`.
 

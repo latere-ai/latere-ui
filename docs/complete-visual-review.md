@@ -1,6 +1,6 @@
 # Complete component visual review
 
-All 34 visual components now have Vue and React implementations. The same 25 component sheets cover default glass, Replichai, Wallfacer and Origo in light/dark themes at desktop/mobile widths. Use the [visual index](visual-reference.md) to inspect each composition, or run `bun run visual:dev` to try its controls.
+All 35 visual components now have Vue and React implementations. The same 25 component sheets cover default glass, Replichai, Wallfacer and Origo in light/dark themes at desktop/mobile widths. Use the [visual index](visual-reference.md) to inspect each composition, or run `bun run visual:dev` to try its controls.
 
 ## Coverage
 
@@ -107,3 +107,8 @@ Both regressions fail against the preceding implementation. The [identity regres
 All 34 focused local behavior checks and 34 strict visual comparisons pass. Native [run 34766453734](https://github.com/latere-ai/latere-ui/actions/runs/34766453734) passes 66 typography/preference checks and 34 capture cases. Both environments pass type checking and 540 unit tests, with 94.38% source line coverage.
 
 The changed details of all 22 compositions were inspected separately on each platform, including the scrolled account menu. All 84 updated PNGs have valid 300 DPI metadata and exact Vue/React parity where paired. The other 1,620 references retain their previous hashes.
+
+The platform identity mark now shares its geometry between adapters. The logo
+sheets were reviewed in all four appearances, light/dark, and desktop/mobile on
+macOS 27; all 16 paired captures match exactly (32 adapter references). Corporate
+logo geometry and production footer appearance are unchanged.
