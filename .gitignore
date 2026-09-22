@@ -3,9 +3,6 @@ node_modules
 .DS_Store
 *.tsbuildinfo
 
-# Agent instructions live in AGENTS.md; CLAUDE.md is a local symlink to it.
-CLAUDE.md
-
 # Browser comparison artifacts (expected PNGs are committed under tests/visual).
 output/playwright/
 coverage/
