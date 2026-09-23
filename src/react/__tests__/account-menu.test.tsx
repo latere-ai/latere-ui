@@ -1,7 +1,7 @@
 // React port of tests/account-menu.test.ts, plus a case for the optional
 // SessionProvider context integration (principal/login/logout/switchOrg
 // falling back to the ambient provider when the corresponding prop is
-// omitted — the one behavior with no Vue analogue, since Vue's AccountMenu
+// omitted — the one behavior with no Vue analog, since Vue's AccountMenu
 // has no such ambient context to opt into).
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -205,7 +205,7 @@ describe('AccountMenu dropdown identity descriptor', () => {
   });
 });
 
-// SessionProvider integration: no Vue analogue (Vue's AccountMenu never reads
+// SessionProvider integration: no Vue analog (Vue's AccountMenu never reads
 // an ambient store), but the ported component's headline feature.
 describe('AccountMenu under SessionProvider', () => {
   function mockFetch(responses: Array<[number, unknown]>) {

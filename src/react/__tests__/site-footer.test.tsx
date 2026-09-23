@@ -1,5 +1,5 @@
 // React SiteFooter (v1.28). The Vue suite in tests/footer.test.ts is the
-// contract; this file asserts the same behaviours through the React adapter,
+// contract; this file asserts the same behaviors through the React adapter,
 // plus the one thing only a two-adapter package can get wrong — two copies of
 // the mark drifting apart.
 import { describe, expect, it, vi } from 'vitest';

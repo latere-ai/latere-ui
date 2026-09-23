@@ -72,7 +72,7 @@ the Vue adapter.
 - Full variant renders brand, four link columns, prefs, social, bottom bar.
 - Compact variant renders one line: copyright, link strip, prefs, social.
 - Theme buttons mark the active one and fire `onThemeChange`.
-- The locale `<select>` fires `onLocaleChange` and honours a custom `locales`.
+- The locale `<select>` fires `onLocaleChange` and honors a custom `locales`.
 - `messages` override wins over the bundled dictionary.
 - `routerLink` receives a relative `to`; without it links are `baseUrl`-absolute.
 - Existing Vue `tests/footer.test.ts` stays green.

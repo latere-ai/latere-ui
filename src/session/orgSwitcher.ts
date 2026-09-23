@@ -6,7 +6,7 @@
 // vanilla-JS harness that wants to render the switcher itself
 // (e.g. wallfacer's ui/js/status-bar.js).
 //
-// Personal context is modelled as an org_id of "" — the same convention the
+// Personal context is modeled as an org_id of "" — the same convention the
 // auth server uses in JWT claims and that the store has always exposed.
 
 import { computed, ref, type ComputedRef, type Ref } from 'vue';

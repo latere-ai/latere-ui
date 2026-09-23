@@ -10,7 +10,7 @@
 // `createSessionStore` and with an app's own bespoke principal store (e.g.
 // lux). It owns its OWN silent-recheck reauth for the probe, so it works even
 // when the store's expiry policy is `graceful` (marketing) — the store's
-// expiry behaviour is wired separately via `onExpired`.
+// expiry behavior is wired separately via `onExpired`.
 //
 // SSR-safe: the fetch + probe happen in onMounted (client only), and reauth
 // no-ops without `window`.
@@ -34,7 +34,7 @@ export interface UseSessionOptions {
   loginPath?: string;
   /**
    * Whether to attempt the silent probe on a logged-out load for this path.
-   * Default: always (marketing — recognise a cross-app session anywhere).
+   * Default: always (marketing — recognize a cross-app session anywhere).
    * Dashboards pass a predicate that's true only for gated routes.
    */
   shouldProbe?: (path: string) => boolean;

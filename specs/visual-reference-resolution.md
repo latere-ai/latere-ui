@@ -25,7 +25,7 @@ Make committed component figures sharp when enlarged or printed. Render real bro
 ## Design
 
 - Preserve CSS viewport sizes and component geometry; set the browser device scale to 300/96 and capture device pixels.
-- Stamp PNG physical resolution at 300 DPI (nearest integer pixels per metre) after explicit reference updates. Preserve every image-data byte; do not resample or sharpen rendered pixels.
+- Stamp PNG physical resolution at 300 DPI (nearest integer pixels per meter) after explicit reference updates. Preserve every image-data byte; do not resample or sharpen rendered pixels.
 - Keep separate macOS reference sets and strict visual comparisons. Normal verification checks PNG density metadata and never modifies expected files.
 - Integrate density stamping into Playwright teardown so local and explicit hosted recording use the same path, including filtered updates.
 - Document the difference between CSS layout size, image pixel dimensions and physical DPI. The design skeleton remains scalable SVG.

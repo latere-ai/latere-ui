@@ -71,7 +71,7 @@ export function readPngDensity(png: Buffer): PngDensity | undefined {
 export function withPngDensity(png: Buffer, dpi: number): Buffer {
   const pixelsPerMetre = Math.round(dpi / 0.0254);
   if (!Number.isFinite(dpi) || dpi <= 0 || pixelsPerMetre < 1 || pixelsPerMetre > UINT32_MAX) {
-    throw new RangeError('PNG DPI must be positive and representable as pixels per metre');
+    throw new RangeError('PNG DPI must be positive and representable as pixels per meter');
   }
   const source = chunks(png);
   const density = Buffer.alloc(21);
