@@ -47,6 +47,7 @@ specs/
 | [Product style presets](product-style-presets.md) | Complete | Importable Replichai, Wallfacer and Origo component appearances |
 | [Product style figures](product-style-figures.md) | Complete | Per-style component references and visual regression matrix |
 | [Integrated sidebar](integrated-sidebar.md) | Complete | macOS 27 window-integrated navigation geometry |
+| [Sidebar tree, compact head and foot rows](console-sidebar-tree.md) | Complete | Expandable sections, built-in icons, one-row head, foot rows, window-concentric account card |
 
 ## Complete adapter and visual coverage
 

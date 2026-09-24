@@ -19,7 +19,9 @@ The visual matrix includes every shell component in both frameworks, both themes
 
 ## Navigation and product switching
 
-`ConsolePalette` accepts `open`, a `ConsoleNavModel` in `model`, and `onClose` / `onNavigate(item)`. Connect the sidebar's `onSearch` callback to the palette's open state. The palette searches enabled rows with a `to` target, focuses its input, supports arrow selection and Enter, and restores focus when closed. Customize its copy with `placeholder` and `emptyLabel`.
+`ConsolePalette` accepts `open`, a `ConsoleNavModel` in `model`, and `onClose` / `onNavigate(item)`. Connect the sidebar's `onSearch` callback to the palette's open state. The palette searches enabled rows with a `to` target, sub-pages included, focuses its input, supports arrow selection and Enter, and restores focus when closed. Customize its copy with `placeholder` and `emptyLabel`.
+
+Pass `items` for entries beyond the rail: actions (`action: true`) and other destinations, each with an optional `group` shown at the row's end, `keywords` that also match, and an `icon`. Pass `search(query)` to append results for a query, such as documentation pages. Every word of the query must appear in a row's label, group or keywords; the chosen row, whichever source it came from, reaches `onNavigate`.
 
 `ProductSwitcher` accepts the current product slug in `current`, an optional `products` list, `labels`, and `size` (`sm` or `md`). The current product is marked without a link. Other tiles navigate to their configured URLs. Its panel adjusts to viewport edges and updates when the page scrolls or resizes. Use `ConsoleSidebar`'s `product` and `productLabels` props to include it in the expanded sidebar head; it hides in the collapsed rail.
 

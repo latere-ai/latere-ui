@@ -10,6 +10,11 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+- The console sidebar holds sub-pages. Give a nav item `children` and it becomes an expandable row, folded until the viewer opens it or one of its pages is current, and the rail remembers the viewer's choice. Enter and Space open and close a row and the arrow keys move between rows. In the collapsed rail a parent links to its page and stays highlighted while any page under it is open.
+- Nav items show a built-in stroke icon when `icon` names one (home, key, card, folder, cube, globe, sparkles, bot, branch, repo, org, shield, book, coins, terminal, plus, search, chevron, external). A row without an icon no longer leaves an empty space before its label.
+- `compact` puts the sidebar's brand, name and fold button in one row and folds the head into a single logo button. `footItems` adds rows such as Documentation and a balance above the account control. With `compact`, the account card's corner follows the window's corner (`--radius-window`, 26px, minus the rail's `--lu-cs-inset`).
+- The command palette takes host `items` (actions and other destinations) and a `search` function for extra results, lists sub-pages, and shows row icons.
+- `AccountMenu` takes `subline="text"` for one quiet line under the name, such as "Platform admin · Personal", in place of the uppercase role badge.
 - Export `PlatformLogoMark` for Vue and React: the platform's Latere symbol above two stacked layers, sharing one geometry definition.
 - Separate footer navigation into Applications, Research, and Platform in Vue and React, including compact layouts. Link the unified platform console and ReplicHAI, and remove the separate capability entries from the footer.
 - Stack Applications, Research, and Platform in one navigation column, alongside Latere, Legal, and Community. Retain entry colors and use text-color hover feedback without underlines.

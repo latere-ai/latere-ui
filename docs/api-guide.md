@@ -120,8 +120,41 @@ Collapse is `v-model:collapsed` (controlled) or uncontrolled if you omit it.
 Set `:collapsible="false"` for a fixed rail. A nav item without `to` renders
 disabled unless `action: true` makes it an action button. Override any row via the `#item` slot, the logo via `#brand`, and
 insert app-specific affordances (command palette, workspace switcher) via
-`#brand-extra` / `#extra`. Items take an `icon` name surfaced through the
-`#icon` slot: the library bundles no icon set.
+`#brand-extra` / `#extra`.
+
+**Icons.** An item's `icon` that names a built-in stroke icon renders at 16px
+in the text color: `home`, `key`, `card`, `folder`, `cube`, `globe`,
+`sparkles`, `bot`, `branch`, `repo`, `org`, `shield`, `book`, `coins`,
+`terminal`, `plus`, `search`, `chevron`, `external` (Lucide shapes, ISC
+license). The `#icon` slot still replaces them. A row with no icon has no
+icon slot, so its label starts at the row's padding.
+
+**Sections with sub-pages.** Give an item `children` and it becomes an
+expandable row with a chevron. Its children stay folded until the viewer
+opens the row or the current page is one of them, and the rail remembers
+which rows the viewer opened (in localStorage under `open-key`; pass `null`
+to keep that to the page's lifetime). Enter or Space opens and closes a row,
+the arrow keys move between rows. In the collapsed rail a parent is a link
+to its own `to`, or its first child's, and stays highlighted while any of its
+pages is open.
+
+```ts
+{ id: 'storage', label: 'Storage', icon: 'folder', to: '/storage', children: [
+  { id: 'storage:files', label: 'Files', to: '/storage/files' },
+  { id: 'storage:trash', label: 'Trash', to: '/storage/trash' },
+] }
+```
+
+**Compact head and foot rows.** `compact` sets the brand, name and fold
+button in one row as tall as a nav row, and folds the head into one button
+that shows the logo. `:foot-items` adds rows above the `#foot` slot, each a
+link or action with an icon and an optional right-aligned `value`, such as
+`{ id: 'credits', label: 'Credits', icon: 'coins', to: '/billing', value: '$8.16' }`.
+With `compact`, the rail keeps `--lu-cs-inset` (12px) from the window's left
+and bottom edges and rounds the account card by `--radius-window` (26px, the
+corner macOS 26 draws around Safari) minus that inset, so the card's corner
+follows the window's. Pass `subline="text"` to `AccountMenu` for one quiet
+line under the name, "Platform admin · Personal", in place of the badge.
 
 ## Docs renderer
 
