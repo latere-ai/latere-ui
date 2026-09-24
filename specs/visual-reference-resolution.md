@@ -40,7 +40,7 @@ Make committed component figures sharp when enlarged or printed. Render real bro
 
 All 150 named states have native 300 DPI references on macOS 27 and macOS 15,
 with every PNG individually reinspected after the design fixes. The
-[per-figure review](../docs/visual-audit-300dpi.md) records findings and final checks.
+[per-figure review](../docs/reviews/visual-audit-300dpi.md) records findings and final checks.
 All 300 files have verified density metadata and native pixel dimensions.
 
 Validation passed: type checking, 446 unit tests with 92.73% line coverage,

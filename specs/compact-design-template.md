@@ -41,7 +41,7 @@ Add browser regressions before implementation, record failures, then prove corre
 
 Implemented compact tokens, shared component geometry, system shell typography, responsive docs and populated workspace examples. Individual visual review additionally corrected weak button/selection boundaries, a clipped select row and redundant toolbar blur. Each correction has a reproducible browser regression; geometry and affordance checks were verified failing before their fixes.
 
-All 304 local browser checks passed in comparison mode; the native macOS recording passed 304 checks. Type checking and 446 unit tests passed with 92.74% line coverage. Reviewed and committed 160 figures per platform, including ten workspace figures per platform, with verified 300 DPI metadata. See the [review record](../docs/compact-design-review.md) and [design guide](../docs/design-system.md).
+All 304 local browser checks passed in comparison mode; the native macOS recording passed 304 checks. Type checking and 446 unit tests passed with 92.74% line coverage. Reviewed and committed 160 figures per platform, including ten workspace figures per platform, with verified 300 DPI metadata. See the [review record](../docs/reviews/compact-design-review.md) and [design guide](../docs/design-system.md).
 
 ## Design evolution
 

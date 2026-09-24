@@ -1,8 +1,8 @@
 # Compact template review
 
-The September 2026 compact revision reduces wasted space while keeping text readable and touch controls usable. See the [design guide](design-system.md) for defaults and the [figure index](visual-reference.md) for individual references.
+The September 2026 compact revision reduces wasted space while keeping text readable and touch controls usable. See the [design guide](../design-system.md) for defaults and the [figure index](../visual-reference.md) for individual references.
 
-![Compact workspace on a laptop](../tests/visual/goldens/darwin-27/workspace-light-laptop.png)
+![Compact workspace on a laptop](../../tests/visual/goldens/darwin-27/workspace-light-laptop.png)
 
 ## Corrections
 

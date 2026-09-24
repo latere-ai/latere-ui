@@ -2,7 +2,7 @@
 
 The September 2026 review examined the Vue component library, React adapters,
 shared styles, console and documentation layouts, and Liquid Glass runtime.
-The resulting [reference index](visual-reference.md) links the real browser
+The resulting [reference index](../visual-reference.md) links the real browser
 renders used by the regression suite.
 
 ## Corrected defects
@@ -57,7 +57,7 @@ footer variants, and representative mobile layouts. Additional images cover
 hover, keyboard focus, palette filtering/scrolling, refraction, sheen, reduced
 motion, reduced transparency, and increased contrast.
 
-The [design skeleton](figures/design-skeleton.svg) explains how tokens,
+The [design skeleton](../figures/design-skeleton.svg) explains how tokens,
 materials, components and application chrome fit together. It is a conceptual
 composition diagram. Component PNGs are actual renders, not illustrations.
 
@@ -82,5 +82,5 @@ composition diagram. Component PNGs are actual renders, not illustrations.
 
 Run `bun run test:coverage`, `bun run typecheck`, and `bun run test:visual`.
 Inspect differences before using the explicit baseline-update command. The
-[contributor guide](../CONTRIBUTING.md) explains the reference platform and
+[contributor guide](../../CONTRIBUTING.md) explains the reference platform and
 review workflow.

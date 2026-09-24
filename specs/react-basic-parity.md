@@ -23,4 +23,4 @@ Each component receives behavior and edge-case unit tests. Preserve native keybo
 
 ## Outcome
 
-All 34 visual components are now exported by both adapters. React surface attributes and the added controls use shared styles and preserve controlled values, native input behavior and focus. Unit tests cover prop updates, disabled states and accessibility; [paired browser controls](../tests/visual/parity-controls.spec.ts) exercise both adapters on desktop and mobile. The [complete visual review](../docs/complete-visual-review.md) records exact light/dark figures for every appearance and both native platforms.
+All 34 visual components are now exported by both adapters. React surface attributes and the added controls use shared styles and preserve controlled values, native input behavior and focus. Unit tests cover prop updates, disabled states and accessibility; [paired browser controls](../tests/visual/parity-controls.spec.ts) exercise both adapters on desktop and mobile. The [complete visual review](../docs/reviews/complete-visual-review.md) records exact light/dark figures for every appearance and both native platforms.

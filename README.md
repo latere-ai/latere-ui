@@ -12,7 +12,7 @@ Shared glass materials, interface components, and application chrome with produc
 
 [Design guide](docs/design-system.md) · [Product styling](docs/design-system.md#keep-product-styling-explicit) · [Integration guide](docs/api-guide.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
 
-Explore the [complete visual reference](docs/visual-reference.md) and [review findings](docs/complete-visual-review.md): every component has light/dark desktop/mobile figures in both frameworks and all four appearances.
+Every component has light and dark, desktop and mobile figures in both frameworks and all four appearances; the [visual reference](docs/visual-reference.md) indexes them.
 
 ## Choose an appearance
 

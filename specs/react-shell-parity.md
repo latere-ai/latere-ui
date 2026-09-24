@@ -33,4 +33,4 @@ Focused unit tests cover keyboard/focus behavior, slot and prop updates, TOC obs
 
 ## Outcome
 
-ConsolePalette, DocsLayout, AccountPrefs, ProductSwitcher and OrgSwitcher are available from the public React entrypoint, including sidebar product switching. [Browser shell tests](../tests/visual/parity-shell.spec.ts) verify navigation, selection and responsive interactions in both adapters. Every shell sheet has exact light/dark desktop/mobile figures under all four appearances. The [complete visual review](../docs/complete-visual-review.md) records both native platforms and source coverage.
+ConsolePalette, DocsLayout, AccountPrefs, ProductSwitcher and OrgSwitcher are available from the public React entrypoint, including sidebar product switching. [Browser shell tests](../tests/visual/parity-shell.spec.ts) verify navigation, selection and responsive interactions in both adapters. Every shell sheet has exact light/dark desktop/mobile figures under all four appearances. The [complete visual review](../docs/reviews/complete-visual-review.md) records both native platforms and source coverage.
