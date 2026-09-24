@@ -6,11 +6,13 @@
 [![Vue 3.5+](https://img.shields.io/badge/vue-3.5%2B-42b883.svg)](https://vuejs.org/)
 [![React 18 or 19](https://img.shields.io/badge/react-18%20%7C%2019-61dafb.svg)](https://react.dev/)
 
-Shared glass materials, interface components, and application chrome with product-neutral defaults. Build forms, navigation, dialogs, and documentation in Vue or React. Choose default glass or the matte Replichai, Wallfacer and Origo appearances.
+Shared glass materials, interface components, and application chrome for Vue and React. Build forms, navigation, dialogs, consoles, and documentation pages, in default glass or the matte Replichai, Wallfacer and Origo appearances.
+
+The materials, controls, overlays, console shell, and documentation layout are product-neutral. A few parts are Latere's own and are published for Latere's products: the site footer and product switcher carry Latere's product lineup and links, the logo marks are Latere's, and the session helpers expect a backend that serves the [session contract](docs/api-guide.md#session) Latere's backends serve, under paths you can rename.
 
 ![Compact workspace with navigation, toolbar, summary panels and projects](tests/visual/goldens/darwin-27/workspace-light-laptop.png)
 
-[Design guide](docs/design-system.md) · [Product styling](docs/design-system.md#keep-product-styling-explicit) · [Integration guide](docs/api-guide.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
+[Design guide](docs/design-system.md) · [Integration guide](docs/api-guide.md) · [React shell](docs/react-shell.md) · [Visual reference](docs/visual-reference.md) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md)
 
 Every component has light and dark, desktop and mobile figures in both frameworks and all four appearances; the [visual reference](docs/visual-reference.md) indexes them.
 
@@ -33,17 +35,17 @@ Import `latere-ui/presets` after the shared styles and set `data-design="replich
 | Site chrome | Full and compact footer, theme and language controls, logo | Vue and React |
 | Session | API client, account resolution, organization switching, session bindings | Vue and React |
 
-The package ships `.vue`, `.tsx`, `.ts`, and `.css` source. Your application compiles it with its own toolchain. Both adapters expose all 35 visual components. React imports come from [latere-ui/react](src/react/index.ts); the [API guide](docs/api-guide.md#react) explains controlled values and callbacks.
+The package ships `.vue`, `.tsx`, `.ts`, and `.css` source. Your application compiles it with its own toolchain. Both adapters expose every visual component. React imports come from [latere-ui/react](src/react/index.ts); the [API guide](docs/api-guide.md#react) explains controlled values and callbacks.
 
 ## Install
 
-Pin a GitHub release tag:
+The package is not on a registry. Pin a release tag from the [releases page](https://github.com/latere-ai/latere-ui/releases), for example:
 
 ```sh
-bun add github:latere-ai/latere-ui#v1.28.1
+bun add github:latere-ai/latere-ui#v1.29.0
 ```
 
-These docs and figures track `main`. Complete React component coverage, the compact template, integrated sidebar and product presets are currently unreleased; v1.28.1 predates these additions. See [Unreleased changes](CHANGELOG.md#unreleased) before adopting `main`.
+These docs and figures track `main`. The changes not yet in a release, such as `PlatformLogoMark` and the grouped footer navigation, are listed under [Unreleased](CHANGELOG.md#unreleased).
 
 Use Vue 3.5+ with your Vue compiler, or React 18/19 with your React toolchain. React applications import `latere-ui/react`. For server rendering with Vite, include `ssr: { noExternal: ['latere-ui'] }` so the package source is compiled for the server too.
 
@@ -118,7 +120,7 @@ Use regular glass for panels and navigation, thick glass for readable overlays, 
 
 For exact props, events, router integration, footer locales, and session setup, see the [integration guide](docs/api-guide.md) and [React shell examples](docs/react-shell.md). English, Chinese, and German footer dictionaries are bundled; the default language dropdown offers English and Chinese.
 
-Both footer layouts group destinations into Applications (Wallfacer and Lectio), Research (ReplicHAI), and Platform (Latere Platform). The full layout also has Latere, Legal, and Community columns. Compact groups wrap on small screens. These groups and their translations are shared by Vue and React across all design presets.
+`SiteFooter` is Latere's site footer. On `main`, both layouts group its destinations into Applications (Wallfacer and Lectio), Research (ReplicHAI), and Platform (Latere Platform), and the full layout adds Latere, Legal, and Community columns. Compact groups wrap on small screens. The groups and their translations are shared by Vue and React across all appearances.
 
 ## Review the visuals
 
@@ -131,9 +133,9 @@ The repository keeps 300 DPI golden PNGs of real components in light and dark th
 | Desktop | [Light](tests/visual/goldens/darwin-27/vue-workspace-light-desktop.png) · [Dark](tests/visual/goldens/darwin-27/vue-workspace-dark-desktop.png) | [Light](tests/visual/goldens/darwin-27/react-workspace-light-desktop.png) · [Dark](tests/visual/goldens/darwin-27/react-workspace-dark-desktop.png) |
 | Mobile | [Light](tests/visual/goldens/darwin-27/vue-workspace-light-mobile.png) · [Dark](tests/visual/goldens/darwin-27/vue-workspace-dark-mobile.png) | [Light](tests/visual/goldens/darwin-27/react-workspace-light-mobile.png) · [Dark](tests/visual/goldens/darwin-27/react-workspace-dark-mobile.png) |
 
-Use the [visual reference index](docs/visual-reference.md) to find a component and browse its golden figures, and follow [Contributing](CONTRIBUTING.md) to run comparisons or review an intentional update. The figures show fixed test content and rendering conditions; they complement interaction tests.
+Use the [visual reference index](docs/visual-reference.md) to find a component and browse its golden figures. The figures show fixed content and rendering conditions; separate interaction tests cover focus, keyboard, and scrolling behavior.
 
-## Develop
+## Contributing
 
 ```sh
 bun install
@@ -141,6 +143,8 @@ bun run test
 bun run typecheck
 ```
 
-The unit suite covers Vue and React. Browser fixtures exercise actual layout and generate the visual references shown here. See [Contributing](CONTRIBUTING.md) for browser setup, screenshot comparison, and baseline review.
+The unit suite covers Vue and React. Browser fixtures exercise actual layout and generate the visual references shown here. [Contributing](CONTRIBUTING.md) covers the browser setup, screenshot comparison, and how an intended visual change is reviewed; the [review records](docs/reviews/README.md) document each past regeneration. Design specs are in [`specs/`](specs/README.md).
 
-MIT licensed. See [LICENSE](LICENSE).
+## License
+
+MIT. See [LICENSE](LICENSE).

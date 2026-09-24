@@ -1,6 +1,6 @@
 # Integration guide
 
-Precise examples for footer preferences, console navigation, documentation, glass materials, and session bindings. This guide tracks unreleased `main`; v1.28.1 predates complete React coverage and the new appearances. Start with the [README](../README.md) for installation or the [design guide](design-system.md) for visual composition.
+Precise examples for footer preferences, console navigation, documentation, glass materials, and session bindings. This guide tracks `main`; changes not yet in a release are listed under Unreleased in the [changelog](../CHANGELOG.md#unreleased). Start with the [README](../README.md) for installation or the [design guide](design-system.md) for visual composition.
 
 ![Tokens, materials, components, and composed surfaces](figures/design-skeleton.svg)
 
@@ -65,7 +65,10 @@ The shared stylesheet scopes link decoration to `.site-footer a` in both layouts
 
 Both footer layouts use 28px outer heights for the theme selector and language dropdown. On coarse-pointer devices, both become 50px high so each inset theme button has a 44px touch target. The selected segment keeps the same geometry as the other segments.
 
-Cross-product links (Wallfacer, Topos, …) are always absolute. Internal links
+The footer carries Latere's own navigation: Wallfacer and Lectio under
+Applications, ReplicHAI under Research, and the platform console under
+Platform, followed by Latere, Legal, and Community links. These destination
+links are always absolute. Latere's own site links (Team, Blog, Legal, home)
 resolve against `baseUrl` as plain `<a>` unless `routerLink` is supplied, in
 which case they render through it with a relative `to`.
 
@@ -185,10 +188,10 @@ specular-edged layers) plus a component library built on it, so every product
 console reads as one coherent surface. This section covers the material
 foundation; the `Glass*` component library is layered on top.
 
-**v1.20 (Liquid Glass v2)** firms the recipe: a **five-step material ladder**,
-compact rounded geometry on a radii ladder, **ink as the only accent** (product colors
-survive only as gradient wordmarks), and a layered floating-glass shadow. See
-[Liquid Glass v2 spec](../specs/liquid-glass-v2-v1.20.md). Migrating from v1.10.x: the `.lu-glass-clear`
+Since v1.20 the recipe is a **five-step material ladder**, compact rounded
+geometry on a radii ladder, **ink as the only accent** (product colors survive
+only as gradient wordmarks), and a layered floating-glass shadow. Migrating
+from v1.10.x: the `.lu-glass-clear`
 Clear tier and the `.lu-glass-dim` utility are removed (the `--glass-dim` modal
 scrim token stays); `.lu-glass-ultrathin` and `.lu-glass-smoke` are new; the
 `GlassTier` union is now `ultrathin | thin | regular | thick | smoke`; and
@@ -353,11 +356,83 @@ message.success('Saved');
 if (await confirm({ message: 'Delete this sandbox?', danger: true })) { /* … */ }
 ```
 
+## Session
+
+The session helpers talk to your application's own backend, which holds the
+session cookie and runs the sign-in redirect. The browser never calls an
+identity provider directly. Every path below is a default and can be renamed
+through options:
+
+| Default path | Request | Expected answer |
+|---|---|---|
+| `/api/me` | `GET` | The signed-in principal as JSON; 401 or 404 when signed out |
+| `/api/me/switch-org` | `POST {"org_id"}` | `{"redirect"}` to follow; an empty `org_id` selects the personal context |
+| `/login?return_to=…` | Browser navigation | Starts sign-in; `prompt=none` in the query asks for a silent check |
+| `/logout` | Browser navigation | Ends the session |
+
+A principal carries `principal_id`, `email`, `org_id` (empty for the personal
+context), and `orgs`, and optionally `name`, `display_name`, `avatar_url`,
+`initials`, `org_name`, `role`, and `auth_url`. A backend with another shape
+passes `mapMe` to translate it. `createApiClient({ csrfCookie })` echoes the
+named cookie in `X-CSRF-Token` on every state-changing request; omit
+`csrfCookie` when your backend does not use double-submit CSRF protection.
+
+In Vue, create the client and the Pinia store once:
+
+```ts
+// session.ts
+import { createApiClient, createSessionStore } from 'latere-ui';
+
+export const client = createApiClient({ csrfCookie: 'csrf_token' });
+export const useSessionStore = createSessionStore({ client, defaultReturnTo: '/dashboard' });
+```
+
+Then call `useSession` once in the root component:
+
+```vue
+<script setup lang="ts">
+import { useSession } from 'latere-ui';
+import { useRoute, useRouter } from 'vue-router';
+import { client, useSessionStore } from '@/session';
+
+const store = useSessionStore();
+const { ready, showAuthGate, loginURL } = useSession({
+  me: () => store.me,
+  loaded: () => store.loaded,
+  fetch: store.fetchMe,
+  route: useRoute(),
+  router: useRouter(),
+  shouldProbe: (path) => path.startsWith('/dashboard'),
+  onUnauthorized: (handler) => { client.onUnauthorized = handler; },
+  onExpired: store.handleExpired,
+});
+</script>
+```
+
+On mount it resolves the principal. When nobody is signed in on a path where
+`shouldProbe` is true, it navigates once to `/login?prompt=none` so a session
+the person already has with the identity provider carries over without a
+prompt. A `sessionStorage` flag keeps the check from looping. When the check
+comes back signed out, `showAuthGate` becomes true and the page renders its
+own sign-in prompt linking to `loginURL`. A request that answers 401 in the
+middle of a session runs `onExpired`.
+
+The store's `expiredSessionMode` decides what an expired session does:
+`'silent-recheck'`, the default, tries the silent check once and then an
+interactive sign-in; `'graceful'` never redirects, so a public page stays
+usable while signed out. `useSessionGate(store, route, router)` exposes the
+same `ready`, `showAuthGate`, and `loginURL` for a single protected view that
+renders its own prompt. `runFrontChannelLogout({ client })` signs out from
+the browser side: it reads `GET /api/logout`, loads each entry of the
+answer's `front_channel_uris` in a hidden frame so other applications clear
+their own sessions, waits at most 2 seconds per frame, and then navigates to
+`post_logout_redirect`.
+
 ## React
 
-All 35 visual components ship from `latere-ui/react`, including controls, overlays, service hosts, console/account components and DocsLayout. The host compiles the source `.tsx`; React and Vue share component styles and framework-free logic. The visual suite compares matching examples by decoded RGBA pixels, with no channel or antialiasing tolerance, then compares each adapter to its platform baseline.
+Every visual component ships from `latere-ui/react`, including controls, overlays, service hosts, console/account components and DocsLayout. The host compiles the source `.tsx`; React and Vue share component styles and framework-free logic. The visual suite compares matching examples by decoded RGBA pixels, with no channel or antialiasing tolerance, then compares each adapter to its platform baseline.
 
-Install React 18 or 19 and React DOM in your application. They are optional peers of this package. The React entrypoint does not import Vue or Pinia at runtime. The install example in the [README](../README.md#install) pins the latest documented release; the complete adapters described here are on unreleased `main`.
+Install React 18 or 19 and React DOM in your application. They are optional peers of this package. The React entrypoint does not import Vue or Pinia at runtime. The complete adapters shipped in v1.29.0; `PlatformLogoMark` is the one React export not yet in a release.
 
 ### Session
 

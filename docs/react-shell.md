@@ -1,6 +1,6 @@
 # React console and account components
 
-These APIs are available on unreleased `main`; v1.28.1 predates the complete shell adapters. Import the shell components from `latere-ui/react`. They use the same component styles and models as the Vue adapters. Import the layout and material styles once in your app:
+These components have shipped since v1.29.0. Import them from `latere-ui/react`. They use the same component styles and models as the Vue adapters. Import the layout and material styles once in your app:
 
 ```tsx
 import 'latere-ui/tokens';
@@ -66,7 +66,34 @@ The host must re-render when its active organization changes. An empty ID select
 
 Style `.latere-org-switcher__button` and the `data-active`, `data-owner`, and `data-loading` attributes in your application. `renderItem(item, select)` replaces a row's button; `select()` returns the selection promise. `header` accepts a React node or a function receiving the current label. `renderError(error)` replaces error content.
 
-The visual gallery demonstrates a compact host presentation with a visible current row and keyboard focus. Wrap the chooser in `.organization-demo` and adapt the [example CSS](../tests/visual/organization-demo.css), which uses the active preset's tokens. These example styles are not part of the headless component's default appearance.
+The component is headless and ships no styles of its own. This is the presentation the reference figure below uses, with a visible current row and keyboard focus, built on the active appearance's tokens. Wrap the chooser in `.organization-demo`, or adapt the selectors to your own wrapper:
+
+```css
+.organization-demo { max-width: 320px; }
+.organization-demo .latere-org-switcher__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.organization-demo .latere-org-switcher__button {
+  appearance: none;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 32px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--radius-sm, 6px);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.organization-demo [data-active="true"] .latere-org-switcher__button {
+  background: var(--accent-subtle);
+  color: var(--accent);
+  font-weight: 600;
+}
+.organization-demo .latere-org-switcher__button:hover { background: var(--accent-subtle); }
+.organization-demo .latere-org-switcher__button:focus-visible { outline: var(--focus-outline); outline-offset: -2px; }
+@media (pointer: coarse) { .organization-demo .latere-org-switcher__button { min-height: 44px; } }
+```
 
 ![Organization chooser with the current workspace highlighted](../tests/visual/goldens/darwin-27/react-organizations-light-mobile.png)
 

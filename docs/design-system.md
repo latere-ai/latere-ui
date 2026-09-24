@@ -1,6 +1,6 @@
 # A shared visual language
 
-Use the same material, spacing, and interface patterns across product surfaces. This guide helps builders choose a surface, compose a screen, and inspect its reference figure. For props and code examples, use the [integration guide](api-guide.md) or [React shell guide](react-shell.md). These docs describe unreleased `main`.
+Use the same material, spacing, and interface patterns across product surfaces. This guide helps builders choose a surface, compose a screen, and inspect its reference figure. For props and code examples, use the [integration guide](api-guide.md) or [React shell guide](react-shell.md). The guide describes `main`; the few changes not yet in a release are listed under Unreleased in the [changelog](../CHANGELOG.md#unreleased).
 
 ![Tokens feed materials, materials support components, and components compose a shell](figures/design-skeleton.svg)
 
@@ -12,7 +12,7 @@ Sibling panels, toolbars and tables share 14px corners. Toolbar buttons use 8px 
 
 [Dark laptop](../tests/visual/goldens/darwin-27/workspace-dark-laptop.png) · [1470px laptop](../tests/visual/goldens/darwin-27/workspace-light-laptop-large.png) · [2560px desktop](../tests/visual/goldens/darwin-27/workspace-light-studio.png) · [Mobile](../tests/visual/goldens/darwin-27/vue-workspace-light-mobile.png)
 
-Size layouts by the browser's available CSS pixels, rather than the monitor's physical resolution. A 224px console rail leaves more room for work on a laptop. The rail now shares the window edge: the shell owns outer corner clipping, and navigation has a flat selected fill without a detached card rim. This follows the [supplied macOS 27 Mail reference](https://www.apple.com/v/os/g/images/macos/improvements/search__gca3sckqsxym_large_2x.jpg). Keep reading lines bounded on wide displays. `DocsLayout` responds to its own container: below 1080px the table of contents disappears, and below 720px navigation moves above the article. Setting `showToc` to false also removes its grid column.
+Size layouts by the browser's available CSS pixels, rather than the monitor's physical resolution. A 224px console rail leaves more room for work on a laptop. The rail shares the window edge: the shell owns outer corner clipping, and navigation has a flat selected fill without a detached card rim, following the [macOS 27 Mail window](https://www.apple.com/v/os/g/images/macos/improvements/search__gca3sckqsxym_large_2x.jpg). Keep reading lines bounded on wide displays. `DocsLayout` responds to its own container: below 1080px the table of contents disappears, and below 720px navigation moves above the article. Setting `showToc` to false also removes its grid column.
 
 | Token | Default | Typical use |
 |---|---|---|
@@ -47,7 +47,7 @@ Use `replichai`, `wallfacer`, or `origo` on **the document root**. This gives te
 
 | Preset | Typography and density | Surfaces and actions | Reference source |
 |---|---|---|---|
-| `replichai` | Inter, 14px reading text, 32px fields | Warm matte surfaces, 18px cards, 8px fields; 30px ink actions with blue hover | [Replichai styles](https://github.com/latere-ai/replichai/blob/main/frontend/src/styles.css) |
+| `replichai` | Inter, 14px reading text, 32px fields | Warm matte surfaces, 18px cards, 8px fields; 30px ink actions with blue hover | Replichai's reading interface |
 | `wallfacer` | Inter, 13px operator UI, 32px fields | Warm matte surfaces, compact 14px cards, 10px fields; 30px ink actions with clay hover | [Wallfacer tokens](https://github.com/latere-ai/wallfacer/blob/main/frontend/src/styles/tokens.css) and [primitives](https://github.com/latere-ai/wallfacer/blob/main/frontend/src/styles/primitives.css) |
 | `origo` | IBM Plex Sans/Mono, 13px UI, 28px table rows | Opaque surfaces without shadows, 4px panels/fields, 3px standalone buttons; iris primary actions | [Origo styles](https://github.com/latere-ai/origo-web/blob/main/internal/web/assets/app.css) |
 
