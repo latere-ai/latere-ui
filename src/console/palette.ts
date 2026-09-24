@@ -17,13 +17,21 @@ export type ConsolePaletteSearch = (query: string) => ConsolePaletteItem[];
 
 /**
  * The rows the palette offers before any query: routable, enabled nav rows
- * (a child names its parent as its group) followed by the host's entries
- * that lead somewhere or run an action.
+ * (a child names its parent as its group, and shows its parent's icon when
+ * it has none, so every row of a section lines up) followed by the host's
+ * entries that lead somewhere or run an action.
  */
 export function paletteEntries(groups: NavGroup[], items: ConsolePaletteItem[] = []): ConsolePaletteItem[] {
+  const parentIcon = new Map<string, string>();
+  for (const g of groups) for (const item of g.items) {
+    if (item.icon) for (const child of item.children ?? []) parentIcon.set(child.id, item.icon);
+  }
   const nav = flattenNavItems(groups)
     .filter((item) => item.to && item.disabled !== true)
-    .map((item) => ({ ...item, group: item.parentLabel ?? item.groupLabel }));
+    .map((item) => {
+      const icon = item.icon ?? parentIcon.get(item.id);
+      return { ...item, ...(icon ? { icon } : {}), group: item.parentLabel ?? item.groupLabel };
+    });
   return [...nav, ...items.filter((item) => item.disabled !== true && (item.to !== undefined || item.action === true))];
 }
 

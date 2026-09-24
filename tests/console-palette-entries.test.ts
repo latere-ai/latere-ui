@@ -32,10 +32,12 @@ describe('palette entries', () => {
       { id: 'off', label: 'Off', action: true, disabled: true },
       { id: 'dead', label: 'Nowhere' },
     ]);
-    expect(entries.map((e) => [e.id, e.group])).toEqual([
-      ['home', 'Main'], ['storage', 'Main'], ['storage:files', 'Storage'], ['storage:trash', 'Storage'],
-      ['admin:fleet', 'Admin'], ['new', 'Actions'],
+    expect(entries.map((e) => [e.id, e.group, e.icon])).toEqual([
+      ['home', 'Main', 'home'], ['storage', 'Main', 'folder'], ['storage:files', 'Storage', 'folder'], ['storage:trash', 'Storage', 'folder'],
+      ['admin:fleet', 'Admin', 'shield'], ['new', 'Actions', undefined],
     ]);
+    // A row without an icon of its own or a parent's gains no icon key.
+    expect('icon' in paletteEntries([{ items: [{ id: 'x', label: 'X', to: '/x' }] }])[0]).toBe(false);
   });
 
   it('matches every term against label, group and keywords, then adds search results', () => {
