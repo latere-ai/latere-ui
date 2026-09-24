@@ -46,6 +46,11 @@
     --radius-xl:  18px;   /* large cards, panels, sidebar slab */
     --radius-2xl: 24px;   /* screenshots, page frames */
     --radius-pill: 999px; /* buttons, badges, nav capsule */
+    /* The corner of the browser window around the page: macOS 26 draws a
+     * window with a toolbar, Safari's included, at 26pt. A surface set at a
+     * window corner takes this radius minus its inset from the window edge,
+     * so the two curves stay concentric. */
+    --radius-window: 26px;
 }
 
 [data-theme="dark"] {

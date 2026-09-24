@@ -5,15 +5,42 @@
 // hosts can override. The nav model and collapse logic are headless
 // (src/console/nav.ts); this is the thin Vue adapter, mirroring OrgSwitcher.vue.
 
-import { computed, onMounted, onUnmounted, ref, type Component } from 'vue';
+import {
+  computed,
+  h,
+  onMounted,
+  onUnmounted,
+  ref,
+  useId,
+  useSlots,
+  watch,
+  type Component,
+  type FunctionalComponent,
+  type VNodeChild,
+} from 'vue';
 
 import {
-  partitionGroups,
+  activePath,
+  hasChildren,
   isItemDisabled,
+  navTarget,
+  partitionGroups,
   type ConsoleNavModel,
+  type NavFootItem,
   type NavGroup,
   type NavItem,
 } from '../console/nav';
+import { consoleIcon } from '../console/icons';
+import { handleNavKey } from '../console/navKeys';
+import {
+  DEFAULT_NAV_OPEN_KEY,
+  isNavOpen,
+  openActivePath,
+  readNavOpen,
+  setNavOpen,
+  writeNavOpen,
+} from '../console/openState';
+import ConsoleIcon from './ConsoleIcon.vue';
 import ProductSwitcher from './ProductSwitcher.vue';
 import type { ProductSwitcherLabelOverrides } from './productSwitcher';
 
@@ -33,6 +60,20 @@ interface Props {
   collapsed?: boolean | null;
   /** Show the fold button. Set false for a fixed rail (sandbox). */
   collapsible?: boolean;
+  /**
+   * Compact head: the brand, name and fold button share one row as tall as a
+   * nav row, and the collapsed rail keeps a single button that shows the
+   * logo and expands the rail. Also sets the rail's inset from
+   * `--lu-cs-inset` and the account card's corner from `--radius-window`.
+   */
+  compact?: boolean;
+  /**
+   * localStorage key under which the open parents persist for this viewer.
+   * `null` keeps them for the page's lifetime only.
+   */
+  openKey?: string | null;
+  /** Rows set in the foot above the #foot slot: links or actions with a value. */
+  footItems?: NavFootItem[];
   /** Injected RouterLink component; falls back to a plain `<a>` off-router. */
   routerLink?: Component;
   /** Home target for the brand link. */
@@ -76,6 +117,8 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   collapsible: true,
+  compact: false,
+  openKey: DEFAULT_NAV_OPEN_KEY,
   collapsed: null,
   homeTo: '/',
   searchLabel: 'Search',
@@ -137,6 +180,98 @@ function rowActive(item: NavItem): boolean {
   return props.activeKey !== undefined && item.id === props.activeKey;
 }
 
+const slots = useSlots();
+const navId = useId();
+const navEl = ref<HTMLElement | null>(null);
+const path = computed(() => activePath(props.model.groups, props.activeKey));
+const openState = ref(readNavOpen(props.openKey));
+// Arriving at a page opens every parent above it; the viewer's choice for
+// any other parent stays as they left it.
+watch(path, (p) => {
+  const next = openActivePath(openState.value, p);
+  if (next === openState.value) return;
+  openState.value = next;
+  writeNavOpen(props.openKey, next);
+}, { immediate: true });
+
+function setOpen(id: string, open: boolean) {
+  const next = setNavOpen(openState.value, id, open);
+  if (next === openState.value) return;
+  openState.value = next;
+  writeNavOpen(props.openKey, next);
+}
+function isOpen(item: NavItem): boolean {
+  return isNavOpen(openState.value, item.id, path.value);
+}
+function onNavKeydown(e: KeyboardEvent) {
+  if (navEl.value) handleNavKey(e, navEl.value, setOpen);
+}
+// A row on the path to the current page: the page itself or a parent of it.
+function inPath(item: NavItem): boolean {
+  return path.value.some((p) => p.id === item.id);
+}
+function groupId(item: NavItem): string {
+  return `${navId}-${item.id}`;
+}
+// A collapsed rail has no room for children: a parent is a link to its own
+// page, or its first child's.
+function collapsedLink(item: NavItem): NavItem {
+  return { ...item, to: navTarget(item), children: undefined };
+}
+
+// The icon a row shows: the host's #icon slot, a built-in one named by
+// `item.icon`, or, for a top-level row in the collapsed rail, the label's
+// first letter. Nothing at all renders no slot, so a label never follows
+// empty space.
+function hasIcon(item: NavItem, depth: number): boolean {
+  return !!slots.icon || !!consoleIcon(item.icon) || (collapsed.value && depth === 0);
+}
+const IconSlot: FunctionalComponent<{ item: NavItem; depth: number }> = ({ item, depth }) => {
+  if (!hasIcon(item, depth)) return null;
+  const content: VNodeChild = slots.icon
+    ? slots.icon({ item, collapsed: collapsed.value })
+    : consoleIcon(item.icon)
+      ? h(ConsoleIcon, { name: item.icon! })
+      : letter(item.label);
+  return h('span', { class: 'lu-cs-item-icon' }, [content]);
+};
+IconSlot.props = ['item', 'depth'];
+
+// One link, action or disabled row. `active` overrides the row's own match
+// (a collapsed parent carries the selection for its children); `value` is a
+// foot row's trailing text.
+const LeafRow: FunctionalComponent<{ item: NavItem; depth: number; active?: boolean; value?: string; extraClass?: string }> = ({ item, depth, active, value, extraClass }) => {
+  const selected = active ?? rowActive(item);
+  const disabled = isItemDisabled(item);
+  const label = value !== undefined ? `${item.label} ${value}` : item.label;
+  const tag = rowTag(item);
+  const children = [
+    h(IconSlot, { item, depth }),
+    !collapsed.value ? h('span', { class: 'lu-cs-item-label' }, item.label) : null,
+    item.dot && !collapsed.value ? h('span', { class: 'lu-cs-dot', 'aria-hidden': 'true' }) : null,
+    item.badge !== undefined && !collapsed.value
+      ? item.badge === 'live'
+        ? h('span', { class: 'lu-cs-badge lu-cs-badge-live' }, [h('span', { class: 'lu-cs-badge-dot', 'aria-hidden': 'true' }), props.liveLabel])
+        : h('span', { class: 'lu-cs-badge' }, String(item.badge))
+      : null,
+    value !== undefined && !collapsed.value ? h('span', { class: 'lu-cs-item-value' }, value) : null,
+  ];
+  const attrs = {
+    ...rowProps(item),
+    class: ['lu-cs-item', depth > 0 ? 'lu-cs-child' : '', extraClass ?? ''].filter(Boolean).join(' '),
+    'data-active': selected ? 'true' : 'false',
+    'data-disabled': disabled ? 'true' : 'false',
+    'data-nav-id': item.id,
+    title: collapsed.value ? label : disabled ? 'Not yet available' : undefined,
+    'aria-current': rowActive(item) ? 'page' : undefined,
+    onClick: (e: MouseEvent) => onRowClick(item, e),
+  };
+  return typeof tag === 'string' ? h(tag, attrs, children) : h(tag, attrs, { default: () => children });
+};
+// Declared so the template's kebab-case attributes reach the render as props
+// (an undeclared `active` would also arrive as '' rather than undefined).
+LeafRow.props = ['item', 'depth', 'active', 'value', 'extraClass'];
+
 // The element a nav row renders as: the injected RouterLink, a plain anchor,
 // or a non-interactive span for disabled rows.
 function rowTag(item: NavItem): Component | string {
@@ -187,6 +322,10 @@ const brandProps = computed(() =>
     : (props.routerLink ? { to: props.homeTo } : { href: props.homeTo }),
 );
 
+// The compact collapsed head is one button: the logo, which turns into the
+// expand glyph on hover or focus.
+const compactFold = computed(() => props.compact && collapsed.value && props.collapsible);
+
 // First grapheme of the label, used as a fallback mark in collapsed mode when
 // the host supplies no #icon slot.
 function letter(label: string): string {
@@ -195,9 +334,9 @@ function letter(label: string): string {
 </script>
 
 <template>
-  <aside class="lu-cs" :data-collapsed="collapsed ? 'true' : 'false'">
+  <aside class="lu-cs" :data-collapsed="collapsed ? 'true' : 'false'" :data-compact="compact ? 'true' : undefined">
     <div class="lu-cs-head">
-      <slot name="brand" :collapsed="collapsed">
+      <slot v-if="!compactFold" name="brand" :collapsed="collapsed">
         <component
           :is="brandTag"
           v-bind="brandProps"
@@ -219,7 +358,7 @@ function letter(label: string): string {
         </component>
       </slot>
 
-      <slot name="brand-extra" :collapsed="collapsed" />
+      <slot v-if="!compactFold" name="brand-extra" :collapsed="collapsed" />
 
       <!-- Cross-console app grid, opt-in via `product`. Hidden while the rail
            is collapsed: the 64px column head stacks vertically and only keeps
@@ -240,7 +379,10 @@ function letter(label: string): string {
         :aria-label="collapsed ? expandLabel : collapseLabel"
         @click="toggle"
       >
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        <span v-if="compactFold" class="lu-cs-fold-mark" aria-hidden="true">
+          <slot name="logo">{{ letter(brandName ?? 'L') }}</slot>
+        </span>
+        <svg class="lu-cs-fold-glyph" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
              stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <rect x="3" y="4" width="18" height="16" rx="2" />
           <line x1="9" y1="4" x2="9" y2="20" />
@@ -271,7 +413,7 @@ function letter(label: string): string {
       <span v-if="!collapsed && searchHint" class="lu-cs-search-hint">{{ searchHint }}</span>
     </button>
 
-    <nav class="lu-cs-nav">
+    <nav ref="navEl" class="lu-cs-nav" @keydown="onNavKeydown">
       <div
         v-for="(g, gi) in orderedGroups"
         :key="`g-${gi}`"
@@ -280,38 +422,55 @@ function letter(label: string): string {
         :data-pin="g.pin === 'bottom' ? 'bottom' : 'top'"
       >
         <div v-if="g.label && !collapsed" class="lu-cs-group-label">{{ g.label }}</div>
-        <slot
-          v-for="item in g.items"
-          :key="item.id"
-          name="item"
-          :item="item"
-          :active="rowActive(item)"
-          :collapsed="collapsed"
-          :disabled="isItemDisabled(item)"
-        >
-          <component
-            :is="rowTag(item)"
-            v-bind="rowProps(item)"
-            class="lu-cs-item"
-            :data-active="rowActive(item) ? 'true' : 'false'"
-            :data-disabled="isItemDisabled(item) ? 'true' : 'false'"
-            :title="collapsed ? item.label : (isItemDisabled(item) ? 'Not yet available' : undefined)"
-            :aria-current="rowActive(item) ? 'page' : undefined"
-            @click="(e: MouseEvent) => onRowClick(item, e)"
+        <template v-for="item in g.items" :key="item.id">
+          <!-- A parent in the expanded rail: a disclosure over its children,
+               which stay in the DOM and are hidden while folded. -->
+          <template v-if="hasChildren(item) && !collapsed">
+            <button
+              type="button"
+              class="lu-cs-item lu-cs-parent"
+              :data-active="rowActive(item) ? 'true' : 'false'"
+              :data-path="inPath(item) ? 'true' : 'false'"
+              :data-disabled="item.disabled === true ? 'true' : 'false'"
+              :data-nav-id="item.id"
+              :aria-expanded="isOpen(item) ? 'true' : 'false'"
+              :aria-controls="groupId(item)"
+              :disabled="item.disabled === true"
+              @click="setOpen(item.id, !isOpen(item))"
+            >
+              <IconSlot :item="item" :depth="0" />
+              <span class="lu-cs-item-label">{{ item.label }}</span>
+              <span v-if="item.dot" class="lu-cs-dot" aria-hidden="true" />
+              <span class="lu-cs-item-chevron" aria-hidden="true"><ConsoleIcon name="chevron" :size="14" /></span>
+            </button>
+            <div :id="groupId(item)" class="lu-cs-children" role="group" :aria-label="item.label" :hidden="!isOpen(item)">
+              <slot
+                v-for="child in item.children"
+                :key="child.id"
+                name="item"
+                :item="child"
+                :active="rowActive(child)"
+                :collapsed="collapsed"
+                :disabled="isItemDisabled(child)"
+              >
+                <LeafRow :item="child" :depth="1" />
+              </slot>
+            </div>
+          </template>
+          <!-- A parent in the collapsed rail: a link that carries the
+               selection while any page under it is open. -->
+          <LeafRow v-else-if="hasChildren(item)" :item="collapsedLink(item)" :depth="0" :active="inPath(item)" />
+          <slot
+            v-else
+            name="item"
+            :item="item"
+            :active="rowActive(item)"
+            :collapsed="collapsed"
+            :disabled="isItemDisabled(item)"
           >
-            <span class="lu-cs-item-icon">
-              <slot name="icon" :item="item" :collapsed="collapsed">{{ collapsed ? letter(item.label) : '' }}</slot>
-            </span>
-            <span v-if="!collapsed" class="lu-cs-item-label">{{ item.label }}</span>
-            <span v-if="item.dot && !collapsed" class="lu-cs-dot" aria-hidden="true" />
-            <template v-if="item.badge !== undefined && !collapsed">
-              <span v-if="item.badge === 'live'" class="lu-cs-badge lu-cs-badge-live">
-                <span class="lu-cs-badge-dot" aria-hidden="true" />{{ liveLabel }}
-              </span>
-              <span v-else class="lu-cs-badge">{{ item.badge }}</span>
-            </template>
-          </component>
-        </slot>
+            <LeafRow :item="item" :depth="0" />
+          </slot>
+        </template>
       </div>
 
       <!-- App-specific contextual content (recent lists, filters, workspace
@@ -320,6 +479,9 @@ function letter(label: string): string {
     </nav>
 
     <div class="lu-cs-foot">
+      <div v-if="footItems && footItems.length > 0" class="lu-cs-foot-items">
+        <LeafRow v-for="item in footItems" :key="item.id" :item="item" :depth="0" :value="item.value" extra-class="lu-cs-foot-item" />
+      </div>
       <slot name="foot" :collapsed="collapsed" />
     </div>
   </aside>

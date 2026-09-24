@@ -17,15 +17,39 @@ import {
   Fragment,
   createElement,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
   type ComponentType,
+  type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
   type ReactNode,
 } from 'react';
 
-import { isItemDisabled, partitionGroups, type NavGroup, type NavItem, type ConsoleNavModel } from '../console/nav';
+import {
+  activePath,
+  hasChildren,
+  isItemDisabled,
+  navTarget,
+  partitionGroups,
+  type ConsoleNavModel,
+  type NavFootItem,
+  type NavGroup,
+  type NavItem,
+} from '../console/nav';
+import { consoleIcon } from '../console/icons';
+import { handleNavKey } from '../console/navKeys';
+import {
+  DEFAULT_NAV_OPEN_KEY,
+  isNavOpen,
+  openActivePath,
+  readNavOpen,
+  setNavOpen,
+  writeNavOpen,
+  type NavOpenState,
+} from '../console/openState';
+import { ConsoleIcon } from './ConsoleIcon';
 import { cx } from './internal';
 import { ProductSwitcher } from './ProductSwitcher';
 import type { ProductSwitcherLabelOverrides } from '../components/productSwitcher';
@@ -79,6 +103,18 @@ export interface ConsoleSidebarProps {
   onCollapsedChange?: (collapsed: boolean) => void;
   /** Show the fold button. Set false for a fixed rail (sandbox). */
   collapsible?: boolean;
+  /**
+   * Compact head: the brand, name and fold button share one row as tall as a
+   * nav row, and the collapsed rail keeps a single button that shows the
+   * logo and expands the rail. Also sets the rail's inset from
+   * `--lu-cs-inset` and the account card's corner from `--radius-window`.
+   */
+  compact?: boolean;
+  /**
+   * localStorage key under which the open parents persist for this viewer.
+   * `null` keeps them for the page's lifetime only.
+   */
+  openKey?: string | null;
   /** Injected router-link component; falls back to a plain `<a>` off-router. */
   routerLink?: RouterLinkComponent;
   /** Home target for the brand link. */
@@ -122,6 +158,8 @@ export interface ConsoleSidebarProps {
   renderIcon?: (props: ConsoleSidebarIconRenderProps) => ReactNode;
   /** App-specific content below the nav groups, above the foot. */
   extra?: SlotContent;
+  /** Rows set in the foot above `foot`: links or actions with a value. */
+  footItems?: NavFootItem[];
   /** The account control / foot content. */
   foot?: SlotContent;
 }
@@ -138,6 +176,8 @@ export function ConsoleSidebar({
   collapsed: collapsedProp,
   onCollapsedChange,
   collapsible = true,
+  compact = false,
+  openKey = DEFAULT_NAV_OPEN_KEY,
   routerLink,
   homeTo = '/',
   brandTheme,
@@ -160,6 +200,7 @@ export function ConsoleSidebar({
   renderItem,
   renderIcon,
   extra,
+  footItems,
   foot,
 }: ConsoleSidebarProps) {
   const [internalCollapsed, setInternalCollapsed] = useState(false);
@@ -202,8 +243,54 @@ export function ConsoleSidebar({
     ];
   }, [model.groups]);
 
+  const navId = useId();
+  const navRef = useRef<HTMLElement>(null);
+  const path = useMemo(() => activePath(model.groups, activeKey), [model.groups, activeKey]);
+  const [openState, setOpenState] = useState<NavOpenState>(() => readNavOpen(openKey));
+  // Arriving at a page opens every parent above it; the viewer's choice for
+  // any other parent stays as they left it.
+  useEffect(() => {
+    setOpenState((prev) => {
+      const next = openActivePath(prev, path);
+      if (next !== prev) writeNavOpen(openKey, next);
+      return next;
+    });
+  }, [path, openKey]);
+
+  function setOpen(id: string, open: boolean) {
+    setOpenState((prev) => {
+      const next = setNavOpen(prev, id, open);
+      if (next !== prev) writeNavOpen(openKey, next);
+      return next;
+    });
+  }
+
+  function onNavKeyDown(e: ReactKeyboardEvent<HTMLElement>) {
+    if (navRef.current) handleNavKey(e.nativeEvent, navRef.current, setOpen);
+  }
+
   function rowActive(item: NavItem): boolean {
     return activeKey !== undefined && item.id === activeKey;
+  }
+
+  // A row on the path to the current page: the page itself or a parent of it.
+  function inPath(item: NavItem): boolean {
+    return path.some((p) => p.id === item.id);
+  }
+
+  // The icon a row shows: the host's, a built-in one named by `item.icon`,
+  // or, for a top-level row in the collapsed rail, the label's first letter.
+  // Nothing at all renders no slot, so a label never follows empty space.
+  function iconFor(item: NavItem, depth: number): ReactNode {
+    if (renderIcon) return renderIcon({ item, collapsed });
+    if (consoleIcon(item.icon)) return <ConsoleIcon name={item.icon!} />;
+    return collapsed && depth === 0 ? letter(item.label) : null;
+  }
+
+  function iconSlot(item: NavItem, depth: number): ReactNode {
+    const icon = iconFor(item, depth);
+    if (icon === null || icon === undefined || icon === false || icon === '') return null;
+    return <span className="lu-cs-item-icon">{icon}</span>;
   }
 
   function rowTag(item: NavItem): RouterLinkComponent | string {
@@ -245,28 +332,28 @@ export function ConsoleSidebar({
       ? { to: homeTo }
       : { href: homeTo };
 
-  function defaultRow(item: NavItem) {
-    const active = rowActive(item);
+  function defaultRow(
+    item: NavItem,
+    depth = 0,
+    options: { active?: boolean; value?: string; className?: string } = {},
+  ) {
+    const active = options.active ?? rowActive(item);
     const disabled = isItemDisabled(item);
+    const label = options.value !== undefined ? `${item.label} ${options.value}` : item.label;
     return createElement(
       rowTag(item) as never,
       {
         key: item.id,
         ...rowProps(item),
-        className: 'lu-cs-item',
+        className: cx('lu-cs-item', depth > 0 && 'lu-cs-child', options.className),
         'data-active': active ? 'true' : 'false',
         'data-disabled': disabled ? 'true' : 'false',
-        title: collapsed ? item.label : disabled ? 'Not yet available' : undefined,
-        'aria-current': active ? 'page' : undefined,
+        'data-nav-id': item.id,
+        title: collapsed ? label : disabled ? 'Not yet available' : undefined,
+        'aria-current': rowActive(item) ? 'page' : undefined,
         onClick: (e: ReactMouseEvent) => onRowClick(item, e),
       },
-      <span className="lu-cs-item-icon">
-        {renderIcon
-          ? renderIcon({ item, collapsed })
-          : collapsed
-            ? letter(item.label)
-            : ''}
-      </span>,
+      iconSlot(item, depth),
       !collapsed && <span className="lu-cs-item-label">{item.label}</span>,
       item.dot && !collapsed && <span className="lu-cs-dot" aria-hidden="true" />,
       item.badge !== undefined && !collapsed
@@ -279,13 +366,74 @@ export function ConsoleSidebar({
           )
           : <span className="lu-cs-badge">{item.badge}</span>
         : null,
+      options.value !== undefined && !collapsed && <span className="lu-cs-item-value">{options.value}</span>,
     );
   }
 
+  // A parent row. Collapsed, there is no room for its children, so it is a
+  // link to its own page (or its first child's) and carries the selection
+  // while any page under it is open. Expanded, it is a disclosure button
+  // over a group of child rows that stays in the DOM, hidden while folded,
+  // so `aria-controls` always names an element.
+  function parentRow(item: NavItem, depth: number): ReactNode {
+    if (collapsed) {
+      return defaultRow({ ...item, to: navTarget(item), children: undefined }, depth, { active: inPath(item) });
+    }
+    const open = isNavOpen(openState, item.id, path);
+    const groupId = `${navId}-${item.id}`;
+    const disabled = item.disabled === true;
+    return (
+      <Fragment key={item.id}>
+        <button
+          type="button"
+          className="lu-cs-item lu-cs-parent"
+          data-active={rowActive(item) ? 'true' : 'false'}
+          data-path={inPath(item) ? 'true' : 'false'}
+          data-disabled={disabled ? 'true' : 'false'}
+          data-nav-id={item.id}
+          aria-expanded={open}
+          aria-controls={groupId}
+          disabled={disabled}
+          onClick={() => setOpen(item.id, !open)}
+        >
+          {iconSlot(item, depth)}
+          <span className="lu-cs-item-label">{item.label}</span>
+          {item.dot && <span className="lu-cs-dot" aria-hidden="true" />}
+          <span className="lu-cs-item-chevron" aria-hidden="true"><ConsoleIcon name="chevron" size={14} /></span>
+        </button>
+        <div className="lu-cs-children" id={groupId} role="group" aria-label={item.label} hidden={!open}>
+          {item.children!.map((child) => leaf(child, depth + 1))}
+        </div>
+      </Fragment>
+    );
+  }
+
+  // Children render one level deep: a child's own children are not shown.
+  function row(item: NavItem, depth: number): ReactNode {
+    return hasChildren(item) ? parentRow(item, depth) : leaf(item, depth);
+  }
+
+  function leaf(item: NavItem, depth: number): ReactNode {
+    if (renderItem) {
+      return (
+        <Fragment key={item.id}>
+          {renderItem({ item, active: rowActive(item), collapsed, disabled: isItemDisabled(item) })}
+        </Fragment>
+      );
+    }
+    return defaultRow(item, depth);
+  }
+
+  // The compact collapsed head is one button: the logo, which turns into the
+  // expand glyph on hover or focus.
+  const compactFold = compact && collapsed && collapsible;
+
   return (
-    <aside className="lu-cs" data-collapsed={collapsed ? 'true' : 'false'}>
+    <aside className="lu-cs" data-collapsed={collapsed ? 'true' : 'false'} data-compact={compact ? 'true' : undefined}>
       <div className="lu-cs-head">
-        {brand !== undefined
+        {compactFold
+          ? null
+          : brand !== undefined
           ? renderSlot(brand, collapsed)
           : createElement(
               brandTag as never,
@@ -311,7 +459,7 @@ export function ConsoleSidebar({
               ),
             )}
 
-        {renderSlot(brandExtra, collapsed)}
+        {!compactFold && renderSlot(brandExtra, collapsed)}
         {product && !collapsed && <ProductSwitcher className="lu-cs-switch" current={product} labels={productLabels} size="sm" />}
 
         {collapsible && (
@@ -322,7 +470,11 @@ export function ConsoleSidebar({
             aria-label={collapsed ? expandLabel : collapseLabel}
             onClick={toggle}
           >
+            {compactFold && (
+              <span className="lu-cs-fold-mark" aria-hidden="true">{logo ?? letter(brandName ?? 'L')}</span>
+            )}
             <svg
+              className="lu-cs-fold-glyph"
               width="15"
               height="15"
               viewBox="0 0 24 24"
@@ -375,7 +527,7 @@ export function ConsoleSidebar({
         </button>
       )}
 
-      <nav className="lu-cs-nav">
+      <nav className="lu-cs-nav" ref={navRef} onKeyDown={onNavKeyDown}>
         {orderedGroups.map((g, gi) => (
           <div
             key={`g-${gi}`}
@@ -383,27 +535,21 @@ export function ConsoleSidebar({
             data-pin={g.pin === 'bottom' ? 'bottom' : 'top'}
           >
             {g.label && !collapsed && <div className="lu-cs-group-label">{g.label}</div>}
-            {g.items.map((item) =>
-              renderItem ? (
-                <Fragment key={item.id}>
-                  {renderItem({
-                    item,
-                    active: rowActive(item),
-                    collapsed,
-                    disabled: isItemDisabled(item),
-                  })}
-                </Fragment>
-              ) : (
-                defaultRow(item)
-              ),
-            )}
+            {g.items.map((item) => row(item, 0))}
           </div>
         ))}
 
         {renderSlot(extra, collapsed)}
       </nav>
 
-      <div className="lu-cs-foot">{renderSlot(foot, collapsed)}</div>
+      <div className="lu-cs-foot">
+        {footItems && footItems.length > 0 && (
+          <div className="lu-cs-foot-items">
+            {footItems.map((item) => defaultRow(item, 0, { value: item.value, className: 'lu-cs-foot-item' }))}
+          </div>
+        )}
+        {renderSlot(foot, collapsed)}
+      </div>
     </aside>
   );
 }
