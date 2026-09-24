@@ -30,8 +30,13 @@ export {
   type ConsoleSidebarIconRenderProps,
   type RouterLinkComponent,
 } from './ConsoleSidebar';
-export { partitionGroups, flattenNavItems, isItemDisabled } from '../console/nav';
-export type { NavItem, NavGroup, FlatNavItem, ConsoleNavModel } from '../console/nav';
+export { partitionGroups, flattenNavItems, isItemDisabled, hasChildren, activePath, navTarget } from '../console/nav';
+export type { NavItem, NavGroup, NavFootItem, FlatNavItem, ConsoleNavModel } from '../console/nav';
+export { DEFAULT_NAV_OPEN_KEY } from '../console/openState';
+export { CONSOLE_ICONS, consoleIcon } from '../console/icons';
+export type { ConsoleIconName } from '../console/icons';
+export { paletteEntries, filterPalette } from '../console/palette';
+export type { ConsolePaletteItem, ConsolePaletteSearch } from '../console/palette';
 
 // Site footer — the shared Latere footer in both variants. Copy and the
 // product lineup come from the same framework-free modules the SFC reads.
@@ -44,7 +49,8 @@ export { LATERE_PRODUCTS, type ProductInfo, type ProductSlug } from '../componen
 
 // Account menu — reuses the headless types/defaults from components/accountMenu.ts.
 export { AccountMenu, type AccountMenuProps } from './AccountMenu';
-export type { AccountMenuLabels, AccountMenuLabelOverrides, AccountMenuItem, AccountRoleLabels } from '../components/accountMenu';
+export { identityLine } from '../components/accountMenu';
+export type { AccountMenuLabels, AccountMenuLabelOverrides, AccountMenuItem, AccountRoleLabels, AccountMenuSubline } from '../components/accountMenu';
 
 // Session bindings — React context + hooks over the vanilla session core
 // (session/client.ts, me.ts, reauth.ts, frontChannel.ts). No vue, no pinia.

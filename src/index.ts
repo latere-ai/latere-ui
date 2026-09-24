@@ -10,13 +10,22 @@ export {
   partitionGroups,
   flattenNavItems,
   isItemDisabled,
+  hasChildren,
+  activePath,
+  navTarget,
 } from './console/nav';
 export type {
   NavItem,
   NavGroup,
+  NavFootItem,
   FlatNavItem,
   ConsoleNavModel,
 } from './console/nav';
+export { DEFAULT_NAV_OPEN_KEY } from './console/openState';
+export { CONSOLE_ICONS, consoleIcon } from './console/icons';
+export type { ConsoleIconName } from './console/icons';
+export { paletteEntries, filterPalette } from './console/palette';
+export type { ConsolePaletteItem, ConsolePaletteSearch } from './console/palette';
 // Collapse primitive lives in its own module (holds Vue state; nav.ts stays
 // import-clean of `vue` so the React ConsoleSidebar can value-import it).
 export { createCollapse } from './console/collapse';
@@ -148,7 +157,8 @@ export type {
 } from './components/productSwitcher';
 export { default as AccountMenu } from './components/AccountMenu.vue';
 export { default as AccountPrefs } from './components/AccountPrefs.vue';
-export type { AccountMenuLabels, AccountMenuLabelOverrides, AccountMenuItem, AccountRoleLabels } from './components/accountMenu';
+export { identityLine } from './components/accountMenu';
+export type { AccountMenuLabels, AccountMenuLabelOverrides, AccountMenuItem, AccountRoleLabels, AccountMenuSubline } from './components/accountMenu';
 export type { AccountPrefsLabels } from './components/accountPrefs';
 export type {
   Principal,

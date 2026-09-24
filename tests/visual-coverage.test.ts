@@ -50,6 +50,8 @@ const nonvisualExports: Record<string, string> = {
   ApiError: 'HTTP client error class; never renders UI.',
   LATERE_PRODUCTS: 'Product registry data, rendered through ProductSwitcher and SiteFooter.',
   DEFAULT_PRODUCT_SWITCHER_LABELS: 'Default text data consumed by ProductSwitcher.',
+  CONSOLE_ICONS: 'Icon path data, rendered through ConsoleSidebar and ConsolePalette.',
+  DEFAULT_NAV_OPEN_KEY: 'Default storage key string for the sidebar\'s open parents; never renders UI.',
 };
 function visualExports(file: string) {
   return sorted([...publicValueExports(file)].filter(name => /^[A-Z]/.test(name) && !(name in nonvisualExports)));
