@@ -6,6 +6,21 @@ export function effectCaptions(matte: boolean) {
 export const options = [{ value: 'daily', label: 'Daily' }, { value: 'weekly', label: 'Weekly' }, { value: 'monthly', label: 'Monthly' }];
 export const selectOptions = Array.from({ length: 20 }, (_, i) => ({ value: String(i), label: `Workspace ${String(i + 1).padStart(2, '0')}`, disabled: i === 1 }));
 export const nav = { groups: [{ label: 'Workspace', items: [{ id: 'overview', label: 'Overview', to: '#overview', icon: 'home' }, { id: 'jobs', label: 'Jobs', to: '#jobs', badge: 12 }, { id: 'live', label: 'Activity', to: '#activity', badge: 'live' as const }, { id: 'future', label: 'Coming soon', disabled: true }] }, { pin: 'bottom' as const, items: [{ id: 'settings', label: 'Settings', to: '#settings' }] }] };
+// The expandable tree, foot rows and palette entries, behind `tree=true`.
+export const treeNav = { groups: [{ items: [
+  { id: 'overview', label: 'Overview', to: '#overview', icon: 'home' },
+  { id: 'projects', label: 'Projects', icon: 'folder', children: [{ id: 'jobs', label: 'Jobs', to: '#jobs' }, { id: 'runs', label: 'Runs', to: '#runs' }] },
+  { id: 'models', label: 'Models', icon: 'sparkles', children: [{ id: 'catalog', label: 'Catalog', to: '#catalog' }, { id: 'usage', label: 'Usage', to: '#usage' }] },
+  { id: 'keys', label: 'Keys', to: '#keys', icon: 'key' },
+] }, { pin: 'bottom' as const, items: [{ id: 'admin', label: 'Admin', icon: 'shield', children: [{ id: 'fleet', label: 'Fleet', to: '#fleet' }] }] }] };
+export const treeFoot = [
+  { id: 'docs', label: 'Documentation', to: '#docs', icon: 'book' },
+  { id: 'credits', label: 'Credits', to: '#credits', icon: 'coins', value: '$8.16' },
+];
+export const paletteItems = [
+  { id: 'new', label: 'New project', action: true, group: 'Actions', icon: 'plus', keywords: 'create' },
+  { id: 'docs', label: 'Open documentation', to: '#docs', group: 'Actions', icon: 'book' },
+];
 export const paletteNav = { groups: [{ label: 'Workspace', items: Array.from({ length: 30 }, (_, i) => ({ id: String(i), label: `Page ${String(i + 1).padStart(2, '0')}`, to: `#page-${i}` })) }] };
 export const principal = { principal_id: 'user-1', email: 'alex@example.test', display_name: 'Alex Morgan', initials: 'AM', org_id: 'studio', org_name: 'Design studio', role: 'org_admin' as const, orgs: Array.from({ length: 16 }, (_, i) => ({ id: i ? `org-${i}` : 'studio', name: i ? `Workspace ${i}` : 'Design studio', slug: `workspace-${i}`, owner: i === 0 })) };
 export const locales = [{ code: 'en', label: 'EN', name: 'English' }, { code: 'zh', label: '中', name: '中文' }, { code: 'de', label: 'DE', name: 'Deutsch' }];

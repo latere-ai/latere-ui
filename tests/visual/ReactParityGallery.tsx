@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import * as UI from '../../src/react';
 import { initLiquidGlass } from '../../src/react';
 import {
-  options, selectOptions, nav, paletteNav, principal, locales, tiers, badgeTones,
+  options, selectOptions, nav, paletteNav, treeNav, treeFoot, paletteItems, principal, locales, tiers, badgeTones,
   alertTones, menuItems, columns, rows, groups, article, createWorkspaceRows,
   buttonSizes, buttonVariants, progressValues, brands, workspaceMetrics, effectCaptions,
 } from './parity-data';
@@ -109,8 +109,9 @@ function ReactParityGallery({ scenario }: { scenario: string }) {
   if (scenario.startsWith('drawer-')) return <div data-component="GlassDrawer"><UI.GlassButton onClick={() => setOpen(true)}>Open drawer</UI.GlassButton><UI.GlassDrawer open={open} onClose={() => setOpen(false)} title="Workspace details" side={scenario === 'drawer-left' ? 'left' : 'right'}><UI.GlassField value={text} onChange={setText} label="Name" />{Array.from({ length: 16 }, (_, i) => <p key={i + 1}>{`Detail ${i + 1}: Workspace activity and settings.`}</p>)}<UI.GlassButton onClick={() => setOpen(false)}>Done</UI.GlassButton></UI.GlassDrawer></div>;
   if (scenario === 'toast') return <div data-component="GlassToaster"><UI.GlassButton onClick={notify}>Show notifications</UI.GlassButton><UI.GlassToaster /></div>;
   if (scenario === 'confirm') return <div data-component="GlassConfirmHost" data-result={confirmResult}><UI.GlassButton onClick={ask}>Delete workspace</UI.GlassButton><UI.GlassConfirmHost /></div>;
+  if (scenario.startsWith('sidebar') && params.get('tree') === 'true') return <div className="shell-stage" data-component="ConsoleSidebar"><UI.ConsoleSidebar model={treeNav} activeKey="jobs" brandName="Workspace" brandSub="Console" search compact openKey={null} collapsed={scenario === 'sidebar-collapsed'} logo={<UI.LatereLogoMark />} footItems={treeFoot} foot={<UI.AccountMenu principal={principal} placement="bottom-start" subline="text" />} /><div className="shell-content"><h2>Workspace overview</h2><p>Projects and activity appear beside the navigation.</p></div></div>;
   if (scenario.startsWith('sidebar')) return <div className="shell-stage" data-component="ConsoleSidebar"><UI.ConsoleSidebar model={nav} activeKey="jobs" brandName="Workspace" brandSub="Console" search collapsed={scenario === 'sidebar-collapsed'} logo={<UI.LatereLogoMark />} foot={params.get('accountIdentity') === 'true' ? <UI.AccountMenu principal={principal} placement="bottom-start" /> : undefined} /><div className="shell-content"><h2>Workspace overview</h2><p>Projects and activity appear beside the navigation.</p></div></div>;
-  if (scenario === 'palette') return <div data-component="ConsolePalette"><UI.GlassButton onClick={() => setOpen(true)}>Open palette</UI.GlassButton><UI.ConsolePalette open={open} model={paletteNav} onClose={() => setOpen(false)} /></div>;
+  if (scenario === 'palette') return <div data-component="ConsolePalette"><UI.GlassButton onClick={() => setOpen(true)}>Open palette</UI.GlassButton><UI.ConsolePalette open={open} model={params.get('tree') === 'true' ? treeNav : paletteNav} items={params.get('tree') === 'true' ? paletteItems : undefined} onClose={() => setOpen(false)} /></div>;
   if (scenario === 'docs') return <div data-component="DocsLayout"><UI.DocsLayout showToc={showToc} groups={groups} activeSlug="intro" articleHtml={article} /></div>;
   if (scenario === 'account') return <form data-component="AccountMenu" style={{ display: 'flex', justifyContent: 'flex-end' }} onSubmit={event => { event.preventDefault(); setText('Unexpected submit'); }}><UI.AccountMenu principal={principal} extraItems={accountLinks} dashboardPath="#dashboard" prefs={<div data-component="AccountPrefs">{prefs}</div>} /></form>;
   if (scenario === 'preferences') return <div className="sample" data-component="AccountPrefs">{prefs}</div>;
