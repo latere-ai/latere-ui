@@ -1,8 +1,10 @@
 <script setup lang="ts">
-// Minimal shared command palette: a ⌘K overlay that fuzzy-filters the console's
-// nav items and jumps to one. It's intentionally small — the nav-jump baseline
-// every console can share. Apps with richer command systems (e.g. cella) keep
-// their own; the rest wire ConsoleSidebar's `search` event to this.
+// Shared command palette: a ⌘K overlay over the console's nav rows, sub-pages
+// included, the host's own entries (actions and other destinations) and, for a
+// query, the rows the host's search returns. Matching lives in
+// console/palette.ts so the React adapter lists the same rows. Apps with
+// richer command systems (e.g. cella) keep their own; the rest wire
+// ConsoleSidebar's `search` event to this.
 
 import { computed, ref, watch, useId } from 'vue';
 
