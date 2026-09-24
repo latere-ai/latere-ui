@@ -20,7 +20,9 @@ import {
   type AccountMenuLabels,
   type AccountMenuLabelOverrides,
   type AccountMenuItem,
+  type AccountMenuSubline,
   DEFAULT_ACCOUNT_MENU_LABELS,
+  identityLine,
 } from './accountMenu';
 
 export type { AccountMenuLabels, AccountMenuItem };
@@ -49,8 +51,15 @@ const props = withDefaults(
      * slotted markup can't pick up the scoped item styles.
      */
     extraItems?: AccountMenuItem[];
+    /**
+     * How the trigger states the role and account under the name: `badge`
+     * (default) sets the role as an uppercase badge beside the organization;
+     * `text` sets one quiet line, "Platform admin · Personal".
+     */
+    subline?: AccountMenuSubline;
   }>(),
   {
+    subline: 'badge',
     placement: 'top-end',
     dashboardPath: null,
     switchingOrgId: null,
@@ -74,6 +83,7 @@ const t = computed<AccountMenuLabels>(() => ({
   // Deep-merge the roles sub-object so a consumer passing partial role
   // labels doesn't wipe the defaults for the rest.
   roles: { ...DEFAULT_LABELS.roles, ...props.labels?.roles },
+  roleNames: { ...DEFAULT_LABELS.roleNames!, ...props.labels?.roleNames },
 }));
 
 const slots = useSlots();
@@ -181,7 +191,8 @@ function onExtraItem(item: AccountMenuItem) {
         <span class="lu-am-id-name">{{ principal ? name : t.signIn }}</span>
         <!-- Sub-label (role badge + org / Individual) only when signed in —
              the logged-out "Sign in" trigger stays a single line. -->
-        <span class="lu-am-id-sub" v-if="principal">
+        <span v-if="principal && subline === 'text'" class="lu-am-id-line">{{ identityLine(principal, t) }}</span>
+        <span class="lu-am-id-sub" v-else-if="principal">
           <span
             v-if="roleBadge"
             class="lu-am-role"

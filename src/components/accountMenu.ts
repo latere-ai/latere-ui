@@ -40,6 +40,11 @@ export interface AccountMenuLabels {
   signIn: string;
   /** Role badge / subline labels (spec: shared four-role account model). */
   roles: AccountRoleLabels;
+  /**
+   * Role names in running text, for the `subline="text"` trigger line
+   * ("Platform admin · Personal"). Sentence case; merged over the defaults.
+   */
+  roleNames?: AccountRoleLabels;
 }
 
 /**
@@ -47,8 +52,9 @@ export interface AccountMenuLabels {
  * every label is optional, including individual role labels (the component
  * deep-merges `roles` over the defaults).
  */
-export type AccountMenuLabelOverrides = Partial<Omit<AccountMenuLabels, 'roles'>> & {
+export type AccountMenuLabelOverrides = Partial<Omit<AccountMenuLabels, 'roles' | 'roleNames'>> & {
   roles?: Partial<AccountRoleLabels>;
+  roleNames?: Partial<AccountRoleLabels>;
 };
 
 export const DEFAULT_ACCOUNT_MENU_LABELS: AccountMenuLabels = {
@@ -67,4 +73,31 @@ export const DEFAULT_ACCOUNT_MENU_LABELS: AccountMenuLabels = {
     org_member: 'Member',
     individual: 'Individual',
   },
+  roleNames: {
+    platform_admin: 'Platform admin',
+    org_admin: 'Admin',
+    org_member: 'Member',
+    individual: 'Personal',
+  },
 };
+
+/** How the trigger states the role and the account under the name. */
+export type AccountMenuSubline = 'badge' | 'text';
+
+/**
+ * The one quiet line under the name in the `text` subline: the role, then
+ * the account the session is in, "Platform admin · Personal" or
+ * "Admin · Design Studio". A person without a role beyond their own account
+ * reads the account alone.
+ */
+export function identityLine(
+  principal: { role?: string; org_name?: string } | null | undefined,
+  labels: Pick<AccountMenuLabels, 'personal' | 'roleNames'>,
+): string {
+  if (!principal) return '';
+  const names = { ...DEFAULT_ACCOUNT_MENU_LABELS.roleNames!, ...labels.roleNames };
+  const role = principal.role && principal.role !== 'individual'
+    ? names[principal.role as keyof AccountRoleLabels] ?? ''
+    : '';
+  return [role, principal.org_name || labels.personal].filter(Boolean).join(' · ');
+}

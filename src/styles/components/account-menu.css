@@ -80,6 +80,14 @@
   gap: 6px;
   min-width: 0;
 }
+.lu-am-id-line {
+  max-width: 100%;
+  font-size: 11.5px;
+  color: var(--text-muted, #888);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .lu-am-id-sub-text {
   overflow: hidden;
   text-overflow: ellipsis;

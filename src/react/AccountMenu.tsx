@@ -18,9 +18,11 @@ import type { Principal } from '../session/types';
 import '../styles/components/account-menu.css';
 import {
   DEFAULT_ACCOUNT_MENU_LABELS,
+  identityLine,
   type AccountMenuItem,
   type AccountMenuLabelOverrides,
   type AccountMenuLabels,
+  type AccountMenuSubline,
 } from '../components/accountMenu';
 import { cx, useClickOutside } from './internal';
 import { useOptionalSession } from './session';
@@ -61,6 +63,12 @@ export interface AccountMenuProps {
   prefs?: ReactNode;
   /** Escape hatch for fully custom markup, styled to match via `.lu-am-item`. */
   extra?: ReactNode;
+  /**
+   * How the trigger states the role and account under the name: `badge`
+   * (default) sets the role as an uppercase badge beside the organization;
+   * `text` sets one quiet line, "Platform admin · Personal".
+   */
+  subline?: AccountMenuSubline;
 }
 
 export function AccountMenu({
@@ -78,6 +86,7 @@ export function AccountMenu({
   onItemSelect,
   prefs,
   extra,
+  subline = 'badge',
 }: AccountMenuProps) {
   const session = useOptionalSession();
   const principal = principalProp !== undefined ? principalProp : (session?.principal ?? null);
@@ -92,6 +101,7 @@ export function AccountMenu({
     // Deep-merge the roles sub-object so a consumer passing partial role
     // labels doesn't wipe the defaults for the rest.
     roles: { ...DEFAULT_ACCOUNT_MENU_LABELS.roles, ...labels?.roles },
+    roleNames: { ...DEFAULT_ACCOUNT_MENU_LABELS.roleNames!, ...labels?.roleNames },
   };
 
   const hasDropdown = !!principal || !!prefs || !!extra || extraItems.length > 0;
@@ -165,7 +175,10 @@ export function AccountMenu({
           <span className="lu-am-id-name">{principal ? name : t.signIn}</span>
           {/* Sub-label (role badge + org / Individual) only when signed in —
               the logged-out "Sign in" trigger stays a single line. */}
-          {principal && (
+          {principal && subline === 'text' && (
+            <span className="lu-am-id-line">{identityLine(principal, t)}</span>
+          )}
+          {principal && subline !== 'text' && (
             <span className="lu-am-id-sub">
               {roleBadge && (
                 <span className={cx('lu-am-role', `lu-am-role-${role}`)}>{roleBadge}</span>
