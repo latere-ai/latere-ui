@@ -6,14 +6,21 @@
 
 import { computed, ref, watch, useId } from 'vue';
 
-import { flattenNavItems, type ConsoleNavModel, type NavItem } from '../console/nav';
+import type { ConsoleNavModel, NavItem } from '../console/nav';
+import { consoleIcon } from '../console/icons';
+import { filterPalette, paletteEntries, type ConsolePaletteItem, type ConsolePaletteSearch } from '../console/palette';
 import { useFocusTrap } from '../glass/overlay';
+import ConsoleIcon from './ConsoleIcon.vue';
 
 interface Props {
   open: boolean;
   model: ConsoleNavModel;
   placeholder?: string;
   emptyLabel?: string;
+  /** Host entries after the nav rows: actions and other destinations. */
+  items?: ConsolePaletteItem[];
+  /** Extra rows for a non-empty query, such as documentation pages. */
+  search?: ConsolePaletteSearch;
 }
 const props = withDefaults(defineProps<Props>(), {
   placeholder: 'Jump to…',
@@ -29,15 +36,10 @@ const panel = ref<HTMLElement | null>(null);
 const id = useId();
 useFocusTrap({ active: computed(() => props.open), container: panel, initialFocus: inputEl, onEscape: () => emit('close') });
 
-// Routable, non-disabled rows only — the palette is a navigator, not a launcher.
-const items = computed(() =>
-  flattenNavItems(props.model.groups).filter((i) => i.to && i.disabled !== true),
-);
-const results = computed(() => {
-  const q = query.value.trim().toLowerCase();
-  if (!q) return items.value;
-  return items.value.filter((i) => i.label.toLowerCase().includes(q));
-});
+// Routable, enabled nav rows, then the host's entries; a query also runs the
+// host's search.
+const items = computed(() => paletteEntries(props.model.groups, props.items));
+const results = computed(() => filterPalette(items.value, query.value, props.search));
 
 watch(
   () => props.open,
@@ -103,8 +105,9 @@ function onKeydown(e: KeyboardEvent) {
             @mouseenter="selected = i"
             @click="choose(item)"
           >
+            <span v-if="consoleIcon(item.icon)" class="lu-cp-item-icon"><ConsoleIcon :name="item.icon!" /></span>
             <span class="lu-cp-item-label">{{ item.label }}</span>
-            <span v-if="item.groupLabel" class="lu-cp-item-group">{{ item.groupLabel }}</span>
+            <span v-if="item.group" class="lu-cp-item-group">{{ item.group }}</span>
           </li>
           <li v-if="!results.length" class="lu-cp-empty">{{ emptyLabel }}</li>
         </ul>
