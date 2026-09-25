@@ -56,6 +56,11 @@ export const en: Dict = {
   'footer.tagline': 'Human intelligence in the loop.',
   'footer.theme': 'Theme',
   'footer.language': 'Language',
+  'footer.theme.light': 'Light',
+  'footer.theme.dark': 'Dark',
+  'footer.theme.system': 'System',
+  'footer.navigation': 'Footer',
+  'footer.social': 'Social profiles',
   'footer.rights': '&copy; 2026 Latere AI. All rights reserved.',
 };
 
@@ -93,6 +98,11 @@ export const zh: Dict = {
   'footer.tagline': '人类智慧始终在回路中。',
   'footer.theme': '主题',
   'footer.language': '语言',
+  'footer.theme.light': '浅色',
+  'footer.theme.dark': '深色',
+  'footer.theme.system': '跟随系统',
+  'footer.navigation': '页脚',
+  'footer.social': '社交账号',
   'footer.rights': '&copy; 2026 Latere AI. 保留所有权利。',
 };
 
@@ -130,6 +140,11 @@ export const de: Dict = {
   'footer.tagline': 'Menschliche Intelligenz im Loop.',
   'footer.theme': 'Design',
   'footer.language': 'Sprache',
+  'footer.theme.light': 'Hell',
+  'footer.theme.dark': 'Dunkel',
+  'footer.theme.system': 'System',
+  'footer.navigation': 'Fußzeile',
+  'footer.social': 'Soziale Profile',
   'footer.rights': '&copy; 2026 Latere AI. Alle Rechte vorbehalten.',
 };
 

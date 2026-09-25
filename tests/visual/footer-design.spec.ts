@@ -9,18 +9,44 @@ function ratio(a: number[], b: number[]) {
 for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark']) {
   test(`${framework} ${theme} footer labels and controls have readable contrast`, async ({ page }) => {
     await visit(page, framework, 'footer', theme);
-    const samples = await page.locator('.footer-tagline, .footer-col-title, .footer-group-title, .footer-lang-select, .footer-seg-btn:not(.is-active), .footer-bottom p').evaluateAll(elements => elements.map(el => {
-      const cs = getComputedStyle(el);
-      return { label: el.className, color: cs.color.match(/[\d.]+/g)!.map(Number), bg: getComputedStyle(document.body).backgroundColor.match(/[\d.]+/g)!.map(Number) };
+    const background = await page.evaluate(() => getComputedStyle(document.body).backgroundColor.match(/[\d.]+/g)!.map(Number));
+    const over = (color: number[]) => color.slice(0, 3).map((v, i) => v * (color[3] ?? 1) + background[i] * (1 - (color[3] ?? 1)));
+    // Resolve any computed color syntax, color-mix results included, to RGBA bytes.
+    const samples = await page.locator('.footer-col-title, .footer-link, .footer-bottom p').evaluateAll(elements => elements.map(el => {
+      const context = document.createElement('canvas').getContext('2d', { willReadFrequently: true })!;
+      context.fillStyle = getComputedStyle(el).color; context.fillRect(0, 0, 1, 1);
+      const [r, g, b, a] = context.getImageData(0, 0, 1, 1).data;
+      return { label: `${el.className}: ${el.textContent}`, color: [r, g, b, a / 255] };
     }));
-    for (const sample of samples) expect.soft(ratio(sample.color, sample.bg), sample.label).toBeGreaterThanOrEqual(4.5);
-    for (const selector of ['.footer-seg', '.footer-lang-select']) {
-      const colors = await page.locator(selector).evaluate(el => {
-        const cs = getComputedStyle(el), background = getComputedStyle(document.body).backgroundColor.match(/[\d.]+/g)!.map(Number);
-        const border = cs.borderTopColor.match(/[\d.]+/g)!.map(Number);
-        return { background, border: border.slice(0, 3).map((v, i) => v * (border[3] ?? 1) + background[i] * (1 - (border[3] ?? 1))) };
+    expect(samples.length).toBeGreaterThan(15);
+    for (const sample of samples) expect.soft(ratio(over(sample.color), background), sample.label).toBeGreaterThanOrEqual(4.5);
+    // Icon glyphs are graphics: 3:1 against the page.
+    const glyphs = await page.locator('.footer-social a, .lu-pref-trigger').evaluateAll(elements => elements.map(el => ({
+      label: el.getAttribute('aria-label')!, color: getComputedStyle(el).color.match(/[\d.]+/g)!.map(Number),
+    })));
+    expect(glyphs).toHaveLength(6);
+    for (const glyph of glyphs) expect.soft(ratio(over(glyph.color), background), glyph.label).toBeGreaterThanOrEqual(3);
+  });
+
+  test(`${framework} ${theme} footer menus read on a solid surface`, async ({ page }) => {
+    await visit(page, framework, 'footer', theme);
+    for (const menu of ['.lu-theme-menu', '.lu-locale-menu']) {
+      await page.locator(`${menu} .lu-pref-trigger`).click();
+      const panel = page.locator(`${menu} .lu-pop-panel`);
+      await expect(panel).toHaveCSS('backdrop-filter', 'none');
+      const surface = await panel.evaluate(el => {
+        const css = getComputedStyle(el);
+        return { background: css.backgroundColor.match(/[\d.]+/g)!.map(Number), shadow: css.boxShadow, border: css.borderTopWidth };
       });
-      expect.soft(ratio(colors.border, colors.background), selector).toBeGreaterThanOrEqual(3);
+      expect(surface.background[3] ?? 1, 'opaque surface').toBe(1);
+      expect(surface.shadow).not.toBe('none');
+      expect(surface.border).toBe('1px');
+      for (const row of await panel.getByRole('menuitemradio').all()) {
+        const color = await row.evaluate(el => getComputedStyle(el).color.match(/[\d.]+/g)!.map(Number));
+        expect.soft(ratio(color, surface.background), await row.innerText()).toBeGreaterThanOrEqual(4.5);
+        expect.soft(Math.round((await row.boundingBox())!.height)).toBe(32);
+      }
+      await page.keyboard.press('Escape');
     }
   });
 
@@ -41,15 +67,29 @@ for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark'])
     await expect(last).toBeInViewport();
   });
 
-  test(`${framework} ${theme} product wordmarks stay legible as navigation`, async ({ page }) => {
-    await visit(page, framework, 'footer', theme);
-    const brands = await page.locator('.footer-col [class$="-brand"]').evaluateAll(elements => elements.map(el => ({
-      name: el.textContent, gradient: getComputedStyle(el).backgroundImage,
+  test(`${framework} ${theme} product gradients stay legible`, async ({ page }) => {
+    // Every stop of every product gradient, at rest in the compact strip and
+    // under the pointer in the full footer's columns.
+    const stops = async (selector: string) => page.locator(selector).evaluateAll(elements => elements.map(el => ({
+      name: el.textContent, gradient: getComputedStyle(el).backgroundImage, color: getComputedStyle(el).color,
       background: getComputedStyle(document.body).backgroundColor.match(/[\d.]+/g)!.map(Number),
     })));
-    expect(brands.map(b => b.name)).toEqual(['Wallfacer', 'Lectio', 'ReplicHAI', 'Latere Platform']);
-    for (const brand of brands) for (const color of brand.gradient.match(/rgb\([^)]+\)/g) ?? []) {
-      expect.soft(ratio(color.match(/[\d.]+/g)!.map(Number), brand.background), `${brand.name}: ${color}`).toBeGreaterThanOrEqual(4.5);
+    await visit(page, framework, 'footer-compact', theme);
+    const wordmarks = await stops('.footer-compact-links [class$="-brand"]');
+    expect(wordmarks.map(b => b.name)).toEqual(['Wallfacer', 'Lectio', 'ReplicHAI', 'Latere Platform']);
+    await visit(page, framework, 'footer', theme);
+    const hovered = [];
+    for (const link of await page.locator('.footer-link[data-brand]').all()) {
+      await link.hover();
+      hovered.push(...await link.evaluate(el => [{
+        name: el.textContent, gradient: getComputedStyle(el).backgroundImage, color: getComputedStyle(el).color,
+        background: getComputedStyle(document.body).backgroundColor.match(/[\d.]+/g)!.map(Number),
+      }]));
+    }
+    expect(hovered.map(b => b.name)).toEqual(['Wallfacer', 'Lectio', 'ReplicHAI', 'Latere Platform']);
+    for (const brand of [...wordmarks, ...hovered]) {
+      const colors = brand.gradient === 'none' ? [brand.color] : brand.gradient.match(/rgb\([^)]+\)/g)!;
+      for (const color of colors) expect.soft(ratio(color.match(/[\d.]+/g)!.map(Number), brand.background), `${brand.name}: ${color}`).toBeGreaterThanOrEqual(4.5);
     }
   });
 }

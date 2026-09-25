@@ -46,9 +46,11 @@ for (const framework of ['vue', 'react']) for (const design of ['default', ...de
         await expect(page.locator('#host-prose-link')).toHaveCSS('text-decoration-line', 'underline');
 
         if (scenario.startsWith('footer')) {
+          // Navigation answers the pointer with color alone, even under the
+          // host's underline rule: no underline appears on hover.
           const navigation = page.locator('.footer-col a, .footer-compact-links a').first();
           await navigation.hover();
-          await expect(navigation).toHaveCSS('text-decoration-line', 'underline');
+          await expect(navigation).toHaveCSS('text-decoration-line', 'none');
           await page.mouse.move(0, 0);
           await page.keyboard.press('Tab');
           await navigation.focus();

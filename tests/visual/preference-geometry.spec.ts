@@ -13,32 +13,54 @@ for (const hasTouch of [false, true]) test.describe(hasTouch ? 'touch' : 'pointe
             await visit(page, framework, scenario, theme, `&parity=1&design=${design}`);
             expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(hasTouch);
 
+            const themeTrigger = page.locator('.lu-theme-menu .lu-pref-trigger');
+            const languageTrigger = page.locator('.lu-locale-menu .lu-pref-trigger');
             const assertGeometry = async () => {
-              const group = (await page.locator('.footer-seg').boundingBox())!;
-              const language = (await page.locator('.footer-lang-select').boundingBox())!;
-              expect.soft(group.height, 'Theme selector outer height').toBe(hasTouch ? 50 : 28);
-              expect.soft(language.height, 'Language and theme outer heights').toBe(group.height);
-              expect.soft(language.y, 'Top edges align').toBe(group.y);
-              expect.soft(language.y + language.height, 'Bottom edges align').toBe(group.y + group.height);
-              for (const button of await page.locator('.footer-seg-btn').all()) {
-                const box = (await button.boundingBox())!;
-                expect.soft(box.height, 'Selected and unselected segments share the inset').toBe(group.height - 6);
-                expect.soft(box.y).toBe(group.y + 3);
-                if (hasTouch) expect.soft(box.width).toBeGreaterThanOrEqual(44);
+              const a = (await themeTrigger.boundingBox())!, b = (await languageTrigger.boundingBox())!;
+              const size = hasTouch ? 44 : 32;
+              expect.soft([a.width, a.height], 'Theme trigger size').toEqual([size, size]);
+              expect.soft([b.width, b.height], 'Language trigger size').toEqual([size, size]);
+              expect.soft(b.y, 'Top edges align').toBe(a.y);
+              for (const trigger of [themeTrigger, languageTrigger]) {
+                const offset = await trigger.evaluate(button => {
+                  const box = button.getBoundingClientRect(), icon = button.querySelector('svg')!.getBoundingClientRect();
+                  return { x: box.x + box.width / 2 - icon.x - icon.width / 2, y: box.y + box.height / 2 - icon.y - icon.height / 2, size: [icon.width, icon.height] };
+                });
+                expect.soft(Math.abs(offset.x) + Math.abs(offset.y), 'Glyph centered').toBeLessThan(1);
+                expect.soft(offset.size, '16px glyph').toEqual([16, 16]);
               }
               expect.soft(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width);
             };
             await assertGeometry();
-            await page.locator('.footer-seg-btn').nth(1).click();
-            await expect(page.locator('.footer-seg-btn').nth(1)).toHaveClass(/is-active/);
-            await page.locator('.footer-lang-select').selectOption('de');
-            await expect(page.locator('.footer-lang-select')).toHaveValue('de');
+            // The open menu: 32px rows, a 16px check column, and a panel corner
+            // concentric with its rows (row radius plus panel padding).
+            await themeTrigger.click();
+            const panel = page.locator('.lu-theme-menu .lu-pop-panel');
+            const rows = panel.getByRole('menuitemradio');
+            await expect(rows).toHaveCount(3);
+            const menu = await panel.evaluate(el => {
+              const css = getComputedStyle(el), row = el.querySelector<HTMLElement>('[role="menuitemradio"]')!;
+              const labels = [...el.querySelectorAll('[role="menuitemradio"]')].map(item => {
+                const range = document.createRange(); range.selectNodeContents(item.lastChild!);
+                return range.getBoundingClientRect().left;
+              });
+              return { outer: parseFloat(css.borderTopLeftRadius), inset: parseFloat(css.paddingTop), inner: parseFloat(getComputedStyle(row).borderTopLeftRadius), labels, check: [...el.querySelectorAll('.lu-menu-check')].map(check => check.getBoundingClientRect().width) };
+            });
+            if (!(hasTouch && design === 'origo')) for (const row of await rows.all()) expect.soft(Math.round((await row.boundingBox())!.height), 'Row height').toBeGreaterThanOrEqual(32);
+            expect.soft(menu.outer, 'Concentric corners').toBe(menu.inner + menu.inset);
+            expect.soft(new Set(menu.labels).size, 'Labels share one x').toBe(1);
+            expect.soft(menu.check).toEqual([16, 16, 16]);
+            await rows.nth(1).click();
+            await expect(themeTrigger).toHaveAttribute('aria-label', /Dark$/);
+            await languageTrigger.click();
+            await page.locator('.lu-locale-menu').getByRole('menuitemradio', { name: 'Deutsch' }).click();
+            await expect(languageTrigger).toHaveAttribute('aria-label', 'Sprache: Deutsch');
             await assertGeometry();
           });
         }
 
-        // The other preference entry points use shared pills rather than the
-        // footer's segmented control/select pair; guard their equality as well.
+        // The account preferences use shared pills rather than the footer's
+        // menus; guard their equality as well.
         if (!hasTouch) for (const scenario of ['preferences', 'account']) {
           await test.step(scenario, async () => {
             await visit(page, framework, scenario, theme, `&parity=1&design=${design}`);

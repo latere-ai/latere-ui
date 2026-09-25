@@ -44,16 +44,12 @@ describe('focus-visible treatment', () => {
     expect(css).toContain('var(--focus-outline');
   });
 
-  it('puts footer links, theme segments, and the locale select on the ink ring', () => {
+  it('puts footer links and the theme and language menu triggers on the ink ring', () => {
     const css = read('src/styles/footer.css');
-    for (const sel of [
-      '.site-footer a:focus-visible',
-      '.footer-seg-btn:focus-visible',
-      '.footer-lang-select:focus-visible',
-    ]) {
-      expect(css, `footer.css must style ${sel}`).toContain(sel);
-    }
+    expect(css, 'footer.css must style .site-footer a:focus-visible').toContain('.site-footer a:focus-visible');
     expect(css).toContain('var(--focus-outline');
+    const menus = read('src/styles/components/preference-menu.css');
+    expect(menus).toMatch(/\.lu-pref-trigger:focus-visible \{ outline: var\(--focus-outline/);
   });
 
   it('puts docs nav, pager, TOC, and body links on the ink ring', () => {

@@ -228,15 +228,12 @@
 :root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-cp-input { font-size: var(--lu-preset-body-size); padding: 12px 14px; }
 :root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-cp-item { padding: 6px 10px; }
 :root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-cp-item-label { font-size: var(--fs-body-sm); }
-:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) :is(.footer-seg, .footer-lang-select) { border-radius: var(--radius-md); }
-:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .footer-seg-btn { border-radius: max(0px, calc(var(--radius-md) - 3px)); }
 
 /* Repository surfaces use small rectangular controls; circular status marks,
  * avatars, radio dots and switch thumbs retain their semantic geometry. */
 /* Nested selections need a visible 3px corner. Include the track's border and
- * padding in its outer radius: 3px in footers, 4px in form segmented controls. */
-:root[data-design="origo"] :is(.footer-seg-btn, .lu-seg-item) { border-radius: 3px; }
-:root[data-design="origo"] :is(.footer-seg, .footer-lang-select) { border-radius: 6px; }
+ * padding in its outer radius: 4px in form segmented controls. */
+:root[data-design="origo"] .lu-seg-item { border-radius: 3px; }
 :root[data-design="origo"] .lu-seg { border-radius: 7px; }
 :root[data-design="origo"] .lu-btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
 :root[data-design="origo"] :is(.lu-iconbtn, .lu-am-trigger, .lu-am-item, .lu-cs-fold, .lu-cs-search-hint, .lu-cs-badge) { border-radius: 3px; }
