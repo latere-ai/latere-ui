@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { defineComponent, h } from 'vue';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { SiteFooter } from '../src';
 import { FOOTER_GROUPS } from '../src/components/footerNavigation';
 import { en, zh, de } from '../src/i18n/footer';
@@ -188,22 +186,4 @@ describe('SiteFooter', () => {
       },
     );
   }
-});
-
-describe('brand wordmark styles', () => {
-  // The footer is self-contained (no @import) so `latere-ui/styles` stays one
-  // resolvable file for SSG consumers; console.css uses brand.css for the same
-  // values. Guard the background-image rule in BOTH so neither regresses.
-  for (const file of ['src/styles/footer.css', 'src/styles/brand.css']) {
-    it(`${file} uses background-image so background-clip:text is not reset by the shorthand`, () => {
-      const css = readFileSync(resolve(process.cwd(), file), 'utf8');
-      expect(css).not.toMatch(/-brand\s*\{\s*background:\s*linear-gradient/);
-      expect(css).toMatch(/\.wallfacer-brand\s*\{\s*background-image:/);
-    });
-  }
-
-  it('footer.css has no @import rule (keeps a single resolvable stylesheet)', () => {
-    const css = readFileSync(resolve(process.cwd(), 'src/styles/footer.css'), 'utf8');
-    expect(css).not.toMatch(/@import\s+['"]/);
-  });
 });

@@ -1,6 +1,32 @@
-/* Shared product wordmark gradients. Imported by both footer.css and
- * console.css so the brand colors have a single source of truth across the
- * marketing footer and every product console sidebar. */
+/* Shared product wordmark gradients. Imported by console.css, and kept in
+ * step with the copy inside footer.css, so the brand colors have one set of
+ * values across the marketing footer and every product console sidebar. */
+
+/* ===== Product gradients =====
+ * One token per product, restated for dark so small wordmarks stay readable.
+ * Each product keeps its hue. The platform is the ground the products stand
+ * on, so its mark is the ink itself: near-black to graphite in light,
+ * off-white to silver in dark. */
+:root {
+    --lu-brand-cella: linear-gradient(135deg, #456f50 0%, #386344 60%, #2c5538 100%);
+    --lu-brand-wallfacer: linear-gradient(135deg, #b45133 0%, #9f432b 60%, #883520 100%);
+    --lu-brand-lux: linear-gradient(135deg, #4d5ec0 0%, #3a4ed1 60%, #2b3fb8 100%);
+    --lu-brand-topos: linear-gradient(135deg, #49616a 0%, #536c3f 60%, #805831 100%);
+    --lu-brand-lectio: linear-gradient(135deg, #90602f 0%, #885121 60%, #734418 100%);
+    --lu-brand-drive: linear-gradient(135deg, #806015 0%, #765812 60%, #674b10 100%);
+    --lu-brand-replichai: linear-gradient(135deg, #2369bd 0%, #2369bd 100%);
+    --lu-brand-platform: linear-gradient(135deg, #0a0a0a 0%, #262626 55%, #4a4a4a 100%);
+}
+[data-theme="dark"] {
+    --lu-brand-cella: linear-gradient(135deg, #9bcfa5 0%, #86be92 60%, #75ad82 100%);
+    --lu-brand-wallfacer: linear-gradient(135deg, #ed9a7d 0%, #df886a 60%, #d27b60 100%);
+    --lu-brand-lux: linear-gradient(135deg, #aab5ff 0%, #92a0f3 60%, #8290e8 100%);
+    --lu-brand-topos: linear-gradient(135deg, #9abcc4 0%, #a9be8d 60%, #c5a47d 100%);
+    --lu-brand-lectio: linear-gradient(135deg, #dfbd91 0%, #cfa577 60%, #be9566 100%);
+    --lu-brand-drive: linear-gradient(135deg, #ead080 0%, #dcc268 60%, #cfb65e 100%);
+    --lu-brand-replichai: linear-gradient(135deg, #78b1ed 0%, #78b1ed 100%);
+    --lu-brand-platform: linear-gradient(135deg, #fafafa 0%, #d8d8d8 55%, #a8a8a8 100%);
+}
 
 /* ===== Product brand names ===== */
 /* `.drive-brand` outlives the retired Drive console: the platform's Storage
@@ -11,7 +37,8 @@
 .lux-brand,
 .topos-brand,
 .lectio-brand,
-.drive-brand {
+.drive-brand,
+.platform-brand {
     font-family: 'Instrument Serif', Georgia, serif !important;
     font-style: italic !important;
     font-weight: 400 !important;
@@ -22,24 +49,14 @@
 }
 /* Use background-image (not the `background` shorthand, which would reset
    background-clip back to border-box and break the text clipping above). */
-.cella-brand { background-image: linear-gradient(135deg, #456f50 0%, #386344 60%, #2c5538 100%); }
-.wallfacer-brand { background-image: linear-gradient(135deg, #b45133 0%, #9f432b 60%, #883520 100%); }
-.lux-brand { background-image: linear-gradient(135deg, #4d5ec0 0%, #3a4ed1 60%, #2b3fb8 100%); }
-.topos-brand { background-image: linear-gradient(135deg, #49616a 0%, #536c3f 60%, #805831 100%); }
-.lectio-brand { background-image: linear-gradient(135deg, #90602f 0%, #885121 60%, #734418 100%); }
-.drive-brand { background-image: linear-gradient(135deg, #806015 0%, #765812 60%, #674b10 100%); }
+.cella-brand { background-image: var(--lu-brand-cella); }
+.wallfacer-brand { background-image: var(--lu-brand-wallfacer); }
+.lux-brand { background-image: var(--lu-brand-lux); }
+.topos-brand { background-image: var(--lu-brand-topos); }
+.lectio-brand { background-image: var(--lu-brand-lectio); }
+.drive-brand { background-image: var(--lu-brand-drive); }
+.platform-brand { background-image: var(--lu-brand-platform); }
 
-/* Theme-specific stops keep small navigation wordmarks readable. */
-[data-theme="dark"] .cella-brand { background-image: linear-gradient(135deg, #9bcfa5 0%, #86be92 60%, #75ad82 100%); }
-[data-theme="dark"] .wallfacer-brand { background-image: linear-gradient(135deg, #ed9a7d 0%, #df886a 60%, #d27b60 100%); }
-[data-theme="dark"] .lux-brand { background-image: linear-gradient(135deg, #aab5ff 0%, #92a0f3 60%, #8290e8 100%); }
-[data-theme="dark"] .topos-brand { background-image: linear-gradient(135deg, #9abcc4 0%, #a9be8d 60%, #c5a47d 100%); }
-[data-theme="dark"] .lectio-brand { background-image: linear-gradient(135deg, #dfbd91 0%, #cfa577 60%, #be9566 100%); }
-[data-theme="dark"] .drive-brand { background-image: linear-gradient(135deg, #ead080 0%, #dcc268 60%, #cfb65e 100%); }
-
-/* Research keeps its blue wordmark; the unified platform uses violet. */
-.replichai-brand, .platform-brand { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; }
-.replichai-brand { color: #2369bd; }
+/* Research keeps its flat blue wordmark. */
+.replichai-brand { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; color: #2369bd; }
 [data-theme="dark"] .replichai-brand { color: #78b1ed; }
-.platform-brand { color: #6b5fc0; }
-[data-theme="dark"] .platform-brand { color: #b1a6ed; }

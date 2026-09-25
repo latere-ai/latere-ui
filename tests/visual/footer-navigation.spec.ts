@@ -18,7 +18,8 @@ for (const framework of ['vue', 'react']) for (const design of ['default', ...de
           expect(Math.max(...positions) - Math.min(...positions)).toBeLessThan(1);
         }
       }
-      await expect(groups.locator('.platform-brand')).toHaveCSS('color', theme === 'dark' ? 'rgb(177, 166, 237)' : 'rgb(107, 95, 192)');
+      // The platform wordmark is the ink; research keeps its blue.
+      await expect(groups.locator('.platform-brand')).toHaveCSS('background-image', theme === 'dark' ? /rgb\(250, 250, 250\)/ : /rgb\(10, 10, 10\)/);
       await expect(groups.locator('.replichai-brand')).toHaveCSS('color', theme === 'dark' ? 'rgb(120, 177, 237)' : 'rgb(35, 105, 189)');
       await expect(groups).toHaveCount(3);
       await expect(groups.locator('h4, .footer-group-title')).toHaveText(['Applications', 'Research', 'Platform']);
