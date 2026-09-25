@@ -14,6 +14,7 @@ specs/
   liquid-glass-v2-v1.20.md (complete: Liquid Glass v2: five-tier material ladder (ultrathin/thin/regular/thick/smoke), capsule geometry + radii ladder, ink-only accent, layered floating-glass shadows; shell adopts the 1d floating-capsule rail; token-layer reskin on the existing .lu-glass-* contracts, released as v1.20.0)
   react-support-v1.27.md   (complete: React bindings for the Glass primitives, console shell, and session client, from `latere-ui/react`)
   react-site-footer-v1.28.md (validated: SiteFooter + LatereLogoMark for React consumers)
+  browser-telemetry.md     (validated: `latere-ui/telemetry`, one lazy browser telemetry entry paired with otel.TelemetryProxy)
 ```
 
 ## Dependencies
