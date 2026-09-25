@@ -17,8 +17,8 @@ Size layouts by the browser's available CSS pixels, rather than the monitor's ph
 | Token | Default | Typical use |
 |---|---|---|
 | `--radius-xs` | 4px | Checkboxes and inline code |
-| `--radius-sm` | 6px | Menu rows |
-| `--radius-md` | 8px | Fields, navigation and compact footer controls |
+| `--radius-sm` | 6px | Menu rows, and the theme and language buttons when no control corner is set |
+| `--radius-md` | 8px | Fields and navigation |
 | `--radius-lg` | 14px | Panels, toolbars, tables and menus |
 | `--radius-xl` | 18px | Dialogs and outer windows |
 | `--radius-2xl` | 24px | Large outer frames |
@@ -53,7 +53,7 @@ Use `replichai`, `wallfacer`, or `origo` on **the document root**. This gives te
 
 These presets apply real geometry, typography, material and state changes to shared components. Replichai's actual card is 18px despite its 12px radius token; Wallfacer's preset chooses its compact 14px card rather than its generic 18px card. Toolbar actions keep concentric corners derived from their parent and inset. Circular status dots, avatars, radio indicators and switch thumbs retain their functional shapes.
 
-Origo's selected segments use visible 3px corners. Their tracks include the border and padding inset: 6px outer corners in footers and 7px in form segmented controls. The footer language dropdown matches its neighboring theme track.
+Origo's selected segments use visible 3px corners. Their tracks include the border and padding inset: 7px outer corners in form segmented controls.
 
 All three map the glass tiers to opaque surfaces and inverse emphasis. Product presets disable backdrop blur and specular highlights; do not initialize the optional optical-effects runtime on them. Brand wordmarks remain separate from UI typography. The preset does not add branding or migrate a consuming application.
 
@@ -120,15 +120,25 @@ The sidebar supports a collapsed rail and custom brand, row, and footer content.
 
 ![Compact footer on a narrow viewport](../tests/visual/goldens/darwin-27/vue-footer-compact-light-mobile.png)
 
-Compact footer links wrap as complete labels, with theme and language controls below them. No horizontal scrolling is required to discover the links. Both full and compact footers align their preference controls at a 28px outer height. Touch devices use 50px controls with 44px theme-button targets.
+Compact footer links wrap as complete labels, with the theme and language buttons below them. No horizontal scrolling is required to discover the links.
 
-Both footer layouts show navigation and wordmarks without resting underlines. Hovering a navigation link adds an underline; keyboard focus shows an outline. These styles belong to the footer and need no page-wide link reset. Article links outside the footer retain the host's styling.
+The full footer leaves room around its content. A lead block on the left holds the site's lockup, the social profiles, a short hairline, and the theme and language buttons. Four link columns sit to its right: Applications with Research below it, Platform, Company, and Legal. Each group is a quiet heading over plain links set 32px apart, and the copyright closes the footer. Below 1024px the lead moves above the columns; on a phone the columns go two up and the lead follows them. A host sets its own lockup in place of the Latere AI mark.
 
-The full footer places brand, four navigation columns, and preferences in one desktop row. Applications, Research, and Platform stack within the first navigation column, followed by Latere, Legal, and Community. On narrow screens the columns form two tracks and preferences follow them. Compact footers label the same three destination groups and wrap their links. Supply ordinary text or inline emphasis for the tagline through `messages`; its wrapping follows the available width.
+Product names in the columns rest in the same face and color as their neighbors, so each column reads as one list. A product takes its gradient under the pointer or keyboard focus. The compact strip keeps its italic wordmarks.
+
+Both footer layouts show navigation without underlines, at rest and under the pointer; the pointer changes the color, and keyboard focus shows an outline. These styles belong to the footer and need no page-wide link reset. Article links outside the footer retain the host's styling.
 
 Account triggers separate the display name from role and workspace metadata with a 4px gap. Preference pills center their labels by cap height and alphabetic baseline, keeping selected and unselected labels aligned across fonts. Browsers without CSS `text-box` support retain ordinary flex centering.
 
-Footer language and theme choices belong to the host's preferences. Supply the language options your application supports; English, Chinese, and German footer copy ships in the package. Resolve an automatic theme to a concrete light or dark theme before applying it to the document.
+## Offer preferences as native menus
+
+The theme and language controls are quiet square icon buttons, 32px, and 44px on touch screens. The theme button shows the current preference, a sun, a moon, or a monitor for following the system; the language button shows a globe. Each opens a menu on a solid surface with a hairline edge and the menu shadow: 32px rows, a check beside the current choice in its own column, and a corner concentric with the rows. The arrow keys move through the rows, Escape closes the menu and returns to the button, and Tab moves on. `ThemeMenu` and `LocaleMenu` are the same controls for a header.
+
+Theme and language choices belong to the host's preferences. Supply the language options your application supports; English, Chinese, and German footer copy ships in the package. Resolve an automatic theme to a concrete light or dark theme before applying it to the document. The footer, a header's menu and the account preferences each report a choice and show the value they are given: keep one preference in the host and they stay in step.
+
+## Draw the platform in ink
+
+Each product keeps its hue: Wallfacer's copper, Lectio's amber, ReplicHAI's blue. The platform is the ground they stand on, so its mark is the ink itself, near-black to graphite in the light theme and off-white to silver in the dark theme. The gradients are the `--lu-brand-*` tokens.
 
 ## Add optical effects deliberately
 

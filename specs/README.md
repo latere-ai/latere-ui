@@ -58,3 +58,4 @@ specs/
 | [React shell and account parity](react-shell-parity.md) | Complete | React shell and account parity |
 | [Complete component visual matrix](complete-visual-matrix.md) | Complete | Complete component visual matrix |
 | [Footer navigation groups](footer-navigation-groups.md) | Complete | Applications, Research, and Platform in both footer adapters and all designs |
+| [Footer columns and preference menus](footer-columns.md) | Complete | Lead block and link columns, theme and language menus on fixed menu primitives, the platform's ink mark |

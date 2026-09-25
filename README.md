@@ -32,7 +32,7 @@ Import `latere-ui/presets` after the shared styles and set `data-design="replich
 | Overlays | Dialogs, drawers, popovers, menus, tooltips, toasts, and confirms | Vue and React |
 | Console | Grouped navigation, collapsible sidebar, account menu, command palette | Vue and React |
 | Documentation | Grouped index, article, table of contents, previous/next navigation | Vue and React |
-| Site chrome | Full and compact footer, theme and language controls, logo | Vue and React |
+| Site chrome | Full and compact footer, theme and language menus, logo | Vue and React |
 | Session | API client, account resolution, organization switching, session bindings | Vue and React |
 
 The package ships `.vue`, `.tsx`, `.ts`, and `.css` source. Your application compiles it with its own toolchain. Both adapters expose every visual component. React imports come from [latere-ui/react](src/react/index.ts); the [API guide](docs/api-guide.md#react) explains controlled values and callbacks.
@@ -45,7 +45,7 @@ The package is not on a registry. Pin a release tag from the [releases page](htt
 bun add github:latere-ai/latere-ui#v1.29.0
 ```
 
-These docs and figures track `main`. The changes not yet in a release, such as `PlatformLogoMark` and the grouped footer navigation, are listed under [Unreleased](CHANGELOG.md#unreleased).
+These docs and figures track `main`. The changes not yet in a release, such as `PlatformLogoMark`, the footer's link columns and the theme and language menus, are listed under [Unreleased](CHANGELOG.md#unreleased).
 
 Use Vue 3.5+ with your Vue compiler, or React 18/19 with your React toolchain. React applications import `latere-ui/react`. For server rendering with Vite, include `ssr: { noExternal: ['latere-ui'] }` so the package source is compiled for the server too.
 
@@ -118,9 +118,9 @@ Use regular glass for panels and navigation, thick glass for readable overlays, 
 | `latere-ui/brand` | Product wordmark gradients |
 | `latere-ui/markdown` | Markdown helpers with TOC-compatible heading IDs |
 
-For exact props, events, router integration, footer locales, and session setup, see the [integration guide](docs/api-guide.md) and [React shell examples](docs/react-shell.md). English, Chinese, and German footer dictionaries are bundled; the default language dropdown offers English and Chinese.
+For exact props, events, router integration, footer locales, and session setup, see the [integration guide](docs/api-guide.md) and [React shell examples](docs/react-shell.md). English, Chinese, and German footer dictionaries are bundled; the default language menu offers English and Chinese.
 
-`SiteFooter` is Latere's site footer. On `main`, both layouts group its destinations into Applications (Wallfacer and Lectio), Research (ReplicHAI), and Platform (Latere Platform), and the full layout adds Latere, Legal, and Community columns. Compact groups wrap on small screens. The groups and their translations are shared by Vue and React across all appearances.
+`SiteFooter` is Latere's site footer. On `main`, the full layout leads with the site's lockup, the social profiles and the theme and language menus, and sets four link columns beside them: Applications with Research, Platform (Latere Platform and Identity), Company, and Legal. The compact layout wraps the same product groups in one row. `ThemeMenu` and `LocaleMenu` are the footer's menus, exported for a header. The groups and their translations are shared by Vue and React across all appearances.
 
 ## Review the visuals
 

@@ -94,7 +94,7 @@ The changed regions of all 12 compositions were inspected at native resolution s
 
 The full footer's English tagline left “loop.” alone on its last line. Shared balanced wrapping now produces “Human intelligence” / “in the loop.” at desktop widths, without manual breaks in translations or host copy.
 
-The [wrapping regression](../../tests/visual/tagline-wrapping.spec.ts) fails against the previous stylesheet. It measures actual text lines across both adapters, all four appearances, both themes and four widths, with English, German, Chinese and custom inline copy. Local verification passes all 40 wrapping/geometry checks and eight strict paired desktop comparisons. Native [run 34763510415](https://github.com/latere-ai/latere-ui/actions/runs/34763510415) passes the same 40 behavior checks, 32 paired full/compact captures, type checking and 540 unit tests with 94.37% source line coverage.
+The wrapping regression, since retired with the tagline, failed against the previous stylesheet. It measures actual text lines across both adapters, all four appearances, both themes and four widths, with English, German, Chinese and custom inline copy. Local verification passes all 40 wrapping/geometry checks and eight strict paired desktop comparisons. Native [run 34763510415](https://github.com/latere-ai/latere-ui/actions/runs/34763510415) passes the same 40 behavior checks, 32 paired full/compact captures, type checking and 540 unit tests with 94.37% source line coverage.
 
 All eight changed compositions were inspected at native resolution separately on each platform. The 32 updated desktop PNGs retain 300 DPI metadata and exact Vue/React pixel parity. The other 1,672 references retain their previous hashes, including every mobile and compact-footer figure.
 

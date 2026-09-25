@@ -47,30 +47,79 @@ const { theme, locale } = storeToRefs(prefs);
 
 | Prop         | Type                          | Default               | Notes                                                                 |
 | ------------ | ----------------------------- | --------------------- | --------------------------------------------------------------------- |
-| `theme`      | `'light' \| 'dark' \| 'auto'` | required              | Drives the active state of the theme toggle.                          |
-| `locale`     | `string` (bundled: `en`, `zh`, `de`)                | required              | Selects footer copy and the active language toggle.                   |
-| `locales`    | `LocaleOption[]`              | `[en, zh]`            | Languages in the locale dropdown (`{ code, label, name? }`).          |
-| `compact`    | `boolean`                     | `false`               | Compact footer with wrapping links and aligned preferences below.                    |
+| `theme`      | `'light' \| 'dark' \| 'auto'` | required              | The theme menu's icon and checked item; `auto` follows the system.    |
+| `locale`     | `string` (bundled: `en`, `zh`, `de`) | required       | Selects footer copy and the checked language.                         |
+| `locales`    | `LocaleOption[]`              | `[en, zh]`            | Languages in the language menu (`{ code, label, name? }`), named by `name`. |
+| `compact`    | `boolean`                     | `false`               | One wrapped row of links with the two menu buttons below.             |
 | `messages`   | `Record<string, Dict>`        | `undefined`           | Per-locale string overrides, merged over the bundled footer copy.     |
-| `baseUrl`    | `string`                      | `'https://latere.ai'` | Origin for the site's own links (Team, Blog, Legal, home).            |
+| `baseUrl`    | `string`                      | `'https://latere.ai'` | Origin for the site's own links (About, Blog, Legal, home).           |
 | `routerLink` | `Component`                   | `undefined`           | Pass `RouterLink` to keep SPA navigation for internal links on-site.  |
 
-The language switcher is a dropdown built from `locales`. To support a locale the
-package does not bundle (bundled: en, zh, de), pass it in `locales` and supply its
-footer strings via `messages`, e.g. `:messages="{ fr: { 'footer.tagline': '…' } }"`.
+The full footer's lead starts with the Latere AI lockup. A site with its own
+lockup passes it through the `#brand` slot (React: the `brand` prop):
 
-The footer reports theme choices; the host applies them to `data-theme` and resolves `auto` with `matchMedia('(prefers-color-scheme: dark)')`. It also persists preferences if needed. German copy is bundled, but the default dropdown lists English and Chinese; include `de` in `locales` to offer German.
+```vue
+<SiteFooter v-model:theme="theme" v-model:locale="locale">
+  <template #brand><a href="/" class="my-lockup">…</a></template>
+</SiteFooter>
+```
 
-The shared stylesheet scopes link decoration to `.site-footer a` in both layouts, including router links that render anchors. Navigation links underline on hover; keyboard focus retains its outline. No global anchor reset is required.
+The language menu lists `locales`. To support a locale the package does not
+bundle (bundled: en, zh, de), pass it in `locales` and supply its footer
+strings via `messages`, e.g. `:messages="{ fr: { 'footer.company': '…' } }"`.
+The theme menu's labels are `footer.theme`, `footer.theme.light`,
+`footer.theme.dark` and `footer.theme.system`.
 
-Both footer layouts use 28px outer heights for the theme selector and language dropdown. On coarse-pointer devices, both become 50px high so each inset theme button has a 44px touch target. The selected segment keeps the same geometry as the other segments.
+The footer reports theme choices; the host applies them to `data-theme` and resolves `auto` with `matchMedia('(prefers-color-scheme: dark)')`. It also persists preferences if needed. German copy is bundled, but the default menu lists English and Chinese; include `de` in `locales` to offer German.
 
-The footer carries Latere's own navigation: Wallfacer and Lectio under
-Applications, ReplicHAI under Research, and the platform console under
-Platform, followed by Latere, Legal, and Community links. These destination
-links are always absolute. Latere's own site links (Team, Blog, Legal, home)
+The shared stylesheet scopes link decoration to `.site-footer a` in both layouts, including router links that render anchors. Navigation links carry no underline, at rest or under the pointer; keyboard focus draws an outline. No global anchor reset is required.
+
+The footer carries Latere's own navigation in four columns: Applications
+(Wallfacer, Lectio) with Research (ReplicHAI) below it, Platform (the
+platform console and Identity), Company (About, Why Latere, Blog, Open Source,
+Contact) and Legal (Privacy, Terms, Impressum). Product and Identity links
+are always absolute. Latere's own site links (About, Blog, Legal, home)
 resolve against `baseUrl` as plain `<a>` unless `routerLink` is supplied, in
 which case they render through it with a relative `to`.
+
+### Theme and language menus
+
+`ThemeMenu` and `LocaleMenu` are the footer's two controls, exported for a
+header or a toolbar. Each is an icon button that opens a menu of choices with
+the current one checked; it shows the value it is given and reports a choice,
+so the host's single preference drives every copy.
+
+```vue
+<ThemeMenu v-model:theme="theme" placement="bottom-end" />
+<LocaleMenu v-model:locale="locale" :locales="locales" label="Language" />
+```
+
+```tsx
+<ThemeMenu theme={theme} onThemeChange={setTheme} labels={{ system: 'Follow system' }} />
+<LocaleMenu locale={locale} locales={locales} onLocaleChange={setLocale} />
+```
+
+| Prop | Menu | Default | Notes |
+| --- | --- | --- | --- |
+| `theme` | theme | required | `'light' \| 'dark' \| 'auto'`; the button shows a sun, a moon or a monitor. |
+| `labels` | theme | English | `{ theme, light, dark, system }`, merged over the defaults. |
+| `locale`, `locales` | language | required, `[en, zh]` | Rows are named by each option's `name`, else its `label`. |
+| `label` | language | `'Language'` | Names the menu and prefixes the button's accessible name. |
+| `placement` | both | `'bottom-end'` | `bottom-start`, `bottom-end`, `top-start` or `top-end`. |
+| `className` | both, React | none | Extra class on the root; a Vue host's `class` falls through. |
+
+The button's accessible name states the menu and the value, "Theme: System".
+Enter, Space, ArrowDown or ArrowUp open the menu on the checked row; the
+arrows, Home and End move; Escape and a choice return focus to the button.
+The menu surface reads `--lu-menu-bg`, `--lu-menu-border` and
+`--lu-menu-shadow`, falling back to `--bg-surface`, `--border-strong` and
+`--shadow-menu`; the button and rows take `--lu-control-height` and
+`--lu-control-radius`.
+
+The same building blocks are public. `GlassMenu` takes items with `checked`
+for a choice menu, `label` for its name and `autofocus` to focus the checked
+row when it mounts; `GlassPopover` takes `surface="solid"` for an opaque menu
+surface and passes the panel `id` to its trigger for `aria-controls`.
 
 ## Console sidebar
 
