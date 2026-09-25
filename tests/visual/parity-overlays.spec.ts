@@ -61,9 +61,13 @@ for (const framework of ['vue', 'react']) for (const layout of ['desktop', 'mobi
       await opener.focus(); await opener.press('Enter');
       const unavailable = page.getByRole('menuitem', { name: 'Unavailable' });
       await expect(unavailable).toBeDisabled();
+      // The menu is one tab stop; the arrows move within it and skip the
+      // disabled action.
       await page.keyboard.press('Tab'); await expect(page.getByRole('menuitem', { name: 'Copy link' })).toBeFocused();
-      await page.keyboard.press('Tab'); await expect(page.getByRole('menuitem', { name: 'Move to folder' })).toBeFocused();
-      await page.keyboard.press('Tab'); await expect(page.getByRole('menuitem', { name: 'Delete', exact: true })).toBeFocused();
+      await page.keyboard.press('ArrowDown'); await expect(page.getByRole('menuitem', { name: 'Move to folder' })).toBeFocused();
+      await page.keyboard.press('ArrowDown'); await expect(page.getByRole('menuitem', { name: 'Delete', exact: true })).toBeFocused();
+      await page.keyboard.press('ArrowDown'); await expect(page.getByRole('menuitem', { name: 'Copy link' })).toBeFocused();
+      await page.keyboard.press('End'); await expect(page.getByRole('menuitem', { name: 'Delete', exact: true })).toBeFocused();
       await page.keyboard.press('Escape');
       await expect(page.locator('.lu-pop-panel')).toHaveCount(0);
       await expect(opener).toBeFocused();
@@ -75,6 +79,19 @@ for (const framework of ['vue', 'react']) for (const layout of ['desktop', 'mobi
       await expect(opener).toBeFocused();
       await opener.press('Enter');
       await page.getByRole('heading', { level: 1 }).click();
+      await expect(page.locator('.lu-pop-panel')).toHaveCount(0);
+      // Tab from the menu's tab stop moves on to the next control, and the
+      // popover closes.
+      await page.evaluate(() => {
+        const next = document.createElement('button');
+        next.textContent = 'Next control';
+        document.querySelector('[data-component=GlassPopover]')!.after(next);
+      });
+      await opener.focus(); await opener.press('ArrowDown');
+      await expect(page.locator('.lu-pop-panel')).toHaveCount(1);
+      await page.keyboard.press('Tab'); await expect(page.getByRole('menuitem', { name: 'Copy link' })).toBeFocused();
+      await page.keyboard.press('Tab');
+      await expect(page.getByRole('button', { name: 'Next control' })).toBeFocused();
       await expect(page.locator('.lu-pop-panel')).toHaveCount(0);
     });
 

@@ -6,6 +6,22 @@
   padding: 6px;
   border-radius: var(--radius-md, 8px);
 }
+/* The opaque menu surface: no glass layer, so it reads the same with or
+ * without `latere-ui/glass` and over any backdrop. A hairline edge, the menu
+ * shadow, and a corner concentric with the rows inside it: the row radius
+ * (the control corner) plus the panel padding. */
+.lu-pop-panel--solid {
+  --lu-menu-padding: 6px;
+  padding: var(--lu-menu-padding);
+  min-width: 176px;
+  box-sizing: border-box;
+  background: var(--lu-menu-bg, var(--bg-surface, #fff));
+  border: 1px solid var(--lu-menu-border, var(--border-strong, rgba(0, 0, 0, 0.12)));
+  border-radius: calc(var(--lu-control-radius, var(--radius-sm, 6px)) + var(--lu-menu-padding));
+  box-shadow: var(--lu-menu-shadow, var(--shadow-menu, 0 8px 28px rgba(0, 0, 0, 0.12)));
+  color: var(--text, #0a0a0a);
+}
+.lu-pop-panel--solid .lu-menu { min-width: 0; }
 .lu-pop-panel--match { box-sizing: border-box; width: 100%; min-width: 0; overflow-wrap: anywhere; }
 .lu-pop-panel--match .lu-menu { min-width: 0; }
 .lu-pop-panel--bottom-start { top: calc(100% + 6px); left: 0; }

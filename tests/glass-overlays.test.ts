@@ -83,7 +83,18 @@ describe('GlassPopover', () => {
     await w.get('.lu-pop-trigger').trigger('click');
     expect(w.find('.lu-pop-panel').exists()).toBe(true);
     expect(w.get('.lu-pop-panel').classes()).toContain('lu-glass-thick');
-    expect(w.get('.lu-pop-panel').attributes('role')).toBe('menu');
+    // The content declares its role; a GlassMenu inside must not sit in a
+    // second, empty menu.
+    expect(w.get('.lu-pop-panel').attributes('role')).toBeUndefined();
+  });
+
+  it('draws the solid surface without the glass tier when asked', async () => {
+    const w = mount(GlassPopover, {
+      props: { surface: 'solid', placement: 'top-start' },
+      slots: { trigger: '<button>open</button>', default: '<div>row</div>' },
+    });
+    await w.get('.lu-pop-trigger').trigger('click');
+    expect(w.get('.lu-pop-panel').classes()).toEqual(['lu-pop-panel', 'lu-pop-panel--solid', 'lu-pop-panel--top-start']);
   });
 });
 
