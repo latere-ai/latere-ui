@@ -1,11 +1,17 @@
-/* GlassButton — de-scoped from the SFC so the Vue and React adapters share
- * one stylesheet. Load after `latere-ui/glass` (the material layer). */
+/* GlassButton: shared by the Vue and React adapters. Load after
+ * `latere-ui/glass` (the material layer).
+ *
+ * The control scale is two heights, 32px (md) and 28px (sm), with 13px and
+ * 12px labels. A host that sets `--lu-control-height`,
+ * `--lu-control-height-sm` and `--lu-control-radius` sizes and rounds every
+ * button, icon button, field and select from one place, so a field and the
+ * button beside it share a baseline and a corner. */
 .lu-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--lu-control-radius, var(--radius-pill, 999px));
   font-family: inherit;
   font-weight: var(--fw-medium, 500);
   line-height: 1;
@@ -15,8 +21,8 @@
   transition: background 0.16s ease, box-shadow 0.16s ease, opacity 0.16s ease;
   white-space: nowrap;
 }
-.lu-btn-md { box-sizing: border-box; min-height: 32px; padding: 8px 14px; font-size: var(--fs-body-sm, 13px); }
-.lu-btn-sm { box-sizing: border-box; min-height: 28px; padding: 6px 10px; font-size: var(--fs-micro, 12px); }
+.lu-btn-md { box-sizing: border-box; min-height: var(--lu-control-height, 32px); padding: 0 14px; font-size: var(--fs-body-sm, 13px); }
+.lu-btn-sm { box-sizing: border-box; min-height: var(--lu-control-height-sm, 28px); padding: 0 10px; font-size: var(--fs-micro, 12px); }
 
 /* Default: thin glass (the .lu-glass-thin class supplies bg/blur/edge/border). */
 .lu-btn-glass {
@@ -52,6 +58,12 @@
 
 .lu-btn-ghost { background: transparent; color: var(--text-secondary, #666); }
 .lu-btn-ghost:hover:not(:disabled) { background: var(--accent-subtle, rgba(0, 0, 0, 0.04)); }
+
+/* Danger as text: a destructive action that sits among other actions, such
+ * as in a row or a toolbar. The filled `danger` is for the confirming button
+ * of a dialog, where the destructive choice is the one being made. */
+.lu-btn-danger-ghost { background: transparent; color: var(--state-error, #a8412e); }
+.lu-btn-danger-ghost:hover:not(:disabled) { background: color-mix(in srgb, var(--state-error, #a8412e) 8%, transparent); }
 
 .lu-btn-danger {
   background: var(--state-error, #a8412e);

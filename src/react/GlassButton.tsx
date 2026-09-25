@@ -6,7 +6,7 @@ import '../styles/components/glass-button.css';
 import { cx } from './internal';
 
 export interface GlassButtonProps {
-  variant?: 'glass' | 'primary' | 'ghost' | 'danger';
+  variant?: 'glass' | 'primary' | 'ghost' | 'danger' | 'danger-ghost';
   size?: 'sm' | 'md';
   /** Show a spinner and block interaction. */
   loading?: boolean;

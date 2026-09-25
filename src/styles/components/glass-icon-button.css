@@ -3,14 +3,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--lu-control-radius, var(--radius-pill, 999px));
   color: var(--text-secondary, #666);
   cursor: pointer;
   box-shadow: none;
   transition: color 0.16s ease, background 0.16s ease;
 }
-.lu-iconbtn-md { width: 36px; height: 36px; }
-.lu-iconbtn-sm { width: 28px; height: 28px; }
+.lu-iconbtn-md { width: var(--lu-control-height, 36px); height: var(--lu-control-height, 36px); }
+.lu-iconbtn-sm { width: var(--lu-control-height-sm, 28px); height: var(--lu-control-height-sm, 28px); }
 .lu-iconbtn:hover { color: var(--text, #0a0a0a); }
 .lu-iconbtn.is-pressed { color: var(--accent, #171717); background: var(--accent-glow-strong, rgba(0, 0, 0, 0.15)); }
 .lu-iconbtn:disabled { opacity: 0.45; cursor: not-allowed; }

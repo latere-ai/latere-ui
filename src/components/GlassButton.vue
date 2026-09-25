@@ -7,7 +7,7 @@ import { computed } from 'vue';
 import '../styles/components/glass-button.css';
 
 const props = withDefaults(defineProps<{
-  variant?: 'glass' | 'primary' | 'ghost' | 'danger';
+  variant?: 'glass' | 'primary' | 'ghost' | 'danger' | 'danger-ghost';
   size?: 'sm' | 'md';
   /** Show a spinner and block interaction. */
   loading?: boolean;
