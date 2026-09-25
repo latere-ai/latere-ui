@@ -33,8 +33,6 @@ committed: the commit log already holds that.
 - `AccountMenu` takes `subline="text"` for one quiet line under the name, such as "Platform admin · Personal", in place of the uppercase role badge.
 - Export `PlatformLogoMark` for Vue and React: the platform's Latere symbol above two stacked layers, sharing one geometry definition.
 - Separate footer navigation into Applications, Research, and Platform in Vue and React, including compact layouts. Link the unified platform console and ReplicHAI, and remove the separate capability entries from the footer.
-- Stack Applications, Research, and Platform in one navigation column, alongside Latere, Legal, and Community. Retain entry colors and use text-color hover feedback without underlines.
-- Center theme icons with fixed SVG geometry and align language text within equally sized controls.
 
 ## v1.29.0 - 2026-09-20
 
