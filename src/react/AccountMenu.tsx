@@ -19,6 +19,7 @@ import '../styles/components/account-menu.css';
 import {
   DEFAULT_ACCOUNT_MENU_LABELS,
   identityLine,
+  identityParts,
   type AccountMenuItem,
   type AccountMenuLabelOverrides,
   type AccountMenuLabels,
@@ -66,7 +67,9 @@ export interface AccountMenuProps {
   /**
    * How the trigger states the role and account under the name: `badge`
    * (default) sets the role as an uppercase badge beside the organization;
-   * `text` sets one quiet line, "Platform admin · Personal".
+   * `text` sets one quiet line, "Platform admin · Personal"; `role` sets a
+   * sentence-case badge, "Platform admin", then the account in quiet text.
+   * With `text` and `role` the dropdown's header follows the same case.
    */
   subline?: AccountMenuSubline;
 }
@@ -124,6 +127,10 @@ export function AccountMenu({
   const role = principal?.role;
   const roleBadge = role && role !== 'individual' ? t.roles[role] : '';
   const identitySub = orgName || (role ? t.roles.individual : t.personal);
+  // The sentence-case sublines (`text`, `role`) name the role and the
+  // account in running text, in the trigger and in the dropdown's header.
+  const sentence = subline === 'text' || subline === 'role';
+  const parts = identityParts(principal, t);
   const orgs = principal?.orgs ?? [];
   const activeOrgId = principal?.org_id || '';
   const isPersonal = !activeOrgId;
@@ -159,7 +166,7 @@ export function AccountMenu({
   if (!principal && signedInOnly) return null;
 
   return (
-    <div ref={root} className={cx('lu-am', opensUp && 'lu-am-up')}>
+    <div ref={root} className={cx('lu-am', opensUp && 'lu-am-up')} data-subline={subline}>
       <button type="button"
         className="lu-am-trigger"
         onClick={onTrigger}
@@ -178,7 +185,15 @@ export function AccountMenu({
           {principal && subline === 'text' && (
             <span className="lu-am-id-line">{identityLine(principal, t)}</span>
           )}
-          {principal && subline !== 'text' && (
+          {principal && subline === 'role' && (
+            <span className="lu-am-id-role">
+              {parts.role && (
+                <span className={cx('lu-am-role', `lu-am-role-${role}`)}>{parts.role}</span>
+              )}
+              <span className="lu-am-id-context">{parts.context}</span>
+            </span>
+          )}
+          {principal && subline !== 'text' && subline !== 'role' && (
             <span className="lu-am-id-sub">
               {roleBadge && (
                 <span className={cx('lu-am-role', `lu-am-role-${role}`)}>{roleBadge}</span>
@@ -222,7 +237,14 @@ export function AccountMenu({
                 {/* Identity descriptor: the role badge + org/individual context.
                     Triggers may hide these to stay compact, so the dropdown is
                     the canonical place they always resolve. */}
-                {(roleBadge || identitySub) && (
+                {sentence ? (
+                  <div className="lu-am-head-meta">
+                    {parts.role && (
+                      <span className={cx('lu-am-role', `lu-am-role-${role}`)}>{parts.role}</span>
+                    )}
+                    <span className="lu-am-head-context">{parts.context}</span>
+                  </div>
+                ) : (roleBadge || identitySub) && (
                   <div className="lu-am-head-meta">
                     {roleBadge && (
                       <span className={cx('lu-am-role', `lu-am-role-${role}`)}>{roleBadge}</span>

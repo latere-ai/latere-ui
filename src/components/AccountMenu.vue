@@ -23,6 +23,7 @@ import {
   type AccountMenuSubline,
   DEFAULT_ACCOUNT_MENU_LABELS,
   identityLine,
+  identityParts,
 } from './accountMenu';
 
 export type { AccountMenuLabels, AccountMenuItem };
@@ -54,7 +55,9 @@ const props = withDefaults(
     /**
      * How the trigger states the role and account under the name: `badge`
      * (default) sets the role as an uppercase badge beside the organization;
-     * `text` sets one quiet line, "Platform admin · Personal".
+     * `text` sets one quiet line, "Platform admin · Personal"; `role` sets a
+     * sentence-case badge, "Platform admin", then the account in quiet text.
+     * With `text` and `role` the dropdown's header follows the same case.
      */
     subline?: AccountMenuSubline;
   }>(),
@@ -132,6 +135,10 @@ const identitySub = computed(() => {
   if (role.value) return t.value.roles.individual;
   return t.value.personal;
 });
+// The sentence-case sublines (`text`, `role`) name the role and the account
+// in running text, in the trigger and in the dropdown's header alike.
+const sentence = computed(() => props.subline === 'text' || props.subline === 'role');
+const parts = computed(() => identityParts(me.value, t.value));
 const orgs = computed(() => me.value?.orgs ?? []);
 const activeOrgId = computed(() => me.value?.org_id || '');
 const isPersonal = computed(() => !activeOrgId.value);
@@ -173,6 +180,7 @@ function onExtraItem(item: AccountMenuItem) {
     v-if="principal || !signedInOnly"
     class="lu-am"
     :class="{ 'lu-am-up': opensUp }"
+    :data-subline="subline"
     ref="root"
   >
     <button type="button"
@@ -192,6 +200,14 @@ function onExtraItem(item: AccountMenuItem) {
         <!-- Sub-label (role badge + org / Individual) only when signed in —
              the logged-out "Sign in" trigger stays a single line. -->
         <span v-if="principal && subline === 'text'" class="lu-am-id-line">{{ identityLine(principal, t) }}</span>
+        <span v-else-if="principal && subline === 'role'" class="lu-am-id-role">
+          <span
+            v-if="parts.role"
+            class="lu-am-role"
+            :class="`lu-am-role-${role}`"
+          >{{ parts.role }}</span>
+          <span class="lu-am-id-context">{{ parts.context }}</span>
+        </span>
         <span class="lu-am-id-sub" v-else-if="principal">
           <span
             v-if="roleBadge"
@@ -231,7 +247,15 @@ function onExtraItem(item: AccountMenuItem) {
           <!-- Identity descriptor: the role badge + org/individual context.
                Triggers may hide these to stay compact, so the dropdown is the
                canonical place they always resolve. -->
-          <div v-if="roleBadge || identitySub" class="lu-am-head-meta">
+          <div v-if="sentence" class="lu-am-head-meta">
+            <span
+              v-if="parts.role"
+              class="lu-am-role"
+              :class="`lu-am-role-${role}`"
+            >{{ parts.role }}</span>
+            <span class="lu-am-head-context">{{ parts.context }}</span>
+          </div>
+          <div v-else-if="roleBadge || identitySub" class="lu-am-head-meta">
             <span
               v-if="roleBadge"
               class="lu-am-role"

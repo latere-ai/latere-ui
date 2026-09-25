@@ -81,8 +81,31 @@ export const DEFAULT_ACCOUNT_MENU_LABELS: AccountMenuLabels = {
   },
 };
 
-/** How the trigger states the role and the account under the name. */
-export type AccountMenuSubline = 'badge' | 'text';
+/**
+ * How the trigger states the role and the account under the name: `badge`
+ * (the default) as an uppercase badge beside the organization, `text` as one
+ * quiet line, `role` as a sentence-case badge followed by the account in
+ * quiet text. With `text` and `role` the dropdown's header states them in the
+ * same sentence case.
+ */
+export type AccountMenuSubline = 'badge' | 'text' | 'role';
+
+/**
+ * The role and the account a sentence-case subline states: the role's name,
+ * empty for a person without a role beyond their own account, and the
+ * organization the session is in or the personal label.
+ */
+export function identityParts(
+  principal: { role?: string; org_name?: string } | null | undefined,
+  labels: Pick<AccountMenuLabels, 'personal' | 'roleNames'>,
+): { role: string; context: string } {
+  if (!principal) return { role: '', context: '' };
+  const names = { ...DEFAULT_ACCOUNT_MENU_LABELS.roleNames!, ...labels.roleNames };
+  const role = principal.role && principal.role !== 'individual'
+    ? names[principal.role as keyof AccountRoleLabels] ?? ''
+    : '';
+  return { role, context: principal.org_name || labels.personal };
+}
 
 /**
  * The one quiet line under the name in the `text` subline: the role, then
@@ -95,9 +118,6 @@ export function identityLine(
   labels: Pick<AccountMenuLabels, 'personal' | 'roleNames'>,
 ): string {
   if (!principal) return '';
-  const names = { ...DEFAULT_ACCOUNT_MENU_LABELS.roleNames!, ...labels.roleNames };
-  const role = principal.role && principal.role !== 'individual'
-    ? names[principal.role as keyof AccountRoleLabels] ?? ''
-    : '';
-  return [role, principal.org_name || labels.personal].filter(Boolean).join(' · ');
+  const { role, context } = identityParts(principal, labels);
+  return [role, context].filter(Boolean).join(' · ');
 }
