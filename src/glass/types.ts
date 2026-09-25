@@ -21,6 +21,11 @@ export interface MenuItem {
   /** Style as destructive. */
   danger?: boolean;
   disabled?: boolean;
+  /**
+   * Selection state for a choice menu. Setting it on any item makes every
+   * item a menuitemradio with aria-checked and a leading check column.
+   */
+  checked?: boolean;
 }
 
 /** One option in a GlassSelect. */

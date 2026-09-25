@@ -1,6 +1,6 @@
-/* The menu is the list content; its enclosing GlassPopover supplies the thick
- * glass surface, padding, and radius — so the list itself stays unstyled to
- * avoid a double-frost when nested. */
+/* The menu is the list content; its enclosing GlassPopover supplies the
+ * surface, padding, and radius, so the list itself stays unstyled to avoid a
+ * double frost when nested. */
 .lu-menu { display: flex; flex-direction: column; gap: 1px; min-width: 160px; }
 .lu-menu-item {
   display: flex;
@@ -21,4 +21,30 @@
 .lu-menu-item.is-danger { color: var(--state-error-text, color-mix(in srgb, var(--state-error, #a8412e) 70%, var(--text, #0a0a0a))); }
 .lu-menu-item:disabled { opacity: 0.45; cursor: not-allowed; }
 .lu-menu-item:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: -2px; }
+
+/* A choice menu (theme, language): 32px rows on the control corner, a 16px
+ * check column so every label starts at the same x, and one highlighted row.
+ * Pointer movement moves focus, so focus is the highlight, as in a native
+ * menu; the row fill is the focus indicator and replaces the ring. */
+.lu-menu--checkable { gap: 0; }
+.lu-menu--checkable .lu-menu-item {
+  gap: 8px;
+  min-height: 32px;
+  padding: 0 12px 0 8px;
+  border-radius: var(--lu-control-radius, var(--radius-sm, 6px));
+  line-height: 20px;
+  white-space: nowrap;
+}
+.lu-menu--checkable .lu-menu-item:hover { background: none; }
+.lu-menu--checkable .lu-menu-item:focus,
+.lu-menu--checkable .lu-menu-item:focus-visible {
+  background: var(--bg-hover, var(--bg-raised, rgba(0, 0, 0, 0.05)));
+  outline: none;
+}
+.lu-menu-check { display: grid; place-items: center; flex: none; width: 16px; height: 16px; color: var(--text, #0a0a0a); }
+.lu-menu-check svg { display: block; width: 16px; height: 16px; }
+/* Forced colors drop the row fill, so the ring comes back. */
+@media (forced-colors: active) {
+  .lu-menu--checkable .lu-menu-item:focus { outline: var(--focus-outline, 2px solid CanvasText); outline-offset: -2px; }
+}
 @media (prefers-reduced-motion: reduce) { .lu-menu-item { transition: none; } }
