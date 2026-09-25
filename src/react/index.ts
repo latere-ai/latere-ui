@@ -35,6 +35,7 @@ export type { NavItem, NavGroup, NavFootItem, FlatNavItem, ConsoleNavModel } fro
 export { DEFAULT_NAV_OPEN_KEY } from '../console/openState';
 export { CONSOLE_ICONS, consoleIcon } from '../console/icons';
 export type { ConsoleIconName } from '../console/icons';
+export { ConsoleIcon, type ConsoleIconProps } from './ConsoleIcon';
 export { paletteEntries, filterPalette } from '../console/palette';
 export type { ConsolePaletteItem, ConsolePaletteSearch } from '../console/palette';
 
@@ -49,7 +50,7 @@ export { LATERE_PRODUCTS, type ProductInfo, type ProductSlug } from '../componen
 
 // Account menu — reuses the headless types/defaults from components/accountMenu.ts.
 export { AccountMenu, type AccountMenuProps } from './AccountMenu';
-export { identityLine } from '../components/accountMenu';
+export { identityLine, identityParts } from '../components/accountMenu';
 export type { AccountMenuLabels, AccountMenuLabelOverrides, AccountMenuItem, AccountRoleLabels, AccountMenuSubline } from '../components/accountMenu';
 
 // Session bindings — React context + hooks over the vanilla session core
