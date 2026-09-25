@@ -135,6 +135,9 @@ describe('audience and foot group styles', () => {
     expect(chip).toMatch(/color: var\(--lu-audience-admin/);
     expect(chip).toMatch(/background: color-mix\(in srgb, var\(--lu-audience-admin/);
   });
+  it('lets the nav give up its height before the foot groups scroll', () => {
+    expect(css).toMatch(/\.lu-cs:has\(> \.lu-cs-foot-has-nav\) > \.lu-cs-nav \{\s*flex-shrink: 1000;\s*min-height: calc\(3 \* var\(--lu-cs-row-size, 36px\)\);/);
+  });
   it('lets the foot group area scroll while the account control keeps its height', () => {
     const nav = css.slice(css.indexOf('.lu-cs-foot-nav {'), css.indexOf('}', css.indexOf('.lu-cs-foot-nav {')));
     expect(nav).toMatch(/min-height: 0;/);

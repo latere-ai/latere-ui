@@ -139,6 +139,9 @@
   padding: 0 6px;
   border-radius: var(--radius-xs, 4px);
 }
+.lu-am:is([data-subline="text"], [data-subline="role"]) .lu-am-head-text {
+  flex: 1;
+}
 .lu-am:is([data-subline="text"], [data-subline="role"]) .lu-am-head-meta {
   margin-top: 6px;
 }

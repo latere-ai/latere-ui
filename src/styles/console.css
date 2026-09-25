@@ -461,9 +461,14 @@ html { overscroll-behavior: none; }
 
 /* ===== Bottom groups in the foot (bottomGroups="foot") ===== */
 /* The groups pinned to the bottom and the foot rows share one scroll area
- * above the account control, under the foot's divider. The foot may then
- * shrink with the nav on a short window: the group area scrolls, the account
- * control keeps its height. */
+ * above the account control, under the foot's divider. On a short window the
+ * nav gives up its height first, down to three rows, since it visibly
+ * scrolls; only then does the foot's group area scroll. The account control
+ * keeps its height. */
+.lu-cs:has(> .lu-cs-foot-has-nav) > .lu-cs-nav {
+    flex-shrink: 1000;
+    min-height: calc(3 * var(--lu-cs-row-size, 36px));
+}
 .lu-cs-foot-has-nav {
     display: flex;
     flex-direction: column;
