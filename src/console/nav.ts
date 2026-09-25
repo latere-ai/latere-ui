@@ -21,6 +21,13 @@ export interface NavItem {
   /** Icon name passed through to the host's icon slot. */
   icon?: string;
   /**
+   * Who sees the row, when that is narrower than everyone signed in.
+   * `'admin'` marks a row only people with an admin role are shown: its icon
+   * takes the audience color and, in the expanded rail, a small chip names
+   * the audience after the label. The host still decides who gets the row.
+   */
+  audience?: 'admin';
+  /**
    * Badge for the row: a number renders a count pill, the string 'live'
    * renders a pulsing dot + "live" label, undefined renders nothing.
    */

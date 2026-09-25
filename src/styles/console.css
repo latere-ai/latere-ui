@@ -459,6 +459,62 @@ html { overscroll-behavior: none; }
     overflow: visible;
 }
 
+/* ===== Bottom groups in the foot (bottomGroups="foot") ===== */
+/* The groups pinned to the bottom and the foot rows share one scroll area
+ * above the account control, under the foot's divider. The foot may then
+ * shrink with the nav on a short window: the group area scrolls, the account
+ * control keeps its height. */
+.lu-cs-foot-has-nav {
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    min-height: 0;
+}
+.lu-cs-foot-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    margin-bottom: 6px;
+}
+.lu-cs-foot-nav > .lu-cs-group {
+    gap: inherit;
+}
+.lu-cs-foot-nav > .lu-cs-foot-items {
+    margin-bottom: 0;
+}
+.lu-cs[data-collapsed="true"] .lu-cs-foot-has-nav {
+    flex-direction: column;
+    align-items: center;
+}
+.lu-cs[data-collapsed="true"] .lu-cs-foot-nav {
+    align-self: stretch;
+}
+
+/* ===== Audience: rows only admins are shown ===== */
+/* A row with `audience: 'admin'` draws its icon in the audience color and,
+ * in the expanded rail, names the audience in a small chip after the label.
+ * Hosts set --lu-audience-admin to a tone of their palette; without it the
+ * marker keeps the text colors. */
+.lu-cs-item[data-audience="admin"] .lu-cs-item-icon {
+    color: var(--lu-audience-admin, currentColor);
+}
+.lu-cs-audience {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    height: 18px;
+    padding: 0 6px;
+    border-radius: var(--radius-xs, 4px);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--lu-audience-admin, var(--text-secondary, #666));
+    background: color-mix(in srgb, var(--lu-audience-admin, var(--text-secondary, #666)) 10%, transparent);
+}
+
 /* ===== Compact head and window-concentric geometry ===== */
 /* The rail sits at the window's left and bottom edges and keeps one inset
  * from both, so the account card's corner can be concentric with the

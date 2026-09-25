@@ -74,6 +74,19 @@ interface Props {
   openKey?: string | null;
   /** Rows set in the foot above the #foot slot: links or actions with a value. */
   footItems?: NavFootItem[];
+  /**
+   * Where groups pinned to the bottom render. `'nav'` (the default) ends the
+   * scrolling nav with them; `'foot'` sets them in the foot with the foot
+   * rows, above the #foot slot, so they stay in view while the nav scrolls
+   * and read as one group with the foot rows.
+   */
+  bottomGroups?: 'nav' | 'foot';
+  /**
+   * The chip a row with an `audience` carries in the expanded rail, and the
+   * suffix of its collapsed tooltip. A row whose own label already says it
+   * (a row named "Admin") carries no chip.
+   */
+  audienceLabel?: string;
   /** Injected RouterLink component; falls back to a plain `<a>` off-router. */
   routerLink?: Component;
   /** Home target for the brand link. */
@@ -126,6 +139,8 @@ const props = withDefaults(defineProps<Props>(), {
   liveLabel: 'Live',
   expandLabel: 'Expand sidebar',
   collapseLabel: 'Collapse sidebar',
+  bottomGroups: 'nav',
+  audienceLabel: 'Admin',
 });
 
 const emit = defineEmits<{
@@ -166,15 +181,17 @@ function toggle() {
   setCollapsed(!collapsed.value);
 }
 
-// Top groups first, then bottom-pinned groups. The first bottom group is
+// Top groups first, then bottom-pinned groups, which end the nav or, with
+// `bottomGroups="foot"`, open the foot. The first bottom group in the nav is
 // flagged so CSS can push it (and everything after) to the rail's foot.
-const orderedGroups = computed<(NavGroup & { firstPinned: boolean })[]>(() => {
-  const { top, bottom } = partitionGroups(props.model.groups);
-  return [
-    ...top.map((g) => ({ ...g, firstPinned: false })),
-    ...bottom.map((g, i) => ({ ...g, firstPinned: i === 0 })),
-  ];
-});
+const partitioned = computed(() => partitionGroups(props.model.groups));
+const navGroups = computed<(NavGroup & { firstPinned: boolean })[]>(() => [
+  ...partitioned.value.top.map((g) => ({ ...g, firstPinned: false })),
+  ...(props.bottomGroups === 'foot' ? [] : partitioned.value.bottom.map((g, i) => ({ ...g, firstPinned: i === 0 }))),
+]);
+const footGroups = computed<(NavGroup & { firstPinned: boolean })[]>(() =>
+  props.bottomGroups === 'foot' ? partitioned.value.bottom.map((g) => ({ ...g, firstPinned: false })) : [],
+);
 
 function rowActive(item: NavItem): boolean {
   return props.activeKey !== undefined && item.id === props.activeKey;
@@ -205,6 +222,23 @@ function isOpen(item: NavItem): boolean {
 }
 function onNavKeydown(e: KeyboardEvent) {
   if (navEl.value) handleNavKey(e, navEl.value, setOpen);
+}
+const footNavEl = ref<HTMLElement | null>(null);
+function onFootNavKeydown(e: KeyboardEvent) {
+  if (footNavEl.value) handleNavKey(e, footNavEl.value, setOpen);
+}
+
+// The audience chip a row carries, unless its label already names the
+// audience; and the audience in the collapsed rail's tooltip.
+function namesAudience(item: NavItem): boolean {
+  return item.label.trim().toLowerCase() === props.audienceLabel.trim().toLowerCase();
+}
+function audienceChip(item: NavItem): VNodeChild {
+  if (!item.audience || collapsed.value || namesAudience(item)) return null;
+  return h('span', { class: 'lu-cs-audience' }, props.audienceLabel);
+}
+function audienceTitle(item: NavItem, label: string): string {
+  return item.audience && !namesAudience(item) ? `${label} · ${props.audienceLabel}` : label;
 }
 // A row on the path to the current page: the page itself or a parent of it.
 function inPath(item: NavItem): boolean {
@@ -248,6 +282,7 @@ const LeafRow: FunctionalComponent<{ item: NavItem; depth: number; active?: bool
   const children = [
     h(IconSlot, { item, depth }),
     !collapsed.value ? h('span', { class: 'lu-cs-item-label' }, item.label) : null,
+    audienceChip(item),
     item.dot && !collapsed.value ? h('span', { class: 'lu-cs-dot', 'aria-hidden': 'true' }) : null,
     item.badge !== undefined && !collapsed.value
       ? item.badge === 'live'
@@ -262,7 +297,8 @@ const LeafRow: FunctionalComponent<{ item: NavItem; depth: number; active?: bool
     'data-active': selected ? 'true' : 'false',
     'data-disabled': disabled ? 'true' : 'false',
     'data-nav-id': item.id,
-    title: collapsed.value ? label : disabled ? 'Not yet available' : undefined,
+    'data-audience': item.audience,
+    title: collapsed.value ? audienceTitle(item, label) : disabled ? 'Not yet available' : undefined,
     'aria-current': rowActive(item) ? 'page' : undefined,
     onClick: (e: MouseEvent) => onRowClick(item, e),
   };
@@ -271,6 +307,56 @@ const LeafRow: FunctionalComponent<{ item: NavItem; depth: number; active?: bool
 // Declared so the template's kebab-case attributes reach the render as props
 // (an undeclared `active` would also arrive as '' rather than undefined).
 LeafRow.props = ['item', 'depth', 'active', 'value', 'extraClass'];
+
+// A group's rows, rendered in the nav or in the foot. A parent in the
+// expanded rail is a disclosure over its children, which stay in the DOM and
+// are hidden while folded; in the collapsed rail it is a link that carries
+// the selection while any page under it is open. Every row passes through
+// the #item slot when the host fills it.
+function itemRow(item: NavItem, depth: number): VNodeChild {
+  return slots.item
+    ? slots.item({ item, active: rowActive(item), collapsed: collapsed.value, disabled: isItemDisabled(item) })
+    : h(LeafRow, { key: item.id, item, depth });
+}
+const GroupRows: FunctionalComponent<{ items: NavItem[] }> = ({ items }) =>
+  items.flatMap((item): VNodeChild[] => {
+    if (hasChildren(item) && !collapsed.value) {
+      const open = isOpen(item);
+      return [
+        h('button', {
+          key: item.id,
+          type: 'button',
+          class: 'lu-cs-item lu-cs-parent',
+          'data-active': rowActive(item) ? 'true' : 'false',
+          'data-path': inPath(item) ? 'true' : 'false',
+          'data-disabled': item.disabled === true ? 'true' : 'false',
+          'data-nav-id': item.id,
+          'data-audience': item.audience,
+          'aria-expanded': open ? 'true' : 'false',
+          'aria-controls': groupId(item),
+          disabled: item.disabled === true,
+          onClick: () => setOpen(item.id, !open),
+        }, [
+          h(IconSlot, { item, depth: 0 }),
+          h('span', { class: 'lu-cs-item-label' }, item.label),
+          audienceChip(item),
+          item.dot ? h('span', { class: 'lu-cs-dot', 'aria-hidden': 'true' }) : null,
+          h('span', { class: 'lu-cs-item-chevron', 'aria-hidden': 'true' }, [h(ConsoleIcon, { name: 'chevron', size: 14 })]),
+        ]),
+        h('div', {
+          key: `${item.id}:children`,
+          id: groupId(item),
+          class: 'lu-cs-children',
+          role: 'group',
+          'aria-label': item.label,
+          hidden: !open,
+        }, item.children!.map((child) => itemRow(child, 1))),
+      ];
+    }
+    if (hasChildren(item)) return [h(LeafRow, { key: item.id, item: collapsedLink(item), depth: 0, active: inPath(item) })];
+    return [itemRow(item, 0)];
+  });
+GroupRows.props = ['items'];
 
 // The element a nav row renders as: the injected RouterLink, a plain anchor,
 // or a non-interactive span for disabled rows.
@@ -415,62 +501,14 @@ function letter(label: string): string {
 
     <nav ref="navEl" class="lu-cs-nav" @keydown="onNavKeydown">
       <div
-        v-for="(g, gi) in orderedGroups"
+        v-for="(g, gi) in navGroups"
         :key="`g-${gi}`"
         class="lu-cs-group"
         :class="{ 'lu-cs-group-pinned': g.firstPinned }"
         :data-pin="g.pin === 'bottom' ? 'bottom' : 'top'"
       >
         <div v-if="g.label && !collapsed" class="lu-cs-group-label">{{ g.label }}</div>
-        <template v-for="item in g.items" :key="item.id">
-          <!-- A parent in the expanded rail: a disclosure over its children,
-               which stay in the DOM and are hidden while folded. -->
-          <template v-if="hasChildren(item) && !collapsed">
-            <button
-              type="button"
-              class="lu-cs-item lu-cs-parent"
-              :data-active="rowActive(item) ? 'true' : 'false'"
-              :data-path="inPath(item) ? 'true' : 'false'"
-              :data-disabled="item.disabled === true ? 'true' : 'false'"
-              :data-nav-id="item.id"
-              :aria-expanded="isOpen(item) ? 'true' : 'false'"
-              :aria-controls="groupId(item)"
-              :disabled="item.disabled === true"
-              @click="setOpen(item.id, !isOpen(item))"
-            >
-              <IconSlot :item="item" :depth="0" />
-              <span class="lu-cs-item-label">{{ item.label }}</span>
-              <span v-if="item.dot" class="lu-cs-dot" aria-hidden="true" />
-              <span class="lu-cs-item-chevron" aria-hidden="true"><ConsoleIcon name="chevron" :size="14" /></span>
-            </button>
-            <div :id="groupId(item)" class="lu-cs-children" role="group" :aria-label="item.label" :hidden="!isOpen(item)">
-              <slot
-                v-for="child in item.children"
-                :key="child.id"
-                name="item"
-                :item="child"
-                :active="rowActive(child)"
-                :collapsed="collapsed"
-                :disabled="isItemDisabled(child)"
-              >
-                <LeafRow :item="child" :depth="1" />
-              </slot>
-            </div>
-          </template>
-          <!-- A parent in the collapsed rail: a link that carries the
-               selection while any page under it is open. -->
-          <LeafRow v-else-if="hasChildren(item)" :item="collapsedLink(item)" :depth="0" :active="inPath(item)" />
-          <slot
-            v-else
-            name="item"
-            :item="item"
-            :active="rowActive(item)"
-            :collapsed="collapsed"
-            :disabled="isItemDisabled(item)"
-          >
-            <LeafRow :item="item" :depth="0" />
-          </slot>
-        </template>
+        <GroupRows :items="g.items" />
       </div>
 
       <!-- App-specific contextual content (recent lists, filters, workspace
@@ -478,8 +516,22 @@ function letter(label: string): string {
       <slot name="extra" :collapsed="collapsed" />
     </nav>
 
-    <div class="lu-cs-foot">
-      <div v-if="footItems && footItems.length > 0" class="lu-cs-foot-items">
+    <div class="lu-cs-foot" :class="{ 'lu-cs-foot-has-nav': footGroups.length > 0 }">
+      <div v-if="footGroups.length > 0" ref="footNavEl" class="lu-cs-foot-nav" @keydown="onFootNavKeydown">
+        <div
+          v-for="(g, gi) in footGroups"
+          :key="`g-${gi}`"
+          class="lu-cs-group"
+          data-pin="bottom"
+        >
+          <div v-if="g.label && !collapsed" class="lu-cs-group-label">{{ g.label }}</div>
+          <GroupRows :items="g.items" />
+        </div>
+        <div v-if="footItems && footItems.length > 0" class="lu-cs-foot-items">
+          <LeafRow v-for="item in footItems" :key="item.id" :item="item" :depth="0" :value="item.value" extra-class="lu-cs-foot-item" />
+        </div>
+      </div>
+      <div v-else-if="footItems && footItems.length > 0" class="lu-cs-foot-items">
         <LeafRow v-for="item in footItems" :key="item.id" :item="item" :depth="0" :value="item.value" extra-class="lu-cs-foot-item" />
       </div>
       <slot name="foot" :collapsed="collapsed" />

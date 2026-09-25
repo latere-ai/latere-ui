@@ -160,6 +160,19 @@ export interface ConsoleSidebarProps {
   extra?: SlotContent;
   /** Rows set in the foot above `foot`: links or actions with a value. */
   footItems?: NavFootItem[];
+  /**
+   * Where groups pinned to the bottom render. `'nav'` (the default) ends the
+   * scrolling nav with them; `'foot'` sets them in the foot with the foot
+   * rows, above the account control, so they stay in view while the nav
+   * scrolls and read as one group with the foot rows.
+   */
+  bottomGroups?: 'nav' | 'foot';
+  /**
+   * The chip a row with an `audience` carries in the expanded rail, and the
+   * suffix of its collapsed tooltip. A row whose own label already says it
+   * (a row named "Admin") carries no chip.
+   */
+  audienceLabel?: string;
   /** The account control / foot content. */
   foot?: SlotContent;
 }
@@ -201,6 +214,8 @@ export function ConsoleSidebar({
   renderIcon,
   extra,
   footItems,
+  bottomGroups = 'nav',
+  audienceLabel = 'Admin',
   foot,
 }: ConsoleSidebarProps) {
   const [internalCollapsed, setInternalCollapsed] = useState(false);
@@ -235,16 +250,21 @@ export function ConsoleSidebar({
     return () => document.removeEventListener('keydown', onKeydown);
   }, []);
 
-  const orderedGroups = useMemo<(NavGroup & { firstPinned: boolean })[]>(() => {
+  // Top groups first, then the bottom-pinned ones, which end the nav or, with
+  // `bottomGroups="foot"`, open the foot.
+  const { navGroups, footGroups } = useMemo(() => {
     const { top: topGroups, bottom } = partitionGroups(model.groups);
-    return [
-      ...topGroups.map((g) => ({ ...g, firstPinned: false })),
-      ...bottom.map((g, i) => ({ ...g, firstPinned: i === 0 })),
-    ];
-  }, [model.groups]);
+    const pinned = bottom.map((g, i) => ({ ...g, firstPinned: i === 0 }));
+    const inFoot = bottomGroups === 'foot';
+    return {
+      navGroups: [...topGroups.map((g) => ({ ...g, firstPinned: false })), ...(inFoot ? [] : pinned)] as (NavGroup & { firstPinned: boolean })[],
+      footGroups: (inFoot ? pinned.map((g) => ({ ...g, firstPinned: false })) : []) as (NavGroup & { firstPinned: boolean })[],
+    };
+  }, [model.groups, bottomGroups]);
 
   const navId = useId();
   const navRef = useRef<HTMLElement>(null);
+  const footNavRef = useRef<HTMLDivElement>(null);
   const path = useMemo(() => activePath(model.groups, activeKey), [model.groups, activeKey]);
   const [openState, setOpenState] = useState<NavOpenState>(() => readNavOpen(openKey));
   // Arriving at a page opens every parent above it; the viewer's choice for
@@ -267,6 +287,22 @@ export function ConsoleSidebar({
 
   function onNavKeyDown(e: ReactKeyboardEvent<HTMLElement>) {
     if (navRef.current) handleNavKey(e.nativeEvent, navRef.current, setOpen);
+  }
+  function onFootNavKeyDown(e: ReactKeyboardEvent<HTMLElement>) {
+    if (footNavRef.current) handleNavKey(e.nativeEvent, footNavRef.current, setOpen);
+  }
+
+  // The audience chip a row carries, unless its label already names the
+  // audience; and the audience in the collapsed rail's tooltip.
+  function namesAudience(item: NavItem): boolean {
+    return item.label.trim().toLowerCase() === audienceLabel.trim().toLowerCase();
+  }
+  function audienceChip(item: NavItem): ReactNode {
+    if (!item.audience || collapsed || namesAudience(item)) return null;
+    return <span className="lu-cs-audience">{audienceLabel}</span>;
+  }
+  function audienceTitle(item: NavItem, label: string): string {
+    return item.audience && !namesAudience(item) ? `${label} · ${audienceLabel}` : label;
   }
 
   function rowActive(item: NavItem): boolean {
@@ -349,12 +385,14 @@ export function ConsoleSidebar({
         'data-active': active ? 'true' : 'false',
         'data-disabled': disabled ? 'true' : 'false',
         'data-nav-id': item.id,
-        title: collapsed ? label : disabled ? 'Not yet available' : undefined,
+        'data-audience': item.audience,
+        title: collapsed ? audienceTitle(item, label) : disabled ? 'Not yet available' : undefined,
         'aria-current': rowActive(item) ? 'page' : undefined,
         onClick: (e: ReactMouseEvent) => onRowClick(item, e),
       },
       iconSlot(item, depth),
       !collapsed && <span className="lu-cs-item-label">{item.label}</span>,
+      audienceChip(item),
       item.dot && !collapsed && <span className="lu-cs-dot" aria-hidden="true" />,
       item.badge !== undefined && !collapsed
         ? item.badge === 'live'
@@ -391,6 +429,7 @@ export function ConsoleSidebar({
           data-path={inPath(item) ? 'true' : 'false'}
           data-disabled={disabled ? 'true' : 'false'}
           data-nav-id={item.id}
+          data-audience={item.audience}
           aria-expanded={open}
           aria-controls={groupId}
           disabled={disabled}
@@ -398,6 +437,7 @@ export function ConsoleSidebar({
         >
           {iconSlot(item, depth)}
           <span className="lu-cs-item-label">{item.label}</span>
+          {audienceChip(item)}
           {item.dot && <span className="lu-cs-dot" aria-hidden="true" />}
           <span className="lu-cs-item-chevron" aria-hidden="true"><ConsoleIcon name="chevron" size={14} /></span>
         </button>
@@ -423,6 +463,25 @@ export function ConsoleSidebar({
     }
     return defaultRow(item, depth);
   }
+
+  function group(g: NavGroup & { firstPinned: boolean }, gi: number): ReactNode {
+    return (
+      <div
+        key={`g-${gi}`}
+        className={cx('lu-cs-group', g.firstPinned && 'lu-cs-group-pinned')}
+        data-pin={g.pin === 'bottom' ? 'bottom' : 'top'}
+      >
+        {g.label && !collapsed && <div className="lu-cs-group-label">{g.label}</div>}
+        {g.items.map((item) => row(item, 0))}
+      </div>
+    );
+  }
+
+  const footRows = footItems && footItems.length > 0 ? (
+    <div className="lu-cs-foot-items">
+      {footItems.map((item) => defaultRow(item, 0, { value: item.value, className: 'lu-cs-foot-item' }))}
+    </div>
+  ) : null;
 
   // The compact collapsed head is one button: the logo, which turns into the
   // expand glyph on hover or focus.
@@ -528,26 +587,18 @@ export function ConsoleSidebar({
       )}
 
       <nav className="lu-cs-nav" ref={navRef} onKeyDown={onNavKeyDown}>
-        {orderedGroups.map((g, gi) => (
-          <div
-            key={`g-${gi}`}
-            className={cx('lu-cs-group', g.firstPinned && 'lu-cs-group-pinned')}
-            data-pin={g.pin === 'bottom' ? 'bottom' : 'top'}
-          >
-            {g.label && !collapsed && <div className="lu-cs-group-label">{g.label}</div>}
-            {g.items.map((item) => row(item, 0))}
-          </div>
-        ))}
+        {navGroups.map(group)}
 
         {renderSlot(extra, collapsed)}
       </nav>
 
-      <div className="lu-cs-foot">
-        {footItems && footItems.length > 0 && (
-          <div className="lu-cs-foot-items">
-            {footItems.map((item) => defaultRow(item, 0, { value: item.value, className: 'lu-cs-foot-item' }))}
+      <div className={cx('lu-cs-foot', footGroups.length > 0 && 'lu-cs-foot-has-nav')}>
+        {footGroups.length > 0 ? (
+          <div className="lu-cs-foot-nav" ref={footNavRef} onKeyDown={onFootNavKeyDown}>
+            {footGroups.map(group)}
+            {footRows}
           </div>
-        )}
+        ) : footRows}
         {renderSlot(foot, collapsed)}
       </div>
     </aside>
