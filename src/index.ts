@@ -113,6 +113,7 @@ export { default as GlassButton } from './components/GlassButton.vue';
 export { default as GlassField } from './components/GlassField.vue';
 export { default as GlassBadge } from './components/GlassBadge.vue';
 export { default as GlassAlert } from './components/GlassAlert.vue';
+export type { GlassAlertTone } from './components/glassAlert';
 export { default as GlassIconButton } from './components/GlassIconButton.vue';
 export { default as GlassSwitch } from './components/GlassSwitch.vue';
 export { default as GlassSegmented } from './components/GlassSegmented.vue';

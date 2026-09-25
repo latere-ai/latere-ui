@@ -1,31 +1,61 @@
-/* GlassAlert — de-scoped from the SFC so the Vue and React adapters share
- * one stylesheet. Load after `latere-ui/glass` (the material layer). */
-.lu-alert {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 14px 16px;
+/* GlassAlert: shared by the Vue and React adapters. Load after
+ * `latere-ui/glass` (the material layer).
+ *
+ * Anatomy: a three-column grid of the tone icon, the text column and the
+ * dismiss. The title and the body share the text column, so every line starts
+ * on one left edge beside the icon. The frame is a full hairline mixed toward
+ * the tone and the fill a faint wash of it; no edge of the frame is heavier
+ * than another. The doubled class outranks the `.lu-glass` material so the
+ * notice stays flat wherever the two sheets load. */
+.lu-alert.lu-alert {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  column-gap: 10px;
+  align-items: start;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--tone) 26%, var(--glass-border, var(--border, rgba(0, 0, 0, 0.08))));
   border-radius: var(--radius-md, 8px);
-  border-left: 3px solid var(--tone);
+  background-image: linear-gradient(
+    color-mix(in srgb, var(--tone) 6%, transparent),
+    color-mix(in srgb, var(--tone) 6%, transparent)
+  );
+  box-shadow: none;
   color: var(--text, #0a0a0a);
+  font-size: var(--fs-body-sm, 13px);
+  line-height: 20px;
 }
-.lu-alert-body { flex: 1; min-width: 0; }
+/* The icon sits on the first line's center: a 20px line, a 16px glyph. */
+.lu-alert-icon {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 20px;
+  color: var(--tone);
+}
+.lu-alert-icon .lu-ci { display: block; }
+.lu-alert-body { min-width: 0; }
 .lu-alert-title {
   font-weight: var(--fw-semibold, 600);
-  font-size: var(--fs-body-sm, 13px);
+  font-size: inherit;
+  line-height: inherit;
   color: var(--text, #0a0a0a);
-  margin: 0 0 2px;
+  margin: 0;
 }
-.lu-alert-text { font-size: var(--fs-body-sm, 13px); color: var(--text-secondary, #666); }
+.lu-alert-text { font-size: inherit; line-height: inherit; color: var(--text-secondary, #666); }
 .lu-alert-close {
   flex: none;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
   background: none;
   border: none;
+  border-radius: var(--radius-xs, 4px);
   cursor: pointer;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1;
   color: var(--text-muted, #a0a0a0);
-  padding: 0 2px;
+  padding: 0;
 }
 .lu-alert-close:hover { color: var(--text, #0a0a0a); }
 .lu-alert-close:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: 2px; }

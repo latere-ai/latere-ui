@@ -37,6 +37,19 @@ describe('GlassAlert (react)', () => {
     expect((b.firstElementChild as HTMLElement).getAttribute('role')).toBe('alert');
   });
 
+  it('leads with the tone icon and keeps title and body in one column, as the Vue adapter', () => {
+    const icons = { info: 'info', success: 'check-circle', warning: 'alert-triangle', error: 'x-circle' } as const;
+    for (const [tone, icon] of Object.entries(icons)) {
+      const { container } = render(<GlassAlert tone={tone as keyof typeof icons} title="T">body</GlassAlert>);
+      const el = container.firstElementChild as HTMLElement;
+      expect(el.getAttribute('data-tone')).toBe(tone);
+      expect([...el.children].map((c) => c.className)).toEqual(['lu-alert-icon', 'lu-alert-body']);
+      expect(el.querySelector('.lu-alert-icon')!.getAttribute('aria-hidden')).toBe('true');
+      expect(el.querySelector('.lu-alert-icon svg')!.getAttribute('data-icon')).toBe(icon);
+      expect(el.querySelector('.lu-alert-body .lu-alert-title')!.textContent).toBe('T');
+    }
+  });
+
   it('dismissible shows the labeled close button and calls onDismiss', () => {
     const onDismiss = vi.fn();
     const { getByLabelText } = render(

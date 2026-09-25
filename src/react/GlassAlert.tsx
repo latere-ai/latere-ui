@@ -1,17 +1,12 @@
-// React adapter of GlassAlert.vue — an inline notice banner on a regular-glass
-// surface, with a tone accent bar and optional dismiss.
-// Requires `import 'latere-ui/glass'`.
+// React adapter of GlassAlert.vue: an inline notice with a leading tone icon,
+// the title and the body on one left edge, a hairline frame with a faint wash
+// of the tone, and an optional dismiss. Requires `import 'latere-ui/glass'`.
 import type { CSSProperties, ReactNode } from 'react';
 import '../styles/components/glass-alert.css';
+import { ALERT_TONE_ICON, ALERT_TONE_VAR, alertRole, alertTone, type GlassAlertTone } from '../components/glassAlert';
+import { ConsoleIcon } from './ConsoleIcon';
 
-export type GlassAlertTone = 'info' | 'success' | 'warning' | 'error';
-
-const TONE_VAR: Record<string, string> = {
-  info: 'var(--accent, #171717)',
-  success: 'var(--state-running, #4a7558)',
-  warning: 'var(--state-idle, #b48a4a)',
-  error: 'var(--state-error, #a8412e)',
-};
+export type { GlassAlertTone };
 
 export interface GlassAlertProps {
   tone?: GlassAlertTone;
@@ -23,16 +18,16 @@ export interface GlassAlertProps {
 }
 
 export function GlassAlert({
-  tone = 'info',
+  tone: toneProp = 'info',
   title,
   dismissible = false,
   onDismiss,
   children,
 }: GlassAlertProps) {
-  const accent = TONE_VAR[tone] ?? TONE_VAR.info;
-  const role = tone === 'error' ? 'alert' : 'status';
+  const tone = alertTone(toneProp);
   return (
-    <div className="lu-alert lu-glass" role={role} style={{ '--tone': accent } as CSSProperties}>
+    <div className="lu-alert lu-glass" role={alertRole(tone)} data-tone={tone} style={{ '--tone': ALERT_TONE_VAR[tone] } as CSSProperties}>
+      <span className="lu-alert-icon" aria-hidden="true"><ConsoleIcon name={ALERT_TONE_ICON[tone]} size={16} /></span>
       <div className="lu-alert-body">
         {title && <p className="lu-alert-title">{title}</p>}
         <div className="lu-alert-text">{children}</div>

@@ -140,6 +140,35 @@ export const CONSOLE_ICONS = {
     p('M7 7h10v10'),
     p('M7 17 17 7'),
   ],
+  /** Lucide "info": the leading mark of an info notice. */
+  info: [
+    ['circle', { cx: '12', cy: '12', r: '10' }],
+    p('M12 16v-4'),
+    p('M12 8h.01'),
+  ],
+  /** Lucide "circle-check": the leading mark of a success notice. */
+  'check-circle': [
+    ['circle', { cx: '12', cy: '12', r: '10' }],
+    p('m9 12 2 2 4-4'),
+  ],
+  /** Lucide "triangle-alert": the leading mark of a warning notice. */
+  'alert-triangle': [
+    p('m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3'),
+    p('M12 9v4'),
+    p('M12 17h.01'),
+  ],
+  /** Lucide "circle-x": the leading mark of an error notice. */
+  'x-circle': [
+    ['circle', { cx: '12', cy: '12', r: '10' }],
+    p('m15 9-6 6'),
+    p('m9 9 6 6'),
+  ],
+  /** Lucide "ellipsis": the trigger of a row's action menu. */
+  more: [
+    ['circle', { cx: '12', cy: '12', r: '1' }],
+    ['circle', { cx: '19', cy: '12', r: '1' }],
+    ['circle', { cx: '5', cy: '12', r: '1' }],
+  ],
 } as const satisfies Record<string, readonly ConsoleIconElement[]>;
 
 /** A name in the built-in set. */
