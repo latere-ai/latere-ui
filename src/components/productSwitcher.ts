@@ -23,7 +23,11 @@ export interface ProductInfo {
   slug: ProductSlug | (string & {});
   /** English display name. Pass a translated `products` array to localize. */
   name: string;
-  /** Console origin, no trailing slash (e.g. "https://lux.latere.ai"). */
+  /**
+   * Where the product is used, no trailing slash: a console origin such as
+   * "https://wf.latere.ai", or the product's section of the platform console
+   * such as "https://platform.latere.ai/console/models".
+   */
   url: string;
   /** Primary brand color, for hosts that need a single solid swatch. */
   color: string;
@@ -69,7 +73,7 @@ export const LATERE_PRODUCTS: readonly ProductInfo[] = [
   {
     slug: 'lux',
     name: 'Lux',
-    url: 'https://lux.latere.ai',
+    url: 'https://platform.latere.ai/console/models',
     color: '#3a4ed1',
     brandClass: 'lux-brand',
     icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3a4ed1" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 4l8 14H4z"/><path d="M2 11h2M20 11h2M12 20v2" opacity="0.7"/></svg>',

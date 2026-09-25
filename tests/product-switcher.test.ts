@@ -32,6 +32,16 @@ describe('product registry', () => {
     }
   });
 
+  // The hosted Lux gateway and its host were deleted on 2026-09-25; models are
+  // managed in the platform console's Models section.
+  it('sends Lux to the platform console, not the retired gateway host', () => {
+    const lux = LATERE_PRODUCTS.find((p) => p.slug === 'lux')!;
+    expect(lux.url).toBe('https://platform.latere.ai/console/models');
+    for (const p of LATERE_PRODUCTS) {
+      expect(new URL(p.url).hostname).not.toBe('lux.latere.ai');
+    }
+  });
+
   it('points every product at an https latere.ai origin with no trailing slash', () => {
     for (const p of LATERE_PRODUCTS) {
       const u = new URL(p.url);
