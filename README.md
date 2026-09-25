@@ -34,6 +34,7 @@ Import `latere-ui/presets` after the shared styles and set `data-design="replich
 | Documentation | Grouped index, article, table of contents, previous/next navigation | Vue and React |
 | Site chrome | Full and compact footer, theme and language controls, logo | Vue and React |
 | Session | API client, account resolution, organization switching, session bindings | Vue and React |
+| Telemetry | Page load, request and Core Web Vitals traces sent to your backend's telemetry relay | Any |
 
 The package ships `.vue`, `.tsx`, `.ts`, and `.css` source. Your application compiles it with its own toolchain. Both adapters expose every visual component. React imports come from [latere-ui/react](src/react/index.ts); the [API guide](docs/api-guide.md#react) explains controlled values and callbacks.
 
@@ -117,8 +118,9 @@ Use regular glass for panels and navigation, thick glass for readable overlays, 
 | `latere-ui/presets` | Optional Replichai, Wallfacer and Origo component appearances |
 | `latere-ui/brand` | Product wordmark gradients |
 | `latere-ui/markdown` | Markdown helpers with TOC-compatible heading IDs |
+| `latere-ui/telemetry` | Browser telemetry through your backend's relay, loaded after the page |
 
-For exact props, events, router integration, footer locales, and session setup, see the [integration guide](docs/api-guide.md) and [React shell examples](docs/react-shell.md). English, Chinese, and German footer dictionaries are bundled; the default language dropdown offers English and Chinese.
+For exact props, events, router integration, footer locales, session setup, and [browser telemetry](docs/api-guide.md#browser-telemetry), see the [integration guide](docs/api-guide.md) and [React shell examples](docs/react-shell.md). English, Chinese, and German footer dictionaries are bundled; the default language dropdown offers English and Chinese.
 
 `SiteFooter` is Latere's site footer. On `main`, both layouts group its destinations into Applications (Wallfacer and Lectio), Research (ReplicHAI), and Platform (Latere Platform), and the full layout adds Latere, Legal, and Community columns. Compact groups wrap on small screens. The groups and their translations are shared by Vue and React across all appearances.
 

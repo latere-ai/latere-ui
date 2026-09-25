@@ -1,12 +1,14 @@
 ---
 title: latere-ui/telemetry, one browser telemetry entry for every frontend
-status: validated
+status: complete
 depends_on: []
 affects:
   - src/telemetry/index.ts (new)
   - src/telemetry/options.ts (new)
   - src/telemetry/sdk.ts (new)
   - tests/telemetry*.test.ts (new)
+  - tests/visual/telemetry.spec.ts, telemetry.html, telemetry-page.ts (new)
+  - tests/visual/vite.config.ts (prebundled SDK packages)
   - package.json (exports "./telemetry", dependencies)
   - bun.lock
   - docs/api-guide.md (Browser telemetry section)
@@ -157,9 +159,10 @@ are local constants until the conventions package publishes them.
 ## Loading strategy and size
 
 `startTelemetry` is the only code on the page's critical path: option
-validation, a sampling draw and a scheduler, a few hundred bytes. The SDK,
+validation, a sampling draw and a scheduler, about 1 KB gzipped. The SDK,
 the instrumentations and `web-vitals` sit behind one dynamic `import()`, so
-any bundler with code splitting emits them as a separate chunk.
+any bundler with code splitting emits them as a separate chunk: 92 KB
+minified, 28 KB gzipped, measured with `bun build --minify --splitting`.
 
 The chunk is requested after the page's `load` event, in an idle callback
 (`requestIdleCallback` with a timeout, or a short `setTimeout` where idle
@@ -246,3 +249,19 @@ dashboard filtered on the old name is updated with it.
   requests carry `traceparent` and cross-origin requests do not.
 - Web vitals reported on hide are included in the flush triggered by the
   same hide.
+
+## Verification
+
+- Unit tests for the entry: no import before `load` and the idle callback,
+  the timer fallback, one load per page, the sampling draw, refused options,
+  and a failing chunk or SDK start that ends in one debug line. A separate
+  test runs the entry without a DOM.
+- Unit tests for the SDK half against a recording exporter: the traces URL,
+  the disabled built-in hide flush, resource attributes, redacted URLs, the
+  relay excluded from tracing, `traceparent` on same-origin requests only,
+  and a web vital finalized by a hide leaving with that same hide.
+- `tests/visual/telemetry.spec.ts` loads a static page in Chromium and checks
+  that the chunk is requested after `loadEventEnd`, that an application
+  request carries `traceparent`, and that a hide delivers `documentLoad`,
+  fetch and `browser.web_vital` spans (FCP, TTFB, LCP, CLS) to the relay
+  route with the expected resource and without query strings.

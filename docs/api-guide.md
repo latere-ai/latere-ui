@@ -1,6 +1,6 @@
 # Integration guide
 
-Precise examples for footer preferences, console navigation, documentation, glass materials, and session bindings. This guide tracks `main`; changes not yet in a release are listed under Unreleased in the [changelog](../CHANGELOG.md#unreleased). Start with the [README](../README.md) for installation or the [design guide](design-system.md) for visual composition.
+Precise examples for footer preferences, console navigation, documentation, glass materials, session bindings, and browser telemetry. This guide tracks `main`; changes not yet in a release are listed under Unreleased in the [changelog](../CHANGELOG.md#unreleased). Start with the [README](../README.md) for installation or the [design guide](design-system.md) for visual composition.
 
 ![Tokens, materials, components, and composed surfaces](figures/design-skeleton.svg)
 
@@ -492,6 +492,88 @@ the browser side: it reads `GET /api/logout`, loads each entry of the
 answer's `front_channel_uris` in a hidden frame so other applications clear
 their own sessions, waits at most 2 seconds per frame, and then navigates to
 `post_logout_redirect`.
+
+## Browser telemetry
+
+`latere-ui/telemetry` records how pages load and how fast they respond, and
+sends it to your application's own backend as OpenTelemetry traces. It works
+with any framework, or none. Enabling it takes one route on the server and one
+call in the browser.
+
+On the server, mount the telemetry relay from `latere.ai/x/pkg/otel` on the
+application's origin:
+
+```go
+mux.Handle("POST /v1/telemetry/", otel.TelemetryProxy("/v1/telemetry"))
+```
+
+The relay forwards `POST /v1/telemetry/v1/traces` to the OTLP collector named
+by `OTEL_EXPORTER_OTLP_ENDPOINT` and adds `OTEL_EXPORTER_OTLP_HEADERS` on the
+way, so the collector's credentials never reach the browser. It needs no
+sign-in, which is why it is bounded by a byte budget instead: over budget it
+answers `429` with `Retry-After`, the browser retries a few times within the
+export timeout and then drops that batch. Without a collector configured it
+answers `503` and the browser drops batches quietly.
+
+In the browser, call `startTelemetry` once at startup:
+
+```ts
+import { startTelemetry } from 'latere-ui/telemetry';
+
+if (import.meta.env.PROD) {
+  startTelemetry({ service: 'example-web', version: '1.4.0', environment: 'production' });
+}
+```
+
+| Option | Default | Meaning |
+|---|---|---|
+| `service` | required | `service.name` of the browser spans. Name it `<product>-web`, so the browser half of a product sits beside its backend service in queries. |
+| `endpoint` | `'/v1/telemetry'` | The prefix the relay is mounted on. Must be on the page's origin; another origin disables telemetry. |
+| `version` | none | `service.version` |
+| `environment` | none | `deployment.environment.name` |
+| `sampleRatio` | `1` | Share of page loads that record, from 0 to 1. The draw happens before anything is downloaded, so an unsampled page costs nothing and a sampled page records all of its spans. |
+
+Only call it where the relay is mounted: a development server without one
+turns every export into a failed request in the network log. Guard the call
+the way the example does, or on whatever tells your application it is
+deployed.
+
+`startTelemetry` returns nothing and never throws. A second call is ignored,
+and on the server (server rendering, Node tests) the call does nothing. The
+OpenTelemetry SDK is not part of your entry bundle: the call waits for the
+page's `load` event and an idle moment, then imports the SDK as its own chunk
+(about 28 KB gzipped). Any bundler with code splitting emits that chunk, for
+example Vite, or `Bun.build` with `splitting: true`. Loading late loses
+nothing the page already did: page load timing and the Web Vitals are read
+from the browser's buffered performance entries. Requests made before the
+chunk arrives are not traced.
+
+What gets recorded:
+
+| Span | Recorded for |
+|---|---|
+| `documentLoad`, `documentFetch`, `resourceFetch` | The page load and each resource it fetched, from the browser's navigation and resource timing |
+| `HTTP GET`, `HTTP POST`, … | Each `fetch()` and `XMLHttpRequest`, with method, URL and status |
+| `browser.web_vital` | Each Core Web Vitals report: LCP, INP, CLS, FCP and TTFB |
+
+A `browser.web_vital` span carries `browser.web_vital.name` (`lcp`, `inp`,
+`cls`, `fcp` or `ttfb`), `.value`, `.delta`, `.id`, `.rating` (`good`,
+`needs-improvement` or `poor`) and `.navigation_type`, the attribute names of
+the OpenTelemetry `browser.web_vital` convention, plus `url.path`. CLS is
+unitless; the others are milliseconds. Requests to your own origin carry a
+`traceparent` header, so a browser request and the backend spans it caused
+share one trace; requests to other origins never get the header. The relay's
+own requests are not traced.
+
+Queued spans are sent when the page is hidden or unloaded, including the
+final LCP, CLS and INP values, which are only known at that moment. The
+upload uses `fetch` with `keepalive`, so it completes after the page is gone.
+
+Privacy: the module sets no cookies, reads no storage, and adds no user,
+account or session identifier. URLs are the only page data it records, and
+the query string and fragment are removed from every recorded URL, so tokens
+and search terms in links are not sent. The browser's user agent string is
+recorded with page loads and requests.
 
 ## React
 
