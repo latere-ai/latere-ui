@@ -94,7 +94,17 @@ A control's shape should survive its different states. Review the resting contro
 
 ![React fields and choice controls in the dark theme](../tests/visual/goldens/darwin-27/react-forms-dark-desktop.png)
 
-Use `GlassBadge` for compact status, `GlassAlert` for a message that needs room, and `GlassProgress` or `GlassSpinner` for work in progress. Keep the status label meaningful without relying on its color.
+Use `GlassBadge` for compact status, `GlassAlert` for a message that needs room, and `GlassProgress` or `GlassSpinner` for work in progress. Keep the status label meaningful without relying on its color. An alert leads with an icon in its tone and keeps an even hairline frame; weight on one edge of a box reads as decoration, not as meaning.
+
+Size controls from one scale. Buttons, fields and selects share a height (32px, and 28px for small controls) and a corner, so a field and the button that submits it sit on one baseline. A screen has one primary action in inverted ink; other actions are bordered or quiet. A destructive action among others is set as text, or lives in a row's menu; only the confirming button of a dialog fills with the danger color.
+
+## Tell links from actions
+
+An action is a button, never an underlined word. A link inside prose keeps a constant underline, a hairline set clear of the descenders in a softened tone of the link color, because the line tells the reader the words lead somewhere. A navigational link in the interface, such as a breadcrumb, a row name or a sidebar entry, carries no underline; its place and its color say it leads somewhere. No link gains or loses its underline with the pointer.
+
+## Mark what only admins see
+
+A row, a panel or a page only people with an admin role are shown carries one marker: the audience color on its icon and a small chip that names the audience. Use the same marker everywhere it holds, in the navigation and inside screens everyone sees, so an admin can tell at a glance what other people will not find.
 
 ## Compose a screen
 

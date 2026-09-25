@@ -154,7 +154,35 @@ With `compact`, the rail keeps `--lu-cs-inset` (12px) from the window's left
 and bottom edges and rounds the account card by `--radius-window` (26px, the
 corner macOS 26 draws around Safari) minus that inset, so the card's corner
 follows the window's. Pass `subline="text"` to `AccountMenu` for one quiet
-line under the name, "Platform admin · Personal", in place of the badge.
+line under the name, "Platform admin · Personal", in place of the badge, or
+`subline="role"` for the role as a small sentence-case badge, "Platform
+admin", followed by the account in quiet text. With either, the dropdown's
+header states the role and the account in the same case.
+
+**Bottom groups in the foot.** Groups with `pin: 'bottom'` end the nav by
+default. Pass `bottom-groups="foot"` (`bottomGroups="foot"` in React) to set
+them in the foot with the foot rows, above the `#foot` slot. They then stay
+in view while the nav scrolls, share the foot's divider, and take the arrow
+keys like the nav. A parent there opens in place; on a short window the group
+area scrolls and the account control keeps its height.
+
+**Rows only admins see.** Give an item `audience: 'admin'` when only people
+with an admin role are shown it. The row's icon takes `--lu-audience-admin`
+and, in the expanded rail, a small chip after the label names the audience:
+`audience-label` (`audienceLabel`), "Admin" by default. A row whose label is
+the audience label carries no chip, so a row named Admin reads once. The
+collapsed rail's tooltip adds the audience ("Organization · Admin"). The
+marker only describes the row; the host still decides who gets it.
+
+```ts
+{ groups: [
+  { items: [/* sections */] },
+  { pin: 'bottom', items: [
+    { id: 'org', label: 'Organization', icon: 'org', to: '/org', audience: 'admin' },
+    { id: 'admin', label: 'Admin', icon: 'shield', to: '/admin', audience: 'admin' },
+  ] },
+] }
+```
 
 ## Docs renderer
 
@@ -377,6 +405,10 @@ Every component below is available from `latere-ui` for Vue and `latere-ui/react
 | Site chrome | `SiteFooter`, `LatereLogoMark`, `PlatformLogoMark` |
 
 `PlatformLogoMark` identifies the platform with the Latere symbol above stacked layers. It inherits `currentColor`, accepts native SVG attributes and merges caller classes. It is decorative by default (`aria-hidden="true"`, `focusable="false"`); place it beside a visible product name, or override the accessibility attributes when it needs its own label. `LatereLogoMark` remains the corporate identity.
+
+`GlassAlert` sets a notice as one grid: a leading 16px icon in the tone's color, then the title and the body sharing one left edge, then an optional dismiss. The frame is a full hairline mixed toward the tone, the fill a faint wash of it; no edge is heavier than another. `tone` picks the color and the icon (`info`, `success`, `warning`, `error`), so a notice never rests on color alone.
+
+Controls share one scale. Set `--lu-control-height` and `--lu-control-height-sm` (32px and 28px by default for buttons, fields and selects) and `--lu-control-radius` once, and every button, icon button, field and select takes them, so a field and the button beside it share a baseline and a corner. A destructive action among other actions is `variant="danger-ghost"`, set as text; the filled `danger` belongs to the confirming button of a dialog.
 
 `GlassBadge` keeps glass labels in the text color and uses the dot for tone. Solid badges pair each default fill with contrasting ink. If you override a semantic fill, set its matching `--state-<tone>-ink` when needed and verify contrast in both themes.
 
