@@ -120,11 +120,19 @@
 .lu-docs-body h2 { font-size: 21px; }
 .lu-docs-body h3 { font-size: 17px; }
 .lu-docs-body p { margin: 0 0 1em; }
+/* A link inside prose carries a constant, refined underline: a hairline set
+ * clear of the descenders in a softened tone of the link color, which hover
+ * darkens to the full color. The line is a cue that the words lead somewhere,
+ * so it never appears or disappears with the pointer. Navigation outside
+ * prose carries none, and an action is a button, not a link. */
 .lu-docs-body a {
     color: var(--accent, #0a0a0a);
-    text-decoration: none;
+    text-decoration-line: underline;
+    text-decoration-thickness: var(--lu-link-underline-thickness, 1px);
+    text-underline-offset: var(--lu-link-underline-offset, 0.22em);
+    text-decoration-color: var(--lu-link-underline-color, color-mix(in srgb, currentColor 38%, transparent));
 }
-.lu-docs-body a:hover { text-decoration: underline; }
+.lu-docs-body a:hover { text-decoration-color: currentColor; }
 .lu-docs-body :is(pre, code) {
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
 }
