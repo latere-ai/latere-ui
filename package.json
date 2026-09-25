@@ -17,7 +17,8 @@
     "./console": "./src/styles/console.css",
     "./docs": "./src/styles/docs.css",
     "./glass": "./src/styles/glass.css",
-    "./presets": "./src/styles/presets.css"
+    "./presets": "./src/styles/presets.css",
+    "./telemetry": "./src/telemetry/index.ts"
   },
   "scripts": {
     "test": "vitest run",
@@ -42,6 +43,18 @@
     "react-dom": {
       "optional": true
     }
+  },
+  "dependencies": {
+    "@opentelemetry/api": "1.9.1",
+    "@opentelemetry/exporter-trace-otlp-http": "0.218.0",
+    "@opentelemetry/instrumentation": "0.218.0",
+    "@opentelemetry/instrumentation-document-load": "0.63.0",
+    "@opentelemetry/instrumentation-fetch": "0.218.0",
+    "@opentelemetry/instrumentation-xml-http-request": "0.218.0",
+    "@opentelemetry/resources": "2.7.1",
+    "@opentelemetry/sdk-trace-web": "2.7.1",
+    "@opentelemetry/semantic-conventions": "1.43.0",
+    "web-vitals": "6.2.2"
   },
   "devDependencies": {
     "@fontsource/instrument-serif": "5.3.0",
