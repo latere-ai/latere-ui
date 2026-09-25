@@ -35,7 +35,6 @@ export type { NavItem, NavGroup, NavFootItem, FlatNavItem, ConsoleNavModel } fro
 export { DEFAULT_NAV_OPEN_KEY } from '../console/openState';
 export { CONSOLE_ICONS, consoleIcon } from '../console/icons';
 export type { ConsoleIconName } from '../console/icons';
-export { ConsoleIcon, type ConsoleIconProps } from './ConsoleIcon';
 export { paletteEntries, filterPalette } from '../console/palette';
 export type { ConsolePaletteItem, ConsolePaletteSearch } from '../console/palette';
 

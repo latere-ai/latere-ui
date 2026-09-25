@@ -24,7 +24,6 @@ export type {
 export { DEFAULT_NAV_OPEN_KEY } from './console/openState';
 export { CONSOLE_ICONS, consoleIcon } from './console/icons';
 export type { ConsoleIconName } from './console/icons';
-export { default as ConsoleIcon } from './components/ConsoleIcon.vue';
 export { paletteEntries, filterPalette } from './console/palette';
 export type { ConsolePaletteItem, ConsolePaletteSearch } from './console/palette';
 // Collapse primitive lives in its own module (holds Vue state; nav.ts stays
