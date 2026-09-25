@@ -18,7 +18,7 @@ const sheets = {
     palette: ['ConsolePalette'],
     docs: ['DocsLayout'],
     account: ['AccountMenu', 'AccountPrefs'],
-    preferences: ['AccountPrefs'],
+    preferences: ['AccountPrefs', 'ThemeMenu', 'LocaleMenu'],
     products: ['ProductSwitcher'],
     organizations: ['OrgSwitcher'],
     footer: ['SiteFooter'],

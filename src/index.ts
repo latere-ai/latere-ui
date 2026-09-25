@@ -158,6 +158,11 @@ export type {
 } from './components/productSwitcher';
 export { default as AccountMenu } from './components/AccountMenu.vue';
 export { default as AccountPrefs } from './components/AccountPrefs.vue';
+// Theme and language menus: icon buttons that open a solid choice menu. The
+// footer uses them; a host header can place the same controls.
+export { default as ThemeMenu } from './components/ThemeMenu.vue';
+export { default as LocaleMenu } from './components/LocaleMenu.vue';
+export type { ThemeMenuLabels } from './components/preferenceMenus';
 export { identityLine, identityParts } from './components/accountMenu';
 export type { AccountMenuLabels, AccountMenuLabelOverrides, AccountMenuItem, AccountRoleLabels, AccountMenuSubline } from './components/accountMenu';
 export type { AccountPrefsLabels } from './components/accountPrefs';

@@ -1,0 +1,32 @@
+/* ThemeMenu and LocaleMenu: the trigger. A quiet square icon button on the
+ * control corner, sized by the control scale; it fills on hover and while its
+ * menu is open. The menu itself is GlassPopover's solid surface around a
+ * choice GlassMenu (glass-popover.css, glass-menu.css). */
+.lu-pref-trigger {
+  display: inline-grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: var(--lu-control-height, 32px);
+  height: var(--lu-control-height, 32px);
+  padding: 0;
+  border: 0;
+  border-radius: var(--lu-control-radius, var(--radius-sm, 6px));
+  background: transparent;
+  color: var(--text-secondary, #666);
+  font: inherit;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.lu-pref-trigger:hover,
+.lu-pref-trigger[aria-expanded="true"] {
+  background: var(--bg-hover, var(--bg-raised, rgba(0, 0, 0, 0.05)));
+  color: var(--text, #0a0a0a);
+}
+.lu-pref-trigger:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: 1px; }
+.lu-pref-icon,
+.lu-pref-icon svg { display: block; width: 16px; height: 16px; }
+/* Touch keeps a 44px target around the same 16px glyph. */
+@media (pointer: coarse) {
+  .lu-pref-trigger { width: 44px; height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) { .lu-pref-trigger { transition: none; } }

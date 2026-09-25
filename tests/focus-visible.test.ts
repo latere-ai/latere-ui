@@ -78,6 +78,9 @@ describe('focus-visible treatment', () => {
       'SiteFooter.vue': 'src/styles/footer.css',
       'DocsLayout.vue': 'src/styles/docs.css',
       'OrgSwitcher.vue': null, // headless by design
+      // The two preference menus share one trigger sheet.
+      'ThemeMenu.vue': 'src/styles/components/preference-menu.css',
+      'LocaleMenu.vue': 'src/styles/components/preference-menu.css',
     };
     const components = readdirSync(resolve(root, 'src/components')).filter((n) =>
       n.endsWith('.vue'),
