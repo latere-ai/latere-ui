@@ -15,6 +15,7 @@ specs/
   react-support-v1.27.md   (complete: React bindings for the Glass primitives, console shell, and session client, from `latere-ui/react`)
   react-site-footer-v1.28.md (validated: SiteFooter + LatereLogoMark for React consumers)
   browser-telemetry.md     (complete: `latere-ui/telemetry`, one lazy browser telemetry entry paired with otel.TelemetryProxy)
+  structured-data.md       (validated: `latere-ui/structured-data`, schema.org JSON-LD builders and an escaped script serializer for public pages)
 ```
 
 ## Dependencies
