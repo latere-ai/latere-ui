@@ -8,7 +8,7 @@ release. A tag without one fails the release workflow. Write under
 A section says what changed for whoever uses the release, not what was
 committed: the commit log already holds that.
 
-## Unreleased
+## v1.30.1 - 2026-09-26
 
 - The full footer's column headings are semibold in the full text tone, darker than the links under them, where they were regular weight in the muted tone and read lighter than the links. The compact strip is unchanged.
 
