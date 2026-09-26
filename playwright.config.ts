@@ -1,5 +1,5 @@
 import { defineConfig } from '@playwright/test';
-import { figureScale, referencePlatform } from './tests/visual/reference-settings';
+import { figureScale, referenceBrowserArgs, referencePlatform } from './tests/visual/reference-settings';
 
 export default defineConfig({
   testDir: './tests/visual',
@@ -25,7 +25,7 @@ export default defineConfig({
     // Avoid a second native capture stream during exact screenshots.
     // Keep DOM/action traces; exact captures already attach failure images.
     trace: { mode: 'retain-on-failure', screenshots: false, snapshots: true, sources: true },
-    launchOptions: { args: ['--disable-lcd-text'] },
+    launchOptions: { args: referenceBrowserArgs },
   },
   webServer: {
     command: 'bun run visual:dev',

@@ -53,7 +53,7 @@ Expected PNGs live in `tests/visual/goldens/<platform>/`. macOS paths include
 its Darwin major: `darwin-24` for macOS 15 (CI), `darwin-27` for macOS 27 (the
 local documentation figures). Chromium is installed by the pinned Playwright
 version. CoreText and blur rendering can differ between macOS releases, so
-these references remain separate. Comparisons decode PNGs and require equal dimensions and every RGBA channel to match exactly. There is no channel threshold, antialiasing exclusion, pixel allowance, mask, or adapter-specific tolerance; PNG compression differences do not count as visual changes.
+these references remain separate. Every compared render uses the Chromium arguments in `tests/visual/reference-settings.ts`: grayscale text antialiasing, and each composited layer up to 4096 device pixels rasterized as one tile. With Chromium's default 256-pixel tiles, the hosted runner drew the edges of stroke icons in a tiled layer with one of two pixel patterns from render to render. A change to these arguments needs a reviewed regeneration, like a browser or font upgrade. Comparisons decode PNGs and require equal dimensions and every RGBA channel to match exactly. There is no channel threshold, antialiasing exclusion, pixel allowance, mask, or adapter-specific tolerance; PNG compression differences do not count as visual changes.
 The viewport is 1100 × 850 for default desktop sheets (1280 × 850 for three-column docs
 and product appearances) and 390 × 844 for mobile in CSS pixels. Captures render at 3.125×
 (300/96), retain device pixels, and store 300 DPI PNG metadata. A standard

@@ -2,12 +2,12 @@ import type { Browser } from '@playwright/test';
 import { goldenTest as test, expect, visit } from './fixtures';
 import { captureExact } from './exact-golden';
 import { comparePixels } from './exact-pixels';
-import { figureScale } from './reference-settings';
+import { figureScale, referenceBrowserArgs } from './reference-settings';
 
 // These two tests share only their recorded evidence, never a browser process.
 test.describe.configure({ mode: 'serial' });
 // CDP exposes launch arguments only when automation is explicitly enabled.
-test.use({ launchOptions: { args: ['--disable-lcd-text', '--enable-automation'] } });
+test.use({ launchOptions: { args: [...referenceBrowserArgs, '--enable-automation'] } });
 let previousBrowser: Browser;
 let previousPixels: Buffer;
 
@@ -19,7 +19,7 @@ test('golden browser preserves the configured render environment', async ({ page
   });
   const cdp = await previousBrowser.newBrowserCDPSession();
   const { arguments: args } = await cdp.send('Browser.getBrowserCommandLine');
-  expect(args).toContain('--disable-lcd-text');
+  for (const arg of referenceBrowserArgs) expect(args).toContain(arg);
   await cdp.detach();
   await page.setViewportSize({ width: 1280, height: 720 });
   await visit(page, 'vue', 'workspace', 'light');
