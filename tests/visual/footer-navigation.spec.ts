@@ -29,9 +29,31 @@ for (const framework of ['vue', 'react']) for (const design of ['default', ...de
         }
       }
 
-      // Headings are quiet and regular weight; links sit 32px apart.
+      // Headings are semibold and set darker than the links under them, so the
+      // label reads apart from the links by weight and by tone; links sit 32px apart.
       const heading = groups.first().locator('h2');
-      await expect(heading).toHaveCSS('font-weight', '400');
+      await expect(heading).toHaveCSS('font-weight', '600');
+      const [headingContrast, linkContrast] = await page.evaluate(() => {
+        const context = document.createElement('canvas').getContext('2d', { willReadFrequently: true })!;
+        // Resolve any computed color syntax, color-mix results included, to RGBA bytes.
+        const rgba = (color: string) => {
+          context.clearRect(0, 0, 1, 1);
+          context.fillStyle = color; context.fillRect(0, 0, 1, 1);
+          const [r, g, b, a] = context.getImageData(0, 0, 1, 1).data;
+          return [r, g, b, a / 255];
+        };
+        const background = rgba(getComputedStyle(document.body).backgroundColor);
+        const luminance = (color: number[]) => color.slice(0, 3)
+          .map((v, i) => (v * color[3] + background[i] * (1 - color[3])) / 255)
+          .map(v => v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4)
+          .reduce((sum, v, i) => sum + v * [.2126, .7152, .0722][i], 0);
+        const contrast = (selector: string) => {
+          const x = luminance(rgba(getComputedStyle(document.querySelector(selector)!).color)), y = luminance([...background.slice(0, 3), 1]);
+          return (Math.max(x, y) + .05) / (Math.min(x, y) + .05);
+        };
+        return [contrast('.footer-col-title'), contrast('.footer-link')];
+      });
+      expect(headingContrast).toBeGreaterThan(linkContrast);
       const pitch = await page.locator('[data-footer-group="company"] li').evaluateAll(items => items.map(item => item.getBoundingClientRect().top));
       for (let i = 1; i < pitch.length; i++) expect.soft(pitch[i] - pitch[i - 1]).toBeCloseTo(32, 0);
 

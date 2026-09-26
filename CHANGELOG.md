@@ -8,6 +8,10 @@ release. A tag without one fails the release workflow. Write under
 A section says what changed for whoever uses the release, not what was
 committed: the commit log already holds that.
 
+## Unreleased
+
+- The full footer's column headings are semibold in the full text tone, darker than the links under them, where they were regular weight in the muted tone and read lighter than the links. The compact strip is unchanged.
+
 ## v1.30.0 - 2026-09-26
 
 - The product switcher sends Lux to the platform console's Models section, `https://platform.latere.ai/console/models`. The hosted gateway at `lux.latere.ai` was retired and no longer answers.

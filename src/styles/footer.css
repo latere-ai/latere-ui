@@ -157,8 +157,9 @@
 }
 .footer-lead .footer-prefs { margin-left: -8px; }
 
-/* Link columns: a quiet regular-weight heading over plain links set 32px
- * apart. A second group in a column sits below the first. */
+/* Link columns: a semibold heading in the full text tone over plain links set
+ * 32px apart, so weight and tone both separate the label from the links under
+ * it. A second group in a column sits below the first. */
 .footer-cols {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -180,11 +181,11 @@
     margin: 0;
     font: inherit;
     font-size: var(--text-ui, 14px);
-    font-weight: 400;
+    font-weight: 600;
     line-height: 20px;
     letter-spacing: normal;
     text-transform: none;
-    color: var(--text-muted);
+    color: var(--text);
 }
 .footer-links {
     display: flex;

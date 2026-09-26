@@ -27,7 +27,7 @@ affects:
   - tests
 effort: large
 created: 2026-09-25
-updated: 2026-09-25
+updated: 2026-09-26
 author: changkun
 dispatched_task_id: null
 ---
@@ -57,10 +57,11 @@ Desktop, above 1024px, is a two-part grid inside the 1200px container:
   the Latere AI mark and wordmark; a host replaces it through the Vue `#brand`
   slot or the React `brand` prop, so platform.latere.ai shows its own
   Latere | Platform lockup.
-- **Columns**, on the right: four columns of groups. Each group is a quiet
-  heading in the regular weight and the muted tone, over plain links in the
-  body face set 32px apart (20px line, 12px gap). A second group in a column
-  sits 40px below the first.
+- **Columns**, on the right: four columns of groups. Each group is a heading
+  in the semibold weight and the full text tone, over plain links in the body
+  face set 32px apart (20px line, 12px gap). The links sit at 82% of the text
+  tone, so the heading reads apart from them by weight and by tone. A second
+  group in a column sits 40px below the first.
 - **Copyright**, closing the footer 72px below the tallest block, in the small
   muted tone.
 
