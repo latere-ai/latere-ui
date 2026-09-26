@@ -7,7 +7,7 @@ For frontend developers building with `latere-ui`.
 | Page | |
 |---|---|
 | [Design guide](design-system.md) | choosing a material, sizing a layout, the appearance presets and their fonts, composing a screen, and optical effects |
-| [Integration guide](api-guide.md) | imports, footer props, the console sidebar, the documentation layout, glass materials, the session contract, and the React adapters |
+| [Integration guide](api-guide.md) | imports, footer props, the console sidebar, the documentation layout, glass materials, the session contract, browser telemetry, structured data for search engines and agents, and the React adapters |
 | [React shell](react-shell.md) | the React command palette, product switcher, account preferences, organization chooser, and documentation layout |
 | [Visual reference](visual-reference.md) | every component's golden figure by framework, appearance, theme, and viewport |
 

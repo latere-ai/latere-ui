@@ -1,6 +1,6 @@
 # Integration guide
 
-Precise examples for footer preferences, console navigation, documentation, glass materials, session bindings, and browser telemetry. This guide tracks `main`; changes not yet in a release are listed under Unreleased in the [changelog](../CHANGELOG.md#unreleased). Start with the [README](../README.md) for installation or the [design guide](design-system.md) for visual composition.
+Precise examples for footer preferences, console navigation, documentation, glass materials, session bindings, browser telemetry, and structured data. This guide tracks `main`; changes not yet in a release are listed under Unreleased in the [changelog](../CHANGELOG.md#unreleased). Start with the [README](../README.md) for installation or the [design guide](design-system.md) for visual composition.
 
 ![Tokens, materials, components, and composed surfaces](figures/design-skeleton.svg)
 
@@ -623,6 +623,286 @@ account or session identifier. URLs are the only page data it records, and
 the query string and fragment are removed from every recorded URL, so tokens
 and search terms in links are not sent. The browser's user agent string is
 recorded with page loads and requests.
+
+## Structured data
+
+`latere-ui/structured-data` describes a page to search engines and AI agents
+in the schema.org vocabulary. Typed builders turn the page's data into
+schema.org nodes, and `jsonLdScript` writes them as the
+`<script type="application/ld+json">` element that goes into the page's
+`<head>`. It has no dependencies and works with any framework or none: a
+static build, a server-rendered page and a browser-only app use the same
+calls.
+
+| Builder | Describes | Required |
+|---|---|---|
+| `organization` | A company or group (`Organization`) | `name`, `url` |
+| `person` | An author or other individual (`Person`) | `name` |
+| `webSite` | A whole site (`WebSite`) | `name`, `url` |
+| `book` | A book in one language (`Book`) | `name`, `url` |
+| `chapter` | One chapter page (`Chapter`) | `name`, `url`, `isPartOf` |
+| `article` | An article page (`Article`) | `headline`, `url` |
+| `blogPosting` | A blog post (`BlogPosting`) | `headline`, `url` |
+| `breadcrumbList` | The trail from the site's top to the page (`BreadcrumbList`) | one or more `{ name, url }`; the last may omit `url` |
+
+Input keys are schema.org property names, and every builder but
+`breadcrumbList` takes `'@id'`. `book`, `chapter`, `article` and `blogPosting` also take `description`,
+`inLanguage` (a BCP 47 tag such as `en` or `zh-CN`), `author`, `publisher`,
+`translator`, `datePublished` and `dateModified` (ISO 8601 strings or `Date`
+values), `image`, `license` (the license's URL, such as a Creative Commons
+deed), `keywords`, `workTranslation` and `translationOfWork`. `book` adds
+`isbn`, `bookEdition`, `numberOfPages` and `hasPart`; `chapter` adds
+`position`; `article` and `blogPosting` add `articleSection` and `wordCount`.
+`webSite` takes `alternateName`, `description`, `inLanguage` and
+`publisher`. `organization` takes `alternateName`, `description`, `logo` and
+`image`, `person` takes `url`, `description` and `image`, and both take
+`sameAs`, the profiles that identify them.
+
+Each builder returns a plain object that starts with
+`"@context": "https://schema.org"` and `"@type"`. Fields you leave out are
+omitted, never written as `null`. To add a property the builders do not take,
+spread the node: `{ ...book(input), abridged: false }`.
+
+### A book chapter at build time
+
+A static build calls the builders with each page's data and writes the result
+into the page's `<head>`. For the English page of a chapter that also exists
+in Chinese, under CC BY-NC-ND 4.0:
+
+```ts
+import { breadcrumbList, chapter, jsonLdScript, person } from 'latere-ui/structured-data';
+
+const license = 'https://creativecommons.org/licenses/by-nc-nd/4.0/';
+const author = person({ name: 'Ada Example', url: 'https://example.com/about' });
+
+const head = jsonLdScript([
+  chapter({
+    '@id': 'https://book.example.com/en/scheduling/',
+    name: 'Scheduling',
+    url: 'https://book.example.com/en/scheduling/',
+    position: 3,
+    inLanguage: 'en',
+    isPartOf: { '@id': 'https://book.example.com/en/', name: 'An Example Book', url: 'https://book.example.com/en/' },
+    author,
+    license,
+    datePublished: '2026-06-01',
+    dateModified: '2026-09-20',
+    // English is the source language, so the English page lists its translation.
+    workTranslation: {
+      '@id': 'https://book.example.com/zh/scheduling/',
+      name: '调度',
+      url: 'https://book.example.com/zh/scheduling/',
+      inLanguage: 'zh-CN',
+    },
+  }),
+  breadcrumbList([
+    { name: 'An Example Book', url: 'https://book.example.com/en/' },
+    { name: 'Scheduling' },
+  ]),
+]);
+
+const html = `<!doctype html><html lang="en"><head><meta charset="utf-8">${head}</head>...`;
+```
+
+The script element holds this graph:
+
+```json
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Chapter",
+      "@id": "https://book.example.com/en/scheduling/",
+      "name": "Scheduling",
+      "url": "https://book.example.com/en/scheduling/",
+      "inLanguage": "en",
+      "author": { "@type": "Person", "name": "Ada Example", "url": "https://example.com/about" },
+      "datePublished": "2026-06-01",
+      "dateModified": "2026-09-20",
+      "license": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+      "workTranslation": {
+        "@type": "Chapter",
+        "@id": "https://book.example.com/zh/scheduling/",
+        "name": "调度",
+        "url": "https://book.example.com/zh/scheduling/",
+        "inLanguage": "zh-CN"
+      },
+      "isPartOf": {
+        "@type": "Book",
+        "@id": "https://book.example.com/en/",
+        "name": "An Example Book",
+        "url": "https://book.example.com/en/"
+      },
+      "position": 3
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "An Example Book", "item": "https://book.example.com/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Scheduling" }
+      ]
+    }
+  ]
+}
+```
+
+The Chinese page describes the same relation from its side: its own `url` and
+`inLanguage`, `isPartOf` the Chinese edition of the book, and
+`translationOfWork` pointing back to the English page.
+
+```ts
+chapter({
+  '@id': 'https://book.example.com/zh/scheduling/',
+  name: '调度',
+  url: 'https://book.example.com/zh/scheduling/',
+  position: 3,
+  inLanguage: 'zh-CN',
+  isPartOf: { '@id': 'https://book.example.com/zh/', name: '示例之书', url: 'https://book.example.com/zh/' },
+  author,
+  license,
+  translationOfWork: { '@id': 'https://book.example.com/en/scheduling/', url: 'https://book.example.com/en/scheduling/', inLanguage: 'en' },
+});
+```
+
+The book's own page uses `book` in the same way, one node per language, with
+`hasPart` listing the chapters and `workTranslation` or `translationOfWork`
+linking the two editions.
+
+### Translations
+
+Schema.org treats a translation as a separate work in its own language, linked
+to the work it was translated from. Describe each language version as its own
+node with its own `url` and `inLanguage`; on the source-language page, list
+the translations in `workTranslation`; on each translated page, name the
+source in `translationOfWork`, and the `translator` if you credit one. A
+chapter's `isPartOf` names the book of its own language. Do not use `sameAs`
+for translations: it states that two things are the same, and a translation is
+a different work.
+
+The JSON-LD describes the relation for parsers and agents. Search engines pair
+language versions from `<link rel="alternate" hreflang="...">` elements, so
+keep those in the head as well.
+
+`Chapter`, `workTranslation` and `translationOfWork` come from schema.org's
+bibliographic extension. They are part of the vocabulary under the same
+context and general-purpose parsers and agents read them, but search engines
+do not build rich results from chapters. Articles, blog posts and breadcrumbs
+are types they do use.
+
+### A blog post on a server-rendered page
+
+A server that renders HTML builds the nodes per request. Describe the
+publisher once, give it an `@id`, and reuse it:
+
+```ts
+import { blogPosting, breadcrumbList, jsonLdScript, organization, person, ref, webSite } from 'latere-ui/structured-data';
+
+const publisher = organization({
+  '@id': 'https://example.com/#organization',
+  name: 'Example',
+  url: 'https://example.com/',
+  logo: 'https://example.com/logo.png',
+  sameAs: ['https://social.example.com/example'],
+});
+
+export function postHead(post: Post): string {
+  return jsonLdScript([
+    blogPosting({
+      headline: post.title,
+      url: `https://example.com/blog/${post.slug}/`,
+      description: post.summary,
+      inLanguage: 'en',
+      author: person({ name: post.authorName, url: post.authorUrl }),
+      publisher,
+      datePublished: post.publishedAt,
+      dateModified: post.updatedAt,
+      image: post.coverUrl,
+    }),
+    breadcrumbList([
+      { name: 'Example', url: 'https://example.com/' },
+      { name: 'Blog', url: 'https://example.com/blog/' },
+      { name: post.title },
+    ]),
+  ]);
+}
+
+// The home page describes the organization and the site, linked by @id.
+export const homeHead = jsonLdScript([
+  publisher,
+  webSite({ '@id': 'https://example.com/#website', name: 'Example', url: 'https://example.com/', publisher: ref(publisher) }),
+]);
+```
+
+### Parties and references
+
+- `author`, `publisher` and `translator` take a node from `person` or
+  `organization`, embedded in full, or `ref(node)`, which writes only
+  `{ "@id": ... }` for a node described elsewhere on the page. `author` and
+  `translator` take one or several.
+- `isPartOf`, `hasPart`, `workTranslation` and `translationOfWork` take an
+  object with `url` or `'@id'`, and optionally `name` and `inLanguage`. A node
+  from a builder works too; it is reduced to those fields so the page does not
+  describe the same work twice. The builder sets the reference's `@type`:
+  `Book` for a chapter's `isPartOf`, `Chapter` for a book's `hasPart`, and the
+  node's own type for translations.
+- Use the page's canonical URL as its `@id`, adding a fragment such as
+  `#organization` when one page describes several things.
+
+### Writing the script element
+
+`jsonLdScript(node)` returns the script element for one node;
+`jsonLdScript([a, b])` returns one `@graph` holding both under a single
+`@context`. An array always produces a `@graph`, even with one node. `jsonLd`
+returns the same JSON text without the element. Hand-written nodes are
+accepted as long as they have a `@type`.
+
+The text is ready to write into HTML as it is; do not HTML-escape it again.
+`<`, `>`, `&`, U+2028 and U+2029 are written as JSON escapes (`\u003c`,
+`\u003e`, `\u0026`, `\u2028`, `\u2029`), so no string in
+your data can end the script element, open an HTML comment or inject markup,
+and `JSON.parse` of the element's text returns your data unchanged.
+
+### Browser-only pages
+
+An app that renders only in the browser places its data with `mountJsonLd`:
+
+```ts
+import { onUnmounted } from 'vue';
+import { blogPosting, mountJsonLd } from 'latere-ui/structured-data';
+
+const remove = mountJsonLd(blogPosting({ headline: post.title, url: post.url }));
+onUnmounted(remove);
+```
+
+It keeps one script element per key (`'page'` unless you pass a second
+argument) in `document.head`, replaces its text on every call, and returns a
+function that removes it. When the next view has already placed its data
+under the same key, the previous view's removal does nothing. On the server it
+does nothing.
+
+Only crawlers that run JavaScript see data placed this way. Many agents and
+some crawlers read the HTML as it was served, so a page that can be built or
+rendered on the server should write `jsonLdScript` there instead.
+
+### Errors
+
+Structured data is generated when a page is built or rendered, so the
+builders throw a `StructuredDataError` for data that is missing or malformed,
+and a bad page fails the build instead of publishing a wrong description. Its
+`code` says why, and `type` and `field` name the node and the input, such as
+`Chapter` and `isPartOf.url`:
+
+| `code` | Cause |
+|---|---|
+| `missing` | `name`, `headline`, `url`, `isPartOf` or the breadcrumb items are absent or empty |
+| `invalid_url` | A URL is relative or not `http:` or `https:` |
+| `invalid_id` | An `@id` is not an absolute IRI |
+| `invalid_date` | A date is not ISO 8601 (`2026-09-26`, `2026-09-26T09:00:00Z`) or names a day that does not exist |
+| `invalid_language` | `inLanguage` is not a BCP 47 language tag |
+| `invalid_value` | Any other value of the wrong shape, such as a `position` of 0 or an `author` given as a string |
+
+Every URL must be absolute: a crawler or an agent may read a copy of the page
+without knowing where it came from.
 
 ## React
 

@@ -35,6 +35,7 @@ Import `latere-ui/presets` after the shared styles and set `data-design="replich
 | Site chrome | Full and compact footer, theme and language menus, logo | Vue and React |
 | Session | API client, account resolution, organization switching, session bindings | Vue and React |
 | Telemetry | Page load, request and Core Web Vitals traces sent to your backend's telemetry relay | Any |
+| Structured data | schema.org descriptions of organizations, sites, books, chapters, articles and blog posts for search engines and AI agents | Any |
 
 The package ships `.vue`, `.tsx`, `.ts`, and `.css` source. Your application compiles it with its own toolchain. Both adapters expose every visual component. React imports come from [latere-ui/react](src/react/index.ts); the [API guide](docs/api-guide.md#react) explains controlled values and callbacks.
 
@@ -119,8 +120,9 @@ Use regular glass for panels and navigation, thick glass for readable overlays, 
 | `latere-ui/brand` | Product wordmark gradients |
 | `latere-ui/markdown` | Markdown helpers with TOC-compatible heading IDs |
 | `latere-ui/telemetry` | Browser telemetry through your backend's relay, loaded after the page |
+| `latere-ui/structured-data` | schema.org JSON-LD builders and the escaped script element for a page's head |
 
-For exact props, events, router integration, footer locales, session setup, and [browser telemetry](docs/api-guide.md#browser-telemetry), see the [integration guide](docs/api-guide.md) and [React shell examples](docs/react-shell.md). English, Chinese, and German footer dictionaries are bundled; the default language menu offers English and Chinese.
+For exact props, events, router integration, footer locales, session setup, [browser telemetry](docs/api-guide.md#browser-telemetry) and [structured data](docs/api-guide.md#structured-data), see the [integration guide](docs/api-guide.md) and [React shell examples](docs/react-shell.md). English, Chinese, and German footer dictionaries are bundled; the default language menu offers English and Chinese.
 
 `SiteFooter` is Latere's site footer. On `main`, the full layout leads with the site's lockup, the social profiles and the theme and language menus, and sets four link columns beside them: Applications with Research, Platform (Latere Platform and Identity), Company, and Legal. The compact layout wraps the same product groups in one row. `ThemeMenu` and `LocaleMenu` are the footer's menus, exported for a header. The groups and their translations are shared by Vue and React across all appearances.
 

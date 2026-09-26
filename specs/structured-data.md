@@ -1,6 +1,6 @@
 ---
 title: latere-ui/structured-data, schema.org JSON-LD for public pages
-status: validated
+status: complete
 depends_on: []
 affects:
   - src/structured-data/index.ts (new)
@@ -9,8 +9,10 @@ affects:
   - src/structured-data/validate.ts (new)
   - src/structured-data/serialize.ts (new)
   - tests/structured-data*.test.ts (new)
+  - tests/visual/structured-data.spec.ts, structured-data.html, structured-data-page.ts (new)
   - package.json (exports "./structured-data", description)
   - docs/api-guide.md (Structured data section)
+  - docs/README.md (integration guide row)
   - README.md (surface and import tables)
   - CHANGELOG.md (Unreleased)
 effort: small
@@ -303,3 +305,9 @@ It does not touch the DOM except in `mountJsonLd`. `latere-ui` and
 - `mountJsonLd` tests in happy-dom: create, replace by key, remove, and a
   stale removal function that leaves a later call's element in place.
 - A test in the Node environment builds and serializes without a DOM.
+- `tests/visual/structured-data.spec.ts` runs Chromium's HTML parser over a
+  server-rendered script element holding hostile strings in text and URL
+  fields: no injected script runs, the head holds exactly the elements
+  written, and the element's text parses back to the graph. A browser-only
+  fixture page checks that `mountJsonLd` keeps one element per key across a
+  navigation and removes it.
