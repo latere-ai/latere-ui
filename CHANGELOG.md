@@ -8,7 +8,7 @@ release. A tag without one fails the release workflow. Write under
 A section says what changed for whoever uses the release, not what was
 committed: the commit log already holds that.
 
-## Unreleased
+## v1.30.0 - 2026-09-26
 
 - The product switcher sends Lux to the platform console's Models section, `https://platform.latere.ai/console/models`. The hosted gateway at `lux.latere.ai` was retired and no longer answers.
 - `latere-ui/structured-data` describes public pages to search engines and AI agents in the schema.org vocabulary. Builders for `Organization`, `Person`, `WebSite`, `Book`, `Chapter`, `Article`, `BlogPosting` and `BreadcrumbList` take the page's data and return plain JSON-LD nodes; `jsonLdScript` writes one node, or a `@graph` of several, as the `<script type="application/ld+json">` element for the page's head, with `<`, `>`, `&`, U+2028 and U+2029 escaped so no value can end the element or inject markup. Translated pages link each language version with `workTranslation` and `translationOfWork`, and `license` takes the license's URL, such as a Creative Commons deed. A missing `name`, `headline`, `url` or `isPartOf`, a relative URL, a malformed date or an invalid language tag throws a `StructuredDataError` when the page is built or rendered. `mountJsonLd` places the same data from a browser-only app, though only crawlers that run scripts see it. No dependencies and no framework: it runs in Bun, Node and the browser, and the Vue and React entries do not include it.

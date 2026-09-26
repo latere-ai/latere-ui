@@ -44,10 +44,10 @@ The package ships `.vue`, `.tsx`, `.ts`, and `.css` source. Your application com
 The package is not on a registry. Pin a release tag from the [releases page](https://github.com/latere-ai/latere-ui/releases), for example:
 
 ```sh
-bun add github:latere-ai/latere-ui#v1.29.0
+bun add github:latere-ai/latere-ui#v1.30.0
 ```
 
-These docs and figures track `main`. The changes not yet in a release, such as `PlatformLogoMark`, the footer's link columns and the theme and language menus, are listed under [Unreleased](CHANGELOG.md#unreleased).
+These docs and figures track `main`. Changes that are not yet in a release are listed under Unreleased in the [changelog](CHANGELOG.md).
 
 Use Vue 3.5+ with your Vue compiler, or React 18/19 with your React toolchain. React applications import `latere-ui/react`. For server rendering with Vite, include `ssr: { noExternal: ['latere-ui'] }` so the package source is compiled for the server too.
 

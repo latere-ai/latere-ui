@@ -1,6 +1,6 @@
 {
   "name": "latere-ui",
-  "version": "1.28.1",
+  "version": "1.30.0",
   "description": "Shared Latere platform UI: Liquid Glass design system (material + component library), footer, logo, console sidebar, docs renderer, the session/auth client + store + account menu, a lazy browser telemetry entry, and schema.org structured data builders.",
   "type": "module",
   "license": "MIT",
