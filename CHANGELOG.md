@@ -8,6 +8,10 @@ release. A tag without one fails the release workflow. Write under
 A section says what changed for whoever uses the release, not what was
 committed: the commit log already holds that.
 
+## v1.31.0 - 2026-09-30
+
+- Any sidebar row takes `value`, the short text set at its end, where only foot rows did. A section pinned to the bottom can show a balance, such as a Wallet row with "$8.16", and still be the section row, highlighted while its pages are open. The collapsed tooltip names the value as a foot row's does. `NavFootItem` is now the same type as `NavItem`; code that uses it keeps compiling.
+
 ## v1.30.1 - 2026-09-26
 
 - The full footer's column headings are semibold in the full text tone, darker than the links under them, where they were regular weight in the muted tone and read lighter than the links. The compact strip is unchanged.
