@@ -272,10 +272,11 @@ const IconSlot: FunctionalComponent<{ item: NavItem; depth: number }> = ({ item,
 IconSlot.props = ['item', 'depth'];
 
 // One link, action or disabled row. `active` overrides the row's own match
-// (a collapsed parent carries the selection for its children); `value` is a
-// foot row's trailing text.
-const LeafRow: FunctionalComponent<{ item: NavItem; depth: number; active?: boolean; value?: string; extraClass?: string }> = ({ item, depth, active, value, extraClass }) => {
+// (a collapsed parent carries the selection for its children); the row's
+// trailing text is its item's `value`.
+const LeafRow: FunctionalComponent<{ item: NavItem; depth: number; active?: boolean; extraClass?: string }> = ({ item, depth, active, extraClass }) => {
   const selected = active ?? rowActive(item);
+  const value = item.value;
   const disabled = isItemDisabled(item);
   const label = value !== undefined ? `${item.label} ${value}` : item.label;
   const tag = rowTag(item);
@@ -306,7 +307,7 @@ const LeafRow: FunctionalComponent<{ item: NavItem; depth: number; active?: bool
 };
 // Declared so the template's kebab-case attributes reach the render as props
 // (an undeclared `active` would also arrive as '' rather than undefined).
-LeafRow.props = ['item', 'depth', 'active', 'value', 'extraClass'];
+LeafRow.props = ['item', 'depth', 'active', 'extraClass'];
 
 // A group's rows, rendered in the nav or in the foot. A parent in the
 // expanded rail is a disclosure over its children, which stay in the DOM and
@@ -528,11 +529,11 @@ function letter(label: string): string {
           <GroupRows :items="g.items" />
         </div>
         <div v-if="footItems && footItems.length > 0" class="lu-cs-foot-items">
-          <LeafRow v-for="item in footItems" :key="item.id" :item="item" :depth="0" :value="item.value" extra-class="lu-cs-foot-item" />
+          <LeafRow v-for="item in footItems" :key="item.id" :item="item" :depth="0" extra-class="lu-cs-foot-item" />
         </div>
       </div>
       <div v-else-if="footItems && footItems.length > 0" class="lu-cs-foot-items">
-        <LeafRow v-for="item in footItems" :key="item.id" :item="item" :depth="0" :value="item.value" extra-class="lu-cs-foot-item" />
+        <LeafRow v-for="item in footItems" :key="item.id" :item="item" :depth="0" extra-class="lu-cs-foot-item" />
       </div>
       <slot name="foot" :collapsed="collapsed" />
     </div>

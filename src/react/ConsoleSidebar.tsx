@@ -375,7 +375,8 @@ export function ConsoleSidebar({
   ) {
     const active = options.active ?? rowActive(item);
     const disabled = isItemDisabled(item);
-    const label = options.value !== undefined ? `${item.label} ${options.value}` : item.label;
+    const value = options.value ?? item.value;
+    const label = value !== undefined ? `${item.label} ${value}` : item.label;
     return createElement(
       rowTag(item) as never,
       {
@@ -404,7 +405,7 @@ export function ConsoleSidebar({
           )
           : <span className="lu-cs-badge">{item.badge}</span>
         : null,
-      options.value !== undefined && !collapsed && <span className="lu-cs-item-value">{options.value}</span>,
+      value !== undefined && !collapsed && <span className="lu-cs-item-value">{value}</span>,
     );
   }
 
@@ -479,7 +480,7 @@ export function ConsoleSidebar({
 
   const footRows = footItems && footItems.length > 0 ? (
     <div className="lu-cs-foot-items">
-      {footItems.map((item) => defaultRow(item, 0, { value: item.value, className: 'lu-cs-foot-item' }))}
+      {footItems.map((item) => defaultRow(item, 0, { className: 'lu-cs-foot-item' }))}
     </div>
   ) : null;
 

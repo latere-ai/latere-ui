@@ -204,6 +204,17 @@ describe('ConsoleSidebar compact head and foot rows (react)', () => {
     expect(row(container, 'credits').querySelector('.lu-cs-item-value')).toBeNull();
   });
 
+  it('sets a grouped row\'s value at its end, as a foot row\'s', () => {
+    const withWallet: ConsoleNavModel = { groups: [...model.groups, { pin: 'bottom', items: [{ id: 'wallet', label: 'Wallet', to: '/billing', icon: 'card', value: '$8.16' }] }] };
+    const { container, rerender } = render(<ConsoleSidebar model={withWallet} bottomGroups="foot" />);
+    const wallet = row(container, 'wallet');
+    expect(wallet.closest('.lu-cs-foot')).not.toBeNull();
+    expect(wallet.querySelector('.lu-cs-item-value')?.textContent).toBe('$8.16');
+    rerender(<ConsoleSidebar model={withWallet} bottomGroups="foot" collapsed />);
+    expect(row(container, 'wallet').getAttribute('title')).toBe('Wallet $8.16');
+    expect(row(container, 'wallet').querySelector('.lu-cs-item-value')).toBeNull();
+  });
+
   it('keeps an empty foot empty', () => {
     const { container } = render(<ConsoleSidebar model={model} footItems={[]} />);
     expect(container.querySelector('.lu-cs-foot')!.innerHTML).toBe('');

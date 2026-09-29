@@ -52,16 +52,15 @@ export interface NavItem {
    * one level: a child's own children are not shown.
    */
   children?: NavItem[];
+  /** Short text set at the row's end, such as a balance ("$8.16"). */
+  value?: string;
 }
 
 /**
  * A row of the rail's foot, above the account control: a link or an action
  * with an icon and an optional trailing value (for example a balance).
  */
-export interface NavFootItem extends NavItem {
-  /** Short text set at the row's end, such as "$8.16". */
-  value?: string;
-}
+export type NavFootItem = NavItem;
 
 /** A labeled section of nav rows, optionally pinned to the rail's bottom. */
 export interface NavGroup {

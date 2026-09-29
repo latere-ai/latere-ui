@@ -210,4 +210,16 @@ describe('ConsoleSidebar compact head and foot rows (vue)', () => {
     expect(row(w, 'credits').find('.lu-cs-item-value').exists()).toBe(false);
     w.unmount();
   });
+
+  it('sets a grouped row\'s value at its end, as a foot row\'s', async () => {
+    const withWallet: ConsoleNavModel = { groups: [...model.groups, { pin: 'bottom', items: [{ id: 'wallet', label: 'Wallet', to: '/billing', icon: 'card', value: '$8.16' }] }] };
+    const w = sidebar({ model: withWallet, bottomGroups: 'foot' });
+    const wallet = row(w, 'wallet');
+    expect(wallet.element.closest('.lu-cs-foot')).not.toBeNull();
+    expect(wallet.find('.lu-cs-item-value').text()).toBe('$8.16');
+    await w.setProps({ collapsed: true });
+    expect(row(w, 'wallet').attributes('title')).toBe('Wallet $8.16');
+    expect(row(w, 'wallet').find('.lu-cs-item-value').exists()).toBe(false);
+    w.unmount();
+  });
 });
