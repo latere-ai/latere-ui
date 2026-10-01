@@ -42,6 +42,18 @@ describe('product registry', () => {
     }
   });
 
+  // topos.latere.ai and cella.latere.ai stopped resolving when their hosted
+  // services were retired; Agents and Environments are platform console
+  // sections, as Models is.
+  it('sends Topos and Cella to the platform console, not their retired hosts', () => {
+    const url = (slug: string) => LATERE_PRODUCTS.find((p) => p.slug === slug)!.url;
+    expect(url('topos')).toBe('https://platform.latere.ai/console/agents');
+    expect(url('cella')).toBe('https://platform.latere.ai/console/environments');
+    for (const p of LATERE_PRODUCTS) {
+      expect(['topos.latere.ai', 'cella.latere.ai']).not.toContain(new URL(p.url).hostname);
+    }
+  });
+
   it('points every product at an https latere.ai origin with no trailing slash', () => {
     for (const p of LATERE_PRODUCTS) {
       const u = new URL(p.url);

@@ -57,7 +57,7 @@ export const LATERE_PRODUCTS: readonly ProductInfo[] = [
   {
     slug: 'topos',
     name: 'Topos',
-    url: 'https://topos.latere.ai',
+    url: 'https://platform.latere.ai/console/agents',
     color: '#55707a',
     brandClass: 'topos-brand',
     icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#55707a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="7" r="2.2"/><circle cx="17" cy="6" r="2.2"/><circle cx="18" cy="17" r="2.2"/><circle cx="7" cy="18" r="2.2"/><path d="M8.1 7.4c2.3 1.3 4.8 1.1 6.9-.5M16.5 8.1c1.4 2 1.8 4.3 1.5 6.7M15.9 17.4c-2.1.9-4.4 1.1-6.7.6M6.8 15.8c-.7-2.2-.8-4.4-.2-6.6M9 9.1l6 6"/></svg>',
@@ -65,7 +65,7 @@ export const LATERE_PRODUCTS: readonly ProductInfo[] = [
   {
     slug: 'cella',
     name: 'Cella',
-    url: 'https://cella.latere.ai',
+    url: 'https://platform.latere.ai/console/environments',
     color: '#6b9e7c',
     brandClass: 'cella-brand',
     icon: '<svg width="22" height="22" viewBox="0 0 16 16" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" style="image-rendering:pixelated;"><rect x="0" y="0" width="16" height="3" fill="#4a7558"/><rect x="0" y="13" width="16" height="3" fill="#4a7558"/><rect x="0" y="3" width="3" height="10" fill="#4a7558"/><rect x="13" y="3" width="3" height="10" fill="#4a7558"/><rect x="3" y="3" width="6" height="4" fill="#8fb894"/><rect x="9" y="3" width="4" height="4" fill="#6b9e7c"/><rect x="3" y="7" width="4" height="3" fill="#6b9e7c"/><rect x="7" y="7" width="6" height="3" fill="#8fb894"/><rect x="3" y="10" width="7" height="3" fill="#8fb894"/><rect x="10" y="10" width="3" height="3" fill="#6b9e7c"/></svg>',

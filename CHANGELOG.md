@@ -8,6 +8,10 @@ release. A tag without one fails the release workflow. Write under
 A section says what changed for whoever uses the release, not what was
 committed: the commit log already holds that.
 
+## Unreleased
+
+- The product switcher's Topos and Cella tiles open the platform console's Agents and Environments sections. They opened `topos.latere.ai` and `cella.latere.ai`, which no longer resolve since those hosted services were retired.
+
 ## v1.32.1 - 2026-10-01
 
 - `LatereLogoMark` and `PlatformLogoMark` draw the mark's dot as a true circle, at the same center and size. It was a traced outline with a flattened side that showed at large sizes.
