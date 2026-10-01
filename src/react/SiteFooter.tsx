@@ -1,11 +1,9 @@
-// React adapter of SiteFooter.vue — the shared Latere footer, in both its
-// variants. Presentational: it takes `theme`/`locale` and reports changes back,
-// so the host's own prefs store stays the single source of truth.
+// SiteFooter: the shared Latere footer, in both its variants. Presentational:
+// it takes `theme`/`locale` and reports changes back, so the host's own prefs
+// store stays the single source of truth.
 //
 // Copy comes from `i18n/footer.ts` and the links from
-// `components/footerNavigation.ts`; both are framework-free `.ts` modules the
-// SFC reads too, so the two adapters cannot drift on what the footer says or
-// where it links.
+// `components/footerNavigation.ts`.
 import { type ComponentType, type ReactNode } from 'react';
 import '../styles/footer.css';
 import { translator, type Locale, type Messages, type Theme, type LocaleOption } from '../i18n/footer';
@@ -48,15 +46,15 @@ export interface SiteFooterProps {
    */
   routerLink?: RouterLinkComponent;
   /**
-   * The host site's lockup at the head of the full footer, the Vue adapter's
-   * `#brand` slot. Defaults to the Latere AI lockup linked to `baseUrl`.
+   * The host site's lockup at the head of the full footer. Defaults to the
+   * Latere AI lockup linked to `baseUrl`.
    */
   brand?: ReactNode;
 }
 
-// The SFC renders these keys with `v-html` because the copy carries entities
-// (`&copy;`) and inline markup. Same nodes, same trust boundary: a host that
-// passes `messages` is passing markup into its own page.
+// These keys render as HTML because the copy carries entities (`&copy;`) and
+// inline markup. A host that passes `messages` is passing markup into its own
+// page.
 function Html({ as: Tag = 'span', html, ...rest }: { as?: any; html: string } & Record<string, unknown>) {
   return <Tag {...rest} dangerouslySetInnerHTML={{ __html: html }} />;
 }
@@ -96,7 +94,7 @@ export function SiteFooter({
   };
 
   // Internal link rendering: relative `to` for routerLink, absolute href
-  // otherwise — the same branch the SFC makes with `<component :is>`.
+  // otherwise.
   const Link: any = routerLink ?? 'a';
   const to = (path: string) => (routerLink ? { to: path } : { href: baseUrl + path });
 

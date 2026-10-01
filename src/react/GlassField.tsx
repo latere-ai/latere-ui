@@ -1,5 +1,5 @@
-// React adapter of GlassField.vue — a labeled input shell in thin glass.
-// Wraps <input>/<textarea>; `value` + `onChange` replace v-model.
+// GlassField: a labeled input shell in thin glass.
+// Wraps <input>/<textarea>, controlled through `value` and `onChange`.
 // Requires `import 'latere-ui/glass'`.
 import { useId, type ChangeEvent } from 'react';
 import '../styles/components/glass-field.css';

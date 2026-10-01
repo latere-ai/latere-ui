@@ -3,9 +3,9 @@ import '../styles/components/glass-radio.css';
 import { cx } from './internal';
 
 export interface GlassRadioProps {
-  /** Selected group value (the Vue modelValue prop). */
+  /** The group's selected value. */
   value: string;
-  /** This option's identity (the Vue value prop). */
+  /** This option's value; the radio is checked when it equals `value`. */
   optionValue: string;
   name: string;
   label?: string;

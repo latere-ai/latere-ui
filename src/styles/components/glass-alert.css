@@ -1,5 +1,4 @@
-/* GlassAlert: shared by the Vue and React adapters. Load after
- * `latere-ui/glass` (the material layer).
+/* GlassAlert. Load after `latere-ui/glass` (the material layer).
  *
  * Anatomy: a three-column grid of the tone icon, the text column and the
  * dismiss. The title and the body share the text column, so every line starts

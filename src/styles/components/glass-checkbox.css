@@ -1,5 +1,4 @@
-/* GlassCheckbox — de-scoped from the SFC so the Vue and React adapters share
- * one stylesheet. Load after `latere-ui/glass` (the material layer). */
+/* GlassCheckbox. Load after `latere-ui/glass` (the material layer). */
 .lu-check { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
 .lu-check.is-disabled { opacity: 0.5; cursor: not-allowed; }
 .lu-check-native { position: absolute; opacity: 0; width: 0; height: 0; }

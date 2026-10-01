@@ -1,5 +1,5 @@
-// DOM-only overlay ownership shared by Vue and React. Only the most recently
-// opened trap handles keyboard events, including mixed-framework hosts.
+// DOM-only overlay ownership. Only the most recently opened trap handles
+// keyboard events, so nested dialogs close one at a time.
 const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),textarea:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])';
 
 interface Trap {

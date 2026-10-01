@@ -1,4 +1,4 @@
-// React adapter of GlassAlert.vue: an inline notice with a leading tone icon,
+// GlassAlert: an inline notice with a leading tone icon,
 // the title and the body on one left edge, a hairline frame with a faint wash
 // of the tone, and an optional dismiss. Requires `import 'latere-ui/glass'`.
 import type { CSSProperties, ReactNode } from 'react';

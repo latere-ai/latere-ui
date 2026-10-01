@@ -1,4 +1,4 @@
-/** Stable immutable snapshots for framework adapters and imperative services. */
+/** Stable immutable snapshots for React subscribers and imperative services. */
 export function createExternalStore<T>(initial: T) {
   let snapshot = initial;
   const listeners = new Set<() => void>();

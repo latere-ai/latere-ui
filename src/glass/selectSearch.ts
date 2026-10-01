@@ -1,5 +1,5 @@
-// Type-to-search for GlassSelect, shared by the Vue and React adapters so both
-// filter, highlight and move through a filtered list identically. Indices are
+// Type-to-search for GlassSelect: filtering, highlighting and movement through
+// a filtered list, kept apart from the component so it is tested alone. Indices are
 // always positions in the full `options` array: option ids, the active option
 // and aria-activedescendant stay stable while the visible set changes.
 import type { SelectOption } from './types';

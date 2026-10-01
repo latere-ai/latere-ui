@@ -1,17 +1,13 @@
-// React adapter of ConsoleSidebar.vue — shared product-console sidebar:
-// brand headline · grouped nav tabs · foldable rail · an account foot slot.
-// The nav model and partition/disabled helpers are headless
-// (src/console/nav.ts, vue-free); this is the thin React shell, mirroring
-// the Vue adapter's markup and class names 1:1 so both frameworks render
-// identical DOM against the same stylesheet.
+// ConsoleSidebar: the shared product-console sidebar: brand headline, grouped
+// nav tabs, a foldable rail and an account foot slot. The nav model and the
+// partition/disabled helpers are headless (src/console/nav.ts); this is the
+// React shell over them.
 //
-// Styling: unlike the Glass primitives, ConsoleSidebar.vue has no
-// `<style scoped>` block to de-scope — its styles already live in the shared,
-// opt-in `src/styles/console.css` (exported as `latere-ui/console`), which
-// also carries cross-component rules for AccountMenu nested in the collapsed
-// rail (`.lu-cs-foot .lu-am-*`). This component does not import a stylesheet
-// itself; hosts `import 'latere-ui/console'` once, exactly as Vue consumers
-// already do.
+// Styling: the styles live in the shared, opt-in `src/styles/console.css`
+// (exported as `latere-ui/console`), which also carries cross-component rules
+// for AccountMenu nested in the collapsed rail (`.lu-cs-foot .lu-am-*`). This
+// component does not import a stylesheet itself; hosts
+// `import 'latere-ui/console'` once.
 //
 import {
   Fragment,
@@ -58,14 +54,12 @@ type BrandTheme = 'lux' | 'cella' | 'topos' | 'wallfacer' | 'lectio';
 
 /**
  * Minimal shape accepted for an injected router link component (e.g.
- * react-router's `Link`). Unlike Vue — which auto-forwards non-prop
- * attributes (`class`, `title`, `onClick`, …) onto a single-root child
- * component — React has no attrs fallthrough, so the component itself must
- * accept and render `className`/`title`/`onClick`/`children` for the sidebar
- * row and brand link to look and behave correctly. Real router `Link`
- * components (react-router, TanStack Router, …) already do this.
+ * react-router's `Link`). The component must accept and render
+ * `className`/`title`/`onClick`/`children` for the sidebar row and brand link
+ * to look and behave correctly. Real router `Link` components (react-router,
+ * TanStack Router, …) already do this.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- intentionally loose, like Vue's `Component` prop type: callers pass react-router's `Link`, TanStack Router's `Link`, or any component whose props are a superset of `{ to }`.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- intentionally loose: callers pass react-router's `Link`, TanStack Router's `Link`, or any component whose props are a superset of `{ to }`.
 export type RouterLinkComponent = ComponentType<any>;
 
 type SlotContent = ReactNode | ((collapsed: boolean) => ReactNode);
@@ -230,9 +224,8 @@ export function ConsoleSidebar({
     setCollapsed(!collapsed);
   }
 
-  // Global Cmd/Ctrl-K opens search, mirroring the Vue adapter's always-on
-  // listener that no-ops unless `search` is enabled (avoids re-attaching on
-  // every prop change).
+  // Global Cmd/Ctrl-K opens search: one always-on listener that no-ops unless
+  // `search` is enabled, so it is not re-attached on every prop change.
   const searchRef = useRef(search);
   searchRef.current = search;
   const onSearchRef = useRef(onSearch);

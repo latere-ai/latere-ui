@@ -1,4 +1,4 @@
-/* Shared console-sidebar styles for ConsoleSidebar.vue. Opt-in entrypoint:
+/* Shared console-sidebar styles for ConsoleSidebar. Opt-in entrypoint:
  * `import 'latere-ui/console'`. Depends on the same design tokens as the footer
  * (--text, --bg-surface, --bg-raised, --text-secondary, --text-muted, --border)
  * plus optional --accent / --ok / --ok-bg for the active row and live badge,
@@ -425,7 +425,7 @@ html { overscroll-behavior: none; }
     gap: 0;
     /* Shrink the trigger to a tight circle around the avatar (AccountMenu's
      * sidebar variant forces width:100% + rounded-rect, which reads as a wide
-     * rectangle in the 64px rail). !important beats the scoped .lu-am-up rule. */
+     * rectangle in the 64px rail). !important beats the .lu-am-up rule. */
     width: auto !important;
     padding: 4px !important;
     border-radius: 999px !important;

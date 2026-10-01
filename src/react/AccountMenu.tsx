@@ -1,14 +1,13 @@
-// React adapter of AccountMenu.vue — the shared account menu for every
-// Latere SPA: identity header → optional "Open dashboard" → an org list with
-// an explicit Personal (no-org) row and each membership → an optional prefs
-// slot (theme/locale) → Sign out / Sign in.
+// AccountMenu: the shared account menu for every Latere SPA: identity header,
+// optional "Open dashboard", an org list with an explicit Personal (no-org)
+// row and each membership, an optional prefs slot (theme/locale), then Sign
+// out or Sign in.
 //
-// Decoupled like the Vue original: it does not require a router. Unlike the
-// Vue original, it CAN optionally read `principal`/`login`/`logout`/
+// It does not require a router. It reads `principal`/`login`/`logout`/
 // `switchOrg` from a `<SessionProvider>` ancestor (via `useOptionalSession`)
 // when the corresponding prop is omitted, so `<AccountMenu />` alone under a
-// provider "just works" — but every prop the Vue component takes still works
-// standalone (e.g. inside a host that keeps its own session state).
+// provider works; every prop also works standalone, inside a host that keeps
+// its own session state.
 // Requires `import 'latere-ui/console'` when nested in ConsoleSidebar's foot
 // (that sheet carries the `.lu-cs-foot .lu-am-*` size overrides); the menu's
 // own styles are self-contained via the import below.

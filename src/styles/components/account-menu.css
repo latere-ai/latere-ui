@@ -1,16 +1,7 @@
-/* AccountMenu — de-scoped from the SFC so the Vue and React adapters share
- * one stylesheet. Relies on the platform CSS tokens (--text, --bg-raised,
- * --accent, …) that every app already defines.
- *
- * Dropped on the move: the three `:slotted(.lu-am-item...)` rules that
- * styled #extra/#prefs slot content in Vue's scoped-CSS model. Scoped CSS
- * needs `:slotted()` because content passed into a slot renders in the
- * *parent's* style scope, not the child's — without it the plain
- * `.lu-am-item` rules below wouldn't reach slotted markup. Once this sheet is
- * global, that distinction disappears: `.lu-am-item` matches slotted content
- * too. The three `:slotted()` blocks were therefore byte-identical duplicates
- * of the `.lu-am-item` / `.lu-am-item:hover` / the shared focus-visible rule
- * already below — dropped rather than carried over dead. */
+/* AccountMenu. Relies on the platform CSS tokens (--text, --bg-raised,
+ * --accent, …) that every app already defines. The sheet is global, so the
+ * `.lu-am-item` rules also style host-supplied rows in the extra and prefs
+ * areas. */
 .lu-am {
   position: relative;
   display: inline-block;

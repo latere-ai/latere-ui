@@ -1,6 +1,7 @@
-// React adapter of GlassSegmented.vue — a segmented control: pick one of a few
+// GlassSegmented: a segmented control: pick one of a few
 // options. Thin-glass track with a highlighted active segment; radiogroup
-// semantics with arrow-key roving focus. `value` + `onChange` replace v-model.
+// semantics with arrow-key roving focus. Controlled through `value` and
+// `onChange`.
 // Requires `import 'latere-ui/glass'`.
 import { useRef, type KeyboardEvent } from 'react';
 import type { SegmentOption } from '../glass/types';

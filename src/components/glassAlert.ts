@@ -1,6 +1,6 @@
-// The GlassAlert anatomy both adapters share: the tone's color token, the
-// icon that leads the notice, and the live-region role. Kept in a .ts module
-// so the Vue and React adapters render the same notice from one table.
+// The GlassAlert anatomy: the tone's color token, the icon that leads the
+// notice, and the live-region role. Kept in a .ts module so the tone table is
+// tested apart from the component.
 
 import type { ConsoleIconName } from '../console/icons';
 

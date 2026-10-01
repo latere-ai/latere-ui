@@ -1,6 +1,10 @@
 import { useLayoutEffect, useRef, useState, type RefObject } from 'react';
 
-/** Vue-compatible CSS enter/leave classes; retain the DOM through its exit. */
+/**
+ * CSS enter/leave classes (`<name>-enter-from`, `-enter-active`, `-enter-to`
+ * and the leave set), swapped on the second animation frame; the element
+ * stays in the DOM through its exit.
+ */
 export function useCssTransition(open: boolean, name: string, root: RefObject<HTMLElement | null>, appear = false): boolean {
   const [present, setPresent] = useState(open);
   const previous = useRef(appear ? false : open);

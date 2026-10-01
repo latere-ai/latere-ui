@@ -1,6 +1,6 @@
-// Expired-session recovery policy, decoupled from Pinia so it can be shared by
-// `createSessionStore` and by apps that keep their own store (e.g. lux). It
-// owns the sandbox-proven flow: a silent `prompt=none` re-check once (guarded
+// Expired-session recovery policy, kept apart from the React bindings so it is
+// shared by `SessionProvider` and by apps that keep their own store. It owns
+// the flow: a silent `prompt=none` re-check once (guarded
 // by a namespaced `sso_checked` sessionStorage flag so it can't loop), then a
 // terminal interactive login. SSR-safe: every method no-ops without `window`.
 
