@@ -1,10 +1,8 @@
-// React session bindings over the framework-agnostic core (session/client.ts,
-// me.ts, reauth.ts, frontChannel.ts, types.ts — none of which import vue).
-// `SessionProvider` is the React-context counterpart of the Pinia store
-// factory (`createSessionStore`); `useSessionGate` is the counterpart of
-// `session/gate.ts`, adapted to be router-agnostic (no vue-router dependency
-// to mirror — hosts pass their own router's path/replace when they have one).
-// Nothing in this file imports `vue` or `pinia`.
+// React session bindings over the framework-free core (session/client.ts,
+// me.ts, reauth.ts, frontChannel.ts, types.ts). `SessionProvider` holds the
+// principal in React context; `useSessionGate` guards a route and is
+// router-agnostic: hosts pass their own router's path/replace when they have
+// one.
 import {
   createContext,
   useCallback,
@@ -94,8 +92,7 @@ const SessionContext = createContext<SessionContextValue | null>(null);
 
 /**
  * Owns the session state machine (loading → authenticated/anonymous) over the
- * vanilla core. Resolves `/me` once on mount, same as the Vue store's
- * bootstrap. Wrap the app (or the console shell) in this once; `useSession()`
+ * framework-free core. Resolves `/me` once on mount. Wrap the app (or the console shell) in this once; `useSession()`
  * and `useSessionGate()` read from it via context.
  */
 export function SessionProvider<Raw = Principal>({
@@ -114,7 +111,7 @@ export function SessionProvider<Raw = Principal>({
 }: SessionProviderProps<Raw>) {
   const client = useMemo(
     () => clientProp ?? createApiClient({ csrfCookie }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- constructed once per mounted provider, like the Pinia store's client.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- constructed once per mounted provider.
     [],
   );
 
@@ -330,7 +327,8 @@ function defaultStripSsoChecked(path: string): void {
  * `opts.path` changes); when absent, the provider's silent `prompt=none`
  * re-check runs. On the bounce-back (`?sso_checked` in the URL) it strips the
  * marker and exposes `showAuthGate` so the view can render a sign-in prompt.
- * The React port of `session/gate.ts`, adapted to be router-agnostic.
+ * Router-agnostic: a host with a router passes its current path in `path`
+ * and a `stripSsoChecked` that navigates with the router.
  */
 export function useSessionGate(opts: UseSessionGateOptions = {}): UseSessionGate {
   const { principal, loading, ensureSession } = useSession();

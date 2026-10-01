@@ -1,19 +1,13 @@
-// React adapter of LatereLogoMark.vue — the Latere mark, inheriting
-// `currentColor` so a host tints it by setting `color` on any ancestor.
-//
-// The path data is duplicated from the SFC because an SVG cannot cross the
-// template/JSX boundary without a runtime. `__tests__/site-footer.test.tsx`
-// compares the `d` attributes in both files, so an edit to one that skips the
-// other fails there rather than shipping two different marks.
+// LatereLogoMark: the Latere mark, inheriting `currentColor` so a host tints
+// it by setting `color` on any ancestor.
 import type { SVGProps } from 'react';
 import { cx } from './internal';
 
 export function LatereLogoMark({ className, ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg
-      // Vue merges a parent's class onto an SFC root; React does not, so the
-      // merge is explicit here. Without it a caller's `className` replaces the
-      // mark's own and the shared sizing rule stops applying.
+      // A caller's `className` joins the mark's own; replacing it would drop
+      // the shared sizing rule.
       className={cx('latere-logo-mark', className)}
       viewBox="147 279 736 425"
       fill="currentColor"

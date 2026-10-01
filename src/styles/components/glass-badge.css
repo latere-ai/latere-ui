@@ -1,5 +1,4 @@
-/* GlassBadge — de-scoped from the SFC so the Vue and React adapters share
- * one stylesheet. Load after `latere-ui/glass` (the material layer). */
+/* GlassBadge. Load after `latere-ui/glass` (the material layer). */
 .lu-badge {
   display: inline-flex;
   align-items: center;

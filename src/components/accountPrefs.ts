@@ -1,7 +1,4 @@
-// Types + defaults for AccountPrefs, kept in a .ts module (not the .vue) so the
-// package entrypoint can re-export them without a consumer's vue-tsc falling
-// back to the default-only `*.vue` shim and losing the named members (this
-// breaks clean / vite-ssg builds).
+// Types and defaults for AccountPrefs.
 
 export interface AccountPrefsLabels {
   language: string;

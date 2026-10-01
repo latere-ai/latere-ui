@@ -1,5 +1,4 @@
-/* GlassSegmented — de-scoped from the SFC so the Vue and React adapters share
- * one stylesheet. Load after `latere-ui/glass` (the material layer). */
+/* GlassSegmented. Load after `latere-ui/glass` (the material layer). */
 .lu-seg {
   display: inline-flex;
   gap: 2px;

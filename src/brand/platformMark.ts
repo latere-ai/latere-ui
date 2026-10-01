@@ -1,4 +1,4 @@
-// Canonical platform geometry, shared by the Vue and React adapters.
+// Canonical platform mark geometry, read by PlatformLogoMark.
 export const PLATFORM_MARK = {
   viewBox: '0 0 32 32',
   logo: { x: 3, y: 2, width: 26, height: 15 },

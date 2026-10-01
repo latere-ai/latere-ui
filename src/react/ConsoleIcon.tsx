@@ -1,4 +1,4 @@
-// React adapter of ConsoleIcon.vue: one stroke icon from the console set
+// ConsoleIcon: one stroke icon from the console set
 // (src/console/icons.ts). A name outside the set renders nothing, so a host
 // can pass any `NavItem.icon` and a row without a known icon keeps no slot.
 import { createElement } from 'react';

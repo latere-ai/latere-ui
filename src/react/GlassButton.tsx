@@ -1,8 +1,8 @@
-// React adapter of GlassButton.vue: an action control in the one control
-// shape, a capsule. The default variant is the secondary action, a hairline
-// outline; `primary` is the ink fill, `ghost` a bare label, `danger` the
-// confirming destructive fill and `danger-ghost` a destructive bare label.
-// Flat: no glass material, blur or shadow (glass-button.css).
+// GlassButton: an action control in the one control shape, a capsule. The
+// default variant is the secondary action, a hairline outline; `primary` is
+// the ink fill, `ghost` a bare label, `danger` the confirming destructive
+// fill and `danger-ghost` a destructive bare label. Flat: no glass material,
+// blur or shadow (glass-button.css).
 import type { MouseEvent, ReactNode } from 'react';
 import '../styles/components/glass-button.css';
 import { cx } from './internal';
@@ -17,7 +17,7 @@ export interface GlassButtonProps {
   disabled?: boolean;
   /** Native button type; defaults to "button" so it never submits by accident. */
   type?: 'button' | 'submit' | 'reset';
-  /** Leading icon — the `icon` slot of the Vue component. */
+  /** Leading icon, set before the label. */
   icon?: ReactNode;
   children?: ReactNode;
   onClick?: (ev: MouseEvent<HTMLButtonElement>) => void;

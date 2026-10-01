@@ -41,7 +41,7 @@ const applications: FooterGroup = { id: 'applications', labelKey: 'footer.applic
 const research: FooterGroup = { id: 'research', labelKey: 'footer.research', links: [{ slug: 'replichai', brandClass: 'replichai-brand', brand: 'replichai', labelKey: 'footer.products.replichai', href: 'https://replichai.latere.ai/' }] };
 const platform: FooterGroup = { id: 'platform', labelKey: 'footer.platform', links: [{ slug: 'platform', brandClass: 'platform-brand', brand: 'platform', labelKey: 'footer.products.platform', href: 'https://platform.latere.ai/console' }, identity] };
 
-/** The product groups, in order, shared by both layouts in both adapters. */
+/** The product groups, in order, shared by both layouts. */
 export const FOOTER_GROUPS: readonly FooterGroup[] = [applications, research, platform];
 
 /** Company pages under the host's base URL, and the contact address. */

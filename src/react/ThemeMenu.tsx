@@ -1,5 +1,8 @@
-// React adapter of ThemeMenu.vue: the same trigger, menu and semantics. See
-// the SFC for the contract.
+// The theme control: a quiet icon button showing the current preference (sun,
+// moon, or a monitor for following the system) that opens Light, Dark and
+// System on a solid menu surface, with a check on the current one. Built on
+// GlassPopover and GlassMenu, so it has their menu-button keys, focus return
+// and menuitemradio semantics. Presentational: the host owns the preference.
 import type { Theme } from '../i18n/footer';
 import {
   DEFAULT_THEME_MENU_LABELS,

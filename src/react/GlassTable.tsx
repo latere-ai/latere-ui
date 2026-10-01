@@ -1,6 +1,6 @@
-// React adapter of GlassTable.vue — a data table with a sticky regular-glass
-// header over scrolling rows. Pass `columns` + `rows`; the Vue `cell-<key>`
-// slots become the `cells` render-prop map. Requires `import 'latere-ui/glass'`.
+// GlassTable: a data table with a sticky regular-glass
+// header over scrolling rows. Pass `columns` + `rows`; the `cells` map
+// renders a column's cells. Requires `import 'latere-ui/glass'`.
 import type { ReactNode } from 'react';
 import type { TableColumn } from '../glass/types';
 import '../styles/components/glass-table.css';

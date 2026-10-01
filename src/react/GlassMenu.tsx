@@ -1,5 +1,12 @@
-// React adapter of GlassMenu.vue: the same markup, roving focus and
-// choice-menu semantics. See the SFC for the interaction contract.
+// A menu list (role=menu) of actionable items: place it inside a
+// GlassPopover, or anywhere a command list belongs. Calls `onSelect` with the
+// item value and skips disabled items.
+//
+// Focus follows the WAI-ARIA menu pattern: one item is in the tab order at a
+// time, ArrowUp/ArrowDown move between enabled items and wrap, Home/End jump
+// to the ends, Enter/Space activate the focused item. When any item carries
+// `checked`, the menu is a choice list: items become menuitemradio with
+// aria-checked and a leading check column, so every label starts at the same x.
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from 'react';
 import type { MenuItem } from '../glass/types';
 import { initialOption, nextEnabledOption } from '../glass/selectNavigation';

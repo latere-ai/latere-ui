@@ -1,11 +1,11 @@
-// Framework-agnostic async core for the session client. Pure functions that
-// take an `ApiClient` (and optional per-call config) and resolve to the same
-// values the Pinia store actions surface. Used by the React adapter
-// (src/react/session.tsx), by non-Vue harnesses, and by the store/useSession
-// reimplementation here that delegates to them.
+// Framework-free async core for the session client. Pure functions that
+// take an `ApiClient` (and optional per-call config) and resolve to the
+// values `SessionProvider` surfaces. Useful for hosts without React, such as
+// a desktop app's plain script, and for the React bindings that delegate to
+// them.
 //
 // SSR-safe: navigation helpers (`login`, `logout`, switch flows) are no-ops
-// when `window` is undefined, mirroring the store actions.
+// when `window` is undefined.
 
 import { ApiError, type ApiClient, type OrgEntry, type Principal } from './types';
 
@@ -65,7 +65,7 @@ export interface SwitchOrgOptions {
 /**
  * POST a switch-org request and navigate to the resulting destination. Falls
  * back to a `loginPath?return_to=…&org_id=…` bounce when the endpoint is
- * missing or fails — same recovery the Pinia store has used since v1.0.
+ * missing or fails.
  * No-op when called outside a browser.
  */
 export async function switchOrg(

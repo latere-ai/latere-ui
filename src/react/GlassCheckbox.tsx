@@ -1,6 +1,6 @@
-// React adapter of GlassCheckbox.vue — a checkbox with a glass check box and a
+// GlassCheckbox: a checkbox with a glass check box and a
 // label. The native input stays in the DOM for accessibility and keyboard
-// support. `value` + `onChange` replace v-model.
+// support. Controlled through `value` and `onChange`.
 import { useId, type ChangeEvent } from 'react';
 import '../styles/components/glass-checkbox.css';
 import { cx } from './internal';

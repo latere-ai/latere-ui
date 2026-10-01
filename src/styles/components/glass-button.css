@@ -1,4 +1,4 @@
-/* GlassButton: shared by the Vue and React adapters.
+/* GlassButton. Load after `latere-ui/glass` (the material layer).
  *
  * One control shape: a capsule in three flat treatments. `primary` is a dark
  * ink fill, `glass` (the default, the secondary action) a 1px hairline

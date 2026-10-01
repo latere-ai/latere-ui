@@ -1,7 +1,7 @@
-// React adapter of GlassModal.vue — a modal dialog on thick glass, portaled to
+// GlassModal: a modal dialog on thick glass, portaled to
 // <body> over a scrim. Traps focus, closes on Escape / scrim click, restores
-// focus on close, and is labeled for assistive tech. `open` + `onClose`
-// replace v-model:open. Requires `import 'latere-ui/glass'`.
+// focus on close, and is labeled for assistive tech. Controlled through
+// `open` and `onClose`. Requires `import 'latere-ui/glass'`.
 import { useId, useRef, type MouseEvent, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import '../styles/components/glass-modal.css';

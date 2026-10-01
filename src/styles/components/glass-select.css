@@ -1,5 +1,4 @@
-/* GlassSelect — de-scoped from the SFC so the Vue and React adapters share
- * one stylesheet. Load after `latere-ui/glass` (the material layer). */
+/* GlassSelect. Load after `latere-ui/glass` (the material layer). */
 .lu-select { position: relative; }
 .lu-select-trigger {
   display: flex;
@@ -25,8 +24,8 @@
 .lu-select-value.is-placeholder { color: var(--text-muted, #707070); }
 .lu-select-chevron { flex: none; color: var(--text-muted, #707070); font-size: 10px; }
 /* The menu panel. It is at least as wide as the trigger and grows to fit its
- * longest label, up to a cap and never past the viewport's 16px gutters; the
- * adapters move it left when it would cross the right gutter. Without a search
+ * longest label, up to a cap and never past the viewport's 16px gutters;
+ * GlassSelect moves it left when it would cross the right gutter. Without a search
  * field the panel is the scroller, with the padding inside the scrolled area.
  * Hosts that restyle the panel (padding, border, background) target this class. */
 .lu-select-list {

@@ -1,4 +1,4 @@
-// React adapter of GlassSpinner.vue — an indeterminate loading spinner.
+// GlassSpinner: an indeterminate loading spinner.
 // Announces itself to assistive tech; slows (never stops) under reduced motion.
 import '../styles/components/glass-spinner.css';
 

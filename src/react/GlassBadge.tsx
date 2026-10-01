@@ -1,4 +1,4 @@
-// React adapter of GlassBadge.vue — a small status pill. `tone` maps to the
+// GlassBadge: a small status pill. `tone` maps to the
 // product's --state-* tokens; thin glass by default, `solid` fills it.
 import type { CSSProperties, ReactNode } from 'react';
 import '../styles/components/glass-badge.css';

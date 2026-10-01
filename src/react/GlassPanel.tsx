@@ -1,4 +1,4 @@
-// React adapter of GlassPanel.vue — a content card: a regular-tier glass
+// GlassPanel: a content card, a regular-tier glass
 // surface with comfortable padding.
 import type { ReactNode } from 'react';
 import '../styles/components/glass-panel.css';
