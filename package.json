@@ -18,6 +18,7 @@
     "./docs": "./src/styles/docs.css",
     "./glass": "./src/styles/glass.css",
     "./presets": "./src/styles/presets.css",
+    "./ink": "./src/styles/ink.css",
     "./telemetry": "./src/telemetry/index.ts",
     "./structured-data": "./src/structured-data/index.ts"
   },
