@@ -1,8 +1,7 @@
-// React entrypoint (`latere-ui/react`). Source-shipped tsx, compiled by the
-// consuming React app exactly as Vue hosts compile the SFCs. Each component
-// imports its shared stylesheet from src/styles/components/*; Vue and
-// React have separate visual baselines for adapter-specific markup. Nothing
-// here may import `vue`; react/react-dom are optional peers.
+// The package entry (`latere-ui`, also `latere-ui/react`). Source-shipped
+// tsx, compiled by the consuming React app. Each component imports its
+// shared stylesheet from src/styles/components/*. Nothing here may import
+// react-dom/server: the favicon helper, which does, is its own entry.
 
 export { GlassButton, type GlassButtonProps } from './GlassButton';
 export { GlassPanel, type GlassPanelProps } from './GlassPanel';
@@ -22,8 +21,8 @@ export type { GlassTier } from './GlassSurface';
 // Shared value types (framework-free .ts modules).
 export type { SelectOption, SegmentOption, TableColumn } from '../glass/types';
 
-// Console shell: React adapter over the headless nav model (console/nav.ts).
-// Styles ship separately as the `latere-ui/console` entrypoint, same as Vue.
+// Console shell over the headless nav model (console/nav.ts). Styles ship
+// separately as the `latere-ui/console` entrypoint.
 export {
   ConsoleSidebar,
   type ConsoleSidebarProps,
@@ -39,8 +38,8 @@ export type { ConsoleIconName } from '../console/icons';
 export { paletteEntries, filterPalette } from '../console/palette';
 export type { ConsolePaletteItem, ConsolePaletteSearch } from '../console/palette';
 
-// Site footer — the shared Latere footer in both variants. Copy and the
-// product lineup come from the same framework-free modules the SFC reads.
+// Site footer: the shared Latere footer in both variants, with its copy from
+// the framework-free i18n module.
 export { SiteFooter, type SiteFooterProps } from './SiteFooter';
 export { LatereLogoMark } from './LatereLogoMark';
 export { PlatformLogoMark } from './PlatformLogoMark';
@@ -53,8 +52,8 @@ export { AccountMenu, type AccountMenuProps } from './AccountMenu';
 export { identityLine, identityParts } from '../components/accountMenu';
 export type { AccountMenuLabels, AccountMenuLabelOverrides, AccountMenuItem, AccountRoleLabels, AccountMenuSubline } from '../components/accountMenu';
 
-// Session bindings — React context + hooks over the vanilla session core
-// (session/client.ts, me.ts, reauth.ts, frontChannel.ts). No vue, no pinia.
+// Session bindings: React context and hooks over the framework-free session
+// core (session/client.ts, me.ts, reauth.ts, frontChannel.ts).
 export {
   SessionProvider,
   useSession,
@@ -65,10 +64,10 @@ export {
   type UseSessionGateOptions,
   type UseSessionGate,
 } from './session';
-// Vanilla async core (framework-agnostic) — re-exported here so a React
-// consumer doesn't need to reach into the Vue-flavored `latere-ui` entry for
-// the types SessionProvider/AccountMenu's props are built from.
+// The framework-free async core, and the types SessionProvider's and
+// AccountMenu's props are built from.
 export { me, orgs, switchOrg, switchPersonal, logout, login } from '../session/me';
+export type { MeOptions, OrgsOptions, SwitchOrgOptions, SwitchOrgNavigation, LogoutOptions } from '../session/me';
 export { createApiClient, ApiError } from '../session/client';
 export { runFrontChannelLogout } from '../session/frontChannel';
 export type {
@@ -84,7 +83,7 @@ export type {
 } from '../session/types';
 export type { FrontChannelLogoutOptions, FrontChannelLogoutResponse } from '../session/frontChannel';
 
-// Complete visual component adapters, sharing styles and framework-free services.
+// The remaining components, sharing styles and framework-free services.
 export * from './basic';
 export * from './overlays';
 export * from './shell';
