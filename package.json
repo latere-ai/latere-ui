@@ -20,7 +20,8 @@
     "./presets": "./src/styles/presets.css",
     "./ink": "./src/styles/ink.css",
     "./telemetry": "./src/telemetry/index.ts",
-    "./structured-data": "./src/structured-data/index.ts"
+    "./structured-data": "./src/structured-data/index.ts",
+    "./favicon": "./src/react/favicon.ts"
   },
   "scripts": {
     "test": "vitest run",
