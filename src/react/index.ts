@@ -12,6 +12,7 @@ export { GlassBadge, type GlassBadgeProps, type GlassBadgeTone } from './GlassBa
 export { GlassAlert, type GlassAlertProps, type GlassAlertTone } from './GlassAlert';
 export { GlassSpinner, type GlassSpinnerProps } from './GlassSpinner';
 export { GlassSelect, type GlassSelectProps } from './GlassSelect';
+export { SELECT_SEARCH_THRESHOLD } from '../glass/selectSearch';
 export { GlassCheckbox, type GlassCheckboxProps } from './GlassCheckbox';
 export { GlassTable, type GlassTableProps } from './GlassTable';
 export { GlassModal, type GlassModalProps } from './GlassModal';

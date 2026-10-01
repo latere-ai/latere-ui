@@ -8,6 +8,13 @@ release. A tag without one fails the release workflow. Write under
 A section says what changed for whoever uses the release, not what was
 committed: the commit log already holds that.
 
+## Unreleased
+
+- `GlassSelect` can be searched by typing. With more than `SELECT_SEARCH_THRESHOLD` options (8, exported from `latere-ui` and `latere-ui/react`), its menu opens with a search field at the top and the focus in it. Typing keeps the options whose label or value contains the text, in any case, and marks the matched part of each label. The arrow keys move through what is left, Enter chooses, and Escape clears the field, then closes the menu. A letter typed on the closed select opens it with that letter in the field, and a search with no match says so in one line. `searchable` shows the field below the threshold or hides it above; `searchPlaceholder` (default "Search") is the field's placeholder and accessible name, and `noMatchLabel` (default "No matches") the no-match line. The field is a combobox that controls the listbox, so a screen reader announces the active option. Existing selects need no change.
+- A select option is one line, cut with an ellipsis, with its full label in a tooltip, where a long label used to wrap. The menu is at least as wide as the select and grows to fit its longest label, up to `--lu-select-menu-max-width` (400px), and never comes closer than 16px to either edge of the viewport.
+- Escape in an open select inside a `GlassModal` or `GlassDrawer` closes only the select; it used to close the dialog as well.
+- The options are a `ul.lu-select-options` listbox inside the `.lu-select-list` panel, so styles that restyle the panel through `.lu-select-list` keep working. The panel sizes as `border-box` and shows seven rows before it scrolls in every host; a host that sets `box-sizing: border-box` on every element saw six and a half.
+
 ## v1.31.0 - 2026-09-30
 
 - Any sidebar row takes `value`, the short text set at its end, where only foot rows did. A section pinned to the bottom can show a balance, such as a Wallet row with "$8.16", and still be the section row, highlighted while its pages are open. The collapsed tooltip names the value as a foot row's does. `NavFootItem` is now the same type as `NavItem`; code that uses it keeps compiling.

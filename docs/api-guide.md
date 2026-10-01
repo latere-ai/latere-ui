@@ -459,6 +459,8 @@ Every component below is available from `latere-ui` for Vue and `latere-ui/react
 
 Controls share one scale. Set `--lu-control-height` and `--lu-control-height-sm` (32px and 28px by default for buttons, fields and selects) and `--lu-control-radius` once, and every button, icon button, field and select takes them, so a field and the button beside it share a baseline and a corner. A destructive action among other actions is `variant="danger-ghost"`, set as text; the filled `danger` belongs to the confirming button of a dialog.
 
+`GlassSelect` can be searched by typing. A select with more than `SELECT_SEARCH_THRESHOLD` options (8) opens with a search field at the top of its menu and the focus in it; typing keeps the options whose label or value contains the text, in any case, and marks the matched part. The arrow keys move through what is left, Enter chooses, and Escape clears the field and then closes the menu. Typing a letter on the closed select opens it with that letter in the field. `searchable` (Vue and React) shows the field below the threshold or hides it above; `searchPlaceholder` (default "Search") is the field's placeholder and accessible name, and `noMatchLabel` (default "No matches") the line shown when nothing matches. Each option is one line, cut with an ellipsis and with its full label in a tooltip; the menu grows wider than the select to fit its longest label, up to `--lu-select-menu-max-width` (400px) and never past the viewport's 16px edges. Inside a modal or a drawer, Escape in an open select closes only the select.
+
 `GlassBadge` keeps glass labels in the text color and uses the dot for tone. Solid badges pair each default fill with contrasting ink. If you override a semantic fill, set its matching `--state-<tone>-ink` when needed and verify contrast in both themes.
 
 Imperative services (mount the host once, call anywhere):
@@ -989,7 +991,7 @@ All Glass components listed above are exported. Import `latere-ui/glass` for the
 |---|---|
 | `GlassField` | `value` and `onChange(text)` |
 | `GlassCheckbox`, `GlassSwitch` | Boolean `value` and `onChange(checked)` |
-| `GlassSelect`, `GlassSegmented` | `value`, `options`, `onChange(value)`; `ariaLabel` names the group/control |
+| `GlassSelect`, `GlassSegmented` | `value`, `options`, `onChange(value)`; `ariaLabel` names the group/control. `GlassSelect` also takes `searchable`, `searchPlaceholder` and `noMatchLabel` |
 | `GlassTabs` | `value`, `tabs`, `onChange(value)`; the host renders the active panel |
 | `GlassRadio` | Selected group `value`, option identity `optionValue`, shared `name`, `onChange(value)` |
 | `GlassModal`, `GlassDrawer`, `ConsolePalette` | `open` and `onClose()`; the host updates `open` |

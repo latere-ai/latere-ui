@@ -16,6 +16,7 @@ specs/
   react-site-footer-v1.28.md (validated: SiteFooter + LatereLogoMark for React consumers)
   browser-telemetry.md     (complete: `latere-ui/telemetry`, one lazy browser telemetry entry paired with otel.TelemetryProxy)
   structured-data.md       (complete: `latere-ui/structured-data`, schema.org JSON-LD builders and an escaped script serializer for public pages)
+  select-search.md         (complete: GlassSelect search by typing above SELECT_SEARCH_THRESHOLD options, shared in src/glass)
 ```
 
 ## Dependencies

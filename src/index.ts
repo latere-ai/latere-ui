@@ -140,6 +140,7 @@ export { default as GlassTooltip } from './components/GlassTooltip.vue';
 // Containers.
 export { default as GlassMenu } from './components/GlassMenu.vue';
 export { default as GlassSelect } from './components/GlassSelect.vue';
+export { SELECT_SEARCH_THRESHOLD } from './glass/selectSearch';
 export { default as GlassDrawer } from './components/GlassDrawer.vue';
 export { default as GlassTable } from './components/GlassTable.vue';
 export type { MenuItem, SelectOption, TableColumn } from './glass/types';

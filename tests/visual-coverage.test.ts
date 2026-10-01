@@ -51,6 +51,7 @@ const nonvisualExports: Record<string, string> = {
   LATERE_PRODUCTS: 'Product registry data, rendered through ProductSwitcher and SiteFooter.',
   DEFAULT_PRODUCT_SWITCHER_LABELS: 'Default text data consumed by ProductSwitcher.',
   CONSOLE_ICONS: 'Icon path data, rendered through ConsoleSidebar and ConsolePalette.',
+  SELECT_SEARCH_THRESHOLD: 'Option count above which GlassSelect shows its search field; a number, never renders UI.',
   DEFAULT_NAV_OPEN_KEY: 'Default storage key string for the sidebar\'s open parents; never renders UI.',
 };
 function visualExports(file: string) {
