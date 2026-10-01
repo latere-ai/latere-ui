@@ -150,7 +150,7 @@ Test effects over a recognizable backdrop so refraction is visible. Check both t
 
 ## Keep the figures reviewable
 
-Golden figures are committed PNGs from the browser fixtures, using fixed content, platform UI fonts with bundled brand/code fonts, and named viewport/theme combinations. They render at 3.125× the CSS layout size for clear enlarged views. The design skeleton is SVG and scales without pixelation. Their filenames identify the appearance, scenario, theme, and viewport. For example, `origo-buttons-dark-desktop.png` shows the button fixture in the Origo appearance in dark mode at the desktop size. Vue and React render each fixture with identical pixels, so one figure shows both adapters.
+Golden figures are committed PNGs from the browser fixtures, using fixed content, platform UI fonts with bundled brand/code fonts, and named viewport/theme combinations. They render at 2× the CSS layout size, as on a high-density display. The design skeleton is SVG and scales without pixelation. Their filenames identify the appearance, scenario, theme, and viewport. For example, `origo-buttons-dark-desktop.png` shows the button fixture in the Origo appearance in dark mode at the desktop size. Vue and React render each fixture with identical pixels, so one figure shows both adapters.
 
 The [reference index](visual-reference.md) maps components to their figures. Contributors compare, inspect, and update them as described in [Contributing](../CONTRIBUTING.md), and the [review records](reviews/README.md) document each deliberate regeneration, the defects it corrected, and the coverage limits.
 

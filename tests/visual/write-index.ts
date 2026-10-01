@@ -6,7 +6,7 @@ const directory = 'tests/visual/goldens/darwin-24';
 const link = (name: string) => `../${directory}/${name}`;
 const lines = [
   '# Visual reference index', '',
-  'These PNGs are the expected renders used by the browser suite. Chromium renders them on macOS 15 at 3.125× browser resolution, so text and edges stay sharp at full size. The same fixtures are interactive in the local gallery (`bun run visual:dev`). See [Contributing](../CONTRIBUTING.md) for comparison and update commands.', '',
+  'These PNGs are the expected renders used by the browser suite. Chromium renders them on macOS 15 at 2× browser resolution, as on a high-density display. The same fixtures are interactive in the local gallery (`bun run visual:dev`). See [Contributing](../CONTRIBUTING.md) for comparison and update commands.', '',
   'Every visual component renders in light and dark themes at desktop and mobile widths. Vue and React must render each sheet with identical decoded RGBA pixels before its reference is compared or recorded, so each figure shows both adapters.', '',
 ];
 const standard = new Set<string>();

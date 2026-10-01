@@ -56,9 +56,9 @@ Chromium is installed by the pinned Playwright version. CoreText and blur
 rendering can differ between macOS releases, so a run on another release has
 no references to compare against; record and compare on the CI runner. Every compared render uses the Chromium arguments in `tests/visual/reference-settings.ts`: grayscale text antialiasing, and each composited layer up to 4096 device pixels rasterized as one tile. With Chromium's default 256-pixel tiles, the hosted runner drew the edges of stroke icons in a tiled layer with one of two pixel patterns from render to render. A change to these arguments needs a reviewed regeneration, like a browser or font upgrade. Comparisons decode PNGs and require equal dimensions and every RGBA channel to match exactly. There is no channel threshold, antialiasing exclusion, pixel allowance, mask, or adapter-specific tolerance; PNG compression differences do not count as visual changes.
 The viewport is 1100 × 850 for default desktop sheets (1280 × 850 for three-column docs
-and product appearances) and 390 × 844 for mobile in CSS pixels. Captures render at 3.125×
-(300/96) and retain device pixels. A standard desktop figure is approximately
-3438 × 2656 pixels, so text stays sharp when enlarged. CSS layout and component sizing stay the same.
+and product appearances) and 390 × 844 for mobile in CSS pixels. Captures render at 2×,
+as on a high-density display, and retain device pixels. A standard desktop
+figure is 2200 × 1700 pixels. CSS layout and component sizing stay the same.
 Fonts are bundled locally;
 media preferences are explicit, with dedicated accessibility scenarios.
 No backend, remote images, or web font service is needed.

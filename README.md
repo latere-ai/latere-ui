@@ -130,7 +130,7 @@ For exact props, events, router integration, footer locales, session setup, [bro
 
 ![Button variants, sizes, disabled states, and loading states](tests/visual/goldens/darwin-24/buttons-light-desktop.png)
 
-The repository keeps golden PNGs of real components in light and dark themes, rendered at 3.125× resolution for clear enlarged views. The matrix includes every visual component in desktop/light, desktop/dark, mobile/light and mobile/dark for default glass, Replichai, Wallfacer and Origo. Vue and React must render each sheet with identical decoded RGBA pixels before its reference can be compared or recorded, so one figure shows both adapters. Comparisons allow no channel or antialiasing tolerance.
+The repository keeps golden PNGs of real components in light and dark themes, rendered at 2× resolution, as on a high-density display. The matrix includes every visual component in desktop/light, desktop/dark, mobile/light and mobile/dark for default glass, Replichai, Wallfacer and Origo. Vue and React must render each sheet with identical decoded RGBA pixels before its reference can be compared or recorded, so one figure shows both adapters. Comparisons allow no channel or antialiasing tolerance.
 
 | Workspace references | Light | Dark |
 |---|---|---|
