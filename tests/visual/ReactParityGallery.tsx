@@ -13,7 +13,6 @@ function ReactParityGallery({ scenario }: { scenario: string }) {
   const params = new URLSearchParams(location.search);
   const effectText = effectCaptions(!!document.documentElement.dataset.design);
   const accountLinks = params.get('accountLinks') === 'true' ? [{ label: 'Account help', href: '#account-help' }] : [];
-  const currentProduct = params.get('currentProduct') ?? '';
   const showToc = params.get('showToc') !== 'false';
   const matchWidth = params.get('matchWidth') === 'true';
   const placement = (params.get('placement') || 'bottom-start') as 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';
@@ -117,7 +116,6 @@ function ReactParityGallery({ scenario }: { scenario: string }) {
   // The account preferences and the two menus share one theme and locale, as
   // a host's header, footer and account menu do.
   if (scenario === 'preferences') return <div className="stack"><div className="sample" data-component="AccountPrefs">{prefs}</div><section className="sample row preference-menus"><div data-component="ThemeMenu"><UI.ThemeMenu theme={theme} onThemeChange={setTheme} placement="bottom-start" /></div><div data-component="LocaleMenu"><UI.LocaleMenu locale={locale} locales={locales} onLocaleChange={setLocale} placement="bottom-start" /></div></section></div>;
-  if (scenario === 'products') return <div data-component="ProductSwitcher"><UI.ProductSwitcher current={currentProduct} /></div>;
   if (scenario === 'organizations') return <div className="sample organization-demo" data-component="OrgSwitcher"><UI.OrgSwitcher state={orgState} header={<p className="sample-label">Switch workspace</p>} /></div>;
   if (scenario.startsWith('footer')) return <div data-component="SiteFooter"><UI.SiteFooter theme={theme} locale={locale} locales={locales} compact={scenario === 'footer-compact'} onThemeChange={setTheme} onLocaleChange={setLocale} /></div>;
   if (scenario === 'logo') return <div className="logo-stage row" data-component="LatereLogoMark"><UI.LatereLogoMark /><UI.PlatformLogoMark data-component="PlatformLogoMark" width={48} height={48} />{brands.map(brand => <span key={brand} className={`${brand}-brand`} style={{ fontSize: 28 }}>{brand}</span>)}</div>;

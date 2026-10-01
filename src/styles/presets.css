@@ -194,13 +194,13 @@
 /* Every filter-bearing primitive participates, including teleported overlays
  * and their scrims. Opaque presets must not retain nested glass rendering. */
 :root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) :is(.lu-glass, .lu-glass-ultrathin, .lu-glass-thin, .lu-glass-thick, .lu-glass-smoke,
-  .lu-tip, .lu-am-dd, .lu-ps-panel, .lu-cp, .lu-cs, .lu-modal-scrim, .lu-drawer-scrim) {
+  .lu-tip, .lu-am-dd, .lu-cp, .lu-cs, .lu-modal-scrim, .lu-drawer-scrim) {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
 :root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) body { font-family: var(--font-ui); font-size: var(--lu-preset-body-size); }
 :root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-cs { background: var(--bg-raised); }
-:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) :is(.lu-modal, .lu-pop-panel, .lu-select-list, .lu-cp, .lu-am-dd, .lu-ps-panel, .lu-drawer, .lu-toast) {
+:root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) :is(.lu-modal, .lu-pop-panel, .lu-select-list, .lu-cp, .lu-am-dd, .lu-drawer, .lu-toast) {
   box-shadow: var(--lu-preset-overlay-shadow);
 }
 :root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) .lu-btn { border-radius: var(--lu-preset-action-radius); font-size: 12.5px; font-weight: var(--fw-medium); }

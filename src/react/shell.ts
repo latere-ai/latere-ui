@@ -3,10 +3,8 @@ export { DocsLayout, type DocsLayoutProps, type DocsLayoutHandle } from './DocsL
 export { AccountPrefs, type AccountPrefsProps } from './AccountPrefs';
 export { ThemeMenu, type ThemeMenuProps, type ThemeMenuLabels } from './ThemeMenu';
 export { LocaleMenu, type LocaleMenuProps } from './LocaleMenu';
-export { ProductSwitcher, type ProductSwitcherProps } from './ProductSwitcher';
 export { OrgSwitcher, useOrgSwitcher, type OrgSwitcherProps, type OrgSwitcherState } from './OrgSwitcher';
 export type { AccountPrefsLabels } from '../components/accountPrefs';
-export type { ProductSwitcherLabels, ProductSwitcherLabelOverrides } from '../components/productSwitcher';
 export type { OrgSwitcherItem, OrgSwitcherDeps } from '../session/orgSwitcherModel';
 export { flattenDocs, findDoc, adjacentDocs, docPath, buildDocSearchIndex } from '../docs/model';
 export type { DocPage, DocGroup, FlatDoc, DocSearchEntry } from '../docs/model';

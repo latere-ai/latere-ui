@@ -71,7 +71,6 @@ export async function prepare(page: Page, scenario: string) {
   if (scenario === 'confirm') await page.getByRole('button', { name: 'Delete workspace', exact: true }).click();
   if (scenario === 'palette') await page.getByRole('button', { name: 'Open palette' }).click();
   if (scenario === 'account') await page.locator('.lu-am-trigger').first().click();
-  if (scenario === 'products') await page.locator('.lu-iconbtn').first().click();
   if (scenario === 'select') await page.getByRole('combobox', { name: 'Workspace', exact: true }).click();
   if (scenario === 'effects') {
     await sampleSheen(page);

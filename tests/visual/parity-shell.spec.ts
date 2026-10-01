@@ -116,27 +116,5 @@ for (const layout of ['desktop', 'mobile']) {
       await setup.click();
       await expect(page).toHaveURL(/\/start\/setup$/);
     });
-
-    test('product switcher marks current, closes links and handles Escape', async ({ page }) => {
-      await visit(page, 'products', 'light', '&parity=1&currentProduct=chat');
-      const trigger = page.getByRole('button', { name: 'Switch product', exact: true });
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      await trigger.click();
-      const current = page.locator('.lu-ps-tile[aria-current="true"]');
-      await expect(current).toContainText('Latere');
-      expect(await current.evaluate(element => element.tagName)).toBe('SPAN');
-      await expect(page.locator('.lu-ps-grid a')).toHaveCount(4);
-      await page.keyboard.press('Escape');
-      await expect(page.locator('.lu-ps-panel')).toHaveCount(0);
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      await trigger.click();
-      const identity = page.getByRole('link', { name: 'Identity', exact: true });
-      await expect(identity).toHaveAttribute('href', 'https://auth.latere.ai');
-      // Observe the real click and dismissal without navigating to another product.
-      await identity.evaluate(element => element.addEventListener('click', event => event.preventDefault(), { once: true }));
-      await identity.click();
-      await expect(page.locator('.lu-ps-panel')).toHaveCount(0);
-      await expect(page).toHaveURL(/scenario=products/);
-    });
   });
 }

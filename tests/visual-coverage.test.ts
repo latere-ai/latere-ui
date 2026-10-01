@@ -48,7 +48,6 @@ function publicValueExports(file: string, load = read, seen = new Set<string>())
 const nonvisualExports: Record<string, string> = {
   SessionProvider: 'React context provider; renders its children without visual markup.',
   ApiError: 'HTTP client error class; never renders UI.',
-  LATERE_PRODUCTS: 'Product registry data, rendered through ProductSwitcher and SiteFooter.',
   CONSOLE_ICONS: 'Icon path data, rendered through ConsoleSidebar and ConsolePalette.',
   SELECT_SEARCH_THRESHOLD: 'Option count above which GlassSelect shows its search field; a number, never renders UI.',
   DEFAULT_NAV_OPEN_KEY: 'Default storage key string for the sidebar\'s open parents; never renders UI.',
@@ -134,7 +133,7 @@ describe('visual fixture inventory', () => {
   it('registers light/dark for every sheet and appearance, and mobile for the default appearance', () => {
     const figures = registeredGoldens('tests/visual/design-goldens.spec.ts');
     const sheets = Object.keys(scenarios);
-    expect(sheets).toHaveLength(25);
+    expect(sheets).toHaveLength(24);
     expect(sorted(manifest.mobileScenarios)).toEqual(sorted(sheets));
     expect(sorted(designManifest.designMobileScenarios)).toEqual([]);
     expect(figures.size).toBe(sheets.length * 2 * 2 + sheets.length * designs.length * 2);

@@ -1,5 +1,3 @@
-import { LATERE_PRODUCTS } from './productSwitcher';
-
 /**
  * One footer destination. `href` is absolute, or a path on the host's company
  * site when `site` is set: those render through the host's `routerLink`
@@ -28,16 +26,11 @@ interface FooterGroup {
   links: readonly FooterLink[];
 }
 
-function application(slug: 'chat'): FooterLink {
-  const product = LATERE_PRODUCTS.find(p => p.slug === slug)!;
-  return { slug, labelKey: `footer.products.${slug}`, href: `${product.url}/`, brandClass: product.brandClass, brand: slug };
-}
-
 const identity: FooterLink = { slug: 'identity', labelKey: 'footer.identity', href: 'https://auth.latere.ai/', html: true };
 const contact: FooterLink = { slug: 'contact', labelKey: 'footer.contact', href: 'mailto:contact@latere.ai', html: true };
 const site = (slug: string, labelKey: string, href: string): FooterLink => ({ slug, labelKey, href, site: true });
 
-const applications: FooterGroup = { id: 'applications', labelKey: 'footer.applications', links: [application('chat')] };
+const applications: FooterGroup = { id: 'applications', labelKey: 'footer.applications', links: [{ slug: 'chat', labelKey: 'footer.products.chat', href: 'https://chat.latere.ai/', brandClass: 'chat-brand', brand: 'chat' }] };
 const research: FooterGroup = { id: 'research', labelKey: 'footer.research', links: [{ slug: 'replichai', brandClass: 'replichai-brand', brand: 'replichai', labelKey: 'footer.products.replichai', href: 'https://replichai.latere.ai/' }] };
 const platform: FooterGroup = { id: 'platform', labelKey: 'footer.platform', links: [{ slug: 'platform', brandClass: 'platform-brand', brand: 'platform', labelKey: 'footer.products.platform', href: 'https://platform.latere.ai/console' }, identity] };
 

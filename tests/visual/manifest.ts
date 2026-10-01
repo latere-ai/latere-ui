@@ -19,7 +19,6 @@ export const scenarios = {
     docs: ['DocsLayout'],
     account: ['AccountMenu', 'AccountPrefs'],
     preferences: ['AccountPrefs', 'ThemeMenu', 'LocaleMenu'],
-    products: ['ProductSwitcher'],
     organizations: ['OrgSwitcher'],
     footer: ['SiteFooter'],
     'footer-compact': ['SiteFooter'],
