@@ -120,10 +120,11 @@ function focusField() {
 }
 useClickOutside(root, () => open.value, () => close());
 
-function choose(opt: SelectOption | undefined, fromKeyboard: boolean) {
+// Choosing returns focus to the trigger, from the field or the pointer alike.
+function choose(opt: SelectOption | undefined) {
   if (!opt || opt.disabled) return;
   emit('update:modelValue', opt.value);
-  close(fromKeyboard);
+  close(true);
 }
 
 // Keep focus where it is while the pointer chooses in the menu; only the
@@ -158,7 +159,7 @@ function onKey(e: KeyboardEvent) {
     active.value = nextVisibleOption(props.options, visible.value, active.value, -1);
   } else if (e.key === 'Enter') {
     e.preventDefault();
-    choose(visible.value.includes(active.value) ? props.options[active.value] : undefined, true);
+    choose(visible.value.includes(active.value) ? props.options[active.value] : undefined);
   } else if (e.key === 'Escape') {
     // The select owns Escape while open: a search clears first, then the menu
     // closes. Nothing behind it, such as a dialog, sees the key.
@@ -235,7 +236,7 @@ function onKey(e: KeyboardEvent) {
             :aria-label="runs.length > 1 ? option.label : undefined"
             :aria-selected="option.value === modelValue"
             :aria-disabled="option.disabled || undefined"
-            @click="choose(option, false)"
+            @click="choose(option)"
             @mouseenter="!option.disabled && (active = i)"
           ><template v-for="(run, r) in runs" :key="r"><mark v-if="run.match" class="lu-select-match">{{ run.text }}</mark><template v-else>{{ run.text }}</template></template></li>
         </ul>

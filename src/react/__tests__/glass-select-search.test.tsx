@@ -174,6 +174,7 @@ describe('GlassSelect search (react)', () => {
     expect(fireEvent.mouseDown(field()!)).toBe(true);
     fireEvent.click(row);
     expect(onChange).toHaveBeenCalledWith('Africa/Cairo');
+    expect(document.activeElement).toBe(w.getByRole('combobox'));
   });
 
   it('makes the hovered enabled row of a filtered list active', () => {

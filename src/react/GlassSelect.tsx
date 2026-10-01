@@ -119,10 +119,11 @@ export function GlassSelect({
   }
   useClickOutside(root, open, () => close());
 
-  function choose(opt: SelectOption | undefined, fromKeyboard: boolean) {
+  // Choosing returns focus to the trigger, from the field or the pointer alike.
+  function choose(opt: SelectOption | undefined) {
     if (!opt || opt.disabled) return;
     onChange?.(opt.value);
-    close(fromKeyboard);
+    close(true);
   }
 
   // Keep focus where it is while the pointer chooses in the menu; only the
@@ -157,7 +158,7 @@ export function GlassSelect({
       setActive((a) => nextVisibleOption(options, visible, a, -1));
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      choose(visible.includes(active) ? options[active] : undefined, true);
+      choose(visible.includes(active) ? options[active] : undefined);
     } else if (e.key === 'Escape') {
       // The select owns Escape while open: a search clears first, then the
       // menu closes. Nothing behind it, such as a dialog, sees the key.
@@ -242,7 +243,7 @@ export function GlassSelect({
                   aria-label={runs.length > 1 ? opt.label : undefined}
                   aria-selected={opt.value === value}
                   aria-disabled={opt.disabled || undefined}
-                  onClick={() => choose(opt, false)}
+                  onClick={() => choose(opt)}
                   onMouseEnter={() => !opt.disabled && setActive(i)}
                 >
                   {runs.map((run, r) => (run.match ? <mark key={r} className="lu-select-match">{run.text}</mark> : run.text))}

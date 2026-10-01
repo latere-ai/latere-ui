@@ -197,6 +197,7 @@ describe('GlassSelect search (vue)', () => {
     row.click();
     await nextTick();
     expect(w.emitted('update:modelValue')).toEqual([['Africa/Cairo']]);
+    expect(document.activeElement).toBe(w.get('button').element);
   });
 
   it('makes the hovered enabled row of a filtered list active', async () => {

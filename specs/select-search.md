@@ -39,7 +39,9 @@ created: 2026-10-01
 - A non-empty query makes the first enabled match active, so Enter takes it.
   An empty query returns to the chosen value. Arrows wrap through the visible
   enabled options; Enter chooses; Escape clears a non-empty query, then
-  closes and returns focus to the trigger. Focus leaving the control (Tab, a
+  closes. Choosing, by key or pointer, and closing with Escape return focus
+  to the trigger; a press in the menu never takes focus from the field or
+  the trigger, so a pointer choice in Chromium shows no focus ring. Focus leaving the control (Tab, a
   click elsewhere) closes the menu without choosing.
 - Nothing matching shows one line, `noMatchLabel` ("No matches"), as a
   status.
