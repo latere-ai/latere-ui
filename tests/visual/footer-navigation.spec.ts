@@ -2,7 +2,7 @@ import { test, expect, visit } from './fixtures';
 import { designs } from './design-manifest';
 
 const COLUMNS = [
-  ['https://wf.latere.ai/', 'https://lectio.latere.ai/'],
+  ['https://wf.latere.ai/'],
   ['https://replichai.latere.ai/'],
   ['https://platform.latere.ai/console', 'https://auth.latere.ai/'],
   ['/about', '/blog/why-latere', '/blog', '/open-source', 'mailto:contact@latere.ai'],
@@ -105,7 +105,7 @@ for (const framework of ['vue', 'react']) for (const design of ['default', ...de
       await expect(link).toHaveCSS('font-style', 'normal');
       await expect(link).toHaveCSS('color', rest);
     }
-    for (const slug of ['wallfacer', 'lectio', 'replichai', 'platform']) {
+    for (const slug of ['wallfacer', 'replichai', 'platform']) {
       const link = page.locator(`.footer-link[data-brand="${slug}"]`);
       await link.hover();
       await expect(link).toHaveCSS('background-image', /linear-gradient/);

@@ -14,7 +14,7 @@ function render(props: Record<string, unknown> = {}, options: Record<string, unk
 afterEach(() => { while (mounted.length) mounted.pop()!.unmount(); document.body.innerHTML = ''; });
 
 const DESTINATIONS = {
-  applications: ['https://wf.latere.ai/', 'https://lectio.latere.ai/'],
+  applications: ['https://wf.latere.ai/'],
   research: ['https://replichai.latere.ai/'],
   platform: ['https://platform.latere.ai/console', 'https://auth.latere.ai/'],
   company: ['https://latere.ai/about', 'https://latere.ai/blog/why-latere', 'https://latere.ai/blog', 'https://latere.ai/open-source', 'mailto:contact@latere.ai'],
@@ -66,7 +66,7 @@ describe('SiteFooter', () => {
     const links = render().findAll('.footer-cols a.footer-link');
     const products = links.filter(a => a.attributes('data-brand'));
     expect(products.map(a => [a.text(), a.attributes('data-brand')])).toEqual([
-      ['Wallfacer', 'wallfacer'], ['Lectio', 'lectio'], ['ReplicHAI', 'replichai'], ['Latere Platform', 'platform'],
+      ['Wallfacer', 'wallfacer'], ['ReplicHAI', 'replichai'], ['Latere Platform', 'platform'],
     ]);
     // No wordmark span: the column reads in one face.
     expect(render().find('.footer-cols [class$="-brand"]').exists()).toBe(false);
@@ -194,7 +194,7 @@ describe('SiteFooter', () => {
     expect(w.find('.footer-bottom').exists()).toBe(false); // copyright lives inline in the bar
     expect(w.find('.footer-compact-copy').exists()).toBe(true);
     const links = w.get('.footer-compact-links');
-    for (const name of ['Wallfacer', 'Lectio', 'ReplicHAI', 'Latere Platform', 'Identity', 'Team', 'Impressum']) {
+    for (const name of ['Wallfacer', 'ReplicHAI', 'Latere Platform', 'Identity', 'Team', 'Impressum']) {
       expect(links.text()).toContain(name);
     }
     expect(w.findAll('.footer-extra .lu-pref')).toHaveLength(2);

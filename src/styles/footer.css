@@ -63,8 +63,9 @@
     --lu-brand-platform: linear-gradient(135deg, #fafafa 0%, #d8d8d8 55%, #a8a8a8 100%);
 }
 /* `.drive-brand` outlives the retired Drive console: the platform's Storage
- * section keeps the gold as its accent, so hosts still resolve the class even
- * though no component in this package emits it. */
+ * section keeps the gold as its accent. `.lectio-brand` outlives Lectio's
+ * place in the footer: published posts still set its wordmark. Hosts resolve
+ * both classes even though no component in this package emits them. */
 .cella-brand,
 .wallfacer-brand,
 .lux-brand,
@@ -207,7 +208,6 @@
 /* A product link rests in the body face like its neighbors and takes its
  * product's gradient under the pointer or focus. */
 .footer-link[data-brand="wallfacer"] { --lu-footer-brand: var(--lu-brand-wallfacer); }
-.footer-link[data-brand="lectio"] { --lu-footer-brand: var(--lu-brand-lectio); }
 .footer-link[data-brand="replichai"] { --lu-footer-brand: var(--lu-brand-replichai); }
 .footer-link[data-brand="platform"] { --lu-footer-brand: var(--lu-brand-platform); }
 .footer-link[data-brand]:hover,
