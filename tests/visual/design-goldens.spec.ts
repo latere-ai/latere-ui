@@ -1,12 +1,13 @@
 import { goldenTest as test, expect, visit, prepare, sheenInteraction } from './fixtures';
-import { scenarios } from './manifest';
-import { designs } from './design-manifest';
+import { scenarios, mobileScenarios } from './manifest';
+import { designs, designMobileScenarios } from './design-manifest';
 import { captureExact } from './exact-golden';
 import { comparePixels } from './exact-pixels';
 import { writeFileSync } from 'node:fs';
 
 for (const design of ['default', ...designs]) for (const [scenario, components] of Object.entries(scenarios.vue)) {
-  for (const theme of ['light', 'dark']) for (const layout of ['desktop', 'mobile']) {
+  const mobile = (design === 'default' ? mobileScenarios : designMobileScenarios).has(scenario);
+  for (const theme of ['light', 'dark']) for (const layout of mobile ? ['desktop', 'mobile'] : ['desktop']) {
     test(`parity ${design} ${scenario} ${theme} ${layout}`, async ({ page }, info) => {
       test.setTimeout(60000);
       await page.setViewportSize(layout === 'mobile' ? { width: 390, height: 844 }

@@ -14,7 +14,7 @@ The materials, controls, overlays, console shell, and documentation layout are p
 
 [Design guide](docs/design-system.md) · [Integration guide](docs/api-guide.md) · [React shell](docs/react-shell.md) · [Visual reference](docs/visual-reference.md) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md)
 
-Every component has light and dark, desktop and mobile figures in both frameworks and all four appearances; the [visual reference](docs/visual-reference.md) indexes them.
+Every component has light and dark figures in all four appearances, and mobile figures in the default appearance, shared by both frameworks; the [visual reference](docs/visual-reference.md) indexes them.
 
 ## Choose an appearance
 
@@ -130,7 +130,7 @@ For exact props, events, router integration, footer locales, session setup, [bro
 
 ![Button variants, sizes, disabled states, and loading states](tests/visual/goldens/darwin-24/buttons-light-desktop.png)
 
-The repository keeps golden PNGs of real components in light and dark themes, rendered at 2× resolution, as on a high-density display. The matrix includes every visual component in desktop/light, desktop/dark, mobile/light and mobile/dark for default glass, Replichai, Wallfacer and Origo. Vue and React must render each sheet with identical decoded RGBA pixels before its reference can be compared or recorded, so one figure shows both adapters. Comparisons allow no channel or antialiasing tolerance.
+The repository keeps golden PNGs of real components in light and dark themes, rendered at 2× resolution, as on a high-density display. The matrix includes every visual component in desktop/light, desktop/dark, mobile/light and mobile/dark for default glass, and desktop/light and desktop/dark for Replichai, Wallfacer and Origo. Vue and React must render each sheet with identical decoded RGBA pixels before its reference can be compared or recorded, so one figure shows both adapters. Comparisons allow no channel or antialiasing tolerance.
 
 | Workspace references | Light | Dark |
 |---|---|---|

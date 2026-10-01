@@ -69,7 +69,7 @@ Each capture waits for finite transitions to finish, pauses looping animations a
 
 Optical figures send a fixed pointer sample through the component's mouse handler, with the native cursor outside the panel. Native full-page captures can temporarily resize Chromium to 1×1 and dispatch an unrelated mouse-leave event. The fixture avoids that input disturbance; capture also checks the sampled opacity and gradient before accepting each frame. Separate browser tests verify that the sample matches real pointer input and that real pointer exit fades the sheen. DOM/action traces remain enabled; background trace screencast images are disabled to avoid a second native capture stream.
 
-The matrix includes every public visual component in both frameworks, all four appearances (default, Replichai, Wallfacer and Origo), desktop/mobile, and light/dark. Fixed logos, headless organization lists, collapsed sidebars and optical-effects examples also participate; a preset may intentionally leave a fixed identity unchanged.
+The matrix includes every public visual component in both frameworks, all four appearances (default, Replichai, Wallfacer and Origo), and light/dark, at desktop width in every appearance and at mobile width in the default appearance. Fixed logos, headless organization lists, collapsed sidebars and optical-effects examples also participate; a preset may intentionally leave a fixed identity unchanged.
 
 Separate interaction tests check focus, keyboard navigation, scrolling, and
 optical effect updates. A still image cannot verify motion or every possible
@@ -122,7 +122,7 @@ the subsequent push must pass comparison without update mode.
    equivalent DOM, whitespace and content so the pixel comparison is meaningful.
 2. Register the public export in `tests/visual/manifest.ts`. The inventory test
    requires a scenario; `design-manifest.ts` applies the same set to every appearance
-   and mobile layout without exclusions.
+   without exclusions, at desktop width for the product appearances.
 3. Add representative states and browser interactions for both adapters. Include
    open overlays, disabled/error states, keyboard focus and narrow layouts. The
    shell behavior suite is `tests/visual/parity-shell.spec.ts`.

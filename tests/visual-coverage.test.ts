@@ -149,17 +149,18 @@ describe('visual fixture inventory', () => {
     expect(sorted(['default', ...designs])).toHaveLength(4);
   });
 
-  it('registers desktop/mobile × light/dark for every adapter, sheet and appearance', () => {
+  it('registers light/dark for every sheet and appearance, and mobile for the default appearance', () => {
     const paired = registeredGoldens('tests/visual/design-goldens.spec.ts');
     const sheets = Object.keys(scenarios.vue);
     expect(sheets).toHaveLength(25);
-    expect(paired.size).toBe(25 * 4 * 2 * 2);
     expect(sorted(manifest.mobileScenarios)).toEqual(sorted(sheets));
-    expect(sorted(designManifest.designMobileScenarios)).toEqual(sorted(sheets));
+    expect(sorted(designManifest.designMobileScenarios)).toEqual([]);
+    expect(paired.size).toBe(sheets.length * 2 * 2 + sheets.length * designs.length * 2);
     for (const design of ['default', ...designs]) for (const sheet of sheets) {
       for (const theme of ['light', 'dark']) for (const layout of ['desktop', 'mobile']) {
         const title = `parity ${design} ${sheet} ${theme} ${layout}`;
-        expect(paired.has(title), `Missing paired golden: ${title}`).toBe(true);
+        const expected = layout === 'desktop' || design === 'default';
+        expect(paired.has(title), `${expected ? 'Missing' : 'Unexpected'} paired golden: ${title}`).toBe(expected);
       }
     }
   });

@@ -23,7 +23,7 @@ function table(prefix: string, sheets: Record<string, readonly string[]>, mobile
 }
 lines.push('## Components', '');
 table('', scenarios.vue, mobileScenarios);
-lines.push('## Product style variations', '', 'Real components rendered with the optional `latere-ui/presets` stylesheet, in both themes and both viewport sizes for each style. Identity marks retain their brand artwork; headless organization controls demonstrate host styling; optical opt-ins show their intentional matte fallback in these presets.', '');
+lines.push('## Product style variations', '', 'Real components rendered with the optional `latere-ui/presets` stylesheet, in both themes at desktop width for each style. Identity marks retain their brand artwork; headless organization controls demonstrate host styling; optical opt-ins show their intentional matte fallback in these presets.', '');
 for (const design of designs) {
   lines.push(`### ${design}`, '');
   table(`${design}-`, designScenarios.vue, designMobileScenarios);
