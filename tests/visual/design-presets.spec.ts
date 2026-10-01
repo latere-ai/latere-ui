@@ -88,13 +88,10 @@ for (const design of Object.keys(recipes)) test(`${design} preserves touch targe
 
 // The account menu is checked in the reference gallery and in the React
 // adapter examples, which mount it with different props.
-for (const design of Object.keys(recipes)) for (const [gallery, scenario, selector] of [
-  ['reference', 'account', '.lu-am-dd'], ['react', 'account', '.lu-am-dd'], ['reference', 'products', '.lu-ps-panel'],
-] as const) test(`${design} ${gallery} ${scenario} menu uses matte material`, async ({ page }) => {
-  await visit(page, scenario, 'light', `${gallery === 'reference' ? '&parity=1' : ''}&design=${design}`);
-  if (scenario === 'products') await page.locator('.lu-iconbtn').first().click();
-  else await page.locator('.lu-am-trigger').first().click();
-  await expect(page.locator(selector)).toHaveCSS('backdrop-filter', 'none');
+for (const design of Object.keys(recipes)) for (const gallery of ['reference', 'react'] as const) test(`${design} ${gallery} account menu uses matte material`, async ({ page }) => {
+  await visit(page, 'account', 'light', `${gallery === 'reference' ? '&parity=1' : ''}&design=${design}`);
+  await page.locator('.lu-am-trigger').first().click();
+  await expect(page.locator('.lu-am-dd')).toHaveCSS('backdrop-filter', 'none');
 });
 test('origo preferences and code use repository geometry and typography', async ({ page }) => {
   await visit(page, 'preferences', 'light', '&parity=1&design=origo');

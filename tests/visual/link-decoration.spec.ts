@@ -23,7 +23,7 @@ const theme = 'light';
 
 // Every component that renders anchors, including teleported menus and the
 // sidebar inside a workspace. Prose retains its separately defined link style.
-const linkSheets = ['workspace', 'sidebar', 'sidebar-collapsed', 'docs', 'account', 'products', 'footer', 'footer-compact'];
+const linkSheets = ['workspace', 'sidebar', 'sidebar-collapsed', 'docs', 'account', 'footer', 'footer-compact'];
 for (const design of ['default', ...designs]) {
   for (const layout of ['desktop', 'mobile']) {
     test(`${design} ${layout} link decoration contract`, async ({ page }) => {

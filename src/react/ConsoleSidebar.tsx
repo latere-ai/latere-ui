@@ -47,8 +47,6 @@ import {
 } from '../console/openState';
 import { ConsoleIcon } from './ConsoleIcon';
 import { cx } from './internal';
-import { ProductSwitcher } from './ProductSwitcher';
-import type { ProductSwitcherLabelOverrides } from '../components/productSwitcher';
 
 type BrandTheme = 'lux' | 'cella' | 'topos' | 'wallfacer' | 'lectio';
 
@@ -83,9 +81,6 @@ export interface ConsoleSidebarIconRenderProps {
 export interface ConsoleSidebarProps {
   /** Grouped navigation model. */
   model: ConsoleNavModel;
-  /** Show a product switcher in the expanded sidebar head. */
-  product?: string;
-  productLabels?: ProductSwitcherLabelOverrides;
   /** Active row: matched against `NavItem.id`. */
   activeKey?: string;
   /**
@@ -140,7 +135,7 @@ export interface ConsoleSidebarProps {
   onSearch?: () => void;
   /** Replaces the default brand block. Receives the current collapsed state. */
   brand?: SlotContent;
-  /** Extra head content next to the brand (e.g. a custom product switcher). */
+  /** Extra head content next to the brand, such as a workspace picker. */
   brandExtra?: SlotContent;
   /** Replaces the default brand mark's fallback letter. */
   logo?: ReactNode;
@@ -178,8 +173,6 @@ function letter(label: string): string {
 export function ConsoleSidebar({
   model,
   activeKey,
-  product,
-  productLabels,
   collapsed: collapsedProp,
   onCollapsedChange,
   collapsible = true,
@@ -513,7 +506,6 @@ export function ConsoleSidebar({
             )}
 
         {!compactFold && renderSlot(brandExtra, collapsed)}
-        {product && !collapsed && <ProductSwitcher className="lu-cs-switch" current={product} labels={productLabels} size="sm" />}
 
         {collapsible && (
           <button
