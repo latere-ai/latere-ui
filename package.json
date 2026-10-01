@@ -1,14 +1,14 @@
 {
   "name": "latere-ui",
   "version": "1.32.1",
-  "description": "Shared Latere platform UI: Liquid Glass design system (material + component library), footer, logo, console sidebar, docs renderer, the session/auth client + store + account menu, a lazy browser telemetry entry, and schema.org structured data builders.",
+  "description": "Shared Latere platform UI for React: Liquid Glass design system (material + component library), the ink palette, footer, logo and favicon, console sidebar, docs renderer, the session/auth client and React bindings with an account menu, a lazy browser telemetry entry, and schema.org structured data builders.",
   "type": "module",
   "license": "MIT",
   "files": [
     "src"
   ],
   "exports": {
-    ".": "./src/index.ts",
+    ".": "./src/react/index.ts",
     "./react": "./src/react/index.ts",
     "./markdown": "./src/docs/markdown.ts",
     "./styles": "./src/styles/footer.css",
@@ -23,7 +23,7 @@
   },
   "scripts": {
     "test": "vitest run",
-    "typecheck": "vue-tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "visual:dev": "vite --config tests/visual/vite.config.ts",
     "test:visual": "playwright test",
     "test:visual:update": "playwright test --update-snapshots=all",
@@ -32,18 +32,8 @@
     "test:coverage": "vitest run --coverage"
   },
   "peerDependencies": {
-    "pinia": "^2.2.0 || ^3.0.0",
     "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0",
-    "vue": "^3.5.0"
-  },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": true
-    },
-    "react-dom": {
-      "optional": true
-    }
+    "react-dom": "^18.0.0 || ^19.0.0"
   },
   "dependencies": {
     "@opentelemetry/api": "1.9.1",
@@ -68,19 +58,14 @@
     "@types/pngjs": "6.0.5",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "@vitejs/plugin-vue": "^5.2.0",
     "@vitest/coverage-v8": "4.1.7",
-    "@vue/test-utils": "^2.4.6",
     "happy-dom": "^15.11.0",
     "markdown-it": "^14.2.0",
-    "pinia": "^2.2.6",
     "pngjs": "7.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "typescript": "^5.6.0",
     "vite": "6",
-    "vitest": "^4.0.0",
-    "vue": "^3.5.13",
-    "vue-tsc": "^2.1.0"
+    "vitest": "^4.0.0"
   }
 }

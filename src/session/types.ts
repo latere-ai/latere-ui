@@ -2,7 +2,7 @@
 // `Principal` mirrors the `orgs[]`/`org_id` JSON shape every product backend
 // already serves at its own `/api/me` (the auth server's richer
 // `memberships[]` shape is adapted server-side per product). Apps whose
-// backend drifts from this map into it via `SessionStoreOptions.mapMe`.
+// backend drifts from this map into it via `SessionProvider`'s `mapMe`.
 
 /** One organization the principal belongs to. */
 export interface OrgEntry {
@@ -106,7 +106,7 @@ export interface ApiClient {
   api<T = unknown>(method: string, path: string, body?: unknown, opts?: RequestOptions): Promise<T>;
   apiUpload<T = unknown>(path: string, form: FormData, opts?: RequestOptions): Promise<T>;
   csrfToken(): string;
-  /** Global 401 handler; assigned after the session store exists. */
+  /** Global 401 handler; `SessionProvider` assigns it while mounted. */
   onUnauthorized?: (ctx: UnauthorizedContext) => void;
 }
 
@@ -115,28 +115,3 @@ export type ExpiredSessionMode = 'silent-recheck' | 'graceful';
 
 /** How `switchOrg` navigates after POSTing the new org. */
 export type SwitchOrgMode = 'follow-redirect' | 'login-bounce';
-
-export interface SessionStoreOptions<Raw = Principal> {
-  client: ApiClient;
-  /** Pinia store id. Default `'session'`. */
-  storeId?: string;
-  /** Endpoint returning the principal. Default `'/api/me'` (lux: `'/me'`). */
-  meEndpoint?: string;
-  /** Org-switch endpoint. Default `'/api/me/switch-org'`. */
-  switchOrgEndpoint?: string;
-  /** Where to land after an interactive login. Default `'/'`. */
-  defaultReturnTo?: string;
-  /** Server login entry point. Default `'/login'`. */
-  loginPath?: string;
-  /** Server logout entry point. Default `'/logout'`. */
-  logoutPath?: string;
-  /** Adapt a backend-specific shape into `Principal`. Default: identity. */
-  mapMe?: (raw: Raw) => Principal;
-  /**
-   * Dashboards default to `'silent-recheck'` (sandbox's `prompt=none`
-   * auto-login); marketing sites pass `'graceful'`.
-   */
-  expiredSessionMode?: ExpiredSessionMode;
-  /** `'follow-redirect'` uses the POST's `{redirect}`; `'login-bounce'` builds a URL. */
-  switchOrgMode?: SwitchOrgMode;
-}
