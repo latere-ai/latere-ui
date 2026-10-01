@@ -8,7 +8,7 @@ release. A tag without one fails the release workflow. Write under
 A section says what changed for whoever uses the release, not what was
 committed: the commit log already holds that.
 
-## Unreleased
+## v1.32.0 - 2026-10-01
 
 - `GlassSelect` can be searched by typing. With more than `SELECT_SEARCH_THRESHOLD` options (8, exported from `latere-ui` and `latere-ui/react`), its menu opens with a search field at the top and the focus in it. Typing keeps the options whose label or value contains the text, in any case, and marks the matched part of each label. The arrow keys move through what is left, Enter chooses, and Escape clears the field, then closes the menu. A letter typed on the closed select opens it with that letter in the field, and a search with no match says so in one line. `searchable` shows the field below the threshold or hides it above; `searchPlaceholder` (default "Search") is the field's placeholder and accessible name, and `noMatchLabel` (default "No matches") the no-match line. The field is a combobox that controls the listbox, so a screen reader announces the active option. Existing selects need no change.
 - A select option is one line, cut with an ellipsis, with its full label in a tooltip, where a long label used to wrap. The menu is at least as wide as the select and grows to fit its longest label, up to `--lu-select-menu-max-width` (400px), and never comes closer than 16px to either edge of the viewport.
