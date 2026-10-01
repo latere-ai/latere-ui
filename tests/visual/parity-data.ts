@@ -1,4 +1,4 @@
-// Canonical content shared by the Vue and React visual galleries.
+// Canonical content of the visual galleries.
 export function effectCaptions(matte: boolean) {
   return matte ? ['Matte surface · refraction off', 'Refraction opt-in · matte preset', 'Sheen opt-in · matte preset']
     : ['Frosted glass · refraction off', 'Edge refraction · patterned backdrop', 'Pointer sheen · move across this surface'];

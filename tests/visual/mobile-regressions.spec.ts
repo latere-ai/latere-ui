@@ -2,7 +2,7 @@ import { test, expect, visit } from './fixtures';
 
 test('product switcher fits when neither trigger alignment fits the mobile viewport', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await visit(page, 'vue', 'products');
+  await visit(page, 'products', 'light', '&parity=1');
   await page.addStyleTag({ content: '.lu-ps { position: fixed; left: calc(50vw - 18px); top: 180px; }' });
   await page.getByRole('button', { name: 'Switch product' }).click();
   const panel = page.locator('.lu-ps-panel');
@@ -24,7 +24,7 @@ test('product switcher fits when neither trigger alignment fits the mobile viewp
 });
 
 test('an open product switcher follows viewport resize and scrolls in short viewports', async ({ page }) => {
-  await visit(page, 'vue', 'products');
+  await visit(page, 'products', 'light', '&parity=1');
   await page.addStyleTag({ content: '.lu-ps { position: fixed; left: calc(100vw - 54px); top: calc(50vh - 18px); }' });
   await page.getByRole('button', { name: 'Switch product' }).click();
   const panel = page.locator('.lu-ps-panel');
@@ -45,7 +45,7 @@ test('an open product switcher follows viewport resize and scrolls in short view
 
 test('long notification text wraps inside the mobile viewport', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 568 });
-  await visit(page, 'vue', 'toast', 'light', '&long=true');
+  await visit(page, 'toast', 'light', '&parity=1&long=true');
   await page.getByRole('button', { name: 'Show notifications' }).click();
   const toast = page.locator('.lu-toast');
   await expect(toast).toBeVisible();
@@ -62,7 +62,7 @@ test('long notification text wraps inside the mobile viewport', async ({ page })
 });
 
 test('matchWidth popover keeps the trigger width with long content', async ({ page }) => {
-  await visit(page, 'vue', 'popover', 'light', '&matchWidth=true');
+  await visit(page, 'popover', 'light', '&parity=1&matchWidth=true');
   await page.addStyleTag({ content: '.lu-pop { width: 240px; }' });
   await page.getByRole('button', { name: 'Open menu' }).click();
   await page.locator('.lu-menu-item').first().evaluate(element => { element.textContent = 'Workspace_' + 'x'.repeat(100); });
@@ -75,7 +75,7 @@ test('matchWidth popover keeps the trigger width with long content', async ({ pa
 });
 
 test('top-end account dropdown stays aligned with its trigger in a wide parent', async ({ page }) => {
-  await visit(page, 'vue', 'account');
+  await visit(page, 'account', 'light', '&parity=1');
   await page.addStyleTag({ content: '[data-component="AccountMenu"] { display: block !important; width: 600px; margin-left: 80px; }' });
   await page.locator('.lu-am-trigger').click();
   const trigger = await page.locator('.lu-am-trigger').boundingBox();

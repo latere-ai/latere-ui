@@ -1,11 +1,11 @@
 import { test, expect, visit } from './fixtures';
 import { designs } from './design-manifest';
 
-for (const framework of ['vue', 'react']) for (const design of ['default', ...designs]) {
+for (const design of ['default', ...designs]) {
   for (const theme of ['light', 'dark']) {
-    test(`${framework} ${design} ${theme} selected segments retain rounded corners`, async ({ page }) => {
+    test(`${design} ${theme} selected segments retain rounded corners`, async ({ page }) => {
       for (const scenario of ['forms']) await test.step(scenario, async () => {
-        await visit(page, framework, scenario, theme, `&parity=1&design=${design}`);
+        await visit(page, scenario, theme, `&parity=1&design=${design}`);
         const segments = page.locator('.lu-seg-item');
         await expect(segments).toHaveCount(3);
         // Exercise both end segments and the middle segment: a bright fill

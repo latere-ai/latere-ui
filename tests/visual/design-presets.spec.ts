@@ -7,7 +7,7 @@ const recipes = {
 } as const;
 for (const [design, recipe] of Object.entries(recipes)) {
   test(`${design} supplies opaque surfaces and its own geometry`, async ({ page }) => {
-    await visit(page, 'vue', 'containers', 'light');
+    await visit(page, 'containers', 'light', '&parity=1');
     await page.evaluate(value => { document.documentElement.dataset.design = value; }, design);
     const panel = page.locator('.lu-panel').first();
     await expect(panel).toHaveCSS('border-radius', recipe.radius);
@@ -17,9 +17,9 @@ for (const [design, recipe] of Object.entries(recipes)) {
   });
 }
 
-for (const [design, recipe] of Object.entries(recipes)) for (const framework of ['vue', 'react']) for (const [mode, theme] of ['light', 'dark'].entries()) {
-  test(`${design} ${framework} ${theme} action and input states`, async ({ page }) => {
-    await visit(page, framework, 'buttons', theme, `&design=${design}`);
+for (const [design, recipe] of Object.entries(recipes)) for (const [mode, theme] of ['light', 'dark'].entries()) {
+  test(`${design} ${theme} action and input states`, async ({ page }) => {
+    await visit(page, 'buttons', theme, `&design=${design}`);
     const primary = page.getByRole('button', { name: 'primary', exact: true }).first();
     await expect(primary).toHaveCSS('min-height', recipe.button);
     await expect(primary).toHaveCSS('box-shadow', 'none');
@@ -40,9 +40,9 @@ for (const [design, recipe] of Object.entries(recipes)) for (const framework of 
     await secondary.focus();
     await expect(secondary).toHaveCSS('outline-style', 'solid');
     await expect(secondary).toHaveCSS('outline-color', recipe.accent[mode]);
-    await expect(page).toMatchGolden(`${design}-${framework}-buttons-states-${theme}.png`, { fullPage: true });
+    await expect(page).toMatchGolden(`${design}-react-buttons-states-${theme}.png`, { fullPage: true });
 
-    await visit(page, framework, 'forms', theme, `&design=${design}`);
+    await visit(page, 'forms', theme, `&design=${design}`);
     const input = page.locator('.lu-field-control').first();
     await input.fill('Updated workspace');
     await expect(input).toHaveValue('Updated workspace');
@@ -57,8 +57,8 @@ for (const [design, recipe] of Object.entries(recipes)) for (const framework of 
     await expect(page.locator('.lu-seg-item').nth(1)).toHaveAttribute('aria-checked', 'true');
   });
 
-  test(`${design} ${framework} ${theme} portaled dialog and live theme`, async ({ page }) => {
-    await visit(page, framework, 'modal', theme, `&design=${design}`);
+  test(`${design} ${theme} portaled dialog and live theme`, async ({ page }) => {
+    await visit(page, 'modal', theme, `&design=${design}`);
     const trigger = page.getByRole('button', { name: 'Open modal', exact: true });
     await trigger.click();
     const dialog = page.getByRole('dialog');
@@ -78,7 +78,7 @@ for (const design of Object.keys(recipes)) test(`${design} preserves touch targe
   const cdp = await page.context().newCDPSession(page);
   await cdp.send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 1 });
   await page.setViewportSize({ width: 390, height: 844 });
-  await visit(page, 'vue', 'buttons', 'light', `&design=${design}`);
+  await visit(page, 'buttons', 'light', `&parity=1&design=${design}`);
   for (const button of await page.locator('.lu-btn, .lu-iconbtn').all()) {
     expect((await button.boundingBox())!.height).toBeGreaterThanOrEqual(44);
   }
@@ -86,23 +86,25 @@ for (const design of Object.keys(recipes)) test(`${design} preserves touch targe
   await expect(page.locator('.lu-btn-primary').first()).toHaveCSS('backdrop-filter', 'blur(20px) saturate(1.8)');
 });
 
-for (const design of Object.keys(recipes)) for (const [framework, scenario, selector] of [
-  ['vue', 'account', '.lu-am-dd'], ['react', 'account', '.lu-am-dd'], ['vue', 'products', '.lu-ps-panel'],
-] as const) test(`${design} ${framework} ${scenario} menu uses matte material`, async ({ page }) => {
-  await visit(page, framework, scenario, 'light', `&design=${design}`);
+// The account menu is checked in the reference gallery and in the React
+// adapter examples, which mount it with different props.
+for (const design of Object.keys(recipes)) for (const [gallery, scenario, selector] of [
+  ['reference', 'account', '.lu-am-dd'], ['react', 'account', '.lu-am-dd'], ['reference', 'products', '.lu-ps-panel'],
+] as const) test(`${design} ${gallery} ${scenario} menu uses matte material`, async ({ page }) => {
+  await visit(page, scenario, 'light', `${gallery === 'reference' ? '&parity=1' : ''}&design=${design}`);
   if (scenario === 'products') await page.locator('.lu-iconbtn').first().click();
   else await page.locator('.lu-am-trigger').first().click();
   await expect(page.locator(selector)).toHaveCSS('backdrop-filter', 'none');
 });
 test('origo preferences and code use repository geometry and typography', async ({ page }) => {
-  await visit(page, 'vue', 'preferences', 'light', '&design=origo');
+  await visit(page, 'preferences', 'light', '&parity=1&design=origo');
   await expect(page.locator('.lu-ap-pill').first()).toHaveCSS('border-radius', '3px');
-  await visit(page, 'vue', 'docs', 'light', '&design=origo');
+  await visit(page, 'docs', 'light', '&parity=1&design=origo');
   await expect(page.locator('pre code')).toHaveCSS('font-family', /IBM Plex Mono/);
 });
 
 test('matte solid badges have no optical rim', async ({ page }) => {
-  await visit(page, 'vue', 'feedback', 'light', '&design=origo');
+  await visit(page, 'feedback', 'light', '&parity=1&design=origo');
   await expect(page.locator('.lu-badge.is-solid').first()).toHaveCSS('box-shadow', 'none');
   await expect(page.locator('.lu-badge').first()).toHaveCSS('border-radius', '3px');
 });

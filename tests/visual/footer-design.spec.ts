@@ -6,9 +6,9 @@ function ratio(a: number[], b: number[]) {
   return (Math.max(x, y) + .05) / (Math.min(x, y) + .05);
 }
 
-for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark']) {
-  test(`${framework} ${theme} footer labels and controls have readable contrast`, async ({ page }) => {
-    await visit(page, framework, 'footer', theme);
+for (const theme of ['light', 'dark']) {
+  test(`${theme} footer labels and controls have readable contrast`, async ({ page }) => {
+    await visit(page, 'footer', theme);
     const background = await page.evaluate(() => getComputedStyle(document.body).backgroundColor.match(/[\d.]+/g)!.map(Number));
     const over = (color: number[]) => color.slice(0, 3).map((v, i) => v * (color[3] ?? 1) + background[i] * (1 - (color[3] ?? 1)));
     // Resolve any computed color syntax, color-mix results included, to RGBA bytes.
@@ -28,8 +28,8 @@ for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark'])
     for (const glyph of glyphs) expect.soft(ratio(over(glyph.color), background), glyph.label).toBeGreaterThanOrEqual(3);
   });
 
-  test(`${framework} ${theme} footer menus read on a solid surface`, async ({ page }) => {
-    await visit(page, framework, 'footer', theme);
+  test(`${theme} footer menus read on a solid surface`, async ({ page }) => {
+    await visit(page, 'footer', theme);
     for (const menu of ['.lu-theme-menu', '.lu-locale-menu']) {
       await page.locator(`${menu} .lu-pref-trigger`).click();
       const panel = page.locator(`${menu} .lu-pop-panel`);
@@ -50,9 +50,9 @@ for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark'])
     }
   });
 
-  test(`${framework} ${theme} compact mobile footer gives navigation a full row`, async ({ page }) => {
+  test(`${theme} compact mobile footer gives navigation a full row`, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await visit(page, framework, 'footer-compact', theme);
+    await visit(page, 'footer-compact', theme);
     const layout = await page.locator('.site-footer-compact').evaluate(el => {
       const footer = el.getBoundingClientRect(), css = getComputedStyle(el);
       const links = el.querySelector('.footer-compact-links')!.getBoundingClientRect();
@@ -67,17 +67,17 @@ for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark'])
     await expect(last).toBeInViewport();
   });
 
-  test(`${framework} ${theme} product gradients stay legible`, async ({ page }) => {
+  test(`${theme} product gradients stay legible`, async ({ page }) => {
     // Every stop of every product gradient, at rest in the compact strip and
     // under the pointer in the full footer's columns.
     const stops = async (selector: string) => page.locator(selector).evaluateAll(elements => elements.map(el => ({
       name: el.textContent, gradient: getComputedStyle(el).backgroundImage, color: getComputedStyle(el).color,
       background: getComputedStyle(document.body).backgroundColor.match(/[\d.]+/g)!.map(Number),
     })));
-    await visit(page, framework, 'footer-compact', theme);
+    await visit(page, 'footer-compact', theme);
     const wordmarks = await stops('.footer-compact-links [class$="-brand"]');
     expect(wordmarks.map(b => b.name)).toEqual(['Wallfacer', 'ReplicHAI', 'Latere Platform']);
-    await visit(page, framework, 'footer', theme);
+    await visit(page, 'footer', theme);
     const hovered = [];
     for (const link of await page.locator('.footer-link[data-brand]').all()) {
       await link.hover();
@@ -95,7 +95,7 @@ for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark'])
 }
 
 test('muted table labels remain readable on every base surface', async ({ page }) => {
-  await visit(page, 'vue', 'containers');
+  await visit(page, 'containers', 'light', '&parity=1');
   const colors = await page.locator('th').first().evaluate(el => {
     const css = getComputedStyle(document.documentElement);
     const rgb = (value: string) => {
@@ -106,8 +106,8 @@ test('muted table labels remain readable on every base surface', async ({ page }
   });
   for (const surface of colors.surfaces) expect.soft(ratio(colors.text, surface)).toBeGreaterThanOrEqual(4.5);
 });
-for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark']) test(`${framework} ${theme} table heading contrasts against its actual glass fill`, async ({ page }) => {
-  await visit(page, framework, 'containers', theme);
+for (const theme of ['light', 'dark']) test(`${theme} table heading contrasts against its actual glass fill`, async ({ page }) => {
+  await visit(page, 'containers', theme);
   const colors = await page.locator('th').first().evaluate(el => {
     const rgba = (color: string) => color.match(/[\d.]+/g)!.map(Number);
     const ancestors: Element[] = [];

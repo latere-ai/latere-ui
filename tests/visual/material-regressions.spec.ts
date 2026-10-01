@@ -12,46 +12,44 @@ async function insetEdges(surface: Locator) {
     }));
 }
 
-for (const framework of ['vue', 'react']) {
-  for (const theme of ['light', 'dark']) {
-    test(`${framework} smoke rims follow their inverse surface in ${theme}`, async ({ page }) => {
-      await visit(page, framework, 'containers', theme);
-      const smoke = page.locator('.lu-gs.lu-glass-smoke');
-      expect(await smoke.count()).toBeGreaterThan(1);
-      for (const surface of await smoke.all()) {
-        const edges = await insetEdges(surface);
-        expect(edges.every(edge => Math.abs(edge.y) <= 1), 'Smoke uses a single-pixel optical rim').toBe(true);
-        const contrastingEdge = edges.find(edge => theme === 'light' ? edge.y > 0 : edge.y < 0)!;
-        expect(contrastingEdge.alpha, 'Inverse fill must not inherit the opposite material’s high-contrast rim').toBeLessThanOrEqual(0.25);
-      }
-      const interactive = page.locator('.lu-gs.lu-glass-smoke.lu-gs-interactive');
-      await interactive.hover();
-      await expect.poll(async () => {
-        const edges = await insetEdges(interactive);
-        return edges.find(edge => theme === 'light' ? edge.y > 0 : edge.y < 0)!.alpha;
-      }, { message: 'Hover must retain the smoke-specific rim treatment' }).toBeLessThanOrEqual(0.25);
-      // The translucent material also uses a restrained one-pixel optical edge.
-      const regular = await insetEdges(page.locator('.lu-gs.lu-glass').first());
-      expect(regular.find(edge => edge.y > 0)?.y).toBe(1);
-    });
-
-    for (const contrast of ['no-preference', 'more'] as const) {
-      test(`${framework} materials stay opaque with reduced transparency in ${theme}, contrast ${contrast}`, async ({ page }) => {
-        await setPreferences(page, { transparency: 'reduce', contrast });
-        await visit(page, framework, 'containers', theme);
-        const materials = page.locator('.lu-gs');
-        expect(await materials.count()).toBeGreaterThanOrEqual(5);
-        for (const surface of await materials.all()) {
-          const paint = await surface.evaluate(el => {
-            const style = getComputedStyle(el);
-            const rgba = style.backgroundColor.match(/[\d.]+/g)!.map(Number);
-            return { alpha: rgba[3] ?? 1, filter: style.backdropFilter, material: el.className };
-          });
-          expect(paint.alpha, `Opaque fill required: ${paint.material}`).toBe(1);
-          expect(paint.filter, `No backdrop effects: ${paint.material}`).toBe('none');
-        }
-      });
+for (const theme of ['light', 'dark']) {
+  test(`smoke rims follow their inverse surface in ${theme}`, async ({ page }) => {
+    await visit(page, 'containers', theme);
+    const smoke = page.locator('.lu-gs.lu-glass-smoke');
+    expect(await smoke.count()).toBeGreaterThan(1);
+    for (const surface of await smoke.all()) {
+      const edges = await insetEdges(surface);
+      expect(edges.every(edge => Math.abs(edge.y) <= 1), 'Smoke uses a single-pixel optical rim').toBe(true);
+      const contrastingEdge = edges.find(edge => theme === 'light' ? edge.y > 0 : edge.y < 0)!;
+      expect(contrastingEdge.alpha, 'Inverse fill must not inherit the opposite material’s high-contrast rim').toBeLessThanOrEqual(0.25);
     }
+    const interactive = page.locator('.lu-gs.lu-glass-smoke.lu-gs-interactive');
+    await interactive.hover();
+    await expect.poll(async () => {
+      const edges = await insetEdges(interactive);
+      return edges.find(edge => theme === 'light' ? edge.y > 0 : edge.y < 0)!.alpha;
+    }, { message: 'Hover must retain the smoke-specific rim treatment' }).toBeLessThanOrEqual(0.25);
+    // The translucent material also uses a restrained one-pixel optical edge.
+    const regular = await insetEdges(page.locator('.lu-gs.lu-glass').first());
+    expect(regular.find(edge => edge.y > 0)?.y).toBe(1);
+  });
+
+  for (const contrast of ['no-preference', 'more'] as const) {
+    test(`materials stay opaque with reduced transparency in ${theme}, contrast ${contrast}`, async ({ page }) => {
+      await setPreferences(page, { transparency: 'reduce', contrast });
+      await visit(page, 'containers', theme);
+      const materials = page.locator('.lu-gs');
+      expect(await materials.count()).toBeGreaterThanOrEqual(5);
+      for (const surface of await materials.all()) {
+        const paint = await surface.evaluate(el => {
+          const style = getComputedStyle(el);
+          const rgba = style.backgroundColor.match(/[\d.]+/g)!.map(Number);
+          return { alpha: rgba[3] ?? 1, filter: style.backdropFilter, material: el.className };
+        });
+        expect(paint.alpha, `Opaque fill required: ${paint.material}`).toBe(1);
+        expect(paint.filter, `No backdrop effects: ${paint.material}`).toBe('none');
+      }
+    });
   }
 }
 
@@ -91,7 +89,7 @@ async function interiorDifference(page: Page, before: Buffer, after: Buffer) {
 for (const theme of ['light', 'dark']) {
   test(`thick toast occludes the underlying page text in ${theme}`, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await visit(page, 'vue', 'toast', theme);
+    await visit(page, 'toast', theme, '&parity=1');
     await page.getByRole('button', { name: 'Show notifications' }).click();
     const toast = page.locator('.lu-toast').first();
     await expect(toast).toHaveCSS('opacity', '1');
@@ -102,27 +100,25 @@ for (const theme of ['light', 'dark']) {
     expect(await interiorDifference(page, before, after), 'Page text must not show through a toast').toBeLessThanOrEqual(1);
   });
 
-  for (const framework of ['vue', 'react']) {
-    test(`${framework} thick nested modal occludes the first dialog text in ${theme}`, async ({ page }) => {
-      await visit(page, framework, 'modal', theme);
-      await page.getByRole('button', { name: 'Open modal', exact: true }).click();
-      await page.getByRole('button', { name: framework === 'vue' ? 'Open nested modal' : 'Create project', exact: true }).click();
-      await expect(page.getByRole('dialog')).toHaveCount(2);
-      const foreground = page.getByRole('dialog').last();
-      await expect(foreground).toHaveCSS('opacity', '1');
-      await expect(foreground.locator('..')).not.toHaveClass(/enter/);
-      const before = await foreground.screenshot();
-      await page.getByRole('dialog').first().evaluate(el => {
-        for (const child of Array.from(el.children)) (child as HTMLElement).style.visibility = 'hidden';
-      });
-      const after = await foreground.screenshot();
-      expect(await interiorDifference(page, before, after), 'Behind-dialog text must not show through the active dialog').toBeLessThanOrEqual(1);
+  test(`thick nested modal occludes the first dialog text in ${theme}`, async ({ page }) => {
+    await visit(page, 'modal', theme);
+    await page.getByRole('button', { name: 'Open modal', exact: true }).click();
+    await page.getByRole('button', { name: 'Create project', exact: true }).click();
+    await expect(page.getByRole('dialog')).toHaveCount(2);
+    const foreground = page.getByRole('dialog').last();
+    await expect(foreground).toHaveCSS('opacity', '1');
+    await expect(foreground.locator('..')).not.toHaveClass(/enter/);
+    const before = await foreground.screenshot();
+    await page.getByRole('dialog').first().evaluate(el => {
+      for (const child of Array.from(el.children)) (child as HTMLElement).style.visibility = 'hidden';
     });
-  }
+    const after = await foreground.screenshot();
+    expect(await interiorDifference(page, before, after), 'Behind-dialog text must not show through the active dialog').toBeLessThanOrEqual(1);
+  });
 }
 
 test('thick overlay backing follows a dark subtree and works without host surface tokens', async ({ page }) => {
-  await visit(page, 'vue', 'containers', 'light');
+  await visit(page, 'containers', 'light', '&parity=1');
   const scope = page.locator('.material-stage');
   const thick = scope.locator('.lu-glass-thick');
   await expect(thick).toHaveCSS('background-color', 'rgb(255, 255, 255)');

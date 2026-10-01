@@ -2,7 +2,7 @@ import { test, expect, visit } from './fixtures';
 
 test('collapsed mobile sidebar retains a narrow rail beside its content', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await visit(page, 'vue', 'sidebar-collapsed', 'light');
+  await visit(page, 'sidebar-collapsed', 'light', '&parity=1');
   const rail = (await page.locator('.lu-cs').boundingBox())!;
   const content = (await page.locator('.shell-content').boundingBox())!;
   expect(rail.width).toBe(64);
@@ -10,21 +10,21 @@ test('collapsed mobile sidebar retains a narrow rail beside its content', async 
   expect(content.width).toBeGreaterThanOrEqual(250);
 });
 
-for (const framework of ['vue', 'react']) test(`origo ${framework} smoke stays neutral while actions use iris`, async ({ page }) => {
-  await visit(page, framework, 'containers', 'light', '&design=origo');
+test(`origo smoke stays neutral while actions use iris`, async ({ page }) => {
+  await visit(page, 'containers', 'light', '&design=origo');
   await expect(page.locator('.lu-panel.lu-glass-smoke').first()).toHaveCSS('background-color', 'rgb(10, 10, 10)');
-  await visit(page, framework, 'buttons', 'light', '&design=origo');
+  await visit(page, 'buttons', 'light', '&design=origo');
   await expect(page.locator('.lu-btn-primary').first()).toHaveCSS('background-color', 'rgb(74, 59, 122)');
 });
 for (const design of ['replichai', 'wallfacer', 'origo']) {
   test(`${design} mobile sidebar gives example content a usable line width`, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await visit(page, 'vue', 'sidebar', 'light', `&design=${design}`);
+    await visit(page, 'sidebar', 'light', `&parity=1&design=${design}`);
     expect((await page.locator('.shell-content').boundingBox())!.width).toBeGreaterThanOrEqual(300);
   });
   test(`${design} expanded mobile sidebar retains account identity`, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await visit(page, 'react', 'sidebar', 'light', `&design=${design}`);
+    await visit(page, 'sidebar', 'light', `&design=${design}`);
     await expect(page.locator('.lu-am-id-name')).toBeVisible();
     const trigger = await page.locator('.lu-am-trigger').boundingBox();
     const identity = await page.locator('.lu-am-id').boundingBox();
@@ -34,7 +34,7 @@ for (const design of ['replichai', 'wallfacer', 'origo']) {
   });
 }
 test('wallfacer dark loading placeholders are visibly distinct from the canvas', async ({ page }) => {
-  await visit(page, 'vue', 'feedback', 'dark', '&design=wallfacer');
+  await visit(page, 'feedback', 'dark', '&parity=1&design=wallfacer');
   const ratio = await page.locator('.lu-skeleton').first().evaluate(el => {
     const canvas = document.createElement('canvas'); canvas.width = canvas.height = 1;
     const ctx = canvas.getContext('2d')!;

@@ -1,12 +1,12 @@
 import { test, expect, visit, prepare } from './fixtures';
 import { designs } from './design-manifest';
 
-for (const framework of ['vue', 'react']) for (const design of ['default', ...designs]) {
-  for (const theme of ['light', 'dark']) test(`${framework} ${design} ${theme} preference labels are optically centered`, async ({ page }) => {
+for (const design of ['default', ...designs]) {
+  for (const theme of ['light', 'dark']) test(`${design} ${theme} preference labels are optically centered`, async ({ page }) => {
     test.setTimeout(60000);
     for (const scenario of ['preferences', 'account']) {
-      await visit(page, framework, scenario, theme, `&parity=1&design=${design}`);
-      await prepare(page, framework, scenario);
+      await visit(page, scenario, theme, `&parity=1&design=${design}`);
+      await prepare(page, scenario);
       for (const button of await page.locator('.lu-ap-pill').all()) {
         for (const select of [false, true]) {
           if (select) await button.click();
