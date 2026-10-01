@@ -245,6 +245,7 @@
 :root[data-design="origo"] .lu-select-list.is-searchable { max-height: none; }
 :root[data-design="origo"] .lu-select-list.is-searchable .lu-select-options { max-height: 196px; }
 :root[data-design="origo"] .lu-select-search { padding: 7px 14px; }
+:root[data-design="origo"] .lu-select-empty { padding: 4px 8px; }
 :root[data-design="origo"] .lu-cp-item { padding: 4px 8px; }
 :root[data-design="origo"] .lu-menu-item { padding: 5px 8px; }
 
