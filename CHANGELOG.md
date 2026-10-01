@@ -8,7 +8,7 @@ release. A tag without one fails the release workflow. Write under
 A section says what changed for whoever uses the release, not what was
 committed: the commit log already holds that.
 
-## Unreleased
+## v1.32.1 - 2026-10-01
 
 - `LatereLogoMark` and `PlatformLogoMark` draw the mark's dot as a true circle, at the same center and size. It was a traced outline with a flattened side that showed at large sizes.
 
