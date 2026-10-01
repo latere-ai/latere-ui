@@ -1,0 +1,157 @@
+/* The ink token layer (`latere-ui/ink`): the ladder the platform console, its
+ * docs and the identity pages read, including this package's controls. Opt in
+ * with `data-design="ink"` on <html>; `data-theme="dark"` selects the dark
+ * ladder. Neutral grays with no hue, ink as the accent, and the primary
+ * action inverted between the themes. Every text tone reaches 4.5:1 on every
+ * surface it is set on and control edges reach 3:1; the package's contrast
+ * test computes both from this file. */
+:root[data-design="ink"] {
+  --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Surfaces, darkest step last: the page, a panel on it, a raised control
+   * or pill, and the hover and selection step. */
+  --bg-deep: #f4f4f4;
+  --bg: #ffffff;
+  --bg-surface: #f9f9f9;
+  --bg-raised: #f4f4f4;
+  --bg-hover: #ececec;
+  --bg-code: var(--bg-raised);
+  /* Text: names and values, secondary lines, metadata and placeholders. */
+  --fg-1: #0d0d0d;
+  --fg-2: #525252;
+  --fg-3: #666666;
+  /* The accent is the ink. The primary action fills with it and sets its
+   * glyph in the page color. */
+  --accent: #0d0d0d;
+  --accent-hover: #333333;
+  --lu-preset-on-accent: #ffffff;
+  --accent-subtle: color-mix(in srgb, var(--accent) 6%, transparent);
+  --glass-pill-fill: var(--bg-hover);
+  /* Dividers, panel and card edges, and the edge of an input or a button. */
+  --border: rgba(0, 0, 0, .08);
+  --border-strong: rgba(0, 0, 0, .14);
+  --border-control: #8a8a8a;
+  --lu-control-border: var(--border-control);
+  /* Semantic colors, muted so the ink stays the loudest thing on a page. */
+  --ok: #356342;
+  --method-write: #38538f;
+  --method-update: #7d5019;
+  --method-delete: #96372e;
+  /* The same tones named by meaning: informational, waiting, and failed or
+   * destructive. Each resolves per theme through the tone it names. */
+  --info: var(--method-write);
+  --warn: var(--method-update);
+  --danger: var(--method-delete);
+  /* Status tones the shared badges, alerts and live indicators read. */
+  --state-running: var(--ok);
+  --state-creating: var(--method-write);
+  --state-idle: var(--method-update);
+  --state-error: var(--method-delete);
+  --state-neutral: var(--fg-3);
+  --state-stopped: var(--fg-3);
+  /* Who a surface is for: the tone of everything only people with an admin
+   * role are shown, from the sidebar row to the page band and the chip. A
+   * muted violet apart from every status tone, so an admin surface never
+   * reads as a warning or a state. */
+  --audience-admin: #5b4a8f;
+  --lu-audience-admin: var(--audience-admin);
+  /* Syntax colors of a code block, in the guides' fences and the API
+   * reference's samples. Each is one of the tones above, so a code block
+   * brings no new color to a page and every mark keeps the 4.5:1 those tones
+   * hold on --bg-code, in both themes, since each resolves per theme. Keywords
+   * and built-in commands take the violet, strings the green, numbers,
+   * literals and types the amber, keys, headers and names the blue, and
+   * variables the red; comments recede to the third text step. */
+  --code-comment: var(--fg-3);
+  --code-keyword: var(--audience-admin);
+  --code-string: var(--ok);
+  --code-number: var(--method-update);
+  --code-name: var(--method-write);
+  --code-variable: var(--method-delete);
+  /* Terminal and remote desktop canvases stay dark in both themes, and so
+   * does the text the console sets on one: a state, a reason, an action. */
+  --bg-terminal: #0a0a0a;
+  --fg-terminal: #ececec;
+  --fg-terminal-muted: #a3a3a3;
+  /* Geometry and elevation. One radius ladder, each step for one kind of
+   * element: 4px (latere-ui's --radius-xs) for badges, chips and marks; 6px
+   * for controls, buttons, fields, selects and menu items; 8px for a row of
+   * the rail, a notice and a toast; 12px for panels, tables, lists and
+   * menus; 16px for dialogs and the site's cards.
+   *
+   * A box inside another box is concentric with it: sitting `d` pixels in
+   * from its frame's edge at a shared corner, its radius is the frame's
+   * minus `d`, never below the control step, written
+   * `max(var(--radius-control), calc(var(--radius-panel) - 16px))`. A larger
+   * inner radius reads as a fatter corner than the frame around it. The
+   * rule binds within 32px of the frame's corner; pills, circles and boxes
+   * under 24px are exempt. */
+  --radius-chip: 4px;
+  --radius-control: 6px;
+  --radius-action: 8px;
+  --radius-panel: 12px;
+  --radius-card: 16px;
+  /* latere-ui's own scale, read by its primitives, is mapped onto the
+   * ladder, so no 14px or 18px corner from its defaults reaches an ink page. */
+  --radius-md: var(--radius-action);
+  --radius-lg: var(--radius-panel);
+  --radius-xl: var(--radius-card);
+  /* Page controls outside the console scale: the default and compact
+   * heights, a control set in a row, and the one large control, such as a
+   * sign-in provider row. */
+  --control-height: 36px;
+  --control-height-compact: 30px;
+  --control-height-sm: 28px;
+  --control-height-lg: 40px;
+  /* The console's control scale: every button, field and select is 32px, or
+   * 28px where it sits in a row, set in 13px with the control corner, so a
+   * field and its button share one baseline. latere-ui's controls read the
+   * three --lu-control tokens. */
+  --lu-control-height: 32px;
+  --lu-control-height-sm: 28px;
+  --lu-control-radius: var(--radius-control);
+  /* The console's type scale: seven sizes and no other.
+   * Home's greeting; a page, object or figure title; a section heading or
+   * an empty state's title; running text; table cells, facts and controls;
+   * code blocks; headers, labels, help and chips. */
+  --text-title: 28px;
+  --text-page: 20px;
+  --text-heading: 16px;
+  --text-ui: 14px;
+  --text-control: 13px;
+  --text-code: 12.5px;
+  --text-small: 12px;
+  /* The one horizontal gutter every block of a console screen starts and
+   * ends on: 24px, and 16px at or below 900px. */
+  --page-gutter: 24px;
+  --shadow-menu: 0 8px 28px rgba(0, 0, 0, .12);
+  --shadow-dialog: 0 20px 80px rgba(0, 0, 0, .18);
+  --scrim: rgba(0, 0, 0, .4);
+}
+:root[data-design="ink"][data-theme="dark"] {
+  --bg-deep: #0d0d0d;
+  --bg: #161616;
+  --bg-surface: #1e1e1e;
+  --bg-raised: #262626;
+  --bg-hover: #2f2f2f;
+  --fg-1: #ececec;
+  --fg-2: #b4b4b4;
+  --fg-3: #9a9a9a;
+  --accent: #ececec;
+  --accent-hover: #c8c8c8;
+  --lu-preset-on-accent: #0d0d0d;
+  --accent-subtle: color-mix(in srgb, var(--accent) 8%, transparent);
+  --border: rgba(255, 255, 255, .08);
+  --border-strong: rgba(255, 255, 255, .14);
+  --border-control: #737373;
+  --ok: #86ba93;
+  --method-write: #9bb0e4;
+  --method-update: #d1a56b;
+  --method-delete: #e99a90;
+  --audience-admin: #b8a9ea;
+  --shadow-menu: 0 8px 28px rgba(0, 0, 0, .5);
+  --shadow-dialog: 0 20px 80px rgba(0, 0, 0, .6);
+  --scrim: rgba(0, 0, 0, .6);
+}
+@media (max-width: 900px) {
+  :root[data-design="ink"] { --page-gutter: 16px; }
+}
