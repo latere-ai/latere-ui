@@ -1,8 +1,12 @@
 import { test, expect, visit } from './fixtures';
 import { designs } from './design-manifest';
 
+// Themes change colors only: no theme sets a size, spacing or decoration
+// token, so these checks run in the light theme.
+const theme = 'light';
+
 for (const framework of ['vue', 'react']) for (const design of ['default', ...designs]) {
-  for (const theme of ['light', 'dark']) test(`${framework} ${design} ${theme} account identity separates name from metadata`, async ({ page }) => {
+  test(`${framework} ${design} account identity separates name from metadata`, async ({ page }) => {
     test.setTimeout(60000);
     for (const width of [390, 768, 1280]) for (const scenario of ['account', 'sidebar']) {
       await page.setViewportSize({ width, height: 850 });

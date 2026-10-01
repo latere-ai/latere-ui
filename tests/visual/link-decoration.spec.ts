@@ -17,12 +17,16 @@ async function expectUndecorated(links: Locator) {
   expect(decorated, 'Navigation and wordmarks must not inherit resting underlines').toEqual([]);
 }
 
+// Themes change colors only: no theme sets a size, spacing or decoration
+// token, so these checks run in the light theme.
+const theme = 'light';
+
 // Every component that renders anchors, including teleported menus and the
 // sidebar inside a workspace. Prose retains its separately defined link style.
 const linkSheets = ['workspace', 'sidebar', 'sidebar-collapsed', 'docs', 'account', 'products', 'footer', 'footer-compact'];
 for (const framework of ['vue', 'react']) for (const design of ['default', ...designs]) {
-  for (const theme of ['light', 'dark']) for (const layout of ['desktop', 'mobile']) {
-    test(`${framework} ${design} ${theme} ${layout} link decoration contract`, async ({ page }) => {
+  for (const layout of ['desktop', 'mobile']) {
+    test(`${framework} ${design} ${layout} link decoration contract`, async ({ page }) => {
       test.setTimeout(60000);
       await page.setViewportSize({ width: layout === 'mobile' ? 390 : 1280, height: 850 });
       for (const scenario of linkSheets) await test.step(scenario, async () => {
