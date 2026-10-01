@@ -1,8 +1,7 @@
-// React port of tests/account-menu.test.ts, plus a case for the optional
-// SessionProvider context integration (principal/login/logout/switchOrg
-// falling back to the ambient provider when the corresponding prop is
-// omitted — the one behavior with no Vue analog, since Vue's AccountMenu
-// has no such ambient context to opt into).
+// AccountMenu: the dropdown, the org switcher, the role badge and identity
+// descriptor, and the optional SessionProvider integration (principal, login,
+// logout and switchOrg fall back to the ambient provider when the matching
+// prop is omitted).
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -95,8 +94,8 @@ describe('AccountMenu (react)', () => {
     let buttons = Array.from(container.querySelectorAll('button.lu-am-item'));
     fireEvent.click(buttons.find((b) => b.textContent === 'Deck access')!);
     expect(onNavigate).toHaveBeenCalledWith('/admin/decks');
-    // Clicking a row closes the dropdown (matches the Vue original); reopen
-    // it before exercising the second row.
+    // Clicking a row closes the dropdown; reopen it before exercising the
+    // second row.
     fireEvent.click(container.querySelector('.lu-am-trigger')!);
     buttons = Array.from(container.querySelectorAll('button.lu-am-item'));
     fireEvent.click(buttons.find((b) => b.textContent === 'Do thing')!);
@@ -179,6 +178,16 @@ describe('AccountMenu role badge (shared four-role account model)', () => {
     expect(container.querySelector('.lu-am-id-sub-text')!.textContent).toBe('Personal');
   });
 
+  // The badge is decided by the role name. A principal whose JSON still
+  // carries the retired `is_superadmin` flag is not an administrator, and the
+  // menu reads nothing from it.
+  it('ignores a retired is_superadmin flag left on the wire', () => {
+    const legacy = { ...base, is_superadmin: true } as unknown as Principal;
+    const { container } = render(<AccountMenu principal={legacy} />);
+    expect(container.querySelector('.lu-am-role')).toBeNull();
+    expect(container.querySelector('.lu-am-id-sub-text')!.textContent).toBe('Personal');
+  });
+
   it('honors custom role labels', () => {
     const { container } = render(
       <AccountMenu
@@ -205,8 +214,8 @@ describe('AccountMenu dropdown identity descriptor', () => {
   });
 });
 
-// SessionProvider integration: no Vue analog (Vue's AccountMenu never reads
-// an ambient store), but the ported component's headline feature.
+// SessionProvider integration: with no principal, login, logout or switchOrg
+// prop, the menu reads them from the ambient provider.
 describe('AccountMenu under SessionProvider', () => {
   function mockFetch(responses: Array<[number, unknown]>) {
     let i = 0;

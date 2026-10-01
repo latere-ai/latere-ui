@@ -4,7 +4,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { GlassButton } from '../GlassButton';
 
 describe('GlassButton (react)', () => {
-  it('renders a capsule button with the Vue-identical classes and fires onClick', () => {
+  it('renders a capsule button on thin glass, of type button, and fires onClick', () => {
     const onClick = vi.fn();
     const { getByRole } = render(<GlassButton onClick={onClick}>Go</GlassButton>);
     const btn = getByRole('button');
@@ -40,7 +40,25 @@ describe('GlassButton (react)', () => {
     expect(onClick).not.toHaveBeenCalled();
   });
 
-  it('renders the icon prop before the label (the Vue icon slot)', () => {
+  it('carries no glass material class on any variant', () => {
+    for (const variant of ['glass', 'primary', 'ghost', 'danger', 'danger-ghost'] as const) {
+      const { getByRole, unmount } = render(<GlassButton variant={variant}>Go</GlassButton>);
+      const classes = Array.from(getByRole('button').classList);
+      expect(classes).toContain(`lu-btn-${variant}`);
+      expect(classes.filter(name => name.startsWith('lu-glass'))).toEqual([]);
+      unmount();
+    }
+  });
+
+  it('disabled blocks interaction', () => {
+    const onClick = vi.fn();
+    const { getByRole } = render(<GlassButton disabled onClick={onClick}>Go</GlassButton>);
+    fireEvent.click(getByRole('button'));
+    expect(onClick).not.toHaveBeenCalled();
+    expect(getByRole('button').hasAttribute('disabled')).toBe(true);
+  });
+
+  it('renders the icon prop before the label', () => {
     const { getByRole } = render(<GlassButton icon={<i data-testid="ic" />}>Go</GlassButton>);
     const btn = getByRole('button');
     expect(btn.querySelector('[data-testid="ic"] + .lu-btn-label')).not.toBeNull();

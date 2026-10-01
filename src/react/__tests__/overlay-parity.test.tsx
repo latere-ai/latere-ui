@@ -1,12 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, cleanup, waitFor } from '@testing-library/react';
 import { renderToString } from 'react-dom/server';
-import { mount } from '@vue/test-utils';
-import { nextTick } from 'vue';
-import VueToaster from '../../components/GlassToaster.vue';
-import VueConfirmHost from '../../components/GlassConfirmHost.vue';
-import { message as vueMessage } from '../../glass/message';
-import { confirm as vueConfirm } from '../../glass/confirm';
 import { confirmStore } from '../../glass/confirmCore';
 import { GlassPopover, GlassTooltip, GlassMenu, GlassDrawer, GlassToaster, GlassConfirmHost, message, confirm, resolveConfirm } from '../overlays';
 
@@ -26,6 +20,9 @@ describe('React anchored overlays', () => {
     fireEvent.click(w.getByText('Open'));
     expect(w.getByText('Opened')).toBeTruthy();
     expect(w.container.querySelector('.lu-pop-panel')?.className).toBe(`lu-pop-panel lu-glass-thick lu-pop-panel--${placement} lu-pop-panel--match`);
+    // The content declares its role; a GlassMenu inside must not sit in a
+    // second, empty menu.
+    expect(w.container.querySelector('.lu-pop-panel')?.hasAttribute('role')).toBe(false);
     fireEvent.click(w.getByText('Unavailable'));
     expect(onSelect).not.toHaveBeenCalled();
     expect(w.getByRole('menuitem', { name: 'Delete' }).className).toContain('is-danger');
@@ -59,7 +56,7 @@ describe('React anchored overlays', () => {
     expect(w.queryByText('Panel')).toBeNull();
   });
 
-  it.each(['top', 'bottom'] as const)('keeps tooltip %s markup identical to Vue', placement => {
+  it.each(['top', 'bottom'] as const)('renders the tooltip %s markup', placement => {
     const w = render(<GlassTooltip text="Description" placement={placement}><button>Trigger</button></GlassTooltip>);
     expect(w.getByRole('tooltip').className).toBe(`lu-tip lu-glass-smoke lu-tip--${placement}`);
     expect(w.getByRole('tooltip').textContent).toBe('Description');
@@ -120,13 +117,13 @@ describe('React drawer', () => {
 });
 
 describe('shared imperative hosts', () => {
-  it('React toaster responds to Vue service calls, roles, colors and click dismissal', async () => {
+  it('toaster renders service calls with their roles, colors and click dismissal', async () => {
     const w = render(<GlassToaster />);
     act(() => {
-      vueMessage.info('Info', { duration: 0 });
-      vueMessage.success('Success', { duration: 0 });
-      vueMessage.warning('Warning', { duration: 0 });
-      vueMessage.error('Error', { duration: 0 });
+      message.info('Info', { duration: 0 });
+      message.success('Success', { duration: 0 });
+      message.warning('Warning', { duration: 0 });
+      message.error('Error', { duration: 0 });
     });
     expect(w.getByRole('region').getAttribute('aria-live')).toBe('polite');
     expect(w.getAllByRole('status')).toHaveLength(3);
@@ -138,26 +135,11 @@ describe('shared imperative hosts', () => {
     await waitFor(() => expect(w.queryByRole('alert')).toBeNull());
   });
 
-  it('React calls render in Vue toaster and Vue confirm host', async () => {
-    const toaster = mount(VueToaster, { attachTo: document.body });
-    message.success('Cross framework', { duration: 0 });
-    await nextTick();
-    expect(document.querySelector('.lu-toast-text')?.textContent).toBe('Cross framework');
-    toaster.unmount();
-    const host = mount(VueConfirmHost, { attachTo: document.body });
-    const pending = confirm({ message: 'Vue request', confirmText: 'Proceed' });
-    await nextTick();
-    await nextTick();
-    (Array.from(document.querySelectorAll('button')).find(b => b.textContent?.trim() === 'Proceed')!).click();
-    await expect(pending).resolves.toBe(true);
-    host.unmount();
-  });
-
-  it('React confirm host consumes Vue queue, custom labels, danger, cancel and Escape', async () => {
+  it('confirm host consumes the queue in order, with custom labels, danger, cancel and Escape', async () => {
     const w = render(<GlassConfirmHost />);
     let first!: Promise<boolean>; let second!: Promise<boolean>;
     act(() => {
-      first = vueConfirm({ title: 'Delete?', message: 'First request', danger: true, confirmText: 'Delete', cancelText: 'Keep' });
+      first = confirm({ title: 'Delete?', message: 'First request', danger: true, confirmText: 'Delete', cancelText: 'Keep' });
       second = confirm({ message: 'Second request' });
     });
     expect(w.getByRole('dialog').parentElement?.className).toContain('lu-modal-scrim--confirm');

@@ -81,4 +81,12 @@ describe('GlassSegmented (react)', () => {
     expect(onChange).toHaveBeenLastCalledWith('y');
     expect(onChange).toHaveBeenCalledTimes(2);
   });
+
+  it('wraps from the first segment to the last with ArrowLeft', () => {
+    const onChange = vi.fn();
+    const three = [...options, { value: 'z', label: 'Z' }];
+    const { container } = render(<GlassSegmented value="x" options={three} onChange={onChange} />);
+    fireEvent.keyDown(container.querySelectorAll('[role="radio"]')[0], { key: 'ArrowLeft' });
+    expect(onChange).toHaveBeenLastCalledWith('z');
+  });
 });

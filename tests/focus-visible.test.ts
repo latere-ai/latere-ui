@@ -13,11 +13,11 @@ import { describe, expect, it } from 'vitest';
 const root = process.cwd();
 const read = (p: string) => readFileSync(resolve(root, p), 'utf8');
 
-// A de-scoped component's shared stylesheet (src/styles/components/<kebab>.css),
-// or null while its styles still live in the SFC's scoped block.
-function sharedSheet(sfcName: string): string | null {
-  const kebab = sfcName
-    .replace(/\.vue$/, '')
+// A component's shared stylesheet (src/styles/components/<kebab>.css), or null
+// when the component carries no stylesheet of its own.
+function sharedSheet(componentFile: string): string | null {
+  const kebab = componentFile
+    .replace(/\.tsx$/, '')
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
     .toLowerCase();
   const rel = `src/styles/components/${kebab}.css`;
@@ -70,28 +70,28 @@ describe('focus-visible treatment', () => {
     // external stylesheet are checked against that sheet; headless components
     // (hosts own all styling) are exempt.
     const external: Record<string, string | null> = {
-      'ConsoleSidebar.vue': 'src/styles/console.css',
-      'SiteFooter.vue': 'src/styles/footer.css',
-      'DocsLayout.vue': 'src/styles/docs.css',
-      'OrgSwitcher.vue': null, // headless by design
+      'ConsoleSidebar.tsx': 'src/styles/console.css',
+      'SiteFooter.tsx': 'src/styles/footer.css',
+      'DocsLayout.tsx': 'src/styles/docs.css',
+      'OrgSwitcher.tsx': null, // headless by design
       // The two preference menus share one trigger sheet.
-      'ThemeMenu.vue': 'src/styles/components/preference-menu.css',
-      'LocaleMenu.vue': 'src/styles/components/preference-menu.css',
+      'ThemeMenu.tsx': 'src/styles/components/preference-menu.css',
+      'LocaleMenu.tsx': 'src/styles/components/preference-menu.css',
     };
-    const components = readdirSync(resolve(root, 'src/components')).filter((n) =>
-      n.endsWith('.vue'),
+    const components = readdirSync(resolve(root, 'src/react')).filter((n) =>
+      n.endsWith('.tsx'),
     );
     expect(components.length).toBeGreaterThan(0);
     for (const name of components) {
-      const src = read(`src/components/${name}`);
+      const src = read(`src/react/${name}`);
       if (!/<button|<a\s/.test(src)) continue;
       if (name in external) {
         const sheet = external[name];
         if (sheet) expect(read(sheet)).toContain(':focus-visible');
         continue;
       }
-      // De-scoped components (react-support v1.27) keep their styles in the
-      // shared per-component sheet; the gate follows the styles there.
+      // Components keep their styles in the shared per-component sheet; the
+      // gate follows the styles there.
       const shared = sharedSheet(name);
       if (shared) {
         expect(read(shared), `${shared} must style :focus-visible`).toContain(':focus-visible');
@@ -102,15 +102,15 @@ describe('focus-visible treatment', () => {
   });
 
   it('sweep: focus outlines go through the shared token, never hardcoded', () => {
-    const components = readdirSync(resolve(root, 'src/components')).filter((n) =>
-      n.endsWith('.vue'),
+    const components = readdirSync(resolve(root, 'src/react')).filter((n) =>
+      n.endsWith('.tsx'),
     );
     const sheets = existsSync(resolve(root, 'src/styles/components'))
       ? readdirSync(resolve(root, 'src/styles/components'))
           .filter((n) => n.endsWith('.css'))
           .map((n) => `src/styles/components/${n}`)
       : [];
-    const sources = [...components.map((n) => `src/components/${n}`), ...sheets];
+    const sources = [...components.map((n) => `src/react/${n}`), ...sheets];
     for (const path of sources) {
       const src = read(path);
       for (const line of src.split('\n')) {

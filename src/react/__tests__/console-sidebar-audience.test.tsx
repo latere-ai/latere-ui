@@ -1,6 +1,5 @@
 // Rows only admins are shown, and the bottom groups set in the foot, in the
-// React ConsoleSidebar. tests/console-sidebar-audience.test.ts holds the Vue
-// twin.
+// ConsoleSidebar.
 import { fireEvent, render } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 
@@ -100,6 +99,13 @@ describe('ConsoleSidebar bottom groups (react)', () => {
     const { container } = render(<ConsoleSidebar model={{ groups: [model.groups[0]] }} footItems={[]} bottomGroups="foot" />);
     expect(container.querySelector('.lu-cs-foot')!.innerHTML).toBe('');
     expect(container.querySelector('.lu-cs-foot')!.className).toBe('lu-cs-foot');
+  });
+
+  it('passes foot rows through renderItem like nav rows', () => {
+    const { container } = render(
+      <ConsoleSidebar model={model} footItems={footItems} bottomGroups="foot" renderItem={({ item }) => <i className="slotted" data-id={item.id} />} />,
+    );
+    expect(Array.from(container.querySelectorAll('.lu-cs-foot-nav i.slotted')).map((el) => el.getAttribute('data-id'))).toEqual(['org:members', 'admin:fleet', 'status']);
   });
 
   it('stacks the foot groups as icons in the collapsed rail', () => {

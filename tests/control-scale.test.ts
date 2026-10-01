@@ -1,13 +1,11 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-import { mount } from '@vue/test-utils';
 import { render } from '@testing-library/react';
 import { createElement } from 'react';
 import { describe, expect, it } from 'vitest';
 
-import GlassButton from '../src/components/GlassButton.vue';
-import { GlassButton as ReactGlassButton } from '../src/react/GlassButton';
+import { GlassButton } from '../src/react/GlassButton';
 
 const read = (name: string) => readFileSync(resolve(process.cwd(), `src/styles/components/${name}.css`), 'utf8');
 const readStyle = (path: string) => readFileSync(resolve(process.cwd(), `src/styles/${path}`), 'utf8');
@@ -66,11 +64,9 @@ describe('the control scale', () => {
     expect(declarations(read('glass-bar'))).not.toMatch(/\.lu-btn/);
   });
 
-  it('offers danger as text for an action among others, in both adapters', () => {
+  it('offers danger as text for an action among others', () => {
     expect(rule(read('glass-button'), '.lu-btn-danger-ghost')).toMatch(/background:\s*transparent;\s*color:\s*var\(--state-error/);
-    const vue = mount(GlassButton, { props: { variant: 'danger-ghost' }, slots: { default: 'Delete' } });
-    expect(vue.classes()).toEqual(['lu-btn', 'lu-btn-danger-ghost', 'lu-btn-md']);
-    const react = render(createElement(ReactGlassButton, { variant: 'danger-ghost' }, 'Delete'));
+    const react = render(createElement(GlassButton, { variant: 'danger-ghost' }, 'Delete'));
     expect(react.container.querySelector('button')!.className).toBe('lu-btn lu-btn-danger-ghost lu-btn-md');
   });
 });

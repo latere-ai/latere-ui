@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { createToc, slugify } from '../src/docs/toc';
+import { createTocCore, slugify } from '../src/docs/tocCore';
 
 function article(html: string): HTMLElement {
   const el = document.createElement('div');
@@ -35,19 +35,19 @@ describe('slugify()', () => {
   });
 });
 
-describe('createToc().scan()', () => {
+describe('createTocCore().scan()', () => {
   it('extracts the heading outline at the configured levels', () => {
     const el = article('<h2>Intro</h2><p>x</p><h3>Details</h3><h4>Skip me</h4><h2>End</h2>');
-    const toc = createToc();
+    const toc = createTocCore();
     const items = toc.scan(el);
     expect(items.map((i) => i.text)).toEqual(['Intro', 'Details', 'End']);
     expect(items.map((i) => i.level)).toEqual([2, 3, 2]);
-    expect(toc.activeId.value).toBe(items[0].id);
+    expect(toc.getSnapshot().activeId).toBe(items[0].id);
   });
 
   it('assigns slug ids to headings missing one, keeping existing ids', () => {
     const el = article('<h2 id="keep">Kept</h2><h2>Made Up</h2>');
-    const toc = createToc();
+    const toc = createTocCore();
     const items = toc.scan(el);
     expect(items[0].id).toBe('keep');
     expect(items[1].id).toBe('made-up');
@@ -57,20 +57,20 @@ describe('createToc().scan()', () => {
 
   it('skips empty headings', () => {
     const el = article('<h2></h2><h2>Real</h2>');
-    expect(createToc().scan(el).map((i) => i.text)).toEqual(['Real']);
+    expect(createTocCore().scan(el).map((i) => i.text)).toEqual(['Real']);
   });
 
   it('setActive overrides the active id', () => {
     const el = article('<h2>A</h2><h2>B</h2>');
-    const toc = createToc();
+    const toc = createTocCore();
     const items = toc.scan(el);
     toc.setActive(items[1].id);
-    expect(toc.activeId.value).toBe(items[1].id);
+    expect(toc.getSnapshot().activeId).toBe(items[1].id);
   });
 
   it('is a no-op for a null container', () => {
-    const toc = createToc();
+    const toc = createTocCore();
     expect(toc.scan(null)).toEqual([]);
-    expect(toc.items.value).toEqual([]);
+    expect(toc.getSnapshot().items).toEqual([]);
   });
 });

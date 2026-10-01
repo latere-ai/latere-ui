@@ -22,6 +22,18 @@ describe('React AccountPrefs', () => {
   });
 });
 
+describe('React AccountPrefs locales', () => {
+  it('renders one language pill per host locale, past two, and marks one locale and one theme active', () => {
+    const localeOptions = [{ code: 'en', label: 'EN', name: 'English' }, { code: 'zh', label: '中文', name: 'Chinese' }, { code: 'de', label: 'DE', name: 'Deutsch' }];
+    const view = render(<AccountPrefs theme="auto" locale="zh" localeOptions={localeOptions} />);
+    const language = view.container.querySelectorAll('[role="group"]')[0];
+    expect(Array.from(language.querySelectorAll('.lu-ap-pill')).map(b => b.textContent)).toEqual(['EN', '中文', 'DE']);
+    const active = Array.from(view.container.querySelectorAll('.lu-ap-pill.is-active')).map(b => b.textContent);
+    expect(active).toHaveLength(2);
+    expect(active).toEqual(expect.arrayContaining(['中文', 'Auto']));
+  });
+});
+
 describe('React ConsolePalette', () => {
   it('filters routable enabled rows, bounds selection, navigates and resets on reopen/model change', () => {
     const onNavigate = vi.fn(); const onClose = vi.fn();
