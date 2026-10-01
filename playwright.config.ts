@@ -3,7 +3,6 @@ import { figureScale, referenceBrowserArgs, referencePlatform } from './tests/vi
 
 export default defineConfig({
   testDir: './tests/visual',
-  globalTeardown: './tests/visual/finish-references.ts',
   testMatch: '**/*.spec.ts',
   outputDir: './output/playwright/results',
   snapshotPathTemplate: `{testDir}/goldens/${referencePlatform}/{arg}{ext}`,

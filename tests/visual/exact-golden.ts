@@ -2,8 +2,6 @@ import { errors, expect as baseExpect, test, type Page } from '@playwright/test'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { comparePixels } from './exact-pixels';
-import { withPngDensity } from './png-density';
-import { figureDpi } from './reference-settings';
 
 type CaptureOptions = Pick<NonNullable<Parameters<Page['screenshot']>[0]>, 'fullPage' | 'clip'> & {
   interaction?: { restore: () => Promise<void>; matches: () => Promise<boolean> };
@@ -116,7 +114,7 @@ export const expect = baseExpect.extend({
     const comparison = expected ? comparePixels(expected, actual) : undefined;
     if (update === 'all' || (update === 'changed' && !comparison?.equal) || (update === 'missing' && !exists)) {
       mkdirSync(dirname(path), { recursive: true });
-      writeFileSync(path, withPngDensity(actual, figureDpi));
+      writeFileSync(path, actual);
       return { pass: true, message: () => `Recorded ${name}` };
     }
     if (!comparison?.equal) {

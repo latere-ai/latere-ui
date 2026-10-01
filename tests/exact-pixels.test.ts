@@ -1,13 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import { PNG } from 'pngjs';
 import { comparePixels } from './visual/exact-pixels';
-import { withPngDensity } from './visual/png-density';
 
 const encode = (values: number[], width = values.length / 4) => PNG.sync.write({ width, height: 1, data: Buffer.from(values) } as PNG);
 describe('exact image comparison', () => {
-  it('compares pixels rather than PNG compression or density metadata', () => {
-    const png = encode([50, 60, 70, 255]);
-    expect(comparePixels(png, withPngDensity(png, 300)).changedPixels).toBe(0);
+  it('compares decoded pixels rather than PNG encoding', () => {
+    const image = { width: 4, height: 1, data: Buffer.from([50, 60, 70, 255, 50, 60, 70, 255, 50, 60, 70, 255, 1, 2, 3, 4]) } as PNG;
+    const fast = PNG.sync.write(image, { deflateLevel: 0 });
+    const small = PNG.sync.write(image, { deflateLevel: 9 });
+    expect(fast.equals(small)).toBe(false);
+    expect(comparePixels(fast, small).changedPixels).toBe(0);
   });
   it.each([0, 1, 2, 3])('rejects a one-level change to channel %i of one pixel', channel => {
     const pixels = [100, 100, 100, 255, 40, 50, 60, 200];
