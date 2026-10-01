@@ -1,10 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-import { mount } from '@vue/test-utils';
+import { render } from '@testing-library/react';
+import { createElement } from 'react';
 import { describe, expect, it } from 'vitest';
 
-import GlassAlert from '../src/components/GlassAlert.vue';
+import { GlassAlert } from '../src/react/GlassAlert';
 import { ALERT_TONE_ICON, ALERT_TONE_VAR, alertRole, alertTone } from '../src/components/glassAlert';
 
 const css = readFileSync(resolve(process.cwd(), 'src/styles/components/glass-alert.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
@@ -25,16 +26,18 @@ describe('GlassAlert anatomy', () => {
 
   it('leads each tone with its own icon in the tone color', () => {
     for (const tone of ['info', 'success', 'warning', 'error'] as const) {
-      const w = mount(GlassAlert, { props: { tone, title: 'Title' }, slots: { default: 'Body' } });
-      const [icon, body] = w.element.children;
+      const { container, unmount } = render(createElement(GlassAlert, { tone, title: 'Title' }, 'Body'));
+      const root = container.firstElementChild as HTMLElement;
+      const [icon, body] = root.children;
       expect(icon.className).toBe('lu-alert-icon');
       expect(icon.getAttribute('aria-hidden')).toBe('true');
       expect(icon.querySelector('svg')?.getAttribute('data-icon')).toBe(ALERT_TONE_ICON[tone]);
       expect(body.className).toBe('lu-alert-body');
       expect(body.querySelector('.lu-alert-title')?.textContent).toBe('Title');
       expect(body.querySelector('.lu-alert-text')?.textContent).toBe('Body');
-      expect(w.attributes('data-tone')).toBe(tone);
-      expect((w.element as HTMLElement).style.getPropertyValue('--tone')).toBe(ALERT_TONE_VAR[tone]);
+      expect(root.getAttribute('data-tone')).toBe(tone);
+      expect(root.style.getPropertyValue('--tone')).toBe(ALERT_TONE_VAR[tone]);
+      unmount();
     }
   });
 
@@ -43,8 +46,8 @@ describe('GlassAlert anatomy', () => {
     expect(alertTone(undefined)).toBe('info');
     expect(alertRole('error')).toBe('alert');
     expect(alertRole('warning')).toBe('status');
-    const w = mount(GlassAlert, { props: { tone: 'loud' as never } });
-    expect(w.attributes('data-tone')).toBe('info');
-    expect(w.attributes('role')).toBe('status');
+    const root = render(createElement(GlassAlert, { tone: 'loud' as never })).container.firstElementChild!;
+    expect(root.getAttribute('data-tone')).toBe('info');
+    expect(root.getAttribute('role')).toBe('status');
   });
 });

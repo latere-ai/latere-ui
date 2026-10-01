@@ -1,7 +1,5 @@
-// React SiteFooter. The Vue suite in tests/footer.test.ts is the contract;
-// this file asserts the same behaviors through the React adapter, plus the
-// one thing only a two-adapter package can get wrong: two copies of the mark
-// drifting apart.
+// SiteFooter: the link columns and compact strip, the lead block, the
+// preference menus, link routing and the bundled translations.
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -226,25 +224,12 @@ describe('SiteFooter (React)', () => {
   }
 });
 
-describe('the two logo marks stay one mark', () => {
-  // The only duplicated source in the package: an SVG cannot cross the
-  // template/JSX boundary without a runtime. Compare the path data so an edit
-  // to one adapter that skips the other fails here.
+describe('the footer social row', () => {
+  // The glyphs live in one data module; the component draws no path of its own.
   const read = (p: string) => readFileSync(resolve(process.cwd(), p), 'utf8');
-  const paths = (src: string) => Array.from(src.matchAll(/<path d="([^"]+)"/g)).map((m) => m[1]);
-
-  it('LatereLogoMark.tsx carries the same paths as LatereLogoMark.vue', () => {
-    const vue = paths(read('src/components/LatereLogoMark.vue'));
-    const tsx = paths(read('src/react/LatereLogoMark.tsx'));
-    expect(vue.length).toBe(6);
-    expect(tsx).toEqual(vue);
-  });
-
-  it('both SiteFooter adapters draw the social row from the shared data', () => {
-    for (const file of ['src/components/SiteFooter.vue', 'src/react/SiteFooter.tsx']) {
-      const src = read(file);
-      expect(paths(src), file).toEqual([]);
-      expect(src, file).toContain('FOOTER_SOCIALS');
-    }
+  it('is drawn from the shared data', () => {
+    const src = read('src/react/SiteFooter.tsx');
+    expect(Array.from(src.matchAll(/<path d="([^"]+)"/g))).toEqual([]);
+    expect(src).toContain('FOOTER_SOCIALS');
   });
 });

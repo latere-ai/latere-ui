@@ -12,7 +12,7 @@ beforeEach(() => {
 });
 afterEach(() => { cleanup(); vi.unstubAllGlobals(); vi.useRealTimers(); });
 
-it('enters with the Vue classes and retains the modal until its leave transition finishes', () => {
+it('enters with the CSS transition classes and retains the modal until its leave transition finishes', () => {
   const view = render(<GlassModal open={false}>Message</GlassModal>);
   view.rerender(<GlassModal open>Message</GlassModal>);
   const scrim = document.querySelector('.lu-modal-scrim')!;

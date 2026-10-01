@@ -1,36 +1,10 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { createCollapse } from '../src/console/collapse';
 import {
   partitionGroups,
   isItemDisabled,
   type NavGroup,
 } from '../src/console/nav';
-
-describe('createCollapse()', () => {
-  it('defaults to expanded and toggles', () => {
-    const c = createCollapse();
-    expect(c.collapsed.value).toBe(false);
-    c.toggle();
-    expect(c.collapsed.value).toBe(true);
-    c.toggle();
-    expect(c.collapsed.value).toBe(false);
-  });
-
-  it('honors the initial value', () => {
-    expect(createCollapse({ initial: true }).collapsed.value).toBe(true);
-  });
-
-  it('calls onChange only on real transitions', () => {
-    const onChange = vi.fn();
-    const c = createCollapse({ onChange });
-    c.set(false); // already false → no call
-    expect(onChange).not.toHaveBeenCalled();
-    c.set(true);
-    c.toggle(); // back to false
-    expect(onChange.mock.calls).toEqual([[true], [false]]);
-  });
-});
 
 describe('partitionGroups()', () => {
   const groups: NavGroup[] = [

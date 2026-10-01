@@ -2,8 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createExternalStore } from '../src/glass/externalStore';
 import { message, dismissToast, toastStore, getServerToasts } from '../src/glass/messageCore';
 import { confirm, resolveConfirm, confirmStore, getServerConfirm } from '../src/glass/confirmCore';
-import { toasts, message as vueMessage } from '../src/glass/message';
-import { currentConfirm, confirm as vueConfirm } from '../src/glass/confirm';
+import { activateFocusTrap } from '../src/glass/focusTrap';
 
 afterEach(() => {
   message.clear();
@@ -31,20 +30,17 @@ describe('external snapshots', () => {
 });
 
 describe('framework-free message service', () => {
-  it('preserves old immutable snapshots and the Vue facade array identity', () => {
+  it('preserves old immutable snapshots', () => {
     const old = toastStore.getSnapshot();
-    const vueArray = toasts;
     const changed = vi.fn();
     const unsubscribe = toastStore.subscribe(changed);
-    expect(vueMessage).toBe(message);
     message('info', 'Information', { duration: 0 });
     const next = toastStore.getSnapshot();
     expect(old).toHaveLength(0);
     expect(next).toHaveLength(1);
     expect(Object.isFrozen(next)).toBe(true);
     expect(Object.isFrozen(next[0])).toBe(true);
-    expect(toasts).toBe(vueArray);
-    expect(toasts[0].text).toBe('Information');
+    expect(next[0].text).toBe('Information');
     expect(getServerToasts()).toEqual([]);
     dismissToast(-1);
     expect(changed).toHaveBeenCalledOnce();
@@ -67,7 +63,7 @@ describe('framework-free message service', () => {
     expect(vi.getTimerCount()).toBe(1);
     message.clear();
     expect(vi.getTimerCount()).toBe(0);
-    expect(toasts).toHaveLength(0);
+    expect(toastStore.getSnapshot()).toHaveLength(0);
   });
 
   it('cancels a scheduled timer when dismissed manually', () => {
@@ -80,26 +76,40 @@ describe('framework-free message service', () => {
 });
 
 describe('framework-free confirm service', () => {
-  it('queues across adapters, snapshots options and resolves each request once', async () => {
-    expect(vueConfirm).toBe(confirm);
+  it('queues requests, snapshots options and resolves each request once', async () => {
     const options = { message: 'First?', danger: true };
     const first = confirm(options);
     const firstSnapshot = confirmStore.getSnapshot();
     options.message = 'Changed caller object';
-    const second = vueConfirm({ message: 'Second?', title: 'Question' });
+    const second = confirm({ message: 'Second?', title: 'Question' });
     expect(confirmStore.getSnapshot()).toBe(firstSnapshot);
     expect(firstSnapshot.current?.message).toBe('First?');
     expect(Object.isFrozen(firstSnapshot.current)).toBe(true);
     expect(firstSnapshot.current).not.toHaveProperty('resolve');
-    expect(currentConfirm.current?.message).toBe('First?');
     resolveConfirm(true);
     await expect(first).resolves.toBe(true);
-    expect(currentConfirm.current?.message).toBe('Second?');
+    expect(confirmStore.getSnapshot().current?.message).toBe('Second?');
     expect(firstSnapshot.current?.message).toBe('First?');
     resolveConfirm(false);
     resolveConfirm(true);
     await expect(second).resolves.toBe(false);
-    expect(currentConfirm.current).toBeNull();
+    expect(confirmStore.getSnapshot().current).toBeNull();
     expect(getServerConfirm()).toEqual({ current: null });
+  });
+});
+
+describe('focus trap', () => {
+  it('focuses initialFocus on open instead of the first focusable element', () => {
+    const container = document.createElement('div');
+    // The button is the first focusable in DOM order, but the input is the
+    // requested initial focus.
+    container.innerHTML = '<button class="first">x</button><input class="field">';
+    document.body.append(container);
+    const input = container.querySelector<HTMLInputElement>('input')!;
+    const trap = activateFocusTrap(() => container, undefined, () => input);
+    try {
+      trap.focus();
+      expect(document.activeElement).toBe(input);
+    } finally { trap.dispose(); container.remove(); }
   });
 });

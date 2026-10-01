@@ -1,5 +1,4 @@
-// The React palette's host entries and search. tests/console-palette-items.test.ts
-// holds the Vue twin.
+// The command palette's host entries and search.
 import { act, fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 

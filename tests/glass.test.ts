@@ -1,10 +1,9 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-import { describe, expect, it, vi, afterEach } from 'vitest';
-import { effectScope } from 'vue';
+import { describe, expect, it } from 'vitest';
 
-import { concentricRadius, glassClass, useGlass } from '../src/glass/useGlass';
+import { glassClass } from '../src/react/GlassSurface';
 
 const css = readFileSync(resolve(process.cwd(), 'src/styles/glass.css'), 'utf8');
 
@@ -131,13 +130,6 @@ describe('glass.css material tokens', () => {
   });
 });
 
-describe('concentricRadius', () => {
-  it('subtracts padding from the outer radius (Apple concentric rule)', () => {
-    expect(concentricRadius('8px')).toBe('calc(var(--glass-radius, 14px) - 8px)');
-    expect(concentricRadius('4px', '20px')).toBe('calc(20px - 4px)');
-  });
-});
-
 describe('glassClass', () => {
   it('maps each tier to its utility class', () => {
     expect(glassClass('ultrathin')).toBe('lu-glass-ultrathin');
@@ -146,37 +138,5 @@ describe('glassClass', () => {
     expect(glassClass('thick')).toBe('lu-glass-thick');
     expect(glassClass('smoke')).toBe('lu-glass-smoke');
     expect(glassClass()).toBe('lu-glass'); // defaults to regular
-  });
-});
-
-describe('useGlass', () => {
-  afterEach(() => vi.unstubAllGlobals());
-
-  it('reflects the matchMedia state and reacts to changes', () => {
-    let handler: ((e: MediaQueryListEvent) => void) | undefined;
-    const mql = {
-      matches: true,
-      addEventListener: (_: string, h: (e: MediaQueryListEvent) => void) => {
-        handler = h;
-      },
-      removeEventListener: vi.fn(),
-    };
-    vi.stubGlobal('matchMedia', () => mql);
-
-    const scope = effectScope();
-    const api = scope.run(() => useGlass())!;
-    expect(api.reducedTransparency.value).toBe(true);
-
-    handler?.({ matches: false } as MediaQueryListEvent);
-    expect(api.reducedTransparency.value).toBe(false);
-    scope.stop();
-  });
-
-  it('is SSR-safe: defaults to false when matchMedia is unavailable', () => {
-    vi.stubGlobal('matchMedia', undefined);
-    const scope = effectScope();
-    const api = scope.run(() => useGlass())!;
-    expect(api.reducedTransparency.value).toBe(false);
-    scope.stop();
   });
 });

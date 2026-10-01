@@ -3,8 +3,7 @@ import {
   SELECT_MENU_VIEWPORT_GUTTER, SELECT_SEARCH_THRESHOLD, filterSelectOptions, initialVisibleOption,
   isSelectSearchable, isTypeToSearchKey, nextVisibleOption, selectLabelRuns, selectMenuShift,
 } from '../src/glass/selectSearch';
-import { SELECT_SEARCH_THRESHOLD as vueExport } from '../src/index';
-import { SELECT_SEARCH_THRESHOLD as reactExport } from '../src/react/index';
+import { SELECT_SEARCH_THRESHOLD as publicExport } from '../src/react/index';
 
 const zones = [
   { value: 'Europe/Berlin', label: 'Europe/Berlin' },
@@ -17,8 +16,7 @@ const zones = [
 describe('select search threshold', () => {
   it('searches above the exported threshold unless the prop decides', () => {
     expect(SELECT_SEARCH_THRESHOLD).toBe(8);
-    expect(vueExport).toBe(SELECT_SEARCH_THRESHOLD);
-    expect(reactExport).toBe(SELECT_SEARCH_THRESHOLD);
+    expect(publicExport).toBe(SELECT_SEARCH_THRESHOLD);
     expect(isSelectSearchable(SELECT_SEARCH_THRESHOLD)).toBe(false);
     expect(isSelectSearchable(SELECT_SEARCH_THRESHOLD + 1)).toBe(true);
     expect(isSelectSearchable(2, true)).toBe(true);

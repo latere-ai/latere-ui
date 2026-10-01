@@ -1,6 +1,6 @@
 // @vitest-environment node
 // latere-ui/structured-data runs where a static build or a server renders
-// pages: no window, no document. The Vue and React entries stay free of it.
+// pages: no window, no document. The component entry stays free of it.
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
@@ -26,8 +26,6 @@ it('makes mountJsonLd a no-op without a document', () => {
   expect(() => remove()).not.toThrow();
 });
 
-it('is not part of the Vue or React entries', () => {
-  for (const entry of ['src/index.ts', 'src/react/index.ts']) {
-    expect(readFileSync(resolve(process.cwd(), entry), 'utf8')).not.toContain('structured-data');
-  }
+it('is not part of the component entry', () => {
+  expect(readFileSync(resolve(process.cwd(), 'src/react/index.ts'), 'utf8')).not.toContain('structured-data');
 });

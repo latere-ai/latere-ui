@@ -1,5 +1,5 @@
 // The expandable tree, the compact head, foot rows and built-in icons of the
-// React ConsoleSidebar. tests/console-sidebar-tree.test.ts holds the Vue twin.
+// ConsoleSidebar.
 import { fireEvent, render } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 

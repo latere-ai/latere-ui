@@ -1,15 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { mount } from '@vue/test-utils';
-import { defineComponent, h, nextTick } from 'vue';
 
-import { initLiquidGlass, refract, sheen, useLiquidGlass } from '../src';
+import { initLiquidGlass, refract, sheen } from '../src/glass/liquidGlass';
 
 describe('liquid glass runtime', () => {
-  it('exposes the runtime + composable entry points', () => {
+  it('exposes the runtime entry points', () => {
     expect(typeof initLiquidGlass).toBe('function');
     expect(typeof refract).toBe('function');
     expect(typeof sheen).toBe('function');
-    expect(typeof useLiquidGlass).toBe('function');
   });
 
   it('scans the document without throwing (progressive enhancement)', () => {
@@ -268,24 +265,5 @@ describe('liquid glass updates', () => {
     initLiquidGlass(panel);
     expect(panel.style.backdropFilter).toContain('url(');
     expect(panel.querySelector('[aria-hidden]')).not.toBeNull();
-  });
-
-  it('the composable responds to preference changes and removes its subscriptions on unmount', async () => {
-    const wrapper = mount(defineComponent({
-      setup() {
-        useLiquidGlass({ root: () => document });
-        return () => h('div');
-      },
-    }));
-    await nextTick();
-    expect(panel.querySelector('[aria-hidden]')).not.toBeNull();
-    const query = media.get('(prefers-reduced-motion: reduce)')!;
-    const remove = vi.spyOn(query, 'removeEventListener');
-    reducedMotion = true;
-    query.dispatchEvent(new Event('change'));
-    await nextTick();
-    expect(panel.querySelector('[aria-hidden]')).toBeNull();
-    wrapper.unmount();
-    expect(remove).toHaveBeenCalledWith('change', expect.any(Function));
   });
 });
