@@ -50,29 +50,27 @@ bun run test:visual:report
 ```
 
 Expected PNGs live in `tests/visual/goldens/<platform>/`. macOS paths include
-its Darwin major: `darwin-24` for macOS 15 (CI), `darwin-27` for macOS 27 (the
-local documentation figures). Chromium is installed by the pinned Playwright
-version. CoreText and blur rendering can differ between macOS releases, so
-these references remain separate. Every compared render uses the Chromium arguments in `tests/visual/reference-settings.ts`: grayscale text antialiasing, and each composited layer up to 4096 device pixels rasterized as one tile. With Chromium's default 256-pixel tiles, the hosted runner drew the edges of stroke icons in a tiled layer with one of two pixel patterns from render to render. A change to these arguments needs a reviewed regeneration, like a browser or font upgrade. Comparisons decode PNGs and require equal dimensions and every RGBA channel to match exactly. There is no channel threshold, antialiasing exclusion, pixel allowance, mask, or adapter-specific tolerance; PNG compression differences do not count as visual changes.
+its Darwin major. The committed set is `darwin-24`: macOS 15, as the hosted CI
+runner renders it. The README and design guide embed these same files.
+Chromium is installed by the pinned Playwright version. CoreText and blur
+rendering can differ between macOS releases, so a run on another release has
+no references to compare against; record and compare on the CI runner. Every compared render uses the Chromium arguments in `tests/visual/reference-settings.ts`: grayscale text antialiasing, and each composited layer up to 4096 device pixels rasterized as one tile. With Chromium's default 256-pixel tiles, the hosted runner drew the edges of stroke icons in a tiled layer with one of two pixel patterns from render to render. A change to these arguments needs a reviewed regeneration, like a browser or font upgrade. Comparisons decode PNGs and require equal dimensions and every RGBA channel to match exactly. There is no channel threshold, antialiasing exclusion, pixel allowance, mask, or adapter-specific tolerance; PNG compression differences do not count as visual changes.
 The viewport is 1100 × 850 for default desktop sheets (1280 × 850 for three-column docs
 and product appearances) and 390 × 844 for mobile in CSS pixels. Captures render at 3.125×
-(300/96), retain device pixels, and store 300 DPI PNG metadata. A standard
-desktop figure is approximately 3438 × 2656 pixels, so text stays sharp when
-enlarged or printed. CSS layout and component sizing stay the same.
+(300/96) and retain device pixels. A standard desktop figure is approximately
+3438 × 2656 pixels, so text stays sharp when enlarged. CSS layout and component sizing stay the same.
 Fonts are bundled locally;
 media preferences are explicit, with dedicated accessibility scenarios.
 No backend, remote images, or web font service is needed.
 
 Golden tests use the `goldenTest` fixture from `tests/visual/fixtures.ts`. Each test launches and closes its own Chromium process so paint caches do not carry over from earlier examples; its Vue and React renders still share the same fresh page. Configured fonts, DPR, viewport, browser arguments and tracing remain in effect. Use the ordinary `test` fixture for behavior checks that do not need a committed visual reference.
 
-Each capture waits for finite transitions to finish, pauses looping animations at their first frame, hides the text caret, and requires two identical decoded RGBA images. It restores the previous animation state afterward. Avoid Playwright's global animation override: repeated SVG captures exposed raster differences with that override. For every scenario, the suite compares Vue directly with React before checking either committed golden. Explicit recording cannot bypass this adapter parity check.
+Each capture waits for finite transitions to finish, pauses looping animations at their first frame, hides the text caret, and requires two identical decoded RGBA images. It restores the previous animation state afterward. Avoid Playwright's global animation override: repeated SVG captures exposed raster differences with that override. For every scenario, the suite compares Vue directly with React before checking the scenario's one committed golden, which therefore covers both adapters. Explicit recording cannot bypass this adapter parity check.
 
 Optical figures send a fixed pointer sample through the component's mouse handler, with the native cursor outside the panel. Native full-page captures can temporarily resize Chromium to 1×1 and dispatch an unrelated mouse-leave event. The fixture avoids that input disturbance; capture also checks the sampled opacity and gradient before accepting each frame. Separate browser tests verify that the sample matches real pointer input and that real pointer exit fades the sheen. DOM/action traces remain enabled; background trace screencast images are disabled to avoid a second native capture stream.
 
 The matrix includes every public visual component in both frameworks, all four appearances (default, Replichai, Wallfacer and Origo), desktop/mobile, and light/dark. Fixed logos, headless organization lists, collapsed sidebars and optical-effects examples also participate; a preset may intentionally leave a fixed identity unchanged.
 
-Normal verification also checks the 300 DPI metadata without modifying files.
-Explicit updates stamp density after capture; they never enlarge old pixels.
 Separate interaction tests check focus, keyboard navigation, scrolling, and
 optical effect updates. A still image cannot verify motion or every possible
 host layout. This suite targets Chromium; it does not establish Firefox or
@@ -95,7 +93,7 @@ bun run test:visual:update --grep 'parity origo forms '
 bun run test:visual --grep 'parity origo forms '
 ```
 
-Review each changed PNG individually in both themes and both layouts for every affected appearance and adapter.
+Review each changed PNG individually in both themes and both layouts for every affected appearance.
 Inspect the full composition and native-size details: corner clearance, text
 insets, border weight, contrast, active/disabled states, clipping and overlay
 occlusion. A matching screenshot proves consistency, not design quality. Record
@@ -110,7 +108,9 @@ reviewed references. A Linux run must not overwrite macOS figures or silently
 accept missing images. Browser or font upgrades require a reviewed regeneration.
 
 To record candidates on the hosted macOS 15 runner, manually dispatch **UI
-verification** with `record_goldens` enabled (or run `gh workflow run visual.yml -f record_goldens=true`). Download the `golden-candidates` artifact, inspect the
+verification** with `record_goldens` enabled (or run `gh workflow run visual.yml -f record_goldens=true`).
+Add `-f record_grep='<pattern>'` to record only the tests whose titles match,
+such as `' footer'` after a footer change. Download the `golden-candidates` artifact, inspect the
 PNG changes, and commit approved files under `tests/visual/goldens/darwin-24/`.
 This explicit recording run never commits files or replaces normal verification;
 the subsequent push must pass comparison without update mode.

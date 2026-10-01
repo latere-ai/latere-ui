@@ -10,7 +10,7 @@ Shared glass materials, interface components, and application chrome for Vue and
 
 The materials, controls, overlays, console shell, and documentation layout are product-neutral. A few parts are Latere's own and are published for Latere's products: the site footer and product switcher carry Latere's product lineup and links, the logo marks are Latere's, and the session helpers expect a backend that serves the [session contract](docs/api-guide.md#session) Latere's backends serve, under paths you can rename.
 
-![Compact workspace with navigation, toolbar, summary panels and projects](tests/visual/goldens/darwin-27/workspace-light-laptop.png)
+![Compact workspace with navigation, toolbar, summary panels and projects](tests/visual/goldens/darwin-24/workspace-light-laptop.png)
 
 [Design guide](docs/design-system.md) · [Integration guide](docs/api-guide.md) · [React shell](docs/react-shell.md) · [Visual reference](docs/visual-reference.md) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md)
 
@@ -20,7 +20,7 @@ Every component has light and dark, desktop and mobile figures in both framework
 
 | Replichai · reading | Wallfacer · operations | Origo · repositories |
 |---|---|---|
-| [![Replichai component appearance](tests/visual/goldens/darwin-27/replichai-vue-workspace-light-desktop.png)](tests/visual/goldens/darwin-27/replichai-vue-workspace-light-desktop.png) | [![Wallfacer component appearance](tests/visual/goldens/darwin-27/wallfacer-vue-workspace-light-desktop.png)](tests/visual/goldens/darwin-27/wallfacer-vue-workspace-light-desktop.png) | [![Origo component appearance](tests/visual/goldens/darwin-27/origo-vue-workspace-light-desktop.png)](tests/visual/goldens/darwin-27/origo-vue-workspace-light-desktop.png) |
+| [![Replichai component appearance](tests/visual/goldens/darwin-24/replichai-workspace-light-desktop.png)](tests/visual/goldens/darwin-24/replichai-workspace-light-desktop.png) | [![Wallfacer component appearance](tests/visual/goldens/darwin-24/wallfacer-workspace-light-desktop.png)](tests/visual/goldens/darwin-24/wallfacer-workspace-light-desktop.png) | [![Origo component appearance](tests/visual/goldens/darwin-24/origo-workspace-light-desktop.png)](tests/visual/goldens/darwin-24/origo-workspace-light-desktop.png) |
 
 Import `latere-ui/presets` after the shared styles and set `data-design="replichai"`, `"wallfacer"`, or `"origo"` on `<html>`. Each has its own fonts, density, corners, surface treatment and interaction states. See [setup and font requirements](docs/design-system.md#keep-product-styling-explicit) and [per-style golden figures](docs/visual-reference.md#product-style-variations).
 
@@ -128,14 +128,14 @@ For exact props, events, router integration, footer locales, session setup, [bro
 
 ## Review the visuals
 
-![Button variants, sizes, disabled states, and loading states](tests/visual/goldens/darwin-27/vue-buttons-light-desktop.png)
+![Button variants, sizes, disabled states, and loading states](tests/visual/goldens/darwin-24/buttons-light-desktop.png)
 
-The repository keeps 300 DPI golden PNGs of real components in light and dark themes, rendered at 3.125× resolution for clear enlarged views. The matrix includes every visual component in desktop/light, desktop/dark, mobile/light and mobile/dark for default glass, Replichai, Wallfacer and Origo, in both adapters. Matching Vue and React examples must have identical decoded RGBA pixels before either baseline can be recorded. Comparisons allow no channel or antialiasing tolerance.
+The repository keeps golden PNGs of real components in light and dark themes, rendered at 3.125× resolution for clear enlarged views. The matrix includes every visual component in desktop/light, desktop/dark, mobile/light and mobile/dark for default glass, Replichai, Wallfacer and Origo. Vue and React must render each sheet with identical decoded RGBA pixels before its reference can be compared or recorded, so one figure shows both adapters. Comparisons allow no channel or antialiasing tolerance.
 
-| Workspace references | Vue | React |
+| Workspace references | Light | Dark |
 |---|---|---|
-| Desktop | [Light](tests/visual/goldens/darwin-27/vue-workspace-light-desktop.png) · [Dark](tests/visual/goldens/darwin-27/vue-workspace-dark-desktop.png) | [Light](tests/visual/goldens/darwin-27/react-workspace-light-desktop.png) · [Dark](tests/visual/goldens/darwin-27/react-workspace-dark-desktop.png) |
-| Mobile | [Light](tests/visual/goldens/darwin-27/vue-workspace-light-mobile.png) · [Dark](tests/visual/goldens/darwin-27/vue-workspace-dark-mobile.png) | [Light](tests/visual/goldens/darwin-27/react-workspace-light-mobile.png) · [Dark](tests/visual/goldens/darwin-27/react-workspace-dark-mobile.png) |
+| Desktop | [View](tests/visual/goldens/darwin-24/workspace-light-desktop.png) | [View](tests/visual/goldens/darwin-24/workspace-dark-desktop.png) |
+| Mobile | [View](tests/visual/goldens/darwin-24/workspace-light-mobile.png) | [View](tests/visual/goldens/darwin-24/workspace-dark-mobile.png) |
 
 Use the [visual reference index](docs/visual-reference.md) to find a component and browse its golden figures. The figures show fixed content and rendering conditions; separate interaction tests cover focus, keyboard, and scrolling behavior.
 

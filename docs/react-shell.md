@@ -97,7 +97,7 @@ The component is headless and ships no styles of its own. This is the presentati
 @media (pointer: coarse) { .organization-demo .latere-org-switcher__button { min-height: 44px; } }
 ```
 
-![Organization chooser with the current workspace highlighted](../tests/visual/goldens/darwin-27/react-organizations-light-mobile.png)
+![Organization chooser with the current workspace highlighted](../tests/visual/goldens/darwin-24/organizations-light-mobile.png)
 
 ## Documentation layout
 

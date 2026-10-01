@@ -8,9 +8,9 @@ Use the same material, spacing, and interface patterns across product surfaces. 
 
 Sibling panels, toolbars and tables share 14px corners. Toolbar buttons use 8px corners: the outer 14px radius minus the 6px vertical inset. Windows use 18px corners; fields and navigation rows use 8px. Panel padding is 16px; table cells use 8px vertical and 16px horizontal insets. Desktop controls are compact while coarse-pointer buttons and fields retain 44px targets. Use `--font-ui` to customize shell typography; the default is the platform system font. Generic controls inherit the host font, and product wordmarks retain their serif identity.
 
-![Compact workspace at 1280×720 CSS pixels](../tests/visual/goldens/darwin-27/workspace-light-laptop.png)
+![Compact workspace at 1280×720 CSS pixels](../tests/visual/goldens/darwin-24/workspace-light-laptop.png)
 
-[Dark laptop](../tests/visual/goldens/darwin-27/workspace-dark-laptop.png) · [1470px laptop](../tests/visual/goldens/darwin-27/workspace-light-laptop-large.png) · [2560px desktop](../tests/visual/goldens/darwin-27/workspace-light-studio.png) · [Mobile](../tests/visual/goldens/darwin-27/vue-workspace-light-mobile.png)
+[Dark laptop](../tests/visual/goldens/darwin-24/workspace-dark-laptop.png) · [1470px laptop](../tests/visual/goldens/darwin-24/workspace-light-laptop-large.png) · [2560px desktop](../tests/visual/goldens/darwin-24/workspace-light-studio.png) · [Mobile](../tests/visual/goldens/darwin-24/workspace-light-mobile.png)
 
 Size layouts by the browser's available CSS pixels, rather than the monitor's physical resolution. A 224px console rail leaves more room for work on a laptop. The rail shares the window edge: the shell owns outer corner clipping, and navigation has a flat selected fill without a detached card rim, following the [macOS 27 Mail window](https://www.apple.com/v/os/g/images/macos/improvements/search__gca3sckqsxym_large_2x.jpg). Keep reading lines bounded on wide displays. `DocsLayout` responds to its own container: below 1080px the table of contents disappears, and below 720px navigation moves above the article. Setting `showToc` to false also removes its grid column.
 
@@ -63,8 +63,8 @@ Supply Inter for Replichai/Wallfacer and IBM Plex Sans/Mono for Origo through yo
 
 | Replichai | Wallfacer | Origo |
 |---|---|---|
-| [![Replichai workspace](../tests/visual/goldens/darwin-27/replichai-vue-workspace-light-desktop.png)](../tests/visual/goldens/darwin-27/replichai-vue-workspace-light-desktop.png) | [![Wallfacer workspace](../tests/visual/goldens/darwin-27/wallfacer-vue-workspace-light-desktop.png)](../tests/visual/goldens/darwin-27/wallfacer-vue-workspace-light-desktop.png) | [![Origo workspace](../tests/visual/goldens/darwin-27/origo-vue-workspace-light-desktop.png)](../tests/visual/goldens/darwin-27/origo-vue-workspace-light-desktop.png) |
-| [Dark](../tests/visual/goldens/darwin-27/replichai-vue-workspace-dark-desktop.png) · [Forms](../tests/visual/goldens/darwin-27/replichai-vue-forms-light-desktop.png) | [Dark](../tests/visual/goldens/darwin-27/wallfacer-vue-workspace-dark-desktop.png) · [Forms](../tests/visual/goldens/darwin-27/wallfacer-vue-forms-light-desktop.png) | [Dark](../tests/visual/goldens/darwin-27/origo-vue-workspace-dark-desktop.png) · [Forms](../tests/visual/goldens/darwin-27/origo-vue-forms-light-desktop.png) |
+| [![Replichai workspace](../tests/visual/goldens/darwin-24/replichai-workspace-light-desktop.png)](../tests/visual/goldens/darwin-24/replichai-workspace-light-desktop.png) | [![Wallfacer workspace](../tests/visual/goldens/darwin-24/wallfacer-workspace-light-desktop.png)](../tests/visual/goldens/darwin-24/wallfacer-workspace-light-desktop.png) | [![Origo workspace](../tests/visual/goldens/darwin-24/origo-workspace-light-desktop.png)](../tests/visual/goldens/darwin-24/origo-workspace-light-desktop.png) |
+| [Dark](../tests/visual/goldens/darwin-24/replichai-workspace-dark-desktop.png) · [Forms](../tests/visual/goldens/darwin-24/replichai-forms-light-desktop.png) | [Dark](../tests/visual/goldens/darwin-24/wallfacer-workspace-dark-desktop.png) · [Forms](../tests/visual/goldens/darwin-24/wallfacer-forms-light-desktop.png) | [Dark](../tests/visual/goldens/darwin-24/origo-workspace-dark-desktop.png) · [Forms](../tests/visual/goldens/darwin-24/origo-forms-light-desktop.png) |
 
 The appearance matrix renders every component in Vue and React, in desktop/light, desktop/dark, mobile/light and mobile/dark. Open the figures at full size or use the [complete per-style component index](visual-reference.md#product-style-variations). Run `bun run visual:dev` to explore their live gallery links.
 
@@ -80,9 +80,9 @@ Glass combines a translucent fill, backdrop blur, a highlighted edge, and a shad
 | Thick | `.lu-glass-thick` | Dialogs, dropdowns, and other reading overlays |
 | Smoke | `.lu-glass-smoke` | Inverse emphasis with theme-aware foreground |
 
-![Light material tiers, panels, toolbar, and table](../tests/visual/goldens/darwin-27/vue-containers-light-desktop.png)
+![Light material tiers, panels, toolbar, and table](../tests/visual/goldens/darwin-24/containers-light-desktop.png)
 
-![Dark material tiers, panels, toolbar, and table](../tests/visual/goldens/darwin-27/vue-containers-dark-desktop.png)
+![Dark material tiers, panels, toolbar, and table](../tests/visual/goldens/darwin-24/containers-dark-desktop.png)
 
 The component and material both matter. `GlassPanel` adds content spacing, `GlassBar` arranges controls horizontally, and `GlassSurface` provides the basic material box. The tier selects their optical treatment. Render a gradient or other stable canvas behind glass; setting a custom property alone does not paint the page.
 
@@ -90,9 +90,9 @@ The component and material both matter. `GlassPanel` adds content spacing, `Glas
 
 A control's shape should survive its different states. Review the resting control alongside its small, disabled, loading, and focused versions. For forms, also inspect empty values, errors, checked choices, and open option lists.
 
-![Vue button variants with size, disabled, and loading examples](../tests/visual/goldens/darwin-27/vue-buttons-light-desktop.png)
+![Button variants with size, disabled, and loading examples](../tests/visual/goldens/darwin-24/buttons-light-desktop.png)
 
-![React fields and choice controls in the dark theme](../tests/visual/goldens/darwin-27/react-forms-dark-desktop.png)
+![Fields and choice controls in the dark theme](../tests/visual/goldens/darwin-24/forms-dark-desktop.png)
 
 Use `GlassBadge` for compact status, `GlassAlert` for a message that needs room, and `GlassProgress` or `GlassSpinner` for work in progress. Keep the status label meaningful without relying on its color. An alert leads with an icon in its tone and keeps an even hairline frame; weight on one edge of a box reads as decoration, not as meaning.
 
@@ -110,15 +110,15 @@ A row, a panel or a page only people with an admin role are shown carries one ma
 
 Put navigation and account controls in the sidebar, content in the main area, and interrupting decisions in an overlay. A compact footer fits application screens; the full footer presents the product family and site links.
 
-![Console sidebar with grouped navigation, counters, and live state](../tests/visual/goldens/darwin-27/vue-sidebar-light-desktop.png)
+![Console sidebar with grouped navigation, counters, and live state](../tests/visual/goldens/darwin-24/sidebar-light-desktop.png)
 
 The sidebar supports a collapsed rail and custom brand, row, and footer content. Keep route selection in the host application. Use a modal for a focused decision, a drawer for a side task, and a popover for a local choice.
 
-![Documentation index, article, and table of contents](../tests/visual/goldens/darwin-27/vue-docs-light-desktop.png)
+![Documentation index, article, and table of contents](../tests/visual/goldens/darwin-24/docs-light-desktop.png)
 
 `DocsLayout` gives long-form material a reading order: grouped index, article, then table of contents. The mobile layout puts navigation above the article. Keep the article readable independently of the surrounding glass chrome.
 
-![Compact footer on a narrow viewport](../tests/visual/goldens/darwin-27/vue-footer-compact-light-mobile.png)
+![Compact footer on a narrow viewport](../tests/visual/goldens/darwin-24/footer-compact-light-mobile.png)
 
 Compact footer links wrap as complete labels, with the theme and language buttons below them. No horizontal scrolling is required to discover the links.
 
@@ -144,13 +144,13 @@ Each product keeps its hue: Wallfacer's copper, Lectio's amber, ReplicHAI's blue
 
 The CSS material works without JavaScript. The optional Liquid Glass runtime adds edge refraction where the browser supports it and a cursor-following sheen on opted-in surfaces. React exports `initLiquidGlass`, `refract` and `sheen`; Vue also provides its lifecycle composable. Use sheen on a deliberate feature panel, where pointer movement helps explain the surface.
 
-![Glass refraction and sheen fixture in the light theme](../tests/visual/goldens/darwin-27/vue-effects-light-desktop.png)
+![Glass refraction and sheen fixture in the light theme](../tests/visual/goldens/darwin-24/effects-light-desktop.png)
 
 Test effects over a recognizable backdrop so refraction is visible. Check both themes, a resized surface, and preference changes. Reduced motion suppresses sheen; reduced transparency suppresses refraction. The material also has contrast and backdrop-filter fallbacks. Verify actual foreground contrast when you customize the palette or background.
 
 ## Keep the figures reviewable
 
-Golden figures are committed PNGs from the browser fixtures, using fixed content, platform UI fonts with bundled brand/code fonts, and named viewport/theme combinations. They render at 3.125× the CSS layout size and carry 300 DPI metadata for clear enlarged and printed views. The design skeleton is SVG and scales without pixelation. Their filenames identify the framework, scenario, theme, and viewport. For example, `react-buttons-dark-desktop.png` shows the React button fixture in dark mode at the desktop size.
+Golden figures are committed PNGs from the browser fixtures, using fixed content, platform UI fonts with bundled brand/code fonts, and named viewport/theme combinations. They render at 3.125× the CSS layout size for clear enlarged views. The design skeleton is SVG and scales without pixelation. Their filenames identify the appearance, scenario, theme, and viewport. For example, `origo-buttons-dark-desktop.png` shows the button fixture in the Origo appearance in dark mode at the desktop size. Vue and React render each fixture with identical pixels, so one figure shows both adapters.
 
 The [reference index](visual-reference.md) maps components to their figures. Contributors compare, inspect, and update them as described in [Contributing](../CONTRIBUTING.md), and the [review records](reviews/README.md) document each deliberate regeneration, the defects it corrected, and the coverage limits.
 

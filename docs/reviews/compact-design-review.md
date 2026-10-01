@@ -2,7 +2,7 @@
 
 The September 2026 compact revision reduces wasted space while keeping text readable and touch controls usable. See the [design guide](../design-system.md) for defaults and the [figure index](../visual-reference.md) for individual references.
 
-![Compact workspace on a laptop](../../tests/visual/goldens/darwin-27/workspace-light-laptop.png)
+![Compact workspace on a laptop](https://github.com/latere-ai/latere-ui/blob/4efdd7e2960b9c726586d233591021dc42d3af96/tests/visual/goldens/darwin-27/workspace-light-laptop.png)
 
 ## Corrections
 
