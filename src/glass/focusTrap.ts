@@ -36,6 +36,10 @@ export function activateFocusTrap(
 
   function onKeydown(event: KeyboardEvent) {
     if (traps.at(-1) !== trap) return;
+    // An open control inside the trap, such as a select's menu, marks itself
+    // with data-lu-owns-escape and handles Escape at its target: the key
+    // clears or closes that control and leaves the dialog open.
+    if (event.key === 'Escape' && (event.target as Element | null)?.closest?.('[data-lu-owns-escape]')) return;
     if (event.key === 'Escape') {
       event.preventDefault();
       event.stopImmediatePropagation();

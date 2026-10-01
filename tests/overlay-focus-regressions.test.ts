@@ -30,6 +30,19 @@ describe('modal focus ownership', () => {
     } finally { upper.unmount(); lower.unmount(); trigger.remove(); }
   });
 
+  it('leaves Escape to an open control inside the dialog that owns it', async () => {
+    const w = mount(GlassModal, { props: { open: true, title: 'Editor' }, slots: { default: '<div class="owner" data-lu-owns-escape><input class="inner"></div><button class="plain">Save</button>' }, attachTo: document.body });
+    try {
+      await nextTick();
+      const owned = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+      document.querySelector('.inner')!.dispatchEvent(owned);
+      expect(owned.defaultPrevented).toBe(false);
+      expect(w.emitted('close')).toBeUndefined();
+      document.querySelector('.plain')!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+      expect(w.emitted('close')).toHaveLength(1);
+    } finally { w.unmount(); }
+  });
+
   it('recovers escaped focus into the topmost dialog on Tab', async () => {
     const outside = document.createElement('button');
     document.body.append(outside);
