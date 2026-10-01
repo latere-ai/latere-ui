@@ -166,7 +166,7 @@ describe('visual fixture inventory', () => {
 });
 
 describe('strict visual comparison contract', () => {
-  it('captures both adapters and checks their RGBA equality before checking golden files', () => {
+  it('captures both adapters and checks their RGBA equality before checking the one golden file', () => {
     const file = 'tests/visual/design-goldens.spec.ts';
     const source = read(file);
     const tree = parse(file, source);
@@ -201,7 +201,7 @@ describe('strict visual comparison contract', () => {
     expect(comparisons).toHaveLength(1);
     expect(assertions).toHaveLength(1);
     expect(inAdapterLoop(captures[0]), 'capture must cover both adapters').toBe(true);
-    expect(inAdapterLoop(goldens[0]), 'golden assertion must cover both adapters').toBe(true);
+    expect(inAdapterLoop(goldens[0]), 'one golden assertion follows the adapter loop').toBe(false);
     expect(comparisons[0].arguments.map(memberName)).toEqual(['vue', 'react']);
     expect(captures[0].pos).toBeLessThan(comparisons[0].pos);
     expect(comparisons[0].pos).toBeLessThan(assertions[0].pos);

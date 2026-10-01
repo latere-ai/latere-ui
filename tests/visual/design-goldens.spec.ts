@@ -28,10 +28,9 @@ for (const design of ['default', ...designs]) for (const [scenario, components] 
         if (comparison.diff) await info.attach('adapter-diff', { body: comparison.diff, contentType: 'image/png' });
       }
       expect(comparison.equal, `Vue/React parity: ${comparison.message}`).toBe(true);
-      // Each adapter has its own reference; recording never bypasses parity.
-      for (const framework of ['vue', 'react']) {
-        await expect(captures[framework]).toMatchGolden(`${design === 'default' ? '' : design + '-'}${framework}-${scenario}-${theme}-${layout}.png`);
-      }
+      // The adapters render identical pixels, so one reference covers both;
+      // recording never bypasses parity.
+      await expect(captures.vue).toMatchGolden(`${design === 'default' ? '' : design + '-'}${scenario}-${theme}-${layout}.png`);
     });
   }
 }
