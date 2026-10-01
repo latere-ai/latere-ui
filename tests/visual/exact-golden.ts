@@ -11,7 +11,7 @@ export async function captureExact(page: Page, options: CaptureOptions = {}) {
   await page.evaluate(() => document.fonts.ready);
   const paused = await page.evaluateHandle(async () => {
     const frame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
-    // Vue starts entering transitions on the second animation frame. Observe
+    // CSS enter transitions start on the second animation frame. Observe
     // that lifecycle before checking actual animations, including chained ones.
     while (true) {
       await frame(); await frame();

@@ -2,10 +2,10 @@ import { test, expect, visit } from './fixtures';
 test.use({ actionTimeout: 3000 });
 test.setTimeout(10000);
 
-for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark']) {
-  for (const width of [320, 390, 768, 1100]) test(`${framework} ${theme} footer exposes every link at ${width}px`, async ({ page }) => {
+for (const theme of ['light', 'dark']) {
+  for (const width of [320, 390, 768, 1100]) test(`${theme} footer exposes every link at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
-    await visit(page, framework, 'footer-compact', theme);
+    await visit(page, 'footer-compact', theme);
     const nav = page.locator('.footer-compact-links');
     const layout = await nav.evaluate(el => {
       const box = el.getBoundingClientRect();
@@ -44,8 +44,8 @@ for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark'])
     expect.soft(panel.x + panel.width).toBeLessThanOrEqual(width);
     await page.keyboard.press('Escape');
   });
-  test(`${framework} ${theme} sibling containers align and toolbar buttons keep the capsule`, async ({ page }) => {
-    await visit(page, framework, 'containers', theme);
+  test(`${theme} sibling containers align and toolbar buttons keep the capsule`, async ({ page }) => {
+    await visit(page, 'containers', theme);
     const radius = await page.locator('.lu-panel').first().evaluate(el => getComputedStyle(el).borderTopLeftRadius);
     await expect(page.locator('.lu-bar')).toHaveCSS('border-radius', radius);
     await expect(page.locator('.lu-table-wrap')).toHaveCSS('border-radius', radius);
@@ -62,7 +62,7 @@ for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark'])
 // operator UI, and the very small corners used by repository browsers.
 for (const [style, radius, inset] of [['reading', 12, 4], ['operator', 14, 6], ['repository', 4, 2]] as const) {
   test(`${style} host tokens preserve sibling and nested geometry`, async ({ page }) => {
-    await visit(page, 'vue', 'containers');
+    await visit(page, 'containers', 'light', '&parity=1');
     await page.evaluate(({ radius, inset }) => {
       document.documentElement.style.setProperty('--radius-lg', `${radius}px`);
       document.documentElement.style.setProperty('--space-1-5', `${inset}px`);
@@ -71,7 +71,7 @@ for (const [style, radius, inset] of [['reading', 12, 4], ['operator', 14, 6], [
       for (const element of await page.locator(selector).all()) await expect(element).toHaveCSS('border-radius', `${radius}px`);
     }
     for (const button of await page.locator('.lu-bar .lu-btn').all()) await expect(button).toHaveCSS('border-radius', '999px');
-    await visit(page, 'vue', 'sidebar');
+    await visit(page, 'sidebar', 'light', '&parity=1');
     await page.evaluate(() => document.documentElement.style.setProperty('--font-ui', 'monospace'));
     await expect(page.locator('.lu-cs-brand-name')).toHaveCSS('font-family', 'monospace');
   });
@@ -81,12 +81,12 @@ test('compact and full footers preserve touch target size', async ({ browser }) 
   const context = await browser.newContext({ hasTouch: true, viewport: { width: 390, height: 844 } });
   try {
     const page = await context.newPage();
-    await visit(page, 'vue', 'footer-compact');
+    await visit(page, 'footer-compact', 'light', '&parity=1');
     for (const control of await page.locator('.lu-pref-trigger, .footer-compact-links a').all()) {
       expect((await control.boundingBox())!.height).toBeGreaterThanOrEqual(44);
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
-    await visit(page, 'vue', 'footer');
+    await visit(page, 'footer', 'light', '&parity=1');
     for (const control of await page.locator('.lu-pref-trigger, .footer-social a').all()) {
       expect((await control.boundingBox())!.height).toBeGreaterThanOrEqual(44);
     }
@@ -97,8 +97,8 @@ test('compact and full footers preserve touch target size', async ({ browser }) 
 // Buttons round from --lu-button-radius; panels, menu rows and fields from
 // --lu-control-radius. A capsule set through the control corner once turned
 // the theme menu's panel into a pill, so the two corners must move apart.
-for (const framework of ['vue', 'react']) test(`${framework} the button corner and the control corner stay separate`, async ({ page }) => {
-  await visit(page, framework, 'footer-compact');
+test('the button corner and the control corner stay separate', async ({ page }) => {
+  await visit(page, 'footer-compact');
   await page.evaluate(() => document.documentElement.style.setProperty('--lu-control-radius', '6px'));
   const trigger = page.locator('.lu-theme-menu .lu-pref-trigger');
   await expect(trigger).toHaveCSS('border-radius', '999px');
@@ -113,8 +113,8 @@ for (const framework of ['vue', 'react']) test(`${framework} the button corner a
   await expect(trigger).toHaveCSS('border-radius', '6px');
 });
 
-for (const framework of ['vue', 'react']) test(`${framework} buttons ignore the control corner and follow the button corner`, async ({ page }) => {
-  await visit(page, framework, 'buttons', 'light', '&parity=1');
+test('buttons ignore the control corner and follow the button corner', async ({ page }) => {
+  await visit(page, 'buttons', 'light', '&parity=1');
   await page.evaluate(() => document.documentElement.style.setProperty('--lu-control-radius', '6px'));
   for (const selector of ['.lu-btn', '.lu-iconbtn']) await expect(page.locator(selector).first()).toHaveCSS('border-radius', '999px');
   await page.evaluate(() => document.documentElement.style.setProperty('--lu-button-radius', '8px'));

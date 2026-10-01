@@ -24,14 +24,14 @@ const theme = 'light';
 // Every component that renders anchors, including teleported menus and the
 // sidebar inside a workspace. Prose retains its separately defined link style.
 const linkSheets = ['workspace', 'sidebar', 'sidebar-collapsed', 'docs', 'account', 'products', 'footer', 'footer-compact'];
-for (const framework of ['vue', 'react']) for (const design of ['default', ...designs]) {
+for (const design of ['default', ...designs]) {
   for (const layout of ['desktop', 'mobile']) {
-    test(`${framework} ${design} ${layout} link decoration contract`, async ({ page }) => {
+    test(`${design} ${layout} link decoration contract`, async ({ page }) => {
       test.setTimeout(60000);
       await page.setViewportSize({ width: layout === 'mobile' ? 390 : 1280, height: 850 });
       for (const scenario of linkSheets) await test.step(scenario, async () => {
-        await visit(page, framework, scenario, theme, `&parity=1&accountLinks=true&design=${design}`);
-        await prepare(page, framework, scenario);
+        await visit(page, scenario, theme, `&parity=1&accountLinks=true&design=${design}`);
+        await prepare(page, scenario);
         await page.mouse.move(0, 0);
         const links = page.locator('a[href]:not(.lu-docs-body a)');
         await expectUndecorated(links);

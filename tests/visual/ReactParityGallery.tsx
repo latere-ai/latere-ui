@@ -8,7 +8,7 @@ import {
   buttonSizes, buttonVariants, progressValues, brands, workspaceMetrics, effectCaptions,
 } from './parity-data';
 
-/** The same examples as VueGallery, rendered through actual React adapters. */
+/** The reference examples every component figure records, rendered through the React components. */
 function ReactParityGallery({ scenario }: { scenario: string }) {
   const params = new URLSearchParams(location.search);
   const effectText = effectCaptions(!!document.documentElement.dataset.design);

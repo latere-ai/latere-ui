@@ -1,7 +1,7 @@
 import { test, expect, visit } from './fixtures';
 for (const width of [390, 1280, 1470, 2560]) test(`workspace stays usable at ${width}px`, async ({ page }) => {
   await page.setViewportSize({ width, height: width === 1280 ? 720 : 900 });
-  await visit(page, 'vue', 'workspace');
+  await visit(page, 'workspace', 'light', '&parity=1');
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
   if (width === 390) {
     await expect(page.locator('.lu-cs-nav')).toBeHidden();
@@ -23,7 +23,7 @@ test('mobile workspace primary action raster stays stable across mounts', async 
   await page.setViewportSize({ width: 390, height: 844 });
   let expected: Buffer | undefined;
   for (let mount = 0; mount < 8; mount++) {
-    await visit(page, 'vue', 'workspace', 'dark');
+    await visit(page, 'workspace', 'dark', '&parity=1');
     await expect(page.getByRole('button', { name: 'New project', exact: true })).toHaveCSS('backdrop-filter', 'none');
     // Isolate nested toolbar compositing; the golden suite covers the whole page.
     const actual = await page.locator('.lu-bar').screenshot({ animations: 'disabled', scale: 'device' });
@@ -36,9 +36,9 @@ test('mobile workspace primary action raster stays stable across mounts', async 
   }
 });
 
-for (const framework of ['vue', 'react']) test(`${framework} shell examples have neutral branding`, async ({ page }) => {
-  for (const scenario of framework === 'vue' ? ['sidebar', 'workspace'] : ['sidebar']) {
-    await visit(page, framework, scenario);
+test(`shell examples have neutral branding`, async ({ page }) => {
+  for (const [scenario, extra] of [['sidebar', ''], ['sidebar', '&parity=1'], ['workspace', '&parity=1']]) {
+    await visit(page, scenario, 'light', extra);
     await expect(page.locator('.lu-cs-brand-name')).toHaveText('Workspace');
     await expect(page.locator('.lu-cs-brand-name')).toHaveCSS('font-style', 'normal');
     await expect(page.locator('.lu-cs-brand-name')).not.toHaveClass(/(?:lux|cella|topos)-brand/);

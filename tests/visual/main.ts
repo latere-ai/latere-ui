@@ -26,7 +26,6 @@ await Promise.all([
 ].map(font => document.fonts.load(font)));
 
 const params = new URLSearchParams(location.search);
-const framework = params.get('framework') ?? 'vue';
 const scenario = params.get('scenario');
 const theme = params.get('theme') ?? 'light';
 const parity = params.get('parity') === '1';
@@ -38,45 +37,39 @@ const root = document.getElementById('app')!;
 if (scenario === 'toast') observeToastDemo(root);
 if (!scenario) {
   root.innerHTML = '<header><h1>Latere UI visual references</h1><p>Choose a sheet. Each uses real components and local assets.</p></header>';
-  for (const [adapter, cases] of Object.entries(scenarios)) {
-    const section = document.createElement('section');
-    section.className = 'sample';
-    const title = document.createElement('h2'); title.textContent = adapter; section.append(title);
-    for (const name of Object.keys(cases)) for (const mode of ['light', 'dark']) {
-      const link = document.createElement('a');
-      link.href = `?framework=${adapter}&scenario=${name}&theme=${mode}&parity=1`;
-      link.textContent = `${name} · ${mode}`; link.className = 'gallery-link'; section.append(link);
-    }
-    root.append(section);
+  const section = document.createElement('section');
+  section.className = 'sample';
+  const title = document.createElement('h2'); title.textContent = 'default'; section.append(title);
+  for (const name of Object.keys(scenarios)) for (const mode of ['light', 'dark']) {
+    const link = document.createElement('a');
+    link.href = `?scenario=${name}&theme=${mode}&parity=1`;
+    link.textContent = `${name} · ${mode}`; link.className = 'gallery-link'; section.append(link);
   }
+  root.append(section);
   for (const design of designs) {
     const section = document.createElement('section'); section.className = 'sample';
     const title = document.createElement('h2'); title.textContent = design; section.append(title);
-    for (const [adapter, sheets] of Object.entries(designScenarios)) for (const name of Object.keys(sheets)) for (const mode of ['light', 'dark']) {
+    for (const name of Object.keys(designScenarios)) for (const mode of ['light', 'dark']) {
       const link = document.createElement('a'); link.className = 'gallery-link';
-      link.href = `?framework=${adapter}&scenario=${name}&theme=${mode}&design=${design}&parity=1`;
-      link.textContent = `${adapter} / ${name} · ${mode}`; section.append(link);
+      link.href = `?scenario=${name}&theme=${mode}&design=${design}&parity=1`;
+      link.textContent = `${name} · ${mode}`; section.append(link);
     }
     root.append(section);
   }
 } else {
   const heading = document.createElement('header');
   heading.innerHTML = '<p class="eyebrow">LATERE UI · VISUAL REFERENCE</p>';
-  const title = document.createElement('h1'); title.textContent = `${design ? design + ' / ' : ''}${parity ? '' : framework + ' / '}${scenario} / ${theme}`;
+  // The reference figures carry no adapter name; the React adapter examples
+  // are captioned as such.
+  const title = document.createElement('h1'); title.textContent = `${design ? design + ' / ' : ''}${parity ? '' : 'react / '}${scenario} / ${theme}`;
   heading.append(title); root.append(heading);
   const stage = document.createElement('main'); stage.id = 'stage'; root.append(stage);
-  if (framework === 'react') {
-    if (parity) {
-      const { mountReactParityGallery } = await import('./ReactParityGallery');
-      mountReactParityGallery(stage, scenario);
-    } else {
-      const { mountReactGallery } = await import('./ReactGallery');
-      mountReactGallery(stage, scenario);
-    }
+  if (parity) {
+    const { mountReactParityGallery } = await import('./ReactParityGallery');
+    mountReactParityGallery(stage, scenario);
   } else {
-    const { createApp } = await import('vue');
-    const { default: Gallery } = await import('./VueGallery.vue');
-    createApp(Gallery, { scenario }).mount(stage);
+    const { mountReactGallery } = await import('./ReactGallery');
+    mountReactGallery(stage, scenario);
   }
   await document.fonts.ready;
   document.documentElement.dataset.ready = 'true';

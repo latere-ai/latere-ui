@@ -1,8 +1,8 @@
 import { test, expect, visit } from './fixtures';
 
-for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark']) {
-  test(`${framework} ${theme} sidebar integrates into its host surface`, async ({ page }) => {
-    await visit(page, framework, 'sidebar', theme, '&parity=1');
+for (const theme of ['light', 'dark']) {
+  test(`${theme} sidebar integrates into its host surface`, async ({ page }) => {
+    await visit(page, 'sidebar', theme, '&parity=1');
     const rail = page.locator('.lu-cs');
     await expect(rail).toHaveCSS('border-radius', '0px');
     await expect(rail).toHaveCSS('border-width', '0px');
@@ -21,10 +21,10 @@ for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark'])
   });
 }
 
-for (const framework of ['vue', 'react']) for (const width of [390, 1280]) for (const theme of ['light', 'dark']) {
-  test(`${framework} ${theme} workspace rail is flush with its window at ${width}px`, async ({ page }) => {
+for (const width of [390, 1280]) for (const theme of ['light', 'dark']) {
+  test(`${theme} workspace rail is flush with its window at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
-    await visit(page, framework, 'workspace', theme, '&parity=1');
+    await visit(page, 'workspace', theme, '&parity=1');
     const shell = page.locator('.workspace-demo');
     await expect(shell).toHaveCSS('overflow', 'hidden');
     await expect(shell).toHaveCSS('padding', '0px');

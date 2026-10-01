@@ -1,5 +1,5 @@
-// Every public visual export participates in both adapters and all four viewport/theme combinations.
-const sheets = {
+// Every public visual export appears in a sheet, rendered in all four viewport/theme combinations.
+export const scenarios = {
     workspace: ['ConsoleSidebar', 'GlassBar', 'GlassPanel', 'GlassTable'],
     buttons: ['GlassButton', 'GlassIconButton'],
     forms: ['GlassField', 'GlassCheckbox', 'GlassRadio', 'GlassSwitch', 'GlassSegmented', 'GlassTabs'],
@@ -26,5 +26,4 @@ const sheets = {
     logo: ['LatereLogoMark', 'PlatformLogoMark'],
     effects: ['GlassSurface'],
   } as const;
-export const scenarios = { vue: sheets, react: sheets } as const;
-export const mobileScenarios = new Set<string>(Object.keys(sheets));
+export const mobileScenarios = new Set<string>(Object.keys(scenarios));

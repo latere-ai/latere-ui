@@ -24,84 +24,82 @@ async function contrast(locator: Locator, property: 'borderTopColor' | 'boxShado
   }, property);
 }
 
-for (const framework of ['vue', 'react']) {
-  for (const theme of ['light', 'dark']) {
-    test(`${framework} ${theme} resting controls and form hints remain visible`, async ({ page }) => {
-      await visit(page, framework, 'forms', theme);
-      const input = page.locator('.lu-field:not(.is-invalid) input:not(:disabled)').first();
-      const check = page.locator('.lu-check:not(.is-disabled) .lu-check-native:not(:checked) + .lu-check-box').first();
-      expect.soft(await contrast(input, 'borderTopColor'), 'input boundary').toBeGreaterThanOrEqual(3);
-      expect.soft(await contrast(check, 'borderTopColor'), 'unchecked boundary').toBeGreaterThanOrEqual(3);
-      expect.soft(await contrast(page.locator('.lu-field-control[placeholder]').first(), 'placeholder'), 'placeholder').toBeGreaterThanOrEqual(4.5);
-      expect.soft(await contrast(page.locator('.lu-field-error').first(), 'color'), 'error message').toBeGreaterThanOrEqual(4.5);
-      await visit(page, framework, framework === 'vue' ? 'select' : 'forms', theme);
-      expect.soft(await contrast(page.locator('.lu-select-trigger:not(:disabled)').first(), 'borderTopColor'), 'select boundary').toBeGreaterThanOrEqual(3);
-      expect.soft(await contrast(page.locator('.lu-select-value.is-placeholder').first(), 'color'), 'select placeholder').toBeGreaterThanOrEqual(4.5);
-    });
-  }
-
-  test(`${framework} field error spacing and disabled styling match the form states`, async ({ page }) => {
-    await visit(page, framework, 'forms');
-    const error = page.locator('.lu-field-error').first();
-    const geometry = await error.evaluate(el => ({ gap: el.getBoundingClientRect().top - el.previousElementSibling!.getBoundingClientRect().bottom, intended: parseFloat(getComputedStyle(el.parentElement!).rowGap), bottomMargin: getComputedStyle(el).marginBottom }));
-    expect.soft(geometry.gap).toBe(geometry.intended);
-    expect.soft(geometry.bottomMargin).toBe('0px');
-    const disabled = page.locator('.lu-field-control:disabled');
-    await expect.soft(disabled).toHaveCSS('cursor', 'not-allowed');
-    expect.soft(await disabled.evaluate(el => Number(getComputedStyle(el).opacity))).toBeLessThan(1);
-  });
-
-  test(`${framework} loading preserves button height and disabled buttons ignore hover`, async ({ page }) => {
-    await visit(page, framework, 'buttons');
-    for (const variant of ['glass', 'primary', 'ghost', 'danger']) {
-      const normal = page.locator(`.lu-btn-${variant}.lu-btn-md:not(:disabled)`).first();
-      const loading = page.locator(`.lu-btn-${variant}.lu-btn-md.is-loading`).first();
-      expect.soft((await loading.boundingBox())!.height, `${variant} loading height`).toBe((await normal.boundingBox())!.height);
-      const disabled = page.locator(`.lu-btn-${variant}:disabled:not(.is-loading)`).first();
-      const before = await disabled.evaluate(el => { const cs = getComputedStyle(el); return [cs.backgroundColor, cs.boxShadow, cs.filter]; });
-      await disabled.hover({ force: true });
-      await page.waitForTimeout(200);
-      const after = await disabled.evaluate(el => { const cs = getComputedStyle(el); return [cs.backgroundColor, cs.boxShadow, cs.filter]; });
-      expect.soft(after, `${variant} disabled hover`).toEqual(before);
-    }
-  });
-
-  test(`${framework} long labels preserve checkbox geometry and select affordance`, async ({ page }) => {
-    await visit(page, framework, 'forms');
-    const check = page.locator('.lu-check:not(.is-disabled)').first();
-    const before = (await check.locator('.lu-check-box').boundingBox())!.width;
-    await check.evaluate(el => { (el as HTMLElement).style.width = '160px'; el.querySelector('.lu-check-label')!.textContent = 'Receive notifications about all workspace activity'; });
-    expect.soft((await check.locator('.lu-check-box').boundingBox())!.width).toBe(before);
-    await visit(page, framework, framework === 'vue' ? 'select' : 'forms');
-    const select = page.locator('.lu-select').first();
-    await select.evaluate(el => { (el as HTMLElement).style.width = '200px'; el.querySelector('.lu-select-value')!.textContent = 'AnExtremelyLongUnbrokenWorkspaceNameThatMustNotHideTheChevron'; });
-    const geometry = await select.evaluate(el => {
-      const trigger = el.querySelector('.lu-select-trigger')!.getBoundingClientRect();
-      const arrow = el.querySelector('.lu-select-chevron')!.getBoundingClientRect();
-      return { right: trigger.right, arrowRight: arrow.right, overflow: el.scrollWidth - el.clientWidth };
-    });
-    expect.soft(geometry.arrowRight).toBeLessThanOrEqual(geometry.right);
-    expect.soft(geometry.overflow).toBeLessThanOrEqual(1);
-    await expect.soft(select.locator('.lu-select-value')).toHaveCSS('text-overflow', 'ellipsis');
-    await select.locator('.lu-select-trigger').click();
-    const option = select.locator('.lu-select-option').first();
-    await option.evaluate(el => { el.textContent = 'AnExtremelyLongUnbrokenWorkspaceNameThatMustRemainInsideTheMenu'; });
-    // One line, cut with an ellipsis, in a menu that stays inside the viewport.
-    await expect.soft(option).toHaveCSS('white-space', 'nowrap');
-    await expect.soft(option).toHaveCSS('text-overflow', 'ellipsis');
-    const fit = await select.evaluate(el => ({
-      row: el.querySelector('.lu-select-option')!.getBoundingClientRect().right,
-      menu: el.querySelector('.lu-select-list')!.getBoundingClientRect().right,
-      viewport: document.documentElement.clientWidth,
-    }));
-    expect.soft(fit.row, 'option inside the menu').toBeLessThanOrEqual(fit.menu);
-    expect.soft(fit.menu, 'menu inside the viewport gutter').toBeLessThanOrEqual(fit.viewport - 16 + 0.5);
+for (const theme of ['light', 'dark']) {
+  test(`${theme} resting controls and form hints remain visible`, async ({ page }) => {
+    await visit(page, 'forms', theme);
+    const input = page.locator('.lu-field:not(.is-invalid) input:not(:disabled)').first();
+    const check = page.locator('.lu-check:not(.is-disabled) .lu-check-native:not(:checked) + .lu-check-box').first();
+    expect.soft(await contrast(input, 'borderTopColor'), 'input boundary').toBeGreaterThanOrEqual(3);
+    expect.soft(await contrast(check, 'borderTopColor'), 'unchecked boundary').toBeGreaterThanOrEqual(3);
+    expect.soft(await contrast(page.locator('.lu-field-control[placeholder]').first(), 'placeholder'), 'placeholder').toBeGreaterThanOrEqual(4.5);
+    expect.soft(await contrast(page.locator('.lu-field-error').first(), 'color'), 'error message').toBeGreaterThanOrEqual(4.5);
+    await visit(page, 'forms', theme);
+    expect.soft(await contrast(page.locator('.lu-select-trigger:not(:disabled)').first(), 'borderTopColor'), 'select boundary').toBeGreaterThanOrEqual(3);
+    expect.soft(await contrast(page.locator('.lu-select-value.is-placeholder').first(), 'color'), 'select placeholder').toBeGreaterThanOrEqual(4.5);
   });
 }
 
+test(`field error spacing and disabled styling match the form states`, async ({ page }) => {
+  await visit(page, 'forms');
+  const error = page.locator('.lu-field-error').first();
+  const geometry = await error.evaluate(el => ({ gap: el.getBoundingClientRect().top - el.previousElementSibling!.getBoundingClientRect().bottom, intended: parseFloat(getComputedStyle(el.parentElement!).rowGap), bottomMargin: getComputedStyle(el).marginBottom }));
+  expect.soft(geometry.gap).toBe(geometry.intended);
+  expect.soft(geometry.bottomMargin).toBe('0px');
+  const disabled = page.locator('.lu-field-control:disabled');
+  await expect.soft(disabled).toHaveCSS('cursor', 'not-allowed');
+  expect.soft(await disabled.evaluate(el => Number(getComputedStyle(el).opacity))).toBeLessThan(1);
+});
+
+test(`loading preserves button height and disabled buttons ignore hover`, async ({ page }) => {
+  await visit(page, 'buttons');
+  for (const variant of ['glass', 'primary', 'ghost', 'danger']) {
+    const normal = page.locator(`.lu-btn-${variant}.lu-btn-md:not(:disabled)`).first();
+    const loading = page.locator(`.lu-btn-${variant}.lu-btn-md.is-loading`).first();
+    expect.soft((await loading.boundingBox())!.height, `${variant} loading height`).toBe((await normal.boundingBox())!.height);
+    const disabled = page.locator(`.lu-btn-${variant}:disabled:not(.is-loading)`).first();
+    const before = await disabled.evaluate(el => { const cs = getComputedStyle(el); return [cs.backgroundColor, cs.boxShadow, cs.filter]; });
+    await disabled.hover({ force: true });
+    await page.waitForTimeout(200);
+    const after = await disabled.evaluate(el => { const cs = getComputedStyle(el); return [cs.backgroundColor, cs.boxShadow, cs.filter]; });
+    expect.soft(after, `${variant} disabled hover`).toEqual(before);
+  }
+});
+
+test(`long labels preserve checkbox geometry and select affordance`, async ({ page }) => {
+  await visit(page, 'forms');
+  const check = page.locator('.lu-check:not(.is-disabled)').first();
+  const before = (await check.locator('.lu-check-box').boundingBox())!.width;
+  await check.evaluate(el => { (el as HTMLElement).style.width = '160px'; el.querySelector('.lu-check-label')!.textContent = 'Receive notifications about all workspace activity'; });
+  expect.soft((await check.locator('.lu-check-box').boundingBox())!.width).toBe(before);
+  await visit(page, 'forms');
+  const select = page.locator('.lu-select').first();
+  await select.evaluate(el => { (el as HTMLElement).style.width = '200px'; el.querySelector('.lu-select-value')!.textContent = 'AnExtremelyLongUnbrokenWorkspaceNameThatMustNotHideTheChevron'; });
+  const geometry = await select.evaluate(el => {
+    const trigger = el.querySelector('.lu-select-trigger')!.getBoundingClientRect();
+    const arrow = el.querySelector('.lu-select-chevron')!.getBoundingClientRect();
+    return { right: trigger.right, arrowRight: arrow.right, overflow: el.scrollWidth - el.clientWidth };
+  });
+  expect.soft(geometry.arrowRight).toBeLessThanOrEqual(geometry.right);
+  expect.soft(geometry.overflow).toBeLessThanOrEqual(1);
+  await expect.soft(select.locator('.lu-select-value')).toHaveCSS('text-overflow', 'ellipsis');
+  await select.locator('.lu-select-trigger').click();
+  const option = select.locator('.lu-select-option').first();
+  await option.evaluate(el => { el.textContent = 'AnExtremelyLongUnbrokenWorkspaceNameThatMustRemainInsideTheMenu'; });
+  // One line, cut with an ellipsis, in a menu that stays inside the viewport.
+  await expect.soft(option).toHaveCSS('white-space', 'nowrap');
+  await expect.soft(option).toHaveCSS('text-overflow', 'ellipsis');
+  const fit = await select.evaluate(el => ({
+    row: el.querySelector('.lu-select-option')!.getBoundingClientRect().right,
+    menu: el.querySelector('.lu-select-list')!.getBoundingClientRect().right,
+    viewport: document.documentElement.clientWidth,
+  }));
+  expect.soft(fit.row, 'option inside the menu').toBeLessThanOrEqual(fit.menu);
+  expect.soft(fit.menu, 'menu inside the viewport gutter').toBeLessThanOrEqual(fit.viewport - 16 + 0.5);
+});
+
 for (const theme of ['light', 'dark']) {
-  test(`vue ${theme} radio and switch keep visible tracks and stable selection geometry`, async ({ page }) => {
-    await visit(page, 'vue', 'forms', theme);
+  test(`${theme} radio and switch keep visible tracks and stable selection geometry`, async ({ page }) => {
+    await visit(page, 'forms', theme, '&parity=1');
     const radio = page.locator('.lu-radio:not(.is-disabled)').nth(1);
     const radioDot = radio.locator('.lu-radio-dot');
     expect.soft(await contrast(radioDot, 'borderTopColor'), 'unchecked radio boundary').toBeGreaterThanOrEqual(3);
@@ -131,12 +129,12 @@ for (const theme of ['light', 'dark']) {
 }
 
 {
-  // The stylesheet is one for both adapters; the switch is measured where
-  // the forms sheet renders it. A host that sizes every box by its border, as most resets do, must not
-  // move the thumb: its gap to the track's inner edge is the same above and
-  // below, and the same on the side it rests against, on and off.
+  // The switch is measured where the forms sheet renders it. A host that
+  // sizes every box by its border, as most resets do, must not move the
+  // thumb: its gap to the track's inner edge is the same above and below,
+  // and the same on the side it rests against, on and off.
   test('switch thumb is centered in a host that sizes boxes by their border', async ({ page }) => {
-    await visit(page, 'vue', 'forms');
+    await visit(page, 'forms');
     await page.addStyleTag({ content: '*, *::before, *::after { box-sizing: border-box; }' });
     const control = page.getByRole('switch', { name: 'Notifications' });
     const gaps = () => control.evaluate(async (el) => {
@@ -157,42 +155,40 @@ for (const theme of ['light', 'dark']) {
   });
 }
 
-for (const framework of ['vue', 'react']) {
-  for (const theme of ['light', 'dark']) {
-    test(`${framework} ${theme} segmented selection remains visible`, async ({ page }) => {
-      await visit(page, framework, 'forms', theme);
-      const segmented = page.locator('.lu-seg').first();
-      expect.soft(await contrast(segmented, 'borderTopColor'), 'segmented boundary').toBeGreaterThanOrEqual(3);
-      const selected = segmented.locator('.lu-seg-item.is-active');
-      expect.soft(await selected.evaluate(el => getComputedStyle(el).boxShadow)).toContain('inset');
-      expect.soft(await contrast(selected, 'boxShadow'), 'selected segment boundary').toBeGreaterThanOrEqual(3);
-      const next = segmented.locator('.lu-seg-item').nth(1);
-      await next.click();
-      await expect(next).toHaveClass(/is-active/);
-      expect(await next.evaluate(el => getComputedStyle(el).boxShadow)).toContain('inset');
-      await next.evaluate(el => (el as HTMLElement).style.setProperty('--focus-outline', '3px solid rgb(127, 45, 233)'));
-      await page.keyboard.press('Tab');
-      await next.focus();
-      await expect(next).toHaveCSS('outline-width', '3px');
-      await expect(next).toHaveCSS('outline-color', 'rgb(127, 45, 233)');
-    });
-  }
-  test(`${framework} alert heading aligns with the dismissal control`, async ({ page }) => {
-    await visit(page, framework, 'feedback');
-    const alert = page.locator('.lu-alert').filter({ has: page.locator('.lu-alert-close') }).first();
-    const geometry = await alert.evaluate(el => {
-      const heading = el.querySelector('.lu-alert-title')!;
-      const dismiss = el.querySelector('.lu-alert-close')!;
-      return { titleTop: heading.getBoundingClientRect().top, dismissTop: dismiss.getBoundingClientRect().top, margin: getComputedStyle(heading).marginTop };
-    });
-    expect.soft(geometry.margin).toBe('0px');
-    expect.soft(geometry.titleTop).toBe(geometry.dismissTop);
+for (const theme of ['light', 'dark']) {
+  test(`${theme} segmented selection remains visible`, async ({ page }) => {
+    await visit(page, 'forms', theme);
+    const segmented = page.locator('.lu-seg').first();
+    expect.soft(await contrast(segmented, 'borderTopColor'), 'segmented boundary').toBeGreaterThanOrEqual(3);
+    const selected = segmented.locator('.lu-seg-item.is-active');
+    expect.soft(await selected.evaluate(el => getComputedStyle(el).boxShadow)).toContain('inset');
+    expect.soft(await contrast(selected, 'boxShadow'), 'selected segment boundary').toBeGreaterThanOrEqual(3);
+    const next = segmented.locator('.lu-seg-item').nth(1);
+    await next.click();
+    await expect(next).toHaveClass(/is-active/);
+    expect(await next.evaluate(el => getComputedStyle(el).boxShadow)).toContain('inset');
+    await next.evaluate(el => (el as HTMLElement).style.setProperty('--focus-outline', '3px solid rgb(127, 45, 233)'));
+    await page.keyboard.press('Tab');
+    await next.focus();
+    await expect(next).toHaveCSS('outline-width', '3px');
+    await expect(next).toHaveCSS('outline-color', 'rgb(127, 45, 233)');
   });
 }
+test(`alert heading aligns with the dismissal control`, async ({ page }) => {
+  await visit(page, 'feedback');
+  const alert = page.locator('.lu-alert').filter({ has: page.locator('.lu-alert-close') }).first();
+  const geometry = await alert.evaluate(el => {
+    const heading = el.querySelector('.lu-alert-title')!;
+    const dismiss = el.querySelector('.lu-alert-close')!;
+    return { titleTop: heading.getBoundingClientRect().top, dismissTop: dismiss.getBoundingClientRect().top, margin: getComputedStyle(heading).marginTop };
+  });
+  expect.soft(geometry.margin).toBe('0px');
+  expect.soft(geometry.titleTop).toBe(geometry.dismissTop);
+});
 
 for (const theme of ['light', 'dark']) {
-  test(`vue ${theme} progress track reveals the unfilled extent`, async ({ page }) => {
-    await visit(page, 'vue', 'feedback', theme);
+  test(`${theme} progress track reveals the unfilled extent`, async ({ page }) => {
+    await visit(page, 'feedback', theme, '&parity=1');
     for (const bar of await page.locator('.lu-progress').all()) {
       expect.soft(await contrast(bar, 'borderTopColor')).toBeGreaterThanOrEqual(3);
     }
@@ -200,8 +196,8 @@ for (const theme of ['light', 'dark']) {
 }
 
 for (const theme of ['light', 'dark']) {
-  test(`vue ${theme} active tab indicator remains visible with independent focus`, async ({ page }) => {
-    await visit(page, 'vue', 'forms', theme);
+  test(`${theme} active tab indicator remains visible with independent focus`, async ({ page }) => {
+    await visit(page, 'forms', theme, '&parity=1');
     const tab = page.locator('.lu-tab.is-active');
     expect.soft(await contrast(tab, 'boxShadow'), 'selected tab edge').toBeGreaterThanOrEqual(3);
     const next = page.locator('.lu-tab').nth(1);

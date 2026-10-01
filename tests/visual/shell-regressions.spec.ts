@@ -6,8 +6,8 @@ test.beforeEach(async ({ page }) => { await setPreferences(page, { motion: 'redu
 for (const scenario of ['modal', 'drawer-left', 'drawer-right']) {
   test(`${scenario} title uses the component padding without browser heading margins`, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await visit(page, 'vue', scenario);
-    await prepare(page, 'vue', scenario);
+    await visit(page, scenario, 'light', '&parity=1');
+    await prepare(page, scenario);
     const kind = scenario === 'modal' ? 'modal' : 'drawer';
     const panel = page.locator(`.lu-${kind}`);
     const title = page.locator(`.lu-${kind}-title`);
@@ -21,8 +21,8 @@ for (const scenario of ['modal', 'drawer-left', 'drawer-right']) {
 }
 
 test('confirm message respects the modal body padding without an extra paragraph margin', async ({ page }) => {
-  await visit(page, 'vue', 'confirm');
-  await prepare(page, 'vue', 'confirm');
+  await visit(page, 'confirm', 'light', '&parity=1');
+  await prepare(page, 'confirm');
   const body = await page.locator('.lu-modal-body').boundingBox();
   const message = await page.locator('.lu-confirm-msg').boundingBox();
   expect(message!.y - body!.y).toBeCloseTo(14, 0);
@@ -30,8 +30,8 @@ test('confirm message respects the modal body padding without an extra paragraph
 
 test('localized modal actions wrap within a narrow dialog', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 568 });
-  await visit(page, 'vue', 'modal');
-  await prepare(page, 'vue', 'modal');
+  await visit(page, 'modal', 'light', '&parity=1');
+  await prepare(page, 'modal');
   await page.locator('.lu-modal-foot .lu-btn-label').first().evaluate(element => { element.textContent = 'Abbrechen'; });
   await page.locator('.lu-modal-foot .lu-btn-label').last().evaluate(element => { element.textContent = 'Änderungen speichern'; });
   const panel = page.locator('.lu-modal');
@@ -46,35 +46,33 @@ test('localized modal actions wrap within a narrow dialog', async ({ page }) => 
 
 test('drawer border fits entirely inside the viewport', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await visit(page, 'vue', 'drawer-right');
-  await prepare(page, 'vue', 'drawer-right');
+  await visit(page, 'drawer-right', 'light', '&parity=1');
+  await prepare(page, 'drawer-right');
   const box = await page.locator('.lu-drawer').boundingBox();
   expect(box!.y + box!.height).toBeLessThanOrEqual(844);
 });
 
 test('light account preferences expose visible controls and a distinct selected state', async ({ page }) => {
-  await visit(page, 'vue', 'preferences');
+  await visit(page, 'preferences', 'light', '&parity=1');
   const unselected = page.locator('.lu-ap-pill').filter({ hasText: 'Dark' });
   expect(await contrast(unselected, 'borderTopColor'), 'Control outline against the light surface').toBeGreaterThanOrEqual(3);
   const activeBorder = await page.locator('.lu-ap-pill').filter({ hasText: 'Light' }).evaluate(element => getComputedStyle(element).borderTopColor);
   expect(activeBorder).not.toBe(await unselected.evaluate(element => getComputedStyle(element).borderTopColor));
 });
 
-for (const framework of ['vue', 'react']) {
-  test(`${framework} sidebar search has a visible boundary and current page has a flat fill in light mode`, async ({ page }) => {
-    await visit(page, framework, 'sidebar');
-    expect(await contrast(page.locator('.lu-cs-search'), 'borderTopColor'), 'search boundary').toBeGreaterThanOrEqual(3);
-    const current = page.locator('.lu-cs-item[data-active="true"]');
-    await expect(current).toHaveCSS('box-shadow', 'none');
-    await expect(current).toHaveAttribute('aria-current', 'page');
-    const inactive = page.locator('.lu-cs-item:not([data-active="true"])').first();
-    expect(await current.evaluate(el => getComputedStyle(el).backgroundColor)).not.toBe(await inactive.evaluate(el => getComputedStyle(el).backgroundColor));
-  });
-}
+test(`sidebar search has a visible boundary and current page has a flat fill in light mode`, async ({ page }) => {
+  await visit(page, 'sidebar');
+  expect(await contrast(page.locator('.lu-cs-search'), 'borderTopColor'), 'search boundary').toBeGreaterThanOrEqual(3);
+  const current = page.locator('.lu-cs-item[data-active="true"]');
+  await expect(current).toHaveCSS('box-shadow', 'none');
+  await expect(current).toHaveAttribute('aria-current', 'page');
+  const inactive = page.locator('.lu-cs-item:not([data-active="true"])').first();
+  expect(await current.evaluate(el => getComputedStyle(el).backgroundColor)).not.toBe(await inactive.evaluate(el => getComputedStyle(el).backgroundColor));
+});
 
 test('keyboard-scrolled palette selection keeps its rounded corners inset from the panel', async ({ page }) => {
-  await visit(page, 'vue', 'palette');
-  await prepare(page, 'vue', 'palette');
+  await visit(page, 'palette', 'light', '&parity=1');
+  await prepare(page, 'palette');
   for (let index = 0; index < 25; index++) await page.keyboard.press('ArrowDown');
   const list = await page.locator('.lu-cp-list').boundingBox();
   const active = await page.locator('.lu-cp-item[data-active="true"]').boundingBox();
@@ -105,28 +103,24 @@ async function contrast(locator: Locator, property: 'borderTopColor' | 'outlineC
 
 for (const theme of ['light', 'dark']) {
   test(`${theme} destructive menu action remains readable`, async ({ page }) => {
-    await visit(page, 'vue', 'popover', theme);
-    await prepare(page, 'vue', 'popover');
+    await visit(page, 'popover', theme, '&parity=1');
+    await prepare(page, 'popover');
     expect(await contrast(page.locator('.lu-menu-item.is-danger'), 'color')).toBeGreaterThanOrEqual(4.5);
   });
 }
 for (const [scenario, selector] of [['palette', '.lu-cp-item[data-active="true"]'], ['docs', '.lu-docs-link[data-active="true"]']]) {
   test(`${scenario} light current selection has a visible boundary`, async ({ page }) => {
-    await visit(page, 'vue', scenario);
-    await prepare(page, 'vue', scenario);
+    await visit(page, scenario, 'light', '&parity=1');
+    await prepare(page, scenario);
     expect(await page.locator(selector).evaluate(el => getComputedStyle(el).boxShadow)).toContain('0px 0px 0px 1px inset');
     expect(await contrast(page.locator(selector), 'selectionEdge')).toBeGreaterThanOrEqual(3);
   });
 }
 
-for (const framework of ['vue', 'react']) {
-  test(`${framework} collapsed sidebar does not draw an empty account footer`, async ({ page }) => {
-    await visit(page, framework, 'sidebar-collapsed');
-    const footer = page.locator('.lu-cs-foot');
-    if (framework === 'react') {
-      await expect(footer.locator('.lu-am')).toBeVisible();
-      await footer.evaluate(element => element.replaceChildren());
-    }
-    await expect(footer).toBeHidden();
-  });
-}
+test(`collapsed sidebar does not draw an empty account footer`, async ({ page }) => {
+  await visit(page, 'sidebar-collapsed');
+  const footer = page.locator('.lu-cs-foot');
+  await expect(footer.locator('.lu-am')).toBeVisible();
+  await footer.evaluate(element => element.replaceChildren());
+  await expect(footer).toBeHidden();
+});

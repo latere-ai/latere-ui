@@ -2,7 +2,7 @@
 
 These PNGs are the expected renders used by the browser suite. Chromium renders them on macOS 15 at 2× browser resolution, as on a high-density display. The same fixtures are interactive in the local gallery (`bun run visual:dev`). See [Contributing](../CONTRIBUTING.md) for comparison and update commands.
 
-Every visual component renders in light and dark themes at desktop and mobile widths. Vue and React must render each sheet with identical decoded RGBA pixels before its reference is compared or recorded, so each figure shows both adapters.
+Every visual component renders in light and dark themes at desktop and mobile widths. Each figure is compared with exact decoded RGBA equality, with no channel or antialiasing tolerance.
 
 ## Components
 
@@ -146,8 +146,6 @@ Additional figures cover focus, hover, nested dialogs, keyboard selection, popov
 - [effects-light-reduced-transparency](../tests/visual/goldens/darwin-24/effects-light-reduced-transparency.png)
 - [origo-react-buttons-states-dark](../tests/visual/goldens/darwin-24/origo-react-buttons-states-dark.png)
 - [origo-react-buttons-states-light](../tests/visual/goldens/darwin-24/origo-react-buttons-states-light.png)
-- [origo-vue-buttons-states-dark](../tests/visual/goldens/darwin-24/origo-vue-buttons-states-dark.png)
-- [origo-vue-buttons-states-light](../tests/visual/goldens/darwin-24/origo-vue-buttons-states-light.png)
 - [palette-empty-dark](../tests/visual/goldens/darwin-24/palette-empty-dark.png)
 - [palette-empty-light](../tests/visual/goldens/darwin-24/palette-empty-light.png)
 - [palette-filtered-dark](../tests/visual/goldens/darwin-24/palette-filtered-dark.png)
@@ -168,20 +166,12 @@ Additional figures cover focus, hover, nested dialogs, keyboard selection, popov
 - [react-select-open-light](../tests/visual/goldens/darwin-24/react-select-open-light.png)
 - [replichai-react-buttons-states-dark](../tests/visual/goldens/darwin-24/replichai-react-buttons-states-dark.png)
 - [replichai-react-buttons-states-light](../tests/visual/goldens/darwin-24/replichai-react-buttons-states-light.png)
-- [replichai-vue-buttons-states-dark](../tests/visual/goldens/darwin-24/replichai-vue-buttons-states-dark.png)
-- [replichai-vue-buttons-states-light](../tests/visual/goldens/darwin-24/replichai-vue-buttons-states-light.png)
 - [tooltip-bottom-dark](../tests/visual/goldens/darwin-24/tooltip-bottom-dark.png)
 - [tooltip-bottom-light](../tests/visual/goldens/darwin-24/tooltip-bottom-light.png)
 - [tooltip-reduced-transparency-dark](../tests/visual/goldens/darwin-24/tooltip-reduced-transparency-dark.png)
 - [tooltip-reduced-transparency-light](../tests/visual/goldens/darwin-24/tooltip-reduced-transparency-light.png)
-- [vue-modal-nested-dark](../tests/visual/goldens/darwin-24/vue-modal-nested-dark.png)
-- [vue-modal-nested-light](../tests/visual/goldens/darwin-24/vue-modal-nested-light.png)
-- [vue-select-filtered-dark](../tests/visual/goldens/darwin-24/vue-select-filtered-dark.png)
-- [vue-select-filtered-light](../tests/visual/goldens/darwin-24/vue-select-filtered-light.png)
 - [wallfacer-react-buttons-states-dark](../tests/visual/goldens/darwin-24/wallfacer-react-buttons-states-dark.png)
 - [wallfacer-react-buttons-states-light](../tests/visual/goldens/darwin-24/wallfacer-react-buttons-states-light.png)
-- [wallfacer-vue-buttons-states-dark](../tests/visual/goldens/darwin-24/wallfacer-vue-buttons-states-dark.png)
-- [wallfacer-vue-buttons-states-light](../tests/visual/goldens/darwin-24/wallfacer-vue-buttons-states-light.png)
 - [workspace-dark-laptop-large](../tests/visual/goldens/darwin-24/workspace-dark-laptop-large.png)
 - [workspace-dark-laptop](../tests/visual/goldens/darwin-24/workspace-dark-laptop.png)
 - [workspace-dark-studio](../tests/visual/goldens/darwin-24/workspace-dark-studio.png)

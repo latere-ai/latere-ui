@@ -6,7 +6,7 @@ for (const theme of ['light', 'dark']) {
       if (reducedTransparency) {
         await setPreferences(page, { transparency: 'reduce' });
       }
-      await visit(page, 'vue', 'tooltip', theme);
+      await visit(page, 'tooltip', theme, '&parity=1');
       await page.getByRole('button', { name: 'Top tooltip' }).focus();
       const tooltip = page.getByRole('tooltip', { name: 'Copy workspace link' });
       await expect(tooltip).toHaveCSS('opacity', '1');

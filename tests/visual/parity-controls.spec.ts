@@ -1,11 +1,11 @@
 import { test, expect, visit, setPreferences } from './fixtures';
 
-for (const framework of ['vue', 'react']) for (const [layout, width] of [['desktop', 1100], ['mobile', 390]] as const) {
-  test.describe(`${framework} ${layout} canonical controls`, () => {
+for (const [layout, width] of [['desktop', 1100], ['mobile', 390]] as const) {
+  test.describe(`${layout} canonical controls`, () => {
     test.use({ viewport: { width, height: 844 } });
 
     test('editing and toggling preserve controlled values across related controls', async ({ page }) => {
-      await visit(page, framework, 'forms', 'light', '&parity=1');
+      await visit(page, 'forms', 'light', '&parity=1');
       const name = page.getByRole('textbox', { name: 'Workspace name', exact: true });
       const checkbox = page.getByRole('checkbox', { name: 'Selected', exact: true });
       const notifications = page.getByRole('switch', { name: 'Notifications' });
@@ -33,7 +33,7 @@ for (const framework of ['vue', 'react']) for (const [layout, width] of [['deskt
     });
 
     test('radio selection synchronizes tabs and segments while keyboard navigation skips disabled radio options', async ({ page }) => {
-      await visit(page, framework, 'forms', 'light', '&parity=1');
+      await visit(page, 'forms', 'light', '&parity=1');
       const radios = page.locator('[data-component="GlassRadio"]');
       const daily = radios.getByRole('radio', { name: 'Daily' });
       const weekly = radios.getByRole('radio', { name: 'Weekly' });
@@ -72,7 +72,7 @@ for (const framework of ['vue', 'react']) for (const [layout, width] of [['deskt
     });
 
     test('icon actions retain accessible toggle state and keyboard focus order', async ({ page }) => {
-      await visit(page, framework, 'buttons', 'light', '&parity=1');
+      await visit(page, 'buttons', 'light', '&parity=1');
       const icons = page.locator('[data-component="GlassIconButton"]');
       const add = icons.getByRole('button', { name: 'Add', exact: true });
       const small = icons.getByRole('button', { name: 'Small add' });
@@ -99,7 +99,7 @@ for (const framework of ['vue', 'react']) for (const [layout, width] of [['deskt
     });
 
     test('progress communicates clamped values and placeholders retain their intended dimensions', async ({ page }) => {
-      await visit(page, framework, 'feedback', 'light', '&parity=1');
+      await visit(page, 'feedback', 'light', '&parity=1');
       for (const [value, expected] of [[-10, 0], [0, 0], [50, 50], [100, 100], [150, 100]]) {
         const progress = page.getByRole('progressbar', { name: `Progress ${value}`, exact: true });
         await expect(progress).toHaveAttribute('aria-valuemin', '0');
@@ -128,7 +128,7 @@ for (const framework of ['vue', 'react']) for (const [layout, width] of [['deskt
     });
 
     test('surface optical attributes drive refraction and pointer sheen and respect reduced preferences', async ({ page }) => {
-      await visit(page, framework, 'effects', 'light', '&parity=1');
+      await visit(page, 'effects', 'light', '&parity=1');
       const refracted = page.locator('.effect-surface[data-lg-refract=""]');
       const plain = page.locator('.effect-surface[data-lg-refract="off"]').first();
       const interactive = page.locator('.effect-surface[data-lg-sheen]');

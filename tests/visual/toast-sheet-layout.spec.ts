@@ -1,10 +1,10 @@
 import { test, expect, visit, prepare } from './fixtures';
 
-for (const framework of ['vue', 'react']) for (const design of ['default', 'replichai', 'wallfacer', 'origo']) {
-  test(`${design} ${framework} mobile toast sheet leaves its caption and trigger readable`, async ({ page }) => {
+for (const design of ['default', 'replichai', 'wallfacer', 'origo']) {
+  test(`${design} mobile toast sheet leaves its caption and trigger readable`, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await visit(page, framework, 'toast', 'light', `&parity=1${design === 'default' ? '' : `&design=${design}`}`);
-    await prepare(page, framework, 'toast');
+    await visit(page, 'toast', 'light', `&parity=1${design === 'default' ? '' : `&design=${design}`}`);
+    await prepare(page, 'toast');
     const stack = page.locator('.lu-toaster');
     const heading = page.locator('#app > header');
     await expect.poll(async () => (await heading.boundingBox())!.y - ((await stack.boundingBox())!.y + (await stack.boundingBox())!.height)).toBeGreaterThanOrEqual(16);

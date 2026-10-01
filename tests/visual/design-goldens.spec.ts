@@ -2,36 +2,21 @@ import { goldenTest as test, expect, visit, prepare, sheenInteraction } from './
 import { scenarios, mobileScenarios } from './manifest';
 import { designs, designMobileScenarios } from './design-manifest';
 import { captureExact } from './exact-golden';
-import { comparePixels } from './exact-pixels';
-import { writeFileSync } from 'node:fs';
 
-for (const design of ['default', ...designs]) for (const [scenario, components] of Object.entries(scenarios.vue)) {
+for (const design of ['default', ...designs]) for (const [scenario, components] of Object.entries(scenarios)) {
   const mobile = (design === 'default' ? mobileScenarios : designMobileScenarios).has(scenario);
   for (const theme of ['light', 'dark']) for (const layout of mobile ? ['desktop', 'mobile'] : ['desktop']) {
-    test(`parity ${design} ${scenario} ${theme} ${layout}`, async ({ page }, info) => {
+    test(`figure ${design} ${scenario} ${theme} ${layout}`, async ({ page }) => {
       test.setTimeout(60000);
       await page.setViewportSize(layout === 'mobile' ? { width: 390, height: 844 }
         : { width: design === 'default' && scenario !== 'docs' ? 1100 : 1280, height: 850 });
-      const captures: Record<string, Buffer> = {};
-      for (const framework of ['vue', 'react']) {
-        await visit(page, framework, scenario, theme, `&parity=1${design === 'default' ? '' : `&design=${design}`}`);
-        await prepare(page, framework, scenario);
-        for (const name of components) await expect(page.locator(`[data-component="${name}"]`).first()).toBeVisible();
-        expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${framework} page overflow`).toBe(true);
-        captures[framework] = await captureExact(page, { fullPage: true,
-          interaction: scenario === 'effects' && design === 'default' ? sheenInteraction(page) : undefined });
-      }
-      const comparison = comparePixels(captures.vue, captures.react);
-      if (!comparison.equal) {
-        for (const framework of ['vue', 'react']) writeFileSync(info.outputPath(`${framework}.png`), captures[framework]);
-        if (comparison.diff) writeFileSync(info.outputPath('diff.png'), comparison.diff);
-        for (const framework of ['vue', 'react']) await info.attach(`${framework}-actual`, { body: captures[framework], contentType: 'image/png' });
-        if (comparison.diff) await info.attach('adapter-diff', { body: comparison.diff, contentType: 'image/png' });
-      }
-      expect(comparison.equal, `Vue/React parity: ${comparison.message}`).toBe(true);
-      // The adapters render identical pixels, so one reference covers both;
-      // recording never bypasses parity.
-      await expect(captures.vue).toMatchGolden(`${design === 'default' ? '' : design + '-'}${scenario}-${theme}-${layout}.png`);
+      await visit(page, scenario, theme, `&parity=1${design === 'default' ? '' : `&design=${design}`}`);
+      await prepare(page, scenario);
+      for (const name of components) await expect(page.locator(`[data-component="${name}"]`).first()).toBeVisible();
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'page overflow').toBe(true);
+      const capture = await captureExact(page, { fullPage: true,
+        interaction: scenario === 'effects' && design === 'default' ? sheenInteraction(page) : undefined });
+      await expect(capture).toMatchGolden(`${design === 'default' ? '' : design + '-'}${scenario}-${theme}-${layout}.png`);
     });
   }
 }

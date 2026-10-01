@@ -1,7 +1,7 @@
 import { test, expect, visit } from './fixtures';
 
 for (const theme of ['light', 'dark']) test(`${theme} compact glass buttons have visible edges and pressed fill`, async ({ page }) => {
-  await visit(page, 'vue', 'buttons', theme);
+  await visit(page, 'buttons', theme, '&parity=1');
   for (const button of [page.locator('.lu-btn-glass').first(), page.locator('.lu-iconbtn').first()]) {
     const edge = await button.evaluate(el => {
       const style = getComputedStyle(el);
@@ -20,7 +20,7 @@ for (const theme of ['light', 'dark']) test(`${theme} compact glass buttons have
 });
 
 for (const theme of ['light', 'dark']) test(`${theme} select marks its chosen row and opens on complete rows`, async ({ page }) => {
-  await visit(page, 'vue', 'select', theme);
+  await visit(page, 'select', theme, '&parity=1');
   await page.getByRole('combobox', { name: 'Workspace', exact: true }).click();
   await expect(page.locator('.lu-select-option.is-selected')).not.toHaveCSS('box-shadow', 'none');
   const geometry = await page.locator('.lu-select-list').evaluate(list => {

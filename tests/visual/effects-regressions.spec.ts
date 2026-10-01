@@ -1,7 +1,7 @@
 import { test, expect, visit, setPreferences } from './fixtures';
 
 test('refraction follows the current theme and surface dimensions on rescan', async ({ page }) => {
-  await visit(page, 'vue', 'effects');
+  await visit(page, 'effects', 'light', '&parity=1');
   const panel = page.locator('.effect-surface[data-lg-refract=""]');
   const read = () => panel.evaluate(el => {
     const inline = (el as HTMLElement).style.backdropFilter;
@@ -40,7 +40,7 @@ test('refraction follows the current theme and surface dimensions on rescan', as
 });
 
 test('reduced transparency removes an existing inline refraction and permits re-enabling', async ({ page }) => {
-  await visit(page, 'vue', 'effects');
+  await visit(page, 'effects', 'light', '&parity=1');
   const panel = page.locator('.effect-surface[data-lg-refract=""]');
   expect(await panel.evaluate(el => (el as HTMLElement).style.backdropFilter)).toContain('url(');
   await setPreferences(page, { transparency: 'reduce' });
@@ -54,7 +54,7 @@ test('reduced transparency removes an existing inline refraction and permits re-
 });
 
 test('pointer sheen refreshes its theme intensity and honors changed motion preferences', async ({ page }) => {
-  await visit(page, 'vue', 'effects');
+  await visit(page, 'effects', 'light', '&parity=1');
   const panel = page.locator('[data-lg-sheen]');
   const sheen = panel.locator(':scope > [aria-hidden]');
   await panel.hover({ position: { x: 150, y: 80 } });

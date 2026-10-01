@@ -14,7 +14,7 @@ const sorted = (values: Iterable<string>) => [...new Set(values)].sort();
 const read = (file: string) => readFileSync(file, 'utf8');
 const parse = (file: string, source: string) => ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true);
 
-/** Resolve runtime exports through nested barrels without loading either framework. */
+/** Resolve runtime exports through nested barrels without loading the modules. */
 function publicValueExports(file: string, load = read, seen = new Set<string>()): Set<string> {
   file = resolve(file);
   if (seen.has(file)) return new Set();
@@ -43,28 +43,18 @@ function publicValueExports(file: string, load = read, seen = new Set<string>())
   return names;
 }
 
-// Only nonvisual values may be exempt. Every Vue SFC, including the headless
+// Only nonvisual values may be exempt. Every component, including the headless
 // OrgSwitcher and identity marks, still needs all visual matrix combinations.
 const nonvisualExports: Record<string, string> = {
   SessionProvider: 'React context provider; renders its children without visual markup.',
   ApiError: 'HTTP client error class; never renders UI.',
   LATERE_PRODUCTS: 'Product registry data, rendered through ProductSwitcher and SiteFooter.',
-  DEFAULT_PRODUCT_SWITCHER_LABELS: 'Default text data consumed by ProductSwitcher.',
   CONSOLE_ICONS: 'Icon path data, rendered through ConsoleSidebar and ConsolePalette.',
   SELECT_SEARCH_THRESHOLD: 'Option count above which GlassSelect shows its search field; a number, never renders UI.',
   DEFAULT_NAV_OPEN_KEY: 'Default storage key string for the sidebar\'s open parents; never renders UI.',
 };
 function visualExports(file: string) {
   return sorted([...publicValueExports(file)].filter(name => /^[A-Z]/.test(name) && !(name in nonvisualExports)));
-}
-function vueComponentExports() {
-  const file = 'src/index.ts';
-  return sorted(parse(file, read(file)).statements.flatMap(statement => {
-    if (!ts.isExportDeclaration(statement) || statement.isTypeOnly || !statement.moduleSpecifier
-      || !ts.isStringLiteral(statement.moduleSpecifier) || !statement.moduleSpecifier.text.endsWith('.vue')
-      || !statement.exportClause || !ts.isNamedExports(statement.exportClause)) return [];
-    return statement.exportClause.elements.filter(item => !item.isTypeOnly && item.propertyName?.text === 'default').map(item => item.name.text);
-  }));
 }
 
 /** Register the actual golden tests while leaving browser callbacks unexecuted. */
@@ -113,34 +103,26 @@ describe('visual fixture inventory', () => {
     expect(sorted(publicValueExports('/virtual/index.ts', load))).toEqual(['GlassRadio', 'GlassSurface', 'GlassTabs', 'Menu']);
   });
 
-  it('exports the complete Vue visual component set from React, including re-export barrels', () => {
-    const vue = vueComponentExports();
-    expect(vue.length).toBeGreaterThan(30);
-    expect(visualExports('src/index.ts')).toEqual(vue);
-    expect(visualExports('src/react/index.ts')).toEqual(vue);
+  it('exempts only nonvisual values the package entry exports', () => {
+    const exported = publicValueExports('src/react/index.ts');
     for (const [name, reason] of Object.entries(nonvisualExports)) {
       expect(reason.length).toBeGreaterThan(20);
-      expect(vue, `${name} cannot exempt a visual SFC`).not.toContain(name);
+      expect(exported.has(name), `${name} is exempt but not exported`).toBe(true);
     }
   });
 
-  for (const framework of ['vue', 'react'] as const) {
-    it(`${framework} manifest covers exactly its public visual exports`, () => {
-      expect(sorted(Object.values(scenarios[framework]).flat())).toEqual(visualExports(framework === 'vue' ? 'src/index.ts' : 'src/react/index.ts'));
-      for (const components of Object.values(scenarios[framework])) {
-        expect(components.length).toBeGreaterThan(0);
-        expect(new Set(components).size).toBe(components.length);
-      }
-    });
-    it(`${framework} has every component sheet under every product appearance`, () => {
-      expect(designScenarios[framework]).toEqual(scenarios[framework]);
-      expect(sorted(Object.values(designScenarios[framework]).flat())).toEqual(vueComponentExports());
-    });
-  }
+  it('manifest covers exactly the public visual exports, including re-export barrels', () => {
+    const visual = visualExports('src/react/index.ts');
+    expect(visual.length).toBeGreaterThan(30);
+    expect(sorted(Object.values(scenarios).flat())).toEqual(visual);
+    for (const components of Object.values(scenarios)) {
+      expect(components.length).toBeGreaterThan(0);
+      expect(new Set(components).size).toBe(components.length);
+    }
+  });
 
-  it('uses the same named sheets and component membership in both adapters', () => {
-    expect(scenarios.react).toEqual(scenarios.vue);
-    expect(designScenarios.react).toEqual(designScenarios.vue);
+  it('has every component sheet under every product appearance', () => {
+    expect(designScenarios).toEqual(scenarios);
   });
 
   it('has all four appearances with no visual exclusions', () => {
@@ -150,63 +132,43 @@ describe('visual fixture inventory', () => {
   });
 
   it('registers light/dark for every sheet and appearance, and mobile for the default appearance', () => {
-    const paired = registeredGoldens('tests/visual/design-goldens.spec.ts');
-    const sheets = Object.keys(scenarios.vue);
+    const figures = registeredGoldens('tests/visual/design-goldens.spec.ts');
+    const sheets = Object.keys(scenarios);
     expect(sheets).toHaveLength(25);
     expect(sorted(manifest.mobileScenarios)).toEqual(sorted(sheets));
     expect(sorted(designManifest.designMobileScenarios)).toEqual([]);
-    expect(paired.size).toBe(sheets.length * 2 * 2 + sheets.length * designs.length * 2);
+    expect(figures.size).toBe(sheets.length * 2 * 2 + sheets.length * designs.length * 2);
     for (const design of ['default', ...designs]) for (const sheet of sheets) {
       for (const theme of ['light', 'dark']) for (const layout of ['desktop', 'mobile']) {
-        const title = `parity ${design} ${sheet} ${theme} ${layout}`;
+        const title = `figure ${design} ${sheet} ${theme} ${layout}`;
         const expected = layout === 'desktop' || design === 'default';
-        expect(paired.has(title), `${expected ? 'Missing' : 'Unexpected'} paired golden: ${title}`).toBe(expected);
+        expect(figures.has(title), `${expected ? 'Missing' : 'Unexpected'} figure: ${title}`).toBe(expected);
       }
     }
   });
 });
 
 describe('strict visual comparison contract', () => {
-  it('captures both adapters and checks their RGBA equality before checking the one golden file', () => {
+  it('captures each figure once and checks that capture against its one golden file', () => {
     const file = 'tests/visual/design-goldens.spec.ts';
     const source = read(file);
     const tree = parse(file, source);
-    const captures: ts.CallExpression[] = [];
+    const captures: ts.VariableDeclaration[] = [];
     const goldens: ts.CallExpression[] = [];
-    const comparisons: ts.CallExpression[] = [];
-    const assertions: ts.CallExpression[] = [];
-    function inAdapterLoop(node: ts.Node) {
-      for (let parent = node.parent; parent; parent = parent.parent) {
-        if (ts.isForOfStatement(parent) && ts.isArrayLiteralExpression(parent.expression)) {
-          const values = parent.expression.elements.filter(ts.isStringLiteral).map(item => item.text);
-          if (sorted(values).join(',') === 'react,vue') return true;
-        }
-      }
-      return false;
-    }
     const visit = (node: ts.Node) => {
-      if (ts.isCallExpression(node)) {
-        if (ts.isIdentifier(node.expression) && node.expression.text === 'captureExact') captures.push(node);
-        if (ts.isIdentifier(node.expression) && node.expression.text === 'comparePixels') comparisons.push(node);
-        if (memberName(node.expression) === 'toMatchGolden') goldens.push(node);
-        if (memberName(node.expression) === 'toBe' && node.arguments[0]?.kind === ts.SyntaxKind.TrueKeyword) {
-          const receiver = (node.expression as ts.PropertyAccessExpression).expression;
-          if (ts.isCallExpression(receiver) && receiver.arguments[0] && memberName(receiver.arguments[0]) === 'equal') assertions.push(node);
-        }
-      }
+      if (ts.isVariableDeclaration(node) && node.initializer && ts.isAwaitExpression(node.initializer)
+        && ts.isCallExpression(node.initializer.expression) && ts.isIdentifier(node.initializer.expression.expression)
+        && node.initializer.expression.expression.text === 'captureExact') captures.push(node);
+      if (ts.isCallExpression(node) && memberName(node.expression) === 'toMatchGolden') goldens.push(node);
       ts.forEachChild(node, visit);
     };
     visit(tree);
     expect(captures).toHaveLength(1);
     expect(goldens).toHaveLength(1);
-    expect(comparisons).toHaveLength(1);
-    expect(assertions).toHaveLength(1);
-    expect(inAdapterLoop(captures[0]), 'capture must cover both adapters').toBe(true);
-    expect(inAdapterLoop(goldens[0]), 'one golden assertion follows the adapter loop').toBe(false);
-    expect(comparisons[0].arguments.map(memberName)).toEqual(['vue', 'react']);
-    expect(captures[0].pos).toBeLessThan(comparisons[0].pos);
-    expect(comparisons[0].pos).toBeLessThan(assertions[0].pos);
-    expect(assertions[0].pos).toBeLessThan(goldens[0].pos);
+    const receiver = (goldens[0].expression as ts.PropertyAccessExpression).expression;
+    expect(ts.isCallExpression(receiver) && receiver.arguments.length === 1 && ts.isIdentifier(receiver.arguments[0])
+      && receiver.arguments[0].text === (captures[0].name as ts.Identifier).text, 'the golden checks the exact capture').toBe(true);
+    expect(captures[0].pos).toBeLessThan(goldens[0].pos);
     expect(source).toContain('&parity=1');
   });
 

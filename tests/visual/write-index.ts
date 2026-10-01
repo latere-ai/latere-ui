@@ -7,7 +7,7 @@ const link = (name: string) => `../${directory}/${name}`;
 const lines = [
   '# Visual reference index', '',
   'These PNGs are the expected renders used by the browser suite. Chromium renders them on macOS 15 at 2× browser resolution, as on a high-density display. The same fixtures are interactive in the local gallery (`bun run visual:dev`). See [Contributing](../CONTRIBUTING.md) for comparison and update commands.', '',
-  'Every visual component renders in light and dark themes at desktop and mobile widths. Vue and React must render each sheet with identical decoded RGBA pixels before its reference is compared or recorded, so each figure shows both adapters.', '',
+  'Every visual component renders in light and dark themes at desktop and mobile widths. Each figure is compared with exact decoded RGBA equality, with no channel or antialiasing tolerance.', '',
 ];
 const standard = new Set<string>();
 function table(prefix: string, sheets: Record<string, readonly string[]>, mobile: Set<string>) {
@@ -22,11 +22,11 @@ function table(prefix: string, sheets: Record<string, readonly string[]>, mobile
   lines.push('');
 }
 lines.push('## Components', '');
-table('', scenarios.vue, mobileScenarios);
+table('', scenarios, mobileScenarios);
 lines.push('## Product style variations', '', 'Real components rendered with the optional `latere-ui/presets` stylesheet, in both themes at desktop width for each style. Identity marks retain their brand artwork; headless organization controls demonstrate host styling; optical opt-ins show their intentional matte fallback in these presets.', '');
 for (const design of designs) {
   lines.push(`### ${design}`, '');
-  table(`${design}-`, designScenarios.vue, designMobileScenarios);
+  table(`${design}-`, designScenarios, designMobileScenarios);
 }
 lines.push('## Interaction and accessibility states', '', 'Additional figures cover focus, hover, nested dialogs, keyboard selection, popover placement, refraction, reduced motion, reduced transparency, and increased contrast.', '');
 for (const name of readdirSync(directory).filter(name => name.endsWith('.png') && !standard.has(name)).sort()) lines.push(`- [${name.replace('.png', '')}](${link(name)})`);
