@@ -43,6 +43,13 @@ for (const theme of ['light', 'dark']) {
     await page.getByRole('combobox', { name: 'Schedule', exact: true }).click();
     await expect(page).toMatchGolden(`react-select-open-${theme}.png`, { fullPage: true });
   });
+  for (const framework of ['vue', 'react']) test(`${framework} select filtered ${theme}`, async ({ page }) => {
+    await visit(page, framework, 'select', theme, '&parity=1');
+    await prepare(page, framework, 'select');
+    await page.keyboard.type('2');
+    await expect(page.getByRole('option')).toHaveText(['Workspace 02', 'Workspace 12', 'Workspace 20']);
+    await expect(page).toMatchGolden(`${framework}-select-filtered-${theme}.png`, { fullPage: true });
+  });
   for (const state of ['filtered', 'empty', 'scrolled']) test(`palette ${state} ${theme}`, async ({ page }) => {
     await visit(page, 'vue', 'palette', theme);
     await prepare(page, 'vue', 'palette');

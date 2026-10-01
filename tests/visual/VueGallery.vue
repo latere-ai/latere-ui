@@ -23,7 +23,7 @@ function addProject() { workspaceRows.value.unshift({ name: 'Untitled project', 
 const innerOpen = ref(false);
 const theme = ref<'light' | 'dark' | 'auto'>(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
 const locale = ref('en');
-const selectValue = ref('0');
+const selectValue = ref('workspace-01');
 const organization = ref('studio');
 const orgState = UI.createOrgSwitcher({ getOrgs: async () => principal.orgs.slice(0, 3), getCurrentOrgID: () => organization.value, switchOrg: async (id) => { organization.value = id; }, eager: true });
 function notify() { UI.message.clear(); if (new URLSearchParams(location.search).get('long') === 'true') { UI.message.error('Workspace_' + 'x'.repeat(180), { duration: 0 }); return; } for (const tone of alertTones) UI.message(tone, tone === 'error' ? 'The workspace could not be saved. Try again.' : `${tone}: Your workspace is ready.`, { duration: 0 }); }

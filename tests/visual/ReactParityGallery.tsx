@@ -28,7 +28,7 @@ function ReactParityGallery({ scenario }: { scenario: string }) {
   const [innerOpen, setInnerOpen] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark' | 'auto'>(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
   const [locale, setLocale] = useState('en');
-  const [selectValue, setSelectValue] = useState('0');
+  const [selectValue, setSelectValue] = useState('workspace-01');
   const [organization, setOrganization] = useState('studio');
   const orgState = UI.useOrgSwitcher({
     getOrgs: async () => principal.orgs.slice(0, 3),

@@ -86,7 +86,16 @@ for (const framework of ['vue', 'react']) {
     await select.locator('.lu-select-trigger').click();
     const option = select.locator('.lu-select-option').first();
     await option.evaluate(el => { el.textContent = 'AnExtremelyLongUnbrokenWorkspaceNameThatMustRemainInsideTheMenu'; });
-    expect.soft(await option.evaluate(el => el.scrollWidth - el.clientWidth), 'option label overflow').toBeLessThanOrEqual(1);
+    // One line, cut with an ellipsis, in a menu that stays inside the viewport.
+    await expect.soft(option).toHaveCSS('white-space', 'nowrap');
+    await expect.soft(option).toHaveCSS('text-overflow', 'ellipsis');
+    const fit = await select.evaluate(el => ({
+      row: el.querySelector('.lu-select-option')!.getBoundingClientRect().right,
+      menu: el.querySelector('.lu-select-list')!.getBoundingClientRect().right,
+      viewport: document.documentElement.clientWidth,
+    }));
+    expect.soft(fit.row, 'option inside the menu').toBeLessThanOrEqual(fit.menu);
+    expect.soft(fit.menu, 'menu inside the viewport gutter').toBeLessThanOrEqual(fit.viewport - 16 + 0.5);
   });
 }
 
