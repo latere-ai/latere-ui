@@ -1,51 +1,8 @@
 import { test, expect, visit } from './fixtures';
 
-test('product switcher fits when neither trigger alignment fits the mobile viewport', async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await visit(page, 'vue', 'products');
-  await page.addStyleTag({ content: '.lu-ps { position: fixed; left: calc(50vw - 18px); top: 180px; }' });
-  await page.getByRole('button', { name: 'Switch product' }).click();
-  const panel = page.locator('.lu-ps-panel');
-  await expect.poll(async () => {
-    const box = await panel.boundingBox();
-    return !!box && box.x >= 8 && box.x + box.width <= 382;
-  }).toBe(true);
-  await page.setViewportSize({ width: 320, height: 568 });
-  await expect.poll(async () => {
-    const box = await panel.boundingBox();
-    return !!box && box.x >= 8 && box.x + box.width <= 312;
-  }).toBe(true);
-  await page.setViewportSize({ width: 240, height: 568 });
-  await expect.poll(async () => {
-    const box = await panel.boundingBox();
-    return !!box && box.x >= 8 && box.x + box.width <= 232;
-  }).toBe(true);
-  await expect(panel).toHaveJSProperty('scrollWidth', await panel.evaluate(element => element.clientWidth));
-});
-
-test('an open product switcher follows viewport resize and scrolls in short viewports', async ({ page }) => {
-  await visit(page, 'vue', 'products');
-  await page.addStyleTag({ content: '.lu-ps { position: fixed; left: calc(100vw - 54px); top: calc(50vh - 18px); }' });
-  await page.getByRole('button', { name: 'Switch product' }).click();
-  const panel = page.locator('.lu-ps-panel');
-  // Halve the panel's own height rather than name a pixel viewport: the grid
-  // is three columns wide, so a retiring console drops a whole row and a fixed
-  // height quietly stops proving that the clamp scrolls instead of clipping.
-  const height = Math.round(await panel.evaluate(element => element.scrollHeight) / 2) + 16;
-  await page.setViewportSize({ width: 320, height });
-  await expect.poll(async () => {
-    const box = await panel.boundingBox();
-    return !!box && box.x >= 8 && box.x + box.width <= 312 && box.y >= 8 && box.y + box.height <= height - 8;
-  }).toBe(true);
-  const lastLink = page.locator('.lu-ps-tile').last();
-  await lastLink.focus();
-  await expect(lastLink).toBeInViewport();
-  expect(await panel.evaluate(element => element.scrollTop)).toBeGreaterThan(0);
-});
-
 test('long notification text wraps inside the mobile viewport', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 568 });
-  await visit(page, 'vue', 'toast', 'light', '&long=true');
+  await visit(page, 'toast', 'light', '&parity=1&long=true');
   await page.getByRole('button', { name: 'Show notifications' }).click();
   const toast = page.locator('.lu-toast');
   await expect(toast).toBeVisible();
@@ -62,7 +19,7 @@ test('long notification text wraps inside the mobile viewport', async ({ page })
 });
 
 test('matchWidth popover keeps the trigger width with long content', async ({ page }) => {
-  await visit(page, 'vue', 'popover', 'light', '&matchWidth=true');
+  await visit(page, 'popover', 'light', '&parity=1&matchWidth=true');
   await page.addStyleTag({ content: '.lu-pop { width: 240px; }' });
   await page.getByRole('button', { name: 'Open menu' }).click();
   await page.locator('.lu-menu-item').first().evaluate(element => { element.textContent = 'Workspace_' + 'x'.repeat(100); });
@@ -75,7 +32,7 @@ test('matchWidth popover keeps the trigger width with long content', async ({ pa
 });
 
 test('top-end account dropdown stays aligned with its trigger in a wide parent', async ({ page }) => {
-  await visit(page, 'vue', 'account');
+  await visit(page, 'account', 'light', '&parity=1');
   await page.addStyleTag({ content: '[data-component="AccountMenu"] { display: block !important; width: 600px; margin-left: 80px; }' });
   await page.locator('.lu-am-trigger').click();
   const trigger = await page.locator('.lu-am-trigger').boundingBox();

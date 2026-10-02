@@ -1,5 +1,4 @@
-/* GlassSpinner — de-scoped from the SFC so the Vue and React adapters share
- * one stylesheet. */
+/* GlassSpinner. */
 .lu-spinner {
   display: inline-block;
   border: 2px solid var(--accent-glow, rgba(0, 0, 0, 0.12));

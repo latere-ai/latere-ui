@@ -1,5 +1,16 @@
-// React adapter of GlassPopover.vue: the same trigger/panel markup, dismissal,
-// focus return, menu-button keys and surfaces. See the SFC for the contract.
+// A floating surface anchored to a trigger: dropdown menus, filter panels.
+// Toggles on trigger click, closes on outside click and Escape, and returns
+// focus to the trigger when it closes from inside. Focus moving to another
+// element outside the popover closes it too. ArrowDown/ArrowUp on a closed
+// trigger open it, as on a menu button. `placement` picks the side.
+//
+// The panel carries no role of its own: its content declares one (GlassMenu
+// is role=menu), so a menu inside the panel is announced once, not nested in
+// a second menu. The trigger receives the panel `id` for aria-controls.
+//
+// `surface` picks the material: `glass` (thick Liquid Glass, requires
+// `import 'latere-ui/glass'`) or `solid`, an opaque menu surface with a
+// hairline border and the menu shadow that needs no glass layer.
 import { useId, useRef, useState, type FocusEvent, type KeyboardEvent, type ReactNode } from 'react';
 import { cx, useClickOutside } from './internal';
 import '../styles/components/glass-popover.css';
@@ -16,7 +27,7 @@ export interface GlassPopoverProps {
   /** The trigger, or a render function receiving the open state and the panel id for aria-controls. */
   trigger: ReactNode | ((scope: { open: boolean; toggle: () => void; id: string }) => ReactNode);
   children?: ReactNode | ((scope: { close: () => void }) => ReactNode);
-  /** Extra class on the root, as a Vue host's class falls through to it. */
+  /** Extra class on the root element. */
   className?: string;
 }
 

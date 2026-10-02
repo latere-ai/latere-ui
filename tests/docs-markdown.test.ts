@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import MarkdownIt from 'markdown-it';
 
 import { createMarkdown, stripFirstHeading } from '../src/docs/markdown';
-import { slugify } from '../src/docs/toc';
+import { slugify } from '../src/docs/tocCore';
 
 describe('createMarkdown()', () => {
   it('assigns heading ids using the same slugify as the TOC', () => {

@@ -1,10 +1,8 @@
-// Types + defaults for AccountMenu, kept in a .ts module (not the .vue) so the
-// package entrypoint can re-export them without a consumer's vue-tsc falling
-// back to the default-only `*.vue` shim and losing the named members.
+// Types and defaults for AccountMenu.
 
 // A per-app custom menu row (e.g. "Admin Panel", "Deck access"). Rendered by
-// AccountMenu in its own scope so it always matches the menu's item style —
-// passing markup through a slot doesn't get the scoped `.lu-am-item` styles.
+// AccountMenu as one of its own rows, so it always matches the menu's item
+// style.
 export interface AccountMenuItem {
   /** Row text. */
   label: string;

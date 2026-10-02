@@ -51,13 +51,18 @@ export function sheenInteraction(page: Page) {
     },
   };
 }
-export async function visit(page: Page, framework: string, scenario: string, theme = 'light', extra = '') {
-  await page.goto(`/?framework=${framework}&scenario=${scenario}&theme=${theme}${extra}`);
+/**
+ * Open one sheet. `extra` carries further query parameters: `&parity=1`
+ * mounts the reference gallery every component figure records, and without it
+ * the page mounts the React adapter examples.
+ */
+export async function visit(page: Page, scenario: string, theme = 'light', extra = '') {
+  await page.goto(`/?scenario=${scenario}&theme=${theme}${extra}`);
   await expect(page.locator('html')).toHaveAttribute('data-ready', 'true');
   await expect(page.locator('#stage > *').first()).toBeAttached();
   await page.evaluate(() => document.fonts.ready);
 }
-export async function prepare(page: Page, framework: string, scenario: string) {
+export async function prepare(page: Page, scenario: string) {
   if (scenario === 'modal') await page.getByRole('button', { name: 'Open modal', exact: true }).click();
   if (scenario.startsWith('drawer-')) await page.getByRole('button', { name: 'Open drawer' }).click();
   if (scenario === 'popover') await page.getByRole('button', { name: 'Open menu' }).click();
@@ -66,7 +71,6 @@ export async function prepare(page: Page, framework: string, scenario: string) {
   if (scenario === 'confirm') await page.getByRole('button', { name: 'Delete workspace', exact: true }).click();
   if (scenario === 'palette') await page.getByRole('button', { name: 'Open palette' }).click();
   if (scenario === 'account') await page.locator('.lu-am-trigger').first().click();
-  if (scenario === 'products') await page.locator('.lu-iconbtn').first().click();
   if (scenario === 'select') await page.getByRole('combobox', { name: 'Workspace', exact: true }).click();
   if (scenario === 'effects') {
     await sampleSheen(page);

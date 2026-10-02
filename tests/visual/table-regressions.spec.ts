@@ -1,8 +1,8 @@
 import { test, expect, visit } from './fixtures';
 
-for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark']) {
-  test(`${framework} ${theme} table has one rounded outline and balanced cell insets`, async ({ page }) => {
-    await visit(page, framework, 'containers', theme);
+for (const theme of ['light', 'dark']) {
+  test(`${theme} table has one rounded outline and balanced cell insets`, async ({ page }) => {
+    await visit(page, 'containers', theme);
     const geometry = await page.locator('.lu-table-wrap').evaluate(wrap => {
       const head = wrap.querySelector('.lu-table-head')!;
       const th = head.querySelector('th')!;
@@ -31,8 +31,8 @@ for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark'])
     expect(geometry.lastDivider).toBe('0px');
   });
 
-  test(`${framework} ${theme} table header material stays attached while scrolling`, async ({ page }) => {
-    await visit(page, framework, 'containers', theme);
+  test(`${theme} table header material stays attached while scrolling`, async ({ page }) => {
+    await visit(page, 'containers', theme);
     await page.locator('.lu-table-wrap').evaluate(wrap => {
       const body = wrap.querySelector('tbody')!;
       const row = body.firstElementChild!;

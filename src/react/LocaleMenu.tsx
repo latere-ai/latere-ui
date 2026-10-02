@@ -1,5 +1,7 @@
-// React adapter of LocaleMenu.vue: the same trigger, menu and semantics. See
-// the SFC for the contract.
+// The language control: a quiet globe button that opens the offered languages
+// on a solid menu surface, each named in its own language, with a check on
+// the current one. Built on GlassPopover and GlassMenu, like ThemeMenu.
+// Presentational: the host owns the locale.
 import type { LocaleOption } from '../i18n/footer';
 import { DEFAULT_LOCALE_OPTIONS, GLOBE_ICON, localeMenuItems, localeTriggerLabel } from '../components/preferenceMenus';
 import { GlassPopover } from './GlassPopover';

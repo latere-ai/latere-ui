@@ -1,5 +1,5 @@
-// The command palette's entries and matching, shared by the Vue and React
-// ConsolePalette. The palette lists every routable row of the nav model,
+// The command palette's entries and matching, read by ConsolePalette. The
+// palette lists every routable row of the nav model,
 // children included, then the host's own entries (actions such as "Create
 // an API key", or destinations outside the rail), and on a query adds what
 // the host's search returns (for example documentation pages).

@@ -1,8 +1,7 @@
-// SessionProvider / useSession / useSessionGate — the React port of
-// session/store.ts + session/gate.ts over the vanilla core. Mirrors the
-// fetch-mock pattern from tests/session-me-core.test.ts and the
-// prompt=none/sso_checked scenario from tests/session-gate.test.ts, adapted
-// to testing-library/react (renderHook + waitFor).
+// SessionProvider, useSession and useSessionGate over the framework-free
+// session core: the expired-session recovery (silent prompt=none re-check
+// once, then an interactive login), the logged-out carve-out, the org-switch
+// redirect modes and the route gate's sso_checked round-trip.
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -140,6 +139,34 @@ describe('SessionProvider / useSession', () => {
     );
   });
 
+  it('graceful mode: a mid-session 401 clears the principal but does not navigate', async () => {
+    vi.stubGlobal(
+      'fetch',
+      mockFetch([
+        [200, PRINCIPAL],
+        [401, { message: 'no session' }],
+      ]),
+    );
+    const { result } = renderHook(() => useSession(), { wrapper: wrapper({ expiredSessionMode: 'graceful' }) });
+    await waitFor(() => expect(result.current.principal).not.toBeNull());
+
+    await act(async () => {
+      await expect(result.current.client.api('GET', '/api/jobs')).rejects.toMatchObject({ status: 401 });
+    });
+
+    expect(result.current.principal).toBeNull();
+    expect(hrefSpy).not.toHaveBeenCalled();
+  });
+
+  it('a logged-out visitor whose /me probe returns 401 is not redirected', async () => {
+    vi.stubGlobal('fetch', mockFetch([[401, { error: 'unauthorized' }]]));
+    const { result } = renderHook(() => useSession(), { wrapper: wrapper({ expiredSessionMode: 'silent-recheck' }) });
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.principal).toBeNull();
+    expect(hrefSpy).not.toHaveBeenCalled();
+    expect(sessionStorage.getItem('latere.sso_checked.session')).toBeNull();
+  });
+
   it('switchOrg follows the redirect from the endpoint', async () => {
     vi.stubGlobal(
       'fetch',
@@ -154,6 +181,24 @@ describe('SessionProvider / useSession', () => {
       await result.current.switchOrg('org-2');
     });
     expect(hrefSpy).toHaveBeenCalledWith('/dashboard');
+  });
+
+  it('switchOrg in login-bounce mode builds a login URL with the org', async () => {
+    vi.stubGlobal(
+      'fetch',
+      mockFetch([
+        [200, PRINCIPAL],
+        [200, {}],
+      ]),
+    );
+    const { result } = renderHook(() => useSession(), {
+      wrapper: wrapper({ switchOrgMode: 'login-bounce', defaultReturnTo: '/dashboard' }),
+    });
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    await act(async () => {
+      await result.current.switchOrg('o1');
+    });
+    expect(hrefSpy).toHaveBeenCalledWith('/login?return_to=' + encodeURIComponent('/dashboard') + '&org_id=o1');
   });
 
   it('logout clears the recheck flag and navigates to logoutPath', async () => {
@@ -199,6 +244,52 @@ describe('useSessionGate', () => {
     expect(hrefSpy).not.toHaveBeenCalled();
     expect(replaceStateSpy).toHaveBeenCalled();
     expect(result2.current.showAuthGate).toBe(true);
+  });
+
+  it('waits for the current path before opening the gate or stripping its marker', async () => {
+    // The silent re-check already ran this tab, so neither check navigates.
+    sessionStorage.setItem('latere.sso_checked.session', '1');
+    stubLocation('/second', '?sso_checked=1&tab=files');
+    const pending: Array<(response: Response) => void> = [];
+    vi.stubGlobal('fetch', vi.fn(() => new Promise<Response>((resolve) => { pending.push(resolve); })));
+    const unauthorized = { ok: false, status: 401, statusText: 'x', text: async () => '{}' } as Response;
+    const strip = vi.fn();
+
+    const { result, rerender } = renderHook(
+      ({ path }) => useSessionGate({ path, stripSsoChecked: strip }),
+      { wrapper: wrapper(), initialProps: { path: '/first' } },
+    );
+    await waitFor(() => expect(pending).toHaveLength(2));
+    rerender({ path: '/second' });
+    await waitFor(() => expect(pending).toHaveLength(3));
+
+    // The provider's bootstrap and the check started for the first path
+    // settle after the path changed, while the second path's check is open.
+    await act(async () => { pending[0](unauthorized); pending[1](unauthorized); });
+    expect(strip).not.toHaveBeenCalled();
+    expect(result.current.ready).toBe(false);
+
+    await act(async () => { pending[2](unauthorized); });
+    await waitFor(() => expect(result.current.ready).toBe(true));
+    expect(strip).toHaveBeenCalledExactlyOnceWith('/second?tab=files');
+    expect(result.current.showAuthGate).toBe(true);
+    expect(hrefSpy).not.toHaveBeenCalled();
+  });
+
+  it('does not strip the marker when an unmounted gate finishes checking', async () => {
+    sessionStorage.setItem('latere.sso_checked.session', '1');
+    stubLocation('/old', '?sso_checked=1');
+    const pending: Array<(response: Response) => void> = [];
+    vi.stubGlobal('fetch', vi.fn(() => new Promise<Response>((resolve) => { pending.push(resolve); })));
+    const strip = vi.fn();
+    const { unmount } = renderHook(() => useSessionGate({ path: '/old', stripSsoChecked: strip }), { wrapper: wrapper() });
+    await waitFor(() => expect(pending.length).toBeGreaterThan(0));
+    unmount();
+    await act(async () => {
+      for (const resolve of pending) resolve({ ok: false, status: 401, statusText: 'x', text: async () => '{}' } as Response);
+    });
+    expect(strip).not.toHaveBeenCalled();
+    expect(hrefSpy).not.toHaveBeenCalled();
   });
 
   it('ready + no gate once a principal resolves', async () => {

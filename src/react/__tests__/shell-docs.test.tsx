@@ -24,6 +24,19 @@ describe('React DocsLayout', () => {
     expect(view.container.querySelector('.lu-docs-group[data-advanced="true"]')).toBeTruthy();
     view.rerender(<DocsLayout groups={[]} activeSlug="missing" />); expect(view.container.querySelector('.lu-docs-pager')).toBeNull();
   });
+  it('lists the groups in order, names both pager neighbors and renders the article body', () => {
+    const view = render(<DocsLayout groups={groups} activeSlug="next" articleHtml="<h2>First</h2><p>Hello world</p><h3>Sub</h3><h2>Second</h2>" />);
+    expect(Array.from(view.container.querySelectorAll('.lu-docs-group-label')).map(g => g.textContent)).toEqual(['Guide', 'Advanced']);
+    expect(view.container.querySelectorAll('.lu-docs-link')).toHaveLength(3);
+    expect(view.container.querySelector('.lu-docs-link-badge')?.textContent).toBe('3');
+    expect(view.container.querySelector('.lu-docs-pager-prev')?.textContent).toContain('Introduction');
+    expect(view.container.querySelector('.lu-docs-pager-next')?.textContent).toContain('Architecture');
+    expect(view.container.querySelector('.lu-docs-title')?.textContent).toBe('Next page');
+    expect(view.container.querySelector('.lu-docs-body')?.innerHTML).toContain('Hello world');
+    const links = Array.from(view.container.querySelectorAll('.lu-docs-toc-link'));
+    expect(links.map(link => link.textContent)).toEqual(['First', 'Sub', 'Second']);
+    expect(links[0].getAttribute('data-active')).toBe('true');
+  });
   it('enhances before scanning, handles prop changes and exposes refresh and slots', () => {
     const ref = createRef<DocsLayoutHandle>(); const onTocSelect = vi.fn();
     const enhance = vi.fn((element: HTMLElement) => { element.querySelector('h2')!.textContent = 'Enhanced'; });

@@ -5,7 +5,7 @@
 // Shape mirrors the model proven in production (e.g. the document-intelligence
 // console's CATEGORIES: `{ id, label, icon?, advanced?, pages: [{ slug, title }] }`
 // + a flattened list for lookup/prev-next + a searchable index). No DOM, no
-// markdown, no framework — DocsLayout.vue renders this; any harness can too.
+// markdown, no framework: DocsLayout renders this; any harness can too.
 
 /** A single documentation page within a group. */
 export interface DocPage {

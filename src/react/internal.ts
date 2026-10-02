@@ -1,17 +1,14 @@
-// Shared plumbing for the React adapters. React-only: nothing in src/react/
-// may import a module that pulls in `vue`, so a React host never needs Vue
-// installed (react/react-dom are optional peers, vue stays Vue-side).
+// Shared plumbing for the React components.
 import { useEffect, useRef, type RefObject } from 'react';
 import { activateFocusTrap } from '../glass/focusTrap';
 
-/** Join truthy class parts — mirrors Vue's class binding output order. */
+/** Join truthy class parts, in argument order. */
 export function cx(...parts: Array<string | false | null | undefined>): string {
   return parts.filter(Boolean).join(' ');
 }
 
 /**
- * Close-on-outside-click + Escape, the React port of
- * `composables/useClickOutside`. Listeners attach only while `open`.
+ * Close-on-outside-click + Escape. Listeners attach only while `open`.
  */
 export function useClickOutside(
   rootRef: RefObject<HTMLElement | null>,

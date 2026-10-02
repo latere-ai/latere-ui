@@ -1,13 +1,13 @@
 import { test, expect, visit } from './fixtures';
 
-for (const framework of ['vue', 'react']) for (const layout of ['desktop', 'mobile']) {
-  test.describe(`${framework} ${layout} canonical shell`, () => {
+for (const layout of ['desktop', 'mobile']) {
+  test.describe(`${layout} canonical shell`, () => {
     test.beforeEach(async ({ page }) => {
       await page.setViewportSize(layout === 'mobile' ? { width: 390, height: 844 } : { width: 1280, height: 850 });
     });
 
     test('preferences update the controlled locale and theme', async ({ page }) => {
-      await visit(page, framework, 'preferences', 'light', '&parity=1');
+      await visit(page, 'preferences', 'light', '&parity=1');
       const language = page.getByRole('group', { name: 'Language', exact: true });
       const theme = page.getByRole('group', { name: 'Theme', exact: true });
       await expect(language.getByRole('button', { name: 'EN', exact: true })).toHaveAttribute('aria-pressed', 'true');
@@ -25,7 +25,7 @@ for (const framework of ['vue', 'react']) for (const layout of ['desktop', 'mobi
     });
 
     test('organization selection updates personal and membership state', async ({ page }) => {
-      await visit(page, framework, 'organizations', 'light', '&parity=1');
+      await visit(page, 'organizations', 'light', '&parity=1');
       const root = page.locator('.latere-org-switcher');
       await expect(root).toHaveAttribute('data-loading', 'false');
       await expect(root.getByRole('menuitem')).toHaveCount(4);
@@ -42,7 +42,7 @@ for (const framework of ['vue', 'react']) for (const layout of ['desktop', 'mobi
     });
 
     test('palette filters, handles empty results, scrolls keyboard selection and restores focus', async ({ page }) => {
-      await visit(page, framework, 'palette', 'light', '&parity=1');
+      await visit(page, 'palette', 'light', '&parity=1');
       const trigger = page.getByRole('button', { name: 'Open palette', exact: true });
       await trigger.click();
       const input = page.getByRole('combobox');
@@ -71,7 +71,7 @@ for (const framework of ['vue', 'react']) for (const layout of ['desktop', 'mobi
     });
 
     test('workspace collapse and new project update visible content', async ({ page }) => {
-      await visit(page, framework, 'workspace', 'light', '&parity=1');
+      await visit(page, 'workspace', 'light', '&parity=1');
       const sidebar = page.locator('.lu-cs');
       await expect(sidebar).toHaveAttribute('data-collapsed', layout === 'mobile' ? 'true' : 'false');
       if (layout === 'mobile') {
@@ -94,7 +94,7 @@ for (const framework of ['vue', 'react']) for (const layout of ['desktop', 'mobi
     });
 
     test('docs heading anchors and navigation remain usable', async ({ page }) => {
-      await visit(page, framework, 'docs', 'light', '&parity=1');
+      await visit(page, 'docs', 'light', '&parity=1');
       await expect(page.getByRole('heading', { name: 'Introduction', exact: true })).toBeVisible();
       const heading = page.getByRole('heading', { name: 'Review activity', exact: true });
       await expect(heading).toHaveAttribute('id', 'review-activity');
@@ -115,28 +115,6 @@ for (const framework of ['vue', 'react']) for (const layout of ['desktop', 'mobi
       await expect(page.locator('.lu-docs-pager-next')).toHaveAttribute('href', '/start/setup');
       await setup.click();
       await expect(page).toHaveURL(/\/start\/setup$/);
-    });
-
-    test('product switcher marks current, closes links and handles Escape', async ({ page }) => {
-      await visit(page, framework, 'products', 'light', '&parity=1&currentProduct=lectio');
-      const trigger = page.getByRole('button', { name: 'Switch product', exact: true });
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      await trigger.click();
-      const current = page.locator('.lu-ps-tile[aria-current="true"]');
-      await expect(current).toContainText('Lectio');
-      expect(await current.evaluate(element => element.tagName)).toBe('SPAN');
-      await expect(page.locator('.lu-ps-grid a')).toHaveCount(5);
-      await page.keyboard.press('Escape');
-      await expect(page.locator('.lu-ps-panel')).toHaveCount(0);
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      await trigger.click();
-      const identity = page.getByRole('link', { name: 'Identity', exact: true });
-      await expect(identity).toHaveAttribute('href', 'https://auth.latere.ai');
-      // Observe the real click and dismissal without navigating to another product.
-      await identity.evaluate(element => element.addEventListener('click', event => event.preventDefault(), { once: true }));
-      await identity.click();
-      await expect(page.locator('.lu-ps-panel')).toHaveCount(0);
-      await expect(page).toHaveURL(/scenario=products/);
     });
   });
 }

@@ -1,4 +1,4 @@
-/* Shared in-app docs styles for DocsLayout.vue. Opt-in entrypoint:
+/* Shared in-app docs styles for DocsLayout. Opt-in entrypoint:
  * `import 'latere-ui/docs'`. Uses the same design tokens as the rest of the
  * library (--text, --bg-surface, --bg-raised, --text-secondary, --text-muted,
  * --border) plus optional --accent, with safe fallbacks. */

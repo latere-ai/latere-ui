@@ -1,5 +1,4 @@
-/* GlassButton: shared by the Vue and React adapters. Load after
- * `latere-ui/glass` (the material layer).
+/* GlassButton. Load after `latere-ui/glass` (the material layer).
  *
  * The control scale is two heights, 32px (md) and 28px (sm), with 13px and
  * 12px labels. A host that sets `--lu-control-height`,

@@ -1,5 +1,4 @@
-/* GlassField — de-scoped from the SFC so the Vue and React adapters share
- * one stylesheet. Load after `latere-ui/glass` (the material layer).
+/* GlassField. Load after `latere-ui/glass` (the material layer).
  * The invalid state anchors on .lu-field so the bare .is-invalid state class
  * cannot leak into global scope. */
 .lu-field { display: flex; flex-direction: column; gap: 5px; }

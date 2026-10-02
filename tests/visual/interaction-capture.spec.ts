@@ -1,9 +1,9 @@
 import { test, expect, visit, sampleSheen } from './fixtures';
 
-for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark']) {
-  test(`${framework} ${theme} fixed sheen sample matches real pointer input and real exit fades`, async ({ page }) => {
+for (const theme of ['light', 'dark']) {
+  test(`${theme} fixed sheen sample matches real pointer input and real exit fades`, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await visit(page, framework, 'effects', theme, '&parity=1');
+    await visit(page, 'effects', theme, '&parity=1');
     const panel = page.locator('[data-lg-sheen]');
     const sheen = panel.locator(':scope > [aria-hidden]');
     await panel.hover({ position: { x: 150, y: 80 } });

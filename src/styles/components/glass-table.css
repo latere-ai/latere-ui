@@ -1,5 +1,4 @@
-/* GlassTable — de-scoped from the SFC so the Vue and React adapters share one
- * stylesheet. Load after `latere-ui/glass`. The th/td element selectors stay
+/* GlassTable. Load after `latere-ui/glass`. The th/td element selectors stay
  * anchored under the lu-prefixed table classes, so global scope is safe. */
 .lu-table-wrap.lu-glass {
   overflow-x: auto;

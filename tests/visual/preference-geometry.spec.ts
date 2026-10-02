@@ -7,13 +7,13 @@ const theme = 'light';
 
 for (const hasTouch of [false, true]) test.describe(hasTouch ? 'touch' : 'pointer', () => {
   test.use({ hasTouch });
-  for (const framework of ['vue', 'react']) for (const design of ['default', ...designs]) {
-    test(`${framework} ${design} preference controls share geometry`, async ({ page }) => {
+  for (const design of ['default', ...designs]) {
+    test(`${design} preference controls share geometry`, async ({ page }) => {
       test.setTimeout(60000);
       for (const width of [320, 1280]) for (const scenario of ['footer', 'footer-compact']) {
         await test.step(`${scenario} at ${width}px`, async () => {
           await page.setViewportSize({ width, height: 900 });
-          await visit(page, framework, scenario, theme, `&parity=1&design=${design}`);
+          await visit(page, scenario, theme, `&parity=1&design=${design}`);
           expect(await page.evaluate(() => matchMedia('(pointer: coarse)').matches)).toBe(hasTouch);
 
           const themeTrigger = page.locator('.lu-theme-menu .lu-pref-trigger');
@@ -66,8 +66,8 @@ for (const hasTouch of [false, true]) test.describe(hasTouch ? 'touch' : 'pointe
       // menus; guard their equality as well.
       if (!hasTouch) for (const scenario of ['preferences', 'account']) {
         await test.step(scenario, async () => {
-          await visit(page, framework, scenario, theme, `&parity=1&design=${design}`);
-          await prepare(page, framework, scenario);
+          await visit(page, scenario, theme, `&parity=1&design=${design}`);
+          await prepare(page, scenario);
           const groups = page.locator('.lu-ap-row');
           await expect(groups).toHaveCount(2);
           for (const group of await groups.all()) {

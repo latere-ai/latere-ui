@@ -30,8 +30,9 @@
 
 /* ===== Product brand names ===== */
 /* `.drive-brand` outlives the retired Drive console: the platform's Storage
- * section keeps the gold as its accent, so hosts still resolve the class even
- * though no component in this package emits it. */
+ * section keeps the gold as its accent. `.lectio-brand` outlives Lectio's
+ * place in the footer: published posts still set its wordmark. Hosts resolve
+ * both classes even though no component in this package emits them. */
 .cella-brand,
 .wallfacer-brand,
 .lux-brand,

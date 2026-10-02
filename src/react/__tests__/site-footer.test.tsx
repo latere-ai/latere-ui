@@ -1,7 +1,5 @@
-// React SiteFooter. The Vue suite in tests/footer.test.ts is the contract;
-// this file asserts the same behaviors through the React adapter, plus the
-// one thing only a two-adapter package can get wrong: two copies of the mark
-// drifting apart.
+// SiteFooter: the link columns and compact strip, the lead block, the
+// preference menus, link routing and the bundled translations.
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -18,7 +16,7 @@ function mount(props: Partial<SiteFooterProps> = {}) {
 
 const hrefs = (c: Element) => Array.from(c.querySelectorAll('a')).map((a) => a.getAttribute('href'));
 const DESTINATIONS = {
-  applications: ['https://wf.latere.ai/', 'https://lectio.latere.ai/'],
+  applications: ['https://wf.latere.ai/'],
   research: ['https://replichai.latere.ai/'],
   platform: ['https://platform.latere.ai/console', 'https://auth.latere.ai/'],
   company: ['https://latere.ai/about', 'https://latere.ai/blog/why-latere', 'https://latere.ai/blog', 'https://latere.ai/open-source', 'mailto:contact@latere.ai'],
@@ -58,7 +56,7 @@ describe('SiteFooter (React)', () => {
     const { container } = mount();
     const links = Array.from(container.querySelectorAll('.footer-cols a.footer-link'));
     expect(links.filter(a => a.hasAttribute('data-brand')).map(a => [a.textContent, a.getAttribute('data-brand')])).toEqual([
-      ['Wallfacer', 'wallfacer'], ['Lectio', 'lectio'], ['ReplicHAI', 'replichai'], ['Latere Platform', 'platform'],
+      ['Wallfacer', 'wallfacer'], ['ReplicHAI', 'replichai'], ['Latere Platform', 'platform'],
     ]);
     expect(container.querySelector('.footer-cols [class$="-brand"]')).toBeNull();
     expect(links.find(a => a.textContent === 'Identity')!.hasAttribute('data-brand')).toBe(false);
@@ -182,7 +180,7 @@ describe('SiteFooter (React)', () => {
     expect(container.querySelector('.footer-bottom')).toBeNull(); // copyright lives inline
     expect(container.querySelector('.footer-compact-copy')).not.toBeNull();
     const links = container.querySelector('.footer-compact-links')!;
-    for (const name of ['Wallfacer', 'Lectio', 'ReplicHAI', 'Latere Platform', 'Identity', 'Team', 'Impressum']) {
+    for (const name of ['Wallfacer', 'ReplicHAI', 'Latere Platform', 'Identity', 'Team', 'Impressum']) {
       expect(links.textContent).toContain(name);
     }
     expect(container.querySelectorAll('.footer-extra .lu-pref')).toHaveLength(2);
@@ -202,6 +200,15 @@ describe('SiteFooter (React)', () => {
     expect(container.textContent).not.toContain('Drive');
   });
 
+  // Lectio folds into the platform, so Applications lists Wallfacer alone in
+  // both variants and no link carries Lectio's hover gradient.
+  it.each([false, true])('offers no Lectio link (compact=%s)', (compact) => {
+    const { container } = mount({ compact });
+    expect(hrefs(container)).not.toContain('https://lectio.latere.ai/');
+    expect(container.textContent).not.toContain('Lectio');
+    expect(container.querySelector('[data-brand="lectio"], .lectio-brand')).toBeNull();
+  });
+
   // The open source page is a company link, so it carries translated copy in
   // every bundled locale and appears in both variants.
   for (const compact of [false, true]) {
@@ -217,25 +224,12 @@ describe('SiteFooter (React)', () => {
   }
 });
 
-describe('the two logo marks stay one mark', () => {
-  // The only duplicated source in the package: an SVG cannot cross the
-  // template/JSX boundary without a runtime. Compare the path data so an edit
-  // to one adapter that skips the other fails here.
+describe('the footer social row', () => {
+  // The glyphs live in one data module; the component draws no path of its own.
   const read = (p: string) => readFileSync(resolve(process.cwd(), p), 'utf8');
-  const paths = (src: string) => Array.from(src.matchAll(/<path d="([^"]+)"/g)).map((m) => m[1]);
-
-  it('LatereLogoMark.tsx carries the same paths as LatereLogoMark.vue', () => {
-    const vue = paths(read('src/components/LatereLogoMark.vue'));
-    const tsx = paths(read('src/react/LatereLogoMark.tsx'));
-    expect(vue.length).toBe(6);
-    expect(tsx).toEqual(vue);
-  });
-
-  it('both SiteFooter adapters draw the social row from the shared data', () => {
-    for (const file of ['src/components/SiteFooter.vue', 'src/react/SiteFooter.tsx']) {
-      const src = read(file);
-      expect(paths(src), file).toEqual([]);
-      expect(src, file).toContain('FOOTER_SOCIALS');
-    }
+  it('is drawn from the shared data', () => {
+    const src = read('src/react/SiteFooter.tsx');
+    expect(Array.from(src.matchAll(/<path d="([^"]+)"/g))).toEqual([]);
+    expect(src).toContain('FOOTER_SOCIALS');
   });
 });

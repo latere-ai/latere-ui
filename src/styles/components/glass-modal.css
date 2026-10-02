@@ -1,5 +1,4 @@
-/* GlassModal — de-scoped from the SFC so the Vue and React adapters share
- * one stylesheet. Load after `latere-ui/glass` (the material layer). */
+/* GlassModal. Load after `latere-ui/glass` (the material layer). */
 .lu-modal-scrim {
   position: fixed;
   inset: 0;

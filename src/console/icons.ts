@@ -1,6 +1,6 @@
-// Stroke icons for console navigation, as element descriptors both adapters
-// render into one `<svg>` with the same attributes, so Vue and React output
-// the same DOM. Each icon draws on a 24-unit grid with round caps and joins
+// Stroke icons for console navigation, as element descriptors ConsoleIcon
+// renders into one `<svg>` with the same attributes. Each icon draws on a
+// 24-unit grid with round caps and joins
 // and takes its color from `currentColor`.
 //
 // The shapes are Lucide icons (https://lucide.dev), used under the ISC

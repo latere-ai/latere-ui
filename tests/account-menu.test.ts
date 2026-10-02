@@ -2,262 +2,40 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
-import { mount } from '@vue/test-utils';
-import { h } from 'vue';
 
-import { AccountMenu } from '../src';
-import type { Principal } from '../src/session/types';
+// Style contracts of the account menu's shared stylesheet. The rendered
+// behavior is covered in src/react/__tests__/account-menu.test.tsx.
+const css = readFileSync(resolve(process.cwd(), 'src/styles/components/account-menu.css'), 'utf8');
 
-const base: Principal = {
-  principal_id: 'p1',
-  email: 'a@b.c',
-  display_name: 'Ada Lovelace',
-  initials: 'AL',
-  org_id: '',
-  orgs: [],
-};
-
-function mountOpen(principal: Principal | null, placement: 'top-end' | 'bottom-start' = 'top-end') {
-  const w = mount(AccountMenu, {
-    props: { principal, placement },
-    slots: { prefs: () => h('div', { class: 'test-prefs' }, 'THEME+LANG') },
-  });
-  // open the dropdown
-  w.find('.lu-am-trigger').trigger('click');
-  return w;
-}
-
-describe('AccountMenu', () => {
-  it('renders the #prefs slot when open (theme/language survive)', async () => {
-    const w = mountOpen(base);
-    await w.vm.$nextTick();
-    expect(w.find('.test-prefs').exists()).toBe(true);
-    expect(w.text()).toContain('THEME+LANG');
-  });
-
+describe('AccountMenu styles', () => {
   it('org/team initials tiles keep ink-on-accent contrast in both themes', () => {
     // Dark themes flip --accent to a light tone; hardcoded white initials
-    // washed out on the light tile (founder-reported). Ink must be var(--bg).
-    // AccountMenu's styles are de-scoped into the shared component sheet
-    // (react-support v1.27); this contrast contract moved with them.
-    const css = readFileSync(
-      resolve(process.cwd(), 'src/styles/components/account-menu.css'),
-      'utf8',
-    );
+    // washed out on the light tile. Ink must be var(--bg).
     const rule = css.slice(css.indexOf('.lu-am-org-team {'), css.indexOf('.lu-am-org-text'));
     expect(rule).toMatch(/color:\s*var\(--bg/);
     expect(rule).not.toMatch(/color:\s*#fff/);
   });
 
-  it('hides the org section when the principal has no orgs (no lonely Personal)', async () => {
-    const w = mountOpen({ ...base, orgs: [] });
-    await w.vm.$nextTick();
-    expect(w.find('.lu-am-org').exists()).toBe(false);
-    expect(w.text()).not.toContain('Organizations');
-  });
-
-  it('shows the org switcher (Personal + memberships) when orgs exist', async () => {
-    const w = mountOpen({
-      ...base,
-      org_id: 'o1',
-      orgs: [{ id: 'o1', name: 'Org One', slug: 'org-one', owner: true }],
-    });
-    await w.vm.$nextTick();
-    const orgRows = w.findAll('.lu-am-org');
-    // Personal row + one membership row
-    expect(orgRows.length).toBe(2);
-    expect(w.text()).toContain('Org One');
-    expect(w.text()).toContain('Personal');
-  });
-
-  it('emits switch-org when a membership row is clicked', async () => {
-    const w = mountOpen({
-      ...base,
-      org_id: '',
-      orgs: [{ id: 'o1', name: 'Org One' }],
-    });
-    await w.vm.$nextTick();
-    // second .lu-am-org is the membership (first is Personal)
-    await w.findAll('.lu-am-org')[1].trigger('click');
-    expect(w.emitted('switch-org')?.[0]).toEqual(['o1']);
-  });
-
-  it('renders data-driven extraItems styled as menu items', async () => {
-    const w = mount(AccountMenu, {
-      props: {
-        principal: base,
-        extraItems: [
-          { label: 'Admin Panel', href: 'https://auth.test/admin' },
-          { label: 'Deck access', to: '/admin/decks' },
-          { label: 'Do thing', id: 'thing' },
-        ],
-      },
-    });
-    await w.find('.lu-am-trigger').trigger('click');
-    await w.vm.$nextTick();
-    const items = w.findAll('.lu-am-item');
-    const labels = items.map((i) => i.text());
-    expect(labels).toContain('Admin Panel');
-    expect(labels).toContain('Deck access');
-    // href item is an <a> with the url
-    const a = w.find('a.lu-am-item');
-    expect(a.attributes('href')).toBe('https://auth.test/admin');
-    // `to` item emits navigate; `id` item emits item-select
-    const buttons = w.findAll('button.lu-am-item');
-    await buttons.find((b) => b.text() === 'Deck access')!.trigger('click');
-    expect(w.emitted('navigate')?.some((e) => e[0] === '/admin/decks')).toBe(true);
-  });
-
-  it('logged out with no content: trigger is a direct Sign in (no dropdown)', async () => {
-    const w = mount(AccountMenu, { props: { principal: null } });
-    await w.find('.lu-am-trigger').trigger('click');
-    await w.vm.$nextTick();
-    // No dropdown panel, no chevron — clicking signs in directly. The pill
-    // keeps its shape: "?" avatar + a single-line "Sign in" (no org sub-label).
-    expect(w.find('.lu-am-dd').exists()).toBe(false);
-    expect(w.find('.lu-am-chev').exists()).toBe(false);
-    expect(w.find('.lu-am-avatar').text()).toBe('?');
-    expect(w.find('.lu-am-id-name').text()).toBe('Sign in');
-    expect(w.find('.lu-am-id-sub').exists()).toBe(false);
-    expect(w.emitted('login')).toBeTruthy();
-  });
-
-  it('logged out WITH prefs: still opens a dropdown (theme/lang useful)', async () => {
-    const w = mount(AccountMenu, {
-      props: { principal: null },
-      slots: { prefs: () => h('div', { class: 'test-prefs' }, 'PREFS') },
-    });
-    await w.find('.lu-am-trigger').trigger('click');
-    await w.vm.$nextTick();
-    expect(w.find('.lu-am-dd').exists()).toBe(true);
-    expect(w.find('.test-prefs').exists()).toBe(true);
-  });
-
-  it('bottom-start variant marks the menu as opening upward (sidebar fit)', async () => {
-    const w = mountOpen(base, 'bottom-start');
-    await w.vm.$nextTick();
-    expect(w.find('.lu-am-up').exists()).toBe(true);
-    expect(w.find('.lu-am-dd-left').exists()).toBe(true);
-  });
-
   // Regression: the head's `border-bottom` plus the first section's `border-top`
-  // rendered a DOUBLED separator line, because the suppressing rule
-  // `.lu-am-section:first-of-type { border-top: 0 }` is dead — `:first-of-type`
+  // rendered a doubled separator line, because the suppressing rule
+  // `.lu-am-section:first-of-type { border-top: 0 }` is dead: `:first-of-type`
   // matches the first <div> sibling (the head), never a `.lu-am-section`. The
-  // fix drops the head's border-bottom so the first section's border-top is the
-  // single header separator. Guard the CSS so the doubling can't return.
+  // head carries no border-bottom, so the first section's border-top is the
+  // single header separator.
   it('does not declare both a head border-bottom and a dead first-of-type guard', () => {
-    // AccountMenu's styles are de-scoped into the shared component sheet
-    // (react-support v1.27); this regression guard moved with them.
-    const css = readFileSync(
-      resolve(process.cwd(), 'src/styles/components/account-menu.css'),
-      'utf8',
-    );
-    const headRule = css.slice(
-      css.indexOf('.lu-am-head {'),
-      css.indexOf('}', css.indexOf('.lu-am-head {')),
-    );
+    const headRule = css.slice(css.indexOf('.lu-am-head {'), css.indexOf('}', css.indexOf('.lu-am-head {')));
     expect(headRule).not.toContain('border-bottom');
     expect(css).not.toContain('.lu-am-section:first-of-type');
   });
 
   // Regression: the dropdown filled with a single translucent `--glass-bg-thick`
-  // tint and relied on `backdrop-filter` to occlude. When the menu renders inside
-  // a glass nav/sidebar, the ancestor's backdrop-filter neutralizes this panel's
-  // blur, so sharp page text bled through the 0.90 fill. The fix composites the
-  // tint over a solid `--bg-surface` base so occlusion no longer depends on the
-  // blur resolving. Guard that the panel keeps a solid backing.
+  // tint and relied on `backdrop-filter` to occlude. Inside a glass nav or
+  // sidebar, the ancestor's backdrop-filter neutralizes this panel's blur, so
+  // sharp page text bled through the 0.90 fill. The tint is composited over a
+  // solid `--bg-surface` base so occlusion does not depend on the blur.
   it('composites the dropdown tint over a solid surface (occludes without blur)', () => {
-    // AccountMenu's styles are de-scoped into the shared component sheet
-    // (react-support v1.27); this regression guard moved with them.
-    const css = readFileSync(
-      resolve(process.cwd(), 'src/styles/components/account-menu.css'),
-      'utf8',
-    );
-    const ddRule = css.slice(
-      css.indexOf('.lu-am-dd {'),
-      css.indexOf('}', css.indexOf('.lu-am-dd {')),
-    );
-    // The background must include a solid surface base under the glass tint, not
-    // a lone translucent `--glass-bg-thick`.
+    const ddRule = css.slice(css.indexOf('.lu-am-dd {'), css.indexOf('}', css.indexOf('.lu-am-dd {')));
     expect(ddRule).toContain('--bg-surface');
     expect(ddRule).toMatch(/background:[\s\S]*--bg-surface/);
-  });
-});
-
-describe('AccountMenu role badge (shared four-role account model)', () => {
-  it('renders a Platform Admin accent badge and "Individual" subline for a no-org superadmin', () => {
-    const w = mount(AccountMenu, {
-      props: { principal: { ...base, role: 'platform_admin' } },
-    });
-    const badge = w.find('.lu-am-role');
-    expect(badge.exists()).toBe(true);
-    expect(badge.text()).toBe('Platform Admin');
-    expect(badge.classes()).toContain('lu-am-role-platform_admin');
-    // Subline text is the individual descriptor, not "Personal".
-    expect(w.find('.lu-am-id-sub-text').text()).toBe('Individual');
-  });
-
-  it('shows the org name as subline and an Admin badge for an org admin', () => {
-    const w = mount(AccountMenu, {
-      props: { principal: { ...base, org_id: 'o1', org_name: 'Acme', role: 'org_admin' } },
-    });
-    expect(w.find('.lu-am-role').text()).toBe('Admin');
-    expect(w.find('.lu-am-id-sub-text').text()).toBe('Acme');
-  });
-
-  it('shows no badge for a plain individual (subline carries it)', () => {
-    const w = mount(AccountMenu, {
-      props: { principal: { ...base, role: 'individual' } },
-    });
-    expect(w.find('.lu-am-role').exists()).toBe(false);
-    expect(w.find('.lu-am-id-sub-text').text()).toBe('Individual');
-  });
-
-  it('falls back to the legacy Personal subline when no role is set', () => {
-    const w = mount(AccountMenu, { props: { principal: base } });
-    expect(w.find('.lu-am-role').exists()).toBe(false);
-    expect(w.find('.lu-am-id-sub-text').text()).toBe('Personal');
-  });
-
-  // Identity rule R9 (leaf id-09): the badge is decided by the role name.
-  // A principal whose JSON still carries the retired `is_superadmin` flag is
-  // not an administrator, and the menu reads nothing from it.
-  it('ignores a retired is_superadmin flag left on the wire', () => {
-    const legacy = { ...base, is_superadmin: true } as unknown as Principal;
-    const w = mount(AccountMenu, { props: { principal: legacy } });
-    expect(w.find('.lu-am-role').exists()).toBe(false);
-    expect(w.find('.lu-am-id-sub-text').text()).toBe('Personal');
-  });
-
-  it('honors custom role labels', () => {
-    const w = mount(AccountMenu, {
-      props: {
-        principal: { ...base, role: 'platform_admin' },
-        labels: { roles: { platform_admin: '平台管理员' } },
-      },
-    });
-    expect(w.find('.lu-am-role').text()).toBe('平台管理员');
-  });
-});
-
-// The open dropdown header always resolves the identity descriptor (role
-// badge + org/individual context), so a trigger that hides it to stay compact
-// still surfaces it on click.
-describe('AccountMenu dropdown identity descriptor', () => {
-  it('shows the role badge + individual context in the open dropdown', async () => {
-    const w = mountOpen({ ...base, role: 'platform_admin' });
-    await w.vm.$nextTick();
-    const meta = w.find('.lu-am-head-meta');
-    expect(meta.exists()).toBe(true);
-    expect(meta.find('.lu-am-role').text()).toBe('Platform Admin');
-    expect(meta.find('.lu-am-head-context').text()).toBe('Individual');
-  });
-
-  it('shows the org name as context for an org member', async () => {
-    const w = mountOpen({ ...base, org_id: 'o1', org_name: 'Acme', role: 'org_member' });
-    await w.vm.$nextTick();
-    expect(w.find('.lu-am-head-context').text()).toBe('Acme');
-    expect(w.find('.lu-am-head-meta .lu-am-role').text()).toBe('Member');
   });
 });

@@ -1,13 +1,13 @@
 import { test, expect, visit } from './fixtures';
 
-for (const framework of ['vue', 'react']) for (const layout of ['desktop', 'mobile']) {
-  test.describe(`${framework} canonical overlays ${layout}`, () => {
+for (const layout of ['desktop', 'mobile']) {
+  test.describe(`canonical overlays ${layout}`, () => {
     test.beforeEach(async ({ page }) => {
       await page.setViewportSize(layout === 'mobile' ? { width: 390, height: 844 } : { width: 1100, height: 850 });
     });
 
     test('nested modals trap keyboard focus and Escape restores each opener', async ({ page }) => {
-      await visit(page, framework, 'modal', 'light', '&parity=1');
+      await visit(page, 'modal', 'light', '&parity=1');
       const opener = page.getByRole('button', { name: 'Open modal', exact: true });
       await opener.focus(); await opener.press('Enter');
       const outer = page.getByRole('dialog', { name: 'Workspace settings', exact: true });
@@ -34,7 +34,7 @@ for (const framework of ['vue', 'react']) for (const layout of ['desktop', 'mobi
 
     for (const side of ['left', 'right']) test(`${side} drawer keeps its keyboard actions reachable in a short viewport`, async ({ page }) => {
       await page.setViewportSize({ width: layout === 'mobile' ? 390 : 1100, height: 420 });
-      await visit(page, framework, `drawer-${side}`, 'light', '&parity=1');
+      await visit(page, `drawer-${side}`, 'light', '&parity=1');
       const opener = page.getByRole('button', { name: 'Open drawer' });
       await opener.click();
       const drawer = page.getByRole('dialog', { name: 'Workspace details' });
@@ -56,7 +56,7 @@ for (const framework of ['vue', 'react']) for (const layout of ['desktop', 'mobi
     });
 
     test('popover skips disabled menu actions and restores trigger focus on Escape', async ({ page }) => {
-      await visit(page, framework, 'popover', 'light', '&parity=1');
+      await visit(page, 'popover', 'light', '&parity=1');
       const opener = page.getByRole('button', { name: 'Open menu', exact: true });
       await opener.focus(); await opener.press('Enter');
       const unavailable = page.getByRole('menuitem', { name: 'Unavailable' });
@@ -96,7 +96,7 @@ for (const framework of ['vue', 'react']) for (const layout of ['desktop', 'mobi
     });
 
     test('tooltips appear for pointer and keyboard focus and disappear on departure', async ({ page }) => {
-      await visit(page, framework, 'tooltip', 'light', '&parity=1');
+      await visit(page, 'tooltip', 'light', '&parity=1');
       const top = page.getByRole('button', { name: 'Top tooltip' });
       const topTip = page.getByRole('tooltip', { name: 'Copy workspace link' });
       const bottom = page.getByRole('button', { name: 'Bottom tooltip' });
@@ -113,7 +113,7 @@ for (const framework of ['vue', 'react']) for (const layout of ['desktop', 'mobi
     });
 
     test('notification roles and independent dismissal preserve remaining messages', async ({ page }) => {
-      await visit(page, framework, 'toast', 'light', '&parity=1');
+      await visit(page, 'toast', 'light', '&parity=1');
       const show = page.getByRole('button', { name: 'Show notifications' });
       await show.click();
       const region = page.getByRole('region', { name: 'Notifications' });
@@ -132,7 +132,7 @@ for (const framework of ['vue', 'react']) for (const layout of ['desktop', 'mobi
     });
 
     test('confirm cancellation and acceptance restore focus and permit subsequent requests', async ({ page }) => {
-      await visit(page, framework, 'confirm', 'light', '&parity=1');
+      await visit(page, 'confirm', 'light', '&parity=1');
       const opener = page.locator('#stage').getByRole('button', { name: 'Delete workspace', exact: true });
       const dialog = page.getByRole('dialog', { name: 'Delete workspace?', exact: true });
       const result = page.locator('[data-component=GlassConfirmHost]');

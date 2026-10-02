@@ -1,5 +1,5 @@
-// Basic React adapters. Re-exported by the public React entrypoint.
-export { GlassSurface, type GlassSurfaceProps } from './GlassSurface';
+// Basic components. Re-exported by the package entry.
+export { GlassSurface, glassClass, type GlassSurfaceProps } from './GlassSurface';
 export { GlassIconButton, type GlassIconButtonProps } from './GlassIconButton';
 export { GlassSwitch, type GlassSwitchProps } from './GlassSwitch';
 export { GlassRadio, type GlassRadioProps } from './GlassRadio';

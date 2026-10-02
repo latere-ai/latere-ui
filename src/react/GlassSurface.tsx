@@ -1,14 +1,16 @@
-// Base Liquid Glass primitive, React adapter of GlassSurface.vue.
-// The tier map is duplicated from
-// glass/useGlass.ts because that module imports `vue`, which a React host
-// does not install.
+// Base Liquid Glass primitive: an element painted with one material tier.
 //
 // Requires the material CSS: `import 'latere-ui/glass'` once in the app.
 import type { ComponentPropsWithoutRef, ElementType, ReactNode } from 'react';
 import '../styles/components/glass-surface.css';
 import { cx } from './internal';
 
-/** Material depth ladder — see glass/useGlass.ts, the Vue-side source. */
+/**
+ * Material tiers, picked by prominence: `ultrathin` (chips, badges, search,
+ * hover), `thin` (nav, pills, bars), `regular` (cards, panels, sidebar),
+ * `thick` (modals, popovers, palettes), `smoke` (ink glass for primary buttons
+ * and inverse emphasis). See `glass.css`.
+ */
 export type GlassTier = 'ultrathin' | 'thin' | 'regular' | 'thick' | 'smoke';
 
 const TIER_CLASS: Record<GlassTier, string> = {

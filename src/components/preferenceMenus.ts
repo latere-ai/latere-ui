@@ -1,6 +1,5 @@
 // Framework-free model of the theme and language menus: glyphs, default
-// labels and the menu items both adapters render. Kept in a .ts module so the
-// Vue SFCs and the React components cannot drift on what the menus offer.
+// labels and the menu items ThemeMenu and LocaleMenu render.
 import type { Theme, LocaleOption } from '../i18n/footer';
 import type { MenuItem } from '../glass/types';
 

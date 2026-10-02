@@ -1,15 +1,12 @@
 // Overlay layering: a confirm raised while a content modal is open must
-// paint above it, and toasts above everything. Both teleported scrims carry
+// paint above it, and toasts above everything. Both portaled scrims carry
 // z-index 1000 historically, so DOM order decided — the earlier-mounted
 // confirm host lost and was fully occluded (drive's share-dialog revoke).
+// The confirm host's scrim class is checked in
+// src/react/__tests__/overlay-parity.test.tsx.
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { mount } from '@vue/test-utils';
-import { nextTick } from 'vue';
-
-import GlassConfirmHost from '../src/components/GlassConfirmHost.vue';
-import { confirm, resolveConfirm } from '../src/glass/confirm';
 
 const read = (p: string) => readFileSync(resolve(process.cwd(), p), 'utf8');
 
@@ -33,25 +30,11 @@ describe('overlay layering scale', () => {
   });
 
   it('every floating surface reads the scale (no hardcoded z-index)', () => {
-    // GlassModal's styles are de-scoped into the shared component sheet
-    // (react-support v1.27); the layering contract moved with them.
     expect(read('src/styles/components/glass-modal.css')).toMatch(/z-index:\s*var\(--lu-z-modal/);
     expect(read('src/styles/components/glass-modal.css')).toMatch(/scrim--confirm\s*\{\s*z-index:\s*var\(--lu-z-confirm/);
     expect(read('src/styles/components/glass-toaster.css')).toMatch(/z-index:\s*var\(--lu-z-toast/);
     expect(read('src/styles/components/glass-popover.css')).toMatch(/z-index:\s*var\(--lu-z-popover/);
     expect(read('src/styles/components/glass-tooltip.css')).toMatch(/z-index:\s*var\(--lu-z-tooltip/);
     expect(read('src/styles/components/glass-drawer.css')).toMatch(/z-index:\s*var\(--lu-z-modal/);
-  });
-
-  it('GlassConfirmHost renders its modal on the confirm layer', async () => {
-    const w = mount(GlassConfirmHost, { attachTo: document.body });
-    const p = confirm({ message: 'sure?' });
-    await nextTick();
-    const scrim = document.body.querySelector('.lu-modal-scrim');
-    expect(scrim).not.toBeNull();
-    expect(scrim!.classList.contains('lu-modal-scrim--confirm')).toBe(true);
-    resolveConfirm(false);
-    await expect(p).resolves.toBe(false);
-    w.unmount();
   });
 });

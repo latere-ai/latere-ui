@@ -5,12 +5,12 @@ import { designs } from './design-manifest';
 // token, so these checks run in the light theme.
 const theme = 'light';
 
-for (const framework of ['vue', 'react']) for (const design of ['default', ...designs]) {
-  test(`${framework} ${design} account identity separates name from metadata`, async ({ page }) => {
+for (const design of ['default', ...designs]) {
+  test(`${design} account identity separates name from metadata`, async ({ page }) => {
     test.setTimeout(60000);
     for (const width of [390, 768, 1280]) for (const scenario of ['account', 'sidebar']) {
       await page.setViewportSize({ width, height: 850 });
-      await visit(page, framework, scenario, theme, `&parity=1&design=${design}&accountIdentity=true`);
+      await visit(page, scenario, theme, `&parity=1&design=${design}&accountIdentity=true`);
       const identity = page.locator('.lu-am-id').first();
       if (scenario === 'account' && width === 390) {
         await expect(identity).toBeHidden();
@@ -25,7 +25,7 @@ for (const framework of ['vue', 'react']) for (const design of ['default', ...de
       expect.soft(trigger.y + trigger.height - metadata.y - metadata.height).toBeGreaterThanOrEqual(4);
       expect.soft(metadata.x + metadata.width).toBeLessThanOrEqual(trigger.x + trigger.width);
       if (scenario === 'sidebar') {
-        await visit(page, framework, 'sidebar-collapsed', theme, `&parity=1&design=${design}&accountIdentity=true`);
+        await visit(page, 'sidebar-collapsed', theme, `&parity=1&design=${design}&accountIdentity=true`);
         await expect(identity).toBeHidden();
       } else {
         await page.locator('.lu-am-trigger').first().click();

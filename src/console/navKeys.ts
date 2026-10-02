@@ -1,5 +1,5 @@
-// Arrow-key movement through the console sidebar's rows, shared by the Vue
-// and React adapters. It reads the rendered rows rather than the model, so it
+// Arrow-key movement through the console sidebar's rows. It reads the
+// rendered rows rather than the model, so it
 // follows exactly what the viewer sees: folded children are inside a
 // `[hidden]` group and are skipped, disabled rows are skipped, and the order
 // is document order. Tab still moves through the rail as usual.

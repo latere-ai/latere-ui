@@ -1,5 +1,4 @@
-// React port of tests/console-sidebar.test.ts, minus the ProductSwitcher
-// cases (ProductSwitcher.vue is not in the v1.27 React ported set).
+// The ConsoleSidebar's rows, brand, collapse state, search and render props.
 import { fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -26,9 +25,9 @@ const model: ConsoleNavModel = {
 
 // Stands in for a real router's `Link`: forwards `to` as `data-rl` (so tests
 // can assert on it) and spreads everything else onto the anchor — className,
-// title, onClick, children — the way react-router's `Link` does. Unlike Vue,
-// React has no automatic attrs-fallthrough onto a child component's root
-// element, so a router-link stub must forward these explicitly.
+// title, onClick, children, the way react-router's `Link` does. React has no
+// automatic attribute fallthrough onto a child component's root element, so a
+// router-link stub must forward these explicitly.
 function RouterLinkStub({
   to,
   children,

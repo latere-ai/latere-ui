@@ -1,4 +1,4 @@
-// React adapter of GlassBar.vue — a horizontal chrome bar (top strip, toolbar,
+// GlassBar: a horizontal chrome bar (top strip, toolbar,
 // section header) on regular-tier glass, safe to lay over scrolling content.
 import type { ReactNode } from 'react';
 import '../styles/components/glass-bar.css';

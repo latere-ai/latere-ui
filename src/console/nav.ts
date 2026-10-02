@@ -1,11 +1,8 @@
 // Headless console-navigation model. Holds the data shape every product
 // console already uses (a list of grouped nav items) plus the pure
-// partition/flatten/disabled helpers. No DOM, no router, no framework runtime
-// import — both the Vue adapter (src/components/ConsoleSidebar.vue) and the
-// React adapter (src/react/ConsoleSidebar.tsx) value-import this module
-// directly, so it must stay import-clean of `vue`. The one piece of the
-// original console-nav primitive that held Vue state — the uncontrolled
-// collapse ref — lives in `./collapse` instead (react-support v1.27).
+// partition/flatten/disabled helpers. No DOM, no router, no framework
+// runtime import: ConsoleSidebar (src/react/ConsoleSidebar.tsx) and hosts
+// value-import it directly.
 //
 // lux, agents and wallfacer each independently arrived at
 // `groups: { group, items: NavItem[] }[]`; this is that shape, unified.

@@ -1,4 +1,4 @@
-// React adapter of GlassSelect.vue: a custom dropdown select, a thin-glass
+// GlassSelect: a custom dropdown select, a thin-glass
 // trigger over a thick-glass menu that holds a listbox. With more than
 // SELECT_SEARCH_THRESHOLD options, or with `searchable`, the menu opens with a
 // search field at its top that filters the options as the reader types.

@@ -2,7 +2,7 @@
 
 These PNGs are the expected renders used by the browser suite. Chromium renders them on macOS 15 at 2× browser resolution, as on a high-density display. The same fixtures are interactive in the local gallery (`bun run visual:dev`). See [Contributing](../CONTRIBUTING.md) for comparison and update commands.
 
-Every visual component renders in light and dark themes at desktop and mobile widths. Vue and React must render each sheet with identical decoded RGBA pixels before its reference is compared or recorded, so each figure shows both adapters.
+Every visual component renders in light and dark themes at desktop and mobile widths. Each figure is compared with exact decoded RGBA equality, with no channel or antialiasing tolerance.
 
 ## Components
 
@@ -27,7 +27,6 @@ Every visual component renders in light and dark themes at desktop and mobile wi
 | docs | DocsLayout | [View](../tests/visual/goldens/darwin-24/docs-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/docs-dark-desktop.png) | [Light](../tests/visual/goldens/darwin-24/docs-light-mobile.png) · [Dark](../tests/visual/goldens/darwin-24/docs-dark-mobile.png) |
 | account | AccountMenu, AccountPrefs | [View](../tests/visual/goldens/darwin-24/account-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/account-dark-desktop.png) | [Light](../tests/visual/goldens/darwin-24/account-light-mobile.png) · [Dark](../tests/visual/goldens/darwin-24/account-dark-mobile.png) |
 | preferences | AccountPrefs, ThemeMenu, LocaleMenu | [View](../tests/visual/goldens/darwin-24/preferences-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/preferences-dark-desktop.png) | [Light](../tests/visual/goldens/darwin-24/preferences-light-mobile.png) · [Dark](../tests/visual/goldens/darwin-24/preferences-dark-mobile.png) |
-| products | ProductSwitcher | [View](../tests/visual/goldens/darwin-24/products-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/products-dark-desktop.png) | [Light](../tests/visual/goldens/darwin-24/products-light-mobile.png) · [Dark](../tests/visual/goldens/darwin-24/products-dark-mobile.png) |
 | organizations | OrgSwitcher | [View](../tests/visual/goldens/darwin-24/organizations-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/organizations-dark-desktop.png) | [Light](../tests/visual/goldens/darwin-24/organizations-light-mobile.png) · [Dark](../tests/visual/goldens/darwin-24/organizations-dark-mobile.png) |
 | footer | SiteFooter | [View](../tests/visual/goldens/darwin-24/footer-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/footer-dark-desktop.png) | [Light](../tests/visual/goldens/darwin-24/footer-light-mobile.png) · [Dark](../tests/visual/goldens/darwin-24/footer-dark-mobile.png) |
 | footer-compact | SiteFooter | [View](../tests/visual/goldens/darwin-24/footer-compact-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/footer-compact-dark-desktop.png) | [Light](../tests/visual/goldens/darwin-24/footer-compact-light-mobile.png) · [Dark](../tests/visual/goldens/darwin-24/footer-compact-dark-mobile.png) |
@@ -61,7 +60,6 @@ Real components rendered with the optional `latere-ui/presets` stylesheet, in bo
 | docs | DocsLayout | [View](../tests/visual/goldens/darwin-24/replichai-docs-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-docs-dark-desktop.png) | — |
 | account | AccountMenu, AccountPrefs | [View](../tests/visual/goldens/darwin-24/replichai-account-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-account-dark-desktop.png) | — |
 | preferences | AccountPrefs, ThemeMenu, LocaleMenu | [View](../tests/visual/goldens/darwin-24/replichai-preferences-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-preferences-dark-desktop.png) | — |
-| products | ProductSwitcher | [View](../tests/visual/goldens/darwin-24/replichai-products-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-products-dark-desktop.png) | — |
 | organizations | OrgSwitcher | [View](../tests/visual/goldens/darwin-24/replichai-organizations-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-organizations-dark-desktop.png) | — |
 | footer | SiteFooter | [View](../tests/visual/goldens/darwin-24/replichai-footer-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-footer-dark-desktop.png) | — |
 | footer-compact | SiteFooter | [View](../tests/visual/goldens/darwin-24/replichai-footer-compact-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-footer-compact-dark-desktop.png) | — |
@@ -91,7 +89,6 @@ Real components rendered with the optional `latere-ui/presets` stylesheet, in bo
 | docs | DocsLayout | [View](../tests/visual/goldens/darwin-24/wallfacer-docs-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-docs-dark-desktop.png) | — |
 | account | AccountMenu, AccountPrefs | [View](../tests/visual/goldens/darwin-24/wallfacer-account-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-account-dark-desktop.png) | — |
 | preferences | AccountPrefs, ThemeMenu, LocaleMenu | [View](../tests/visual/goldens/darwin-24/wallfacer-preferences-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-preferences-dark-desktop.png) | — |
-| products | ProductSwitcher | [View](../tests/visual/goldens/darwin-24/wallfacer-products-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-products-dark-desktop.png) | — |
 | organizations | OrgSwitcher | [View](../tests/visual/goldens/darwin-24/wallfacer-organizations-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-organizations-dark-desktop.png) | — |
 | footer | SiteFooter | [View](../tests/visual/goldens/darwin-24/wallfacer-footer-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-footer-dark-desktop.png) | — |
 | footer-compact | SiteFooter | [View](../tests/visual/goldens/darwin-24/wallfacer-footer-compact-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-footer-compact-dark-desktop.png) | — |
@@ -121,7 +118,6 @@ Real components rendered with the optional `latere-ui/presets` stylesheet, in bo
 | docs | DocsLayout | [View](../tests/visual/goldens/darwin-24/origo-docs-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-docs-dark-desktop.png) | — |
 | account | AccountMenu, AccountPrefs | [View](../tests/visual/goldens/darwin-24/origo-account-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-account-dark-desktop.png) | — |
 | preferences | AccountPrefs, ThemeMenu, LocaleMenu | [View](../tests/visual/goldens/darwin-24/origo-preferences-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-preferences-dark-desktop.png) | — |
-| products | ProductSwitcher | [View](../tests/visual/goldens/darwin-24/origo-products-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-products-dark-desktop.png) | — |
 | organizations | OrgSwitcher | [View](../tests/visual/goldens/darwin-24/origo-organizations-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-organizations-dark-desktop.png) | — |
 | footer | SiteFooter | [View](../tests/visual/goldens/darwin-24/origo-footer-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-footer-dark-desktop.png) | — |
 | footer-compact | SiteFooter | [View](../tests/visual/goldens/darwin-24/origo-footer-compact-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-footer-compact-dark-desktop.png) | — |
@@ -146,8 +142,6 @@ Additional figures cover focus, hover, nested dialogs, keyboard selection, popov
 - [effects-light-reduced-transparency](../tests/visual/goldens/darwin-24/effects-light-reduced-transparency.png)
 - [origo-react-buttons-states-dark](../tests/visual/goldens/darwin-24/origo-react-buttons-states-dark.png)
 - [origo-react-buttons-states-light](../tests/visual/goldens/darwin-24/origo-react-buttons-states-light.png)
-- [origo-vue-buttons-states-dark](../tests/visual/goldens/darwin-24/origo-vue-buttons-states-dark.png)
-- [origo-vue-buttons-states-light](../tests/visual/goldens/darwin-24/origo-vue-buttons-states-light.png)
 - [palette-empty-dark](../tests/visual/goldens/darwin-24/palette-empty-dark.png)
 - [palette-empty-light](../tests/visual/goldens/darwin-24/palette-empty-light.png)
 - [palette-filtered-dark](../tests/visual/goldens/darwin-24/palette-filtered-dark.png)
@@ -168,20 +162,12 @@ Additional figures cover focus, hover, nested dialogs, keyboard selection, popov
 - [react-select-open-light](../tests/visual/goldens/darwin-24/react-select-open-light.png)
 - [replichai-react-buttons-states-dark](../tests/visual/goldens/darwin-24/replichai-react-buttons-states-dark.png)
 - [replichai-react-buttons-states-light](../tests/visual/goldens/darwin-24/replichai-react-buttons-states-light.png)
-- [replichai-vue-buttons-states-dark](../tests/visual/goldens/darwin-24/replichai-vue-buttons-states-dark.png)
-- [replichai-vue-buttons-states-light](../tests/visual/goldens/darwin-24/replichai-vue-buttons-states-light.png)
 - [tooltip-bottom-dark](../tests/visual/goldens/darwin-24/tooltip-bottom-dark.png)
 - [tooltip-bottom-light](../tests/visual/goldens/darwin-24/tooltip-bottom-light.png)
 - [tooltip-reduced-transparency-dark](../tests/visual/goldens/darwin-24/tooltip-reduced-transparency-dark.png)
 - [tooltip-reduced-transparency-light](../tests/visual/goldens/darwin-24/tooltip-reduced-transparency-light.png)
-- [vue-modal-nested-dark](../tests/visual/goldens/darwin-24/vue-modal-nested-dark.png)
-- [vue-modal-nested-light](../tests/visual/goldens/darwin-24/vue-modal-nested-light.png)
-- [vue-select-filtered-dark](../tests/visual/goldens/darwin-24/vue-select-filtered-dark.png)
-- [vue-select-filtered-light](../tests/visual/goldens/darwin-24/vue-select-filtered-light.png)
 - [wallfacer-react-buttons-states-dark](../tests/visual/goldens/darwin-24/wallfacer-react-buttons-states-dark.png)
 - [wallfacer-react-buttons-states-light](../tests/visual/goldens/darwin-24/wallfacer-react-buttons-states-light.png)
-- [wallfacer-vue-buttons-states-dark](../tests/visual/goldens/darwin-24/wallfacer-vue-buttons-states-dark.png)
-- [wallfacer-vue-buttons-states-light](../tests/visual/goldens/darwin-24/wallfacer-vue-buttons-states-light.png)
 - [workspace-dark-laptop-large](../tests/visual/goldens/darwin-24/workspace-dark-laptop-large.png)
 - [workspace-dark-laptop](../tests/visual/goldens/darwin-24/workspace-dark-laptop.png)
 - [workspace-dark-studio](../tests/visual/goldens/darwin-24/workspace-dark-studio.png)

@@ -2,19 +2,19 @@ import { test, expect, visit } from './fixtures';
 import { designs } from './design-manifest';
 
 const COLUMNS = [
-  ['https://wf.latere.ai/', 'https://lectio.latere.ai/'],
+  ['https://wf.latere.ai/'],
   ['https://replichai.latere.ai/'],
   ['https://platform.latere.ai/console', 'https://auth.latere.ai/'],
   ['/about', '/blog/why-latere', '/blog', '/open-source', 'mailto:contact@latere.ai'],
   ['/legal/privacy', '/legal/terms', '/legal/impressum'],
 ];
 
-for (const framework of ['vue', 'react']) for (const design of ['default', ...designs]) for (const theme of ['light', 'dark']) {
-  test(`${framework} ${design} ${theme} footer columns and lead`, async ({ page }) => {
+for (const design of ['default', ...designs]) for (const theme of ['light', 'dark']) {
+  test(`${design} ${theme} footer columns and lead`, async ({ page }) => {
     test.setTimeout(60000);
     for (const width of [320, 390, 768, 1280]) await test.step(`${width}px`, async () => {
       await page.setViewportSize({ width, height: 900 });
-      await visit(page, framework, 'footer', theme, `&parity=1&design=${design}`);
+      await visit(page, 'footer', theme, `&parity=1&design=${design}`);
       const groups = page.locator('.footer-cols [data-footer-group]');
       await expect(groups).toHaveCount(5);
       await expect(page.locator('.footer-cols > .footer-col')).toHaveCount(4);
@@ -94,9 +94,9 @@ for (const framework of ['vue', 'react']) for (const design of ['default', ...de
     });
   });
 
-  test(`${framework} ${design} ${theme} footer links: plain at rest, product gradient under pointer and focus`, async ({ page }) => {
+  test(`${design} ${theme} footer links: plain at rest, product gradient under pointer and focus`, async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
-    await visit(page, framework, 'footer', theme, `&parity=1&design=${design}`);
+    await visit(page, 'footer', theme, `&parity=1&design=${design}`);
     const links = page.locator('.footer-cols a.footer-link');
     const rest = await links.first().evaluate(el => getComputedStyle(el).color);
     for (const link of await links.all()) {
@@ -105,7 +105,7 @@ for (const framework of ['vue', 'react']) for (const design of ['default', ...de
       await expect(link).toHaveCSS('font-style', 'normal');
       await expect(link).toHaveCSS('color', rest);
     }
-    for (const slug of ['wallfacer', 'lectio', 'replichai', 'platform']) {
+    for (const slug of ['wallfacer', 'replichai', 'platform']) {
       const link = page.locator(`.footer-link[data-brand="${slug}"]`);
       await link.hover();
       await expect(link).toHaveCSS('background-image', /linear-gradient/);
@@ -123,10 +123,10 @@ for (const framework of ['vue', 'react']) for (const design of ['default', ...de
     expect(await plain.evaluate(el => getComputedStyle(el).color)).not.toBe(rest);
   });
 
-  test(`${framework} ${design} ${theme} compact footer keeps the product groups`, async ({ page }) => {
+  test(`${design} ${theme} compact footer keeps the product groups`, async ({ page }) => {
     for (const width of [320, 1280]) {
       await page.setViewportSize({ width, height: 900 });
-      await visit(page, framework, 'footer-compact', theme, `&parity=1&design=${design}`);
+      await visit(page, 'footer-compact', theme, `&parity=1&design=${design}`);
       const groups = page.locator('[data-footer-group]');
       await expect(groups).toHaveCount(3);
       await expect(groups.locator('.footer-group-title')).toHaveText(['Applications', 'Research', 'Platform']);

@@ -6,10 +6,10 @@ For frontend developers building with `latere-ui`.
 
 | Page | |
 |---|---|
-| [Design guide](design-system.md) | choosing a material, sizing a layout, the appearance presets and their fonts, composing a screen, and optical effects |
-| [Integration guide](api-guide.md) | imports, footer props, the console sidebar, the documentation layout, glass materials, the session contract, browser telemetry, structured data for search engines and agents, and the React adapters |
-| [React shell](react-shell.md) | the React command palette, product switcher, account preferences, organization chooser, and documentation layout |
-| [Visual reference](visual-reference.md) | every component's golden figure by framework, appearance, theme, and viewport |
+| [Design guide](design-system.md) | choosing a material, sizing a layout, the appearance presets and their fonts, the ink palette, composing a screen, and optical effects |
+| [Integration guide](api-guide.md) | imports, footer props, the favicon, the console sidebar, the documentation layout, glass materials and components, the session contract, browser telemetry, and structured data for search engines and agents |
+| [Console and account components](react-shell.md) | the command palette, account preferences, organization chooser, and documentation layout |
+| [Visual reference](visual-reference.md) | every component's golden figure by appearance, theme, and viewport |
 
 Installation and a first component are in the [README](../README.md). What
 changed in each release is in the [changelog](../CHANGELOG.md).

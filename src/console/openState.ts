@@ -1,5 +1,5 @@
-// Which parent rows of the console sidebar are open. Both adapters keep the
-// same map, so the rule lives here: a parent the viewer has opened or closed
+// Which parent rows of the console sidebar are open. The rule lives apart
+// from the component so it is tested alone: a parent the viewer has opened or closed
 // keeps that choice, one they have not touched is open exactly when it holds
 // the current page, and arriving at a page opens every parent above it. The
 // map persists per viewer in localStorage under a host-chosen key; storage

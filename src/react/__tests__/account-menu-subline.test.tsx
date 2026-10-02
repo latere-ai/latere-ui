@@ -1,5 +1,5 @@
-// The React account menu's text subline. tests/account-menu-subline-vue.test.ts
-// holds the Vue twin.
+// The account menu's text and role sublines, on the trigger and in the
+// dropdown header.
 import { fireEvent, render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 

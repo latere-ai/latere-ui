@@ -6,7 +6,7 @@ import { GlassBar } from '../GlassBar';
 import { GlassTable } from '../GlassTable';
 
 describe('GlassPanel (react)', () => {
-  it('renders a regular-glass surface with the Vue-identical classes', () => {
+  it('renders a regular-glass surface', () => {
     const { container } = render(<GlassPanel>P</GlassPanel>);
     const el = container.firstElementChild!;
     expect(el.tagName).toBe('DIV');

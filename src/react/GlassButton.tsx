@@ -1,4 +1,4 @@
-// React adapter of GlassButton.vue — a glass action control. Capsule-shaped;
+// GlassButton: a glass action control. Capsule-shaped;
 // the default variant is thin glass, `primary` is smoked ink glass, `danger`
 // destructive. Requires `import 'latere-ui/glass'`.
 import type { MouseEvent, ReactNode } from 'react';
@@ -13,7 +13,7 @@ export interface GlassButtonProps {
   disabled?: boolean;
   /** Native button type; defaults to "button" so it never submits by accident. */
   type?: 'button' | 'submit' | 'reset';
-  /** Leading icon — the `icon` slot of the Vue component. */
+  /** Leading icon, set before the label. */
   icon?: ReactNode;
   children?: ReactNode;
   onClick?: (ev: MouseEvent<HTMLButtonElement>) => void;

@@ -1,8 +1,7 @@
-// Vanilla async core tests. The functions in src/session/me.ts must behave
-// identically to the analogous Pinia-store actions: me() returns null on
-// 401/404, switchOrg POSTs then follows the response or bounces, logout/login
-// navigate. Coverage here lets the store later delegate to this module
-// without losing behavior.
+// Framework-free session core tests. The functions in src/session/me.ts back
+// the React SessionProvider and any host that keeps its own store: me()
+// returns null on 401/404, switchOrg POSTs then follows the response or
+// bounces, logout/login navigate.
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -195,7 +194,7 @@ describe('logout() / login()', () => {
 // `is_superadmin` flag is not a key of the shared principal, so a product
 // cannot keep reading it through the shared type. This guard is a typecheck
 // assertion: with the key back on `Principal` the assignment is legal and the
-// directive below is unused, which fails `vue-tsc`.
+// directive below is unused, which fails the typecheck.
 describe('Principal shape', () => {
   it('carries no is_superadmin key; the role channel is `role`', () => {
     // @ts-expect-error id-09: the retired flag is not part of `Principal`.
