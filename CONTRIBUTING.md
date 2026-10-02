@@ -36,8 +36,8 @@ bunx playwright install chromium
 bun run visual:dev
 ```
 
-Open <http://127.0.0.1:4173>. Choose an appearance, framework, component sheet, and theme.
-Each page mounts source components with local fonts and fixed sample content. Canonical comparisons use `VueGallery.vue` and `ReactParityGallery.tsx`, with fixture data shared in `parity-data.ts`; the `parity=1` query selects those React examples.
+Open <http://127.0.0.1:4173>. Choose an appearance, component sheet, and theme.
+Each page mounts source components with local fonts and fixed sample content. `tests/visual/main.ts` reads the query: `?scenario=<sheet>&theme=<light|dark>&parity=1` mounts `ReactParityGallery.tsx`, the reference examples every component figure records, with fixture data in `parity-data.ts`; without `parity=1` it mounts `ReactGallery.tsx`, a second set of examples captioned "react / …". Add `&design=<appearance>` for a product appearance.
 The gallery is a development fixture; it is not included in the published package.
 
 ## Compare visual references
@@ -54,7 +54,7 @@ its Darwin major. The committed set is `darwin-24`: macOS 15, as the hosted CI
 runner renders it. The README and design guide embed these same files.
 Chromium is installed by the pinned Playwright version. CoreText and blur
 rendering can differ between macOS releases, so a run on another release has
-no references to compare against; record and compare on the CI runner. Every compared render uses the Chromium arguments in `tests/visual/reference-settings.ts`: grayscale text antialiasing, and each composited layer up to 4096 device pixels rasterized as one tile. With Chromium's default 256-pixel tiles, the hosted runner drew the edges of stroke icons in a tiled layer with one of two pixel patterns from render to render. A change to these arguments needs a reviewed regeneration, like a browser or font upgrade. Comparisons decode PNGs and require equal dimensions and every RGBA channel to match exactly. There is no channel threshold, antialiasing exclusion, pixel allowance, mask, or adapter-specific tolerance; PNG compression differences do not count as visual changes.
+no references to compare against; record and compare on the CI runner. Every compared render uses the Chromium arguments in `tests/visual/reference-settings.ts`: grayscale text antialiasing, and each composited layer up to 4096 device pixels rasterized as one tile. With Chromium's default 256-pixel tiles, the hosted runner drew the edges of stroke icons in a tiled layer with one of two pixel patterns from render to render. A change to these arguments needs a reviewed regeneration, like a browser or font upgrade. Comparisons decode PNGs and require equal dimensions and every RGBA channel to match exactly. There is no channel threshold, antialiasing exclusion, pixel allowance, or mask; PNG compression differences do not count as visual changes.
 The viewport is 1100 × 850 for default desktop sheets (1280 × 850 for three-column docs
 and product appearances) and 390 × 844 for mobile in CSS pixels. Captures render at 2×,
 as on a high-density display, and retain device pixels. A standard desktop
@@ -63,13 +63,13 @@ Fonts are bundled locally;
 media preferences are explicit, with dedicated accessibility scenarios.
 No backend, remote images, or web font service is needed.
 
-Golden tests use the `goldenTest` fixture from `tests/visual/fixtures.ts`. Each test launches and closes its own Chromium process so paint caches do not carry over from earlier examples; its Vue and React renders still share the same fresh page. Configured fonts, DPR, viewport, browser arguments and tracing remain in effect. Use the ordinary `test` fixture for behavior checks that do not need a committed visual reference.
+Golden tests use the `goldenTest` fixture from `tests/visual/fixtures.ts`. Each test launches and closes its own Chromium process so paint caches do not carry over from earlier examples. Configured fonts, DPR, viewport, browser arguments and tracing remain in effect. Use the ordinary `test` fixture for behavior checks that do not need a committed visual reference.
 
-Each capture waits for finite transitions to finish, pauses looping animations at their first frame, hides the text caret, and requires two identical decoded RGBA images. It restores the previous animation state afterward. Avoid Playwright's global animation override: repeated SVG captures exposed raster differences with that override. For every scenario, the suite compares Vue directly with React before checking the scenario's one committed golden, which therefore covers both adapters. Explicit recording cannot bypass this adapter parity check.
+Each capture waits for finite transitions to finish, pauses looping animations at their first frame, hides the text caret, and requires two identical decoded RGBA images. It restores the previous animation state afterward. Avoid Playwright's global animation override: repeated SVG captures exposed raster differences with that override. The figure matrix (`tests/visual/design-goldens.spec.ts`) captures each sheet once from the reference gallery and compares that capture with the sheet's one committed golden; tests open a sheet with `visit(page, scenario, theme?, extra?)`, passing `&parity=1` in `extra` for the reference examples.
 
 Optical figures send a fixed pointer sample through the component's mouse handler, with the native cursor outside the panel. Native full-page captures can temporarily resize Chromium to 1×1 and dispatch an unrelated mouse-leave event. The fixture avoids that input disturbance; capture also checks the sampled opacity and gradient before accepting each frame. Separate browser tests verify that the sample matches real pointer input and that real pointer exit fades the sheen. DOM/action traces remain enabled; background trace screencast images are disabled to avoid a second native capture stream.
 
-The matrix includes every public visual component in both frameworks, all four appearances (default, Replichai, Wallfacer and Origo), and light/dark, at desktop width in every appearance and at mobile width in the default appearance. Fixed logos, headless organization lists, collapsed sidebars and optical-effects examples also participate; a preset may intentionally leave a fixed identity unchanged.
+The matrix includes every public visual component in all four appearances (default, Replichai, Wallfacer and Origo), and light/dark, at desktop width in every appearance and at mobile width in the default appearance. Fixed logos, headless organization lists, collapsed sidebars and optical-effects examples also participate; a preset may intentionally leave a fixed identity unchanged.
 
 Separate interaction tests check focus, keyboard navigation, scrolling, and
 optical effect updates. A still image cannot verify motion or every possible
@@ -85,12 +85,12 @@ CI uploads that folder on failure. Push and pull-request checks never regenerate
 
 ```sh
 # Narrow the update to the component you changed.
-bun run test:visual:update --grep 'parity default buttons '
+bun run test:visual:update --grep 'figure default buttons '
 # Then compare the result without update mode.
-bun run test:visual --grep 'parity default buttons '
-# Review a specific appearance in both adapters and themes.
-bun run test:visual:update --grep 'parity origo forms '
-bun run test:visual --grep 'parity origo forms '
+bun run test:visual --grep 'figure default buttons '
+# Review a specific appearance in both themes.
+bun run test:visual:update --grep 'figure origo forms '
+bun run test:visual --grep 'figure origo forms '
 ```
 
 Review each changed PNG individually in both themes and both layouts for every affected appearance.
@@ -117,18 +117,19 @@ the subsequent push must pass comparison without update mode.
 
 ## Add a component or state
 
-1. Add equivalent source-component examples to `tests/visual/VueGallery.vue` and
-   `tests/visual/ReactParityGallery.tsx`. Share data in `parity-data.ts`; preserve
-   equivalent DOM, whitespace and content so the pixel comparison is meaningful.
+1. Add the component's examples to `tests/visual/ReactParityGallery.tsx`, under a
+   sheet whose root element carries `data-component="<Export>"`. Share fixture data
+   in `parity-data.ts`.
 2. Register the public export in `tests/visual/manifest.ts`. The inventory test
-   requires a scenario; `design-manifest.ts` applies the same set to every appearance
-   without exclusions, at desktop width for the product appearances.
-3. Add representative states and browser interactions for both adapters. Include
-   open overlays, disabled/error states, keyboard focus and narrow layouts. The
-   shell behavior suite is `tests/visual/parity-shell.spec.ts`.
-4. Resolve any Vue/React pixel differences in source or canonical fixture content
-   before recording. Investigate font loading, inline text shaping, dimensions
-   and compositing; keep the zero-tolerance comparison intact.
+   requires every visual export of the package entry to appear in a sheet;
+   `design-manifest.ts` applies the same set to every appearance without
+   exclusions, at desktop width for the product appearances.
+3. Add representative states and browser interactions. Include open overlays,
+   disabled/error states, keyboard focus and narrow layouts. The shell behavior
+   suite is `tests/visual/parity-shell.spec.ts`.
+4. Keep the capture stable before recording: investigate font loading, inline
+   text shaping, dimensions and compositing when two captures differ, and keep
+   the zero-tolerance comparison intact.
 5. Generate and inspect the figures, rerun comparisons, and update the
    [design guide](docs/design-system.md). Run `bun run visual:index` to regenerate
    the [reference index](docs/visual-reference.md); do not hand-edit its tables.
