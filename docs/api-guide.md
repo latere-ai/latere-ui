@@ -18,61 +18,61 @@ document.documentElement.dataset.design = 'origo';
 document.documentElement.dataset.theme = 'dark';
 ```
 
-`data-design` accepts `replichai`, `wallfacer`, or `origo` on `<html>`. Remove the attribute to restore default glass. Root scope also styles teleported overlays; nested mixed appearances are unsupported. Supply Inter for Replichai/Wallfacer or IBM Plex Sans/Mono for Origo through the host font pipeline. See the [design guide](design-system.md#keep-product-styling-explicit) for geometry, palette and font details, and the [component figures](visual-reference.md#product-style-variations) for both themes and adapters.
+`data-design` accepts `replichai`, `wallfacer`, or `origo` on `<html>`. Remove the attribute to restore default glass. Root scope also styles portaled overlays; nested mixed appearances are unsupported. Supply Inter for Replichai/Wallfacer or IBM Plex Sans/Mono for Origo through the host font pipeline. See the [design guide](design-system.md#keep-product-styling-explicit) for geometry, palette and font details, and the [component figures](visual-reference.md#product-style-variations) for both themes.
+
+The ink palette is a separate stylesheet: import `latere-ui/ink` after the shared styles and set `data-design="ink"`. It recolors the default glass components with the platform's neutral ladder; see [the ink palette](design-system.md#use-the-ink-palette).
 
 ## Footer preferences
 
-The footer is presentational: it takes `theme` / `locale` and emits
-`update:theme` / `update:locale`. Wire it to your app's own prefs store with
-`v-model`:
+The footer is presentational: it takes `theme` and `locale` and reports the
+reader's choices through `onThemeChange` and `onLocaleChange`. Wire it to your
+app's own preference state. `SiteFooter` imports its own stylesheet, so
+`latere-ui/styles` is needed only by a page that styles footer markup without
+the component.
 
-```vue
-<script setup lang="ts">
+```tsx
 import { SiteFooter } from 'latere-ui';
-import 'latere-ui/styles';
 // import 'latere-ui/tokens'; // only if your app has no --text/--bg-* tokens
-import { storeToRefs } from 'pinia';
-import { usePrefsStore } from '@/stores/prefs';
 
-const prefs = usePrefsStore();
-const { theme, locale } = storeToRefs(prefs);
-</script>
-
-<template>
-  <SiteFooter v-model:theme="theme" v-model:locale="locale" />
-</template>
+<SiteFooter
+  theme={theme} onThemeChange={setTheme}
+  locale={locale} onLocaleChange={setLocale}
+/>
 ```
 
 ### Props
 
-| Prop         | Type                          | Default               | Notes                                                                 |
-| ------------ | ----------------------------- | --------------------- | --------------------------------------------------------------------- |
-| `theme`      | `'light' \| 'dark' \| 'auto'` | required              | The theme menu's icon and checked item; `auto` follows the system.    |
-| `locale`     | `string` (bundled: `en`, `zh`, `de`) | required       | Selects footer copy and the checked language.                         |
-| `locales`    | `LocaleOption[]`              | `[en, zh]`            | Languages in the language menu (`{ code, label, name? }`), named by `name`. |
-| `compact`    | `boolean`                     | `false`               | One wrapped row of links with the two menu buttons below.             |
-| `messages`   | `Record<string, Dict>`        | `undefined`           | Per-locale string overrides, merged over the bundled footer copy.     |
-| `baseUrl`    | `string`                      | `'https://latere.ai'` | Origin for the site's own links (About, Blog, Legal, home).           |
-| `routerLink` | `Component`                   | `undefined`           | Pass `RouterLink` to keep SPA navigation for internal links on-site.  |
+| Prop             | Type                          | Default               | Notes                                                                 |
+| ---------------- | ----------------------------- | --------------------- | --------------------------------------------------------------------- |
+| `theme`          | `'light' \| 'dark' \| 'auto'` | required              | The theme menu's icon and checked item; `auto` follows the system.    |
+| `onThemeChange`  | `(theme) => void`             | `undefined`           | Called with the theme the reader picked.                              |
+| `locale`         | `string` (bundled: `en`, `zh`, `de`) | required       | Selects footer copy and the checked language.                         |
+| `onLocaleChange` | `(locale) => void`            | `undefined`           | Called with the locale the reader picked.                             |
+| `locales`        | `LocaleOption[]`              | `[en, zh]`            | Languages in the language menu (`{ code, label, name? }`), named by `name`. |
+| `compact`        | `boolean`                     | `false`               | One wrapped row of links with the two menu buttons below.             |
+| `messages`       | `Messages`                    | `undefined`           | Per-locale string overrides, merged over the bundled footer copy.     |
+| `baseUrl`        | `string`                      | `'https://latere.ai'` | Origin for the site's own links (About, Blog, Legal, home).           |
+| `routerLink`     | `ComponentType`               | `undefined`           | Your router's `Link`, to keep SPA navigation for internal links on-site. |
+| `brand`          | `ReactNode`                   | Latere AI lockup      | The host site's lockup at the head of the full footer.                |
 
 The full footer's lead starts with the Latere AI lockup. A site with its own
-lockup passes it through the `#brand` slot (React: the `brand` prop):
+lockup passes it through `brand`:
 
-```vue
-<SiteFooter v-model:theme="theme" v-model:locale="locale">
-  <template #brand><a href="/" class="my-lockup">…</a></template>
-</SiteFooter>
+```tsx
+<SiteFooter theme={theme} locale={locale} brand={<a href="/" className="my-lockup">…</a>} />
 ```
 
 The language menu lists `locales`. To support a locale the package does not
 bundle (bundled: en, zh, de), pass it in `locales` and supply its footer
-strings via `messages`, e.g. `:messages="{ fr: { 'footer.company': '…' } }"`.
-The theme menu's labels are `footer.theme`, `footer.theme.light`,
-`footer.theme.dark` and `footer.theme.system`.
+strings via `messages`, e.g. `messages={{ fr: { 'footer.company': '…' } }}`.
+An app that ships one language passes `locales` with just that one, so the
+menu offers only what the app has. The theme menu's labels are
+`footer.theme`, `footer.theme.light`, `footer.theme.dark` and
+`footer.theme.system`.
 
 The footer reports theme choices; the host applies them to `data-theme` and resolves `auto` with `matchMedia('(prefers-color-scheme: dark)')`. It also persists preferences if needed. German copy is bundled, but the default menu lists English and Chinese; include `de` in `locales` to offer German.
 
-The shared stylesheet scopes link decoration to `.site-footer a` in both layouts, including router links that render anchors. Navigation links carry no underline, at rest or under the pointer; keyboard focus draws an outline. No global anchor reset is required.
+The shared stylesheet scopes link decoration to `.site-footer a` in both layouts, including router links that render anchors. Navigation links carry no underline, at rest or under the pointer; keyboard focus draws an outline. No global anchor reset is required. `compact` swaps the lead and link columns for wrapping navigation followed by the two menus; every label stays visible without horizontal scrolling.
 
 The footer carries Latere's own navigation in four columns: Applications
 (the chat, under its public name Latere) with Research (ReplicHAI) below it,
@@ -83,6 +83,12 @@ are always absolute. Latere's own site links (About, Blog, Legal, home)
 resolve against `baseUrl` as plain `<a>` unless `routerLink` is supplied, in
 which case they render through it with a relative `to`.
 
+`footer.css` reads `--text`, `--text-secondary`, `--text-muted`, `--accent`,
+`--border`, `--bg-surface`, `--bg-raised`, `--shadow`, `--focus-outline` and
+the `--glass-*` set. If your app already has its own palette, alias them on
+`.site-footer` rather than importing `latere-ui/tokens`, which would redefine
+`--bg-*` for the whole page.
+
 ### Theme and language menus
 
 `ThemeMenu` and `LocaleMenu` are the footer's two controls, exported for a
@@ -90,24 +96,19 @@ header or a toolbar. Each is an icon button that opens a menu of choices with
 the current one checked; it shows the value it is given and reports a choice,
 so the host's single preference drives every copy.
 
-```vue
-<ThemeMenu v-model:theme="theme" placement="bottom-end" />
-<LocaleMenu v-model:locale="locale" :locales="locales" label="Language" />
-```
-
 ```tsx
 <ThemeMenu theme={theme} onThemeChange={setTheme} labels={{ system: 'Follow system' }} />
-<LocaleMenu locale={locale} locales={locales} onLocaleChange={setLocale} />
+<LocaleMenu locale={locale} locales={locales} onLocaleChange={setLocale} label="Language" />
 ```
 
 | Prop | Menu | Default | Notes |
 | --- | --- | --- | --- |
-| `theme` | theme | required | `'light' \| 'dark' \| 'auto'`; the button shows a sun, a moon or a monitor. |
+| `theme`, `onThemeChange` | theme | required | `'light' \| 'dark' \| 'auto'`; the button shows a sun, a moon or a monitor. |
 | `labels` | theme | English | `{ theme, light, dark, system }`, merged over the defaults. |
-| `locale`, `locales` | language | required, `[en, zh]` | Rows are named by each option's `name`, else its `label`. |
+| `locale`, `locales`, `onLocaleChange` | language | required, `[en, zh]` | Rows are named by each option's `name`, else its `label`. |
 | `label` | language | `'Language'` | Names the menu and prefixes the button's accessible name. |
 | `placement` | both | `'bottom-end'` | `bottom-start`, `bottom-end`, `top-start` or `top-end`. |
-| `className` | both, React | none | Extra class on the root; a Vue host's `class` falls through. |
+| `className` | both | none | Extra class on the root, for host placement. |
 
 The button's accessible name states the menu and the value, "Theme: System".
 Enter, Space, ArrowDown or ArrowUp open the menu on the checked row; the
@@ -123,24 +124,43 @@ for a choice menu, `label` for its name and `autofocus` to focus the checked
 row when it mounts; `GlassPopover` takes `surface="solid"` for an opaque menu
 surface and passes the panel `id` to its trigger for `aria-controls`.
 
+### Favicon
+
+`latere-ui/favicon` writes the platform's browser tab icon from the mark the
+console navigation draws, `PlatformLogoMark`. A tab icon sits outside the
+page's palette, so its colors are fixed: `FAVICON_INK` (`#0d0d0d`) in a light
+tab and `FAVICON_INK_DARK` (`#ececec`) in a dark one, switched by a
+`prefers-color-scheme` rule inside the SVG.
+
+```ts
+// scripts/favicon.ts, run before the build
+import { platformFaviconSvg } from 'latere-ui/favicon';
+
+await Bun.write('public/favicon.svg', platformFaviconSvg());
+```
+
+`platformFaviconSvg()` returns the complete SVG document. `favicon(markup)`
+inserts the same style first inside other rendered `<svg>` markup; the style
+colors the element that carries the `platform-logo-mark` class, and
+`favicon` throws when the markup is not an `<svg>` element. The entry renders with `react-dom/server`, so call it
+from a build script or a server. It is a separate entry so that no client
+bundle carries the server renderer; the main `latere-ui` entry never imports
+it.
+
 ## Console sidebar
 
 `ConsoleSidebar` is the shared product-console rail: a brand headline, grouped
-nav tabs, a fold/collapse toggle, and a `#foot` slot for your `AccountControl`.
-The nav model and collapse logic are headless (`createCollapse`,
-`partitionGroups`); the SFC is a thin adapter. Styles ship as the opt-in
+nav tabs, a fold/collapse toggle, and a `foot` prop for your account control.
+The nav model is headless (`partitionGroups`, `flattenNavItems`); the
+component is a thin shell over it. Styles ship as the opt-in
 `latere-ui/console` entrypoint (built on `tokens.css`), so the consoles align
 visually instead of each restyling their own rail.
 
-```vue
-<script setup lang="ts">
-import { ConsoleSidebar, type ConsoleNavModel } from 'latere-ui';
+```tsx
+import { ConsoleSidebar, AccountMenu, type ConsoleNavModel } from 'latere-ui';
 import 'latere-ui/console';
-import { RouterLink, useRoute, useRouter } from 'vue-router';
-import AccountControl from '@/components/AccountControl.vue';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-const route = useRoute();
-const router = useRouter();
 const model: ConsoleNavModel = {
   groups: [
     { label: 'Workspace', items: [
@@ -152,38 +172,45 @@ const model: ConsoleNavModel = {
     ] },
   ],
 };
-</script>
 
-<template>
-  <ConsoleSidebar
-    :model="model"
-    :active-key="String(route.name)"
-    brand-name="Workspace" brand-sub="Console"
-    :router-link="RouterLink"
-    @navigate="(it) => router.push(it.to!)"
-  >
-    <template #foot><AccountControl placement="bottom-start" /></template>
-  </ConsoleSidebar>
-</template>
+function Rail() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  return (
+    <ConsoleSidebar
+      model={model}
+      activeKey={location.pathname.split('/')[1]}
+      brandName="Workspace" brandSub="Console"
+      routerLink={Link}
+      onNavigate={(item) => item.to && navigate(item.to)}
+      foot={<AccountMenu placement="bottom-start" />}
+    />
+  );
+}
 ```
 
-Collapse is `v-model:collapsed` (controlled) or uncontrolled if you omit it.
-Set `:collapsible="false"` for a fixed rail. A nav item without `to` renders
-disabled unless `action: true` makes it an action button. Override any row via the `#item` slot, the logo via `#brand`, and
-insert app-specific affordances (command palette, workspace switcher) via
-`#brand-extra` / `#extra`.
+`routerLink` must accept and render `className`, `title`, `onClick` and
+`children`; real router `Link` components (react-router, TanStack Router)
+already do. Collapse is `collapsed` with `onCollapsedChange` (controlled) or
+uncontrolled if `collapsed` is omitted. Set `collapsible={false}` for a fixed
+rail. A nav item without `to` renders disabled unless `action: true` makes it
+an action button. Override any row with `renderItem`, the brand block with
+`brand`, and insert app-specific affordances (command palette, workspace
+switcher) with `brandExtra`, `top` or `extra`. `brand`, `brandExtra`, `top`,
+`extra` and `foot` accept a node or a function of the collapsed state. Connect
+`search` and `onSearch` to a [`ConsolePalette`](react-shell.md#navigation).
 
 **Icons.** An item's `icon` that names a built-in stroke icon renders at 16px
 in the text color: `home`, `key`, `card`, `folder`, `cube`, `globe`,
 `sparkles`, `bot`, `branch`, `repo`, `org`, `shield`, `book`, `coins`,
 `terminal`, `plus`, `search`, `chevron`, `external` (Lucide shapes, ISC
-license). The `#icon` slot still replaces them. A row with no icon has no
-icon slot, so its label starts at the row's padding.
+license). `renderIcon` replaces a row's icon fallback. A row with no icon has
+no icon slot, so its label starts at the row's padding.
 
 **Sections with sub-pages.** Give an item `children` and it becomes an
 expandable row with a chevron. Its children stay folded until the viewer
 opens the row or the current page is one of them, and the rail remembers
-which rows the viewer opened (in localStorage under `open-key`; pass `null`
+which rows the viewer opened (in localStorage under `openKey`; pass `null`
 to keep that to the page's lifetime). Enter or Space opens and closes a row,
 the arrow keys move between rows. In the collapsed rail a parent is a link
 to its own `to`, or its first child's, and stays highlighted while any of its
@@ -198,8 +225,8 @@ pages is open.
 
 **Compact head and foot rows.** `compact` sets the brand, name and fold
 button in one row as tall as a nav row, and folds the head into one button
-that shows the logo. `:foot-items` adds rows above the `#foot` slot, each a
-link or action with an icon and an optional right-aligned `value`, such as
+that shows the logo. `footItems` adds rows above `foot`, each a link or
+action with an icon and an optional right-aligned `value`, such as
 `{ id: 'credits', label: 'Credits', icon: 'coins', to: '/billing', value: '$8.16' }`.
 With `compact`, the rail keeps `--lu-cs-inset` (12px) from the window's left
 and bottom edges and rounds the account card by `--radius-window` (26px, the
@@ -211,19 +238,19 @@ admin", followed by the account in quiet text. With either, the dropdown's
 header states the role and the account in the same case.
 
 **Bottom groups in the foot.** Groups with `pin: 'bottom'` end the nav by
-default. Pass `bottom-groups="foot"` (`bottomGroups="foot"` in React) to set
-them in the foot with the foot rows, above the `#foot` slot. They then stay
-in view while the nav scrolls, share the foot's divider, and take the arrow
-keys like the nav. A parent there opens in place; on a short window the group
-area scrolls and the account control keeps its height.
+default. Pass `bottomGroups="foot"` to set them in the foot with the foot
+rows, above `foot`. They then stay in view while the nav scrolls, share the
+foot's divider, and take the arrow keys like the nav. A parent there opens in
+place; on a short window the group area scrolls and the account control keeps
+its height.
 
 **Rows only admins see.** Give an item `audience: 'admin'` when only people
 with an admin role are shown it. The row's icon takes `--lu-audience-admin`
 and, in the expanded rail, a small chip after the label names the audience:
-`audience-label` (`audienceLabel`), "Admin" by default. A row whose label is
-the audience label carries no chip, so a row named Admin reads once. The
-collapsed rail's tooltip adds the audience ("Organization · Admin"). The
-marker only describes the row; the host still decides who gets it.
+`audienceLabel`, "Admin" by default. A row whose label is the audience label
+carries no chip, so a row named Admin reads once. The collapsed rail's
+tooltip adds the audience ("Organization · Admin"). The marker only describes
+the row; the host still decides who gets it.
 
 ```ts
 { groups: [
@@ -240,15 +267,14 @@ marker only describes the row; the host still decides who gets it.
 `DocsLayout` renders **multiple grouped docs**: a categorized index (left), the
 article (center), an auto table of contents with scroll-spy (right), and
 prev/next across the flattened reading order. It drives both markdown docs
-(pass `articleHtml`) and component-driven docs (use the `#article` slot). The
+(pass `articleHtml`) and component-driven docs (pass a node in `article`). The
 grouped model and TOC are headless (`flattenDocs`, `adjacentDocs`,
-`buildDocSearchIndex`, `createToc`); styles ship as `latere-ui/docs`.
+`buildDocSearchIndex`, `createTocCore`); styles ship as `latere-ui/docs`.
 
-```vue
-<script setup lang="ts">
+```tsx
 import { DocsLayout, type DocGroup } from 'latere-ui';
 import 'latere-ui/docs';
-import { RouterLink, useRoute, useRouter } from 'vue-router';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 const groups: DocGroup[] = [
   { id: 'getting-started', label: 'Getting started', icon: 'rocket', pages: [
@@ -259,29 +285,32 @@ const groups: DocGroup[] = [
     { slug: 'architecture', title: 'Architecture' },
   ] },
 ];
-const route = useRoute();
-const router = useRouter();
-</script>
 
-<template>
-  <DocsLayout
-    :groups="groups"
-    :active-slug="route.params.slug as string"
-    :active-group-id="route.params.group as string"
-    :article-html="renderedMarkdown"
-    base="/docs"
-    :router-link="RouterLink"
-    :enhance="mountDiagrams"
-    @navigate="(d) => router.push(`/docs/${d.groupId}/${d.slug}`)"
-  />
-</template>
+function Docs({ renderedMarkdown }: { renderedMarkdown: string }) {
+  const { group, slug } = useParams();
+  const navigate = useNavigate();
+  return (
+    <DocsLayout
+      groups={groups}
+      activeSlug={slug ?? ''}
+      activeGroupId={group}
+      articleHtml={renderedMarkdown}
+      base="/docs"
+      routerLink={Link}
+      enhance={mountDiagrams}
+      onNavigate={(d) => navigate(`/docs/${d.groupId}/${d.slug}`)}
+    />
+  );
+}
 ```
 
 App-specific post-processing: mermaid, light/dark images, `[[diagram:name]]`
 mounts: plugs into the `enhance(el)` hook; the layout never owns a diagram
-pipeline. For markdown, `latere-ui/markdown` exports `createMarkdown(MarkdownIt,
-opts)` (you inject your own `markdown-it`) which assigns heading ids with the
-**same** slugify as the TOC, so anchors and the on-this-page list always agree:
+pipeline. [Console and account components](react-shell.md#documentation-layout) lists the
+render props and the `DocsLayoutHandle` ref. For markdown,
+`latere-ui/markdown` exports `createMarkdown(MarkdownIt, opts)` (you inject
+your own `markdown-it`) which assigns heading ids with the **same** slugify as
+the TOC, so anchors and the on-this-page list always agree:
 
 ```ts
 import MarkdownIt from 'markdown-it';
@@ -363,21 +392,14 @@ Control colors can be customized without replacing component rules:
 Defaults are checked for readable text and distinct controls in both gallery
 themes. Verify overrides against the background where your app uses them.
 
-```ts
-import { useGlass, concentricRadius } from 'latere-ui';
-const { glassClass, reducedTransparency } = useGlass();
-// :class="glassClass('regular')" : reducedTransparency is a reactive ref
-// concentricRadius('8px') → calc(var(--glass-radius,14px) - 8px)
-```
-
 Adoption requirements:
 
 1. **Set a `--canvas`.** Frosted glass over a flat fill reads as dead gray.
 2. **Glass is chrome, never content.** Never put glass over live
    terminal / VNC / video: `backdrop-filter` there tanks performance and
    legibility. Keep content surfaces opaque.
-3. **Concentric corners.** A nested control's radius = parent radius − padding;
-   use `concentricRadius()` / `--glass-radius`.
+3. **Concentric corners.** A nested control's radius = parent radius − padding,
+   written `calc(var(--glass-radius, 14px) - 8px)` for an 8px inset.
 4. **Check accessibility in context.** The material adjusts its tokens for
    reduced transparency, increased contrast, and missing backdrop-filter support.
    Verify text contrast against your actual background and any token overrides.
@@ -397,12 +419,20 @@ Apple Liquid Glass lenses what sits behind it: is a progressive enhancement in
 JS, because no CSS primitive can displace the backdrop (it needs an SVG
 `feDisplacementMap`). Call it once near the app root:
 
-```ts
-import { useLiquidGlass } from 'latere-ui';   // Vue
-useLiquidGlass({ watchSource: () => route.fullPath }); // re-scan on navigation
-// …or framework-free: import { initLiquidGlass } from 'latere-ui/react';
-//                     initLiquidGlass();  // call again after the DOM changes
+```tsx
+import { useEffect } from 'react';
+import { initLiquidGlass } from 'latere-ui';
+
+function GlassRuntime({ path }: { path: string }) {
+  // Scan again after each navigation, since new surfaces mount with the page.
+  useEffect(() => { initLiquidGlass(); }, [path]);
+  return null;
+}
 ```
+
+`initLiquidGlass(root?)` scans the document, or one subtree, and is safe to
+call again after the DOM changes. `refract(el)` and `sheen(el)` enhance one
+element.
 
 What it does, per surface:
 
@@ -440,7 +470,7 @@ reading surface when legibility must not depend on blur.
 
 ### Component library
 
-Every component below is available from `latere-ui` for Vue and `latere-ui/react` for React. Both adapters use the shared material and component styles.
+Every component below is exported from `latere-ui`. Each imports its own shared stylesheet; import `latere-ui/glass` once for the material.
 
 | Group | Components |
 |-------|-----------|
@@ -452,8 +482,38 @@ Every component below is available from `latere-ui` for Vue and `latere-ui/react
 | Data | `GlassTable` |
 | Service hosts | `GlassToaster`, `GlassConfirmHost` |
 | Shell and docs | `ConsoleSidebar`, `ConsolePalette`, `DocsLayout` |
-| Account | `AccountMenu`, `AccountPrefs`, `OrgSwitcher`, `ProductSwitcher` |
-| Site chrome | `SiteFooter`, `LatereLogoMark`, `PlatformLogoMark` |
+| Account | `AccountMenu`, `AccountPrefs`, `OrgSwitcher` |
+| Site chrome | `SiteFooter`, `ThemeMenu`, `LocaleMenu`, `LatereLogoMark`, `PlatformLogoMark` |
+
+Controlled components report proposed values through callbacks; the host passes the new value back to update the control:
+
+| Component | Controlled props and callback |
+|---|---|
+| `GlassField` | `value` and `onChange(text)` |
+| `GlassCheckbox`, `GlassSwitch` | Boolean `value` and `onChange(checked)` |
+| `GlassSelect`, `GlassSegmented` | `value`, `options`, `onChange(value)`; `ariaLabel` names the group/control. `GlassSelect` also takes `searchable`, `searchPlaceholder` and `noMatchLabel` |
+| `GlassTabs` | `value`, `tabs`, `onChange(value)`; the host renders the active panel |
+| `GlassRadio` | Selected group `value`, option identity `optionValue`, shared `name`, `onChange(value)` |
+| `GlassModal`, `GlassDrawer`, `ConsolePalette` | `open` and `onClose()`; the host updates `open` |
+| `GlassPopover` | Optional `open` / `onOpenChange(open)`; omit `open` for internal state |
+| `GlassMenu` | `items` and `onSelect(value)`; disabled items cannot select |
+
+A radio group shares one `value` and `name`; each radio's `optionValue` is the value it selects:
+
+```tsx
+import { useState } from 'react';
+import { GlassRadio } from 'latere-ui';
+
+function Schedule() {
+  const [frequency, setFrequency] = useState('daily');
+  return <>
+    <GlassRadio name="frequency" value={frequency} optionValue="daily"
+      label="Daily" onChange={setFrequency} />
+    <GlassRadio name="frequency" value={frequency} optionValue="weekly"
+      label="Weekly" onChange={setFrequency} />
+  </>;
+}
+```
 
 `PlatformLogoMark` identifies the platform with the Latere symbol above stacked layers. It inherits `currentColor`, accepts native SVG attributes and merges caller classes. It is decorative by default (`aria-hidden="true"`, `focusable="false"`); place it beside a visible product name, or override the accessibility attributes when it needs its own label. `LatereLogoMark` remains the corporate identity.
 
@@ -474,25 +534,36 @@ Set `--lu-button-radius` to give buttons a squarer corner. Never set a capsule t
 
 Migrating from v1.34 and earlier: `--lu-control-radius` no longer rounds buttons, so a host that set it to square its buttons sets `--lu-button-radius` to the same value. The button element no longer carries `lu-glass-thin` (default variant) or `lu-glass-ultrathin` (`GlassIconButton`); a host rule that targeted those classes on a button no longer matches. The primary fill reads `--text` and its label `--bg`, where it used to read `--glass-smoke-strong` and `--glass-smoke-ink`; the default variant's label is `--text`, where it was `--text-secondary`. A button inside `GlassBar` keeps the capsule; it no longer takes the bar's corner minus its inset.
 
-`GlassSelect` can be searched by typing. A select with more than `SELECT_SEARCH_THRESHOLD` options (8) opens with a search field at the top of its menu and the focus in it; typing keeps the options whose label or value contains the text, in any case, and marks the matched part. The arrow keys move through what is left, Enter chooses, and Escape clears the field and then closes the menu. Typing a letter on the closed select opens it with that letter in the field. `searchable` (Vue and React) shows the field below the threshold or hides it above; `searchPlaceholder` (default "Search") is the field's placeholder and accessible name, and `noMatchLabel` (default "No matches") the line shown when nothing matches. Each option is one line, cut with an ellipsis and with its full label in a tooltip; the menu grows wider than the select to fit its longest label, up to `--lu-select-menu-max-width` (400px) and never past the viewport's 16px edges. Inside a modal or a drawer, Escape in an open select closes only the select.
+`GlassSelect` can be searched by typing. A select with more than `SELECT_SEARCH_THRESHOLD` options (8) opens with a search field at the top of its menu and the focus in it; typing keeps the options whose label or value contains the text, in any case, and marks the matched part. The arrow keys move through what is left, Enter chooses, and Escape clears the field and then closes the menu. Typing a letter on the closed select opens it with that letter in the field. `searchable` shows the field below the threshold or hides it above; `searchPlaceholder` (default "Search") is the field's placeholder and accessible name, and `noMatchLabel` (default "No matches") the line shown when nothing matches. Each option is one line, cut with an ellipsis and with its full label in a tooltip; the menu grows wider than the select to fit its longest label, up to `--lu-select-menu-max-width` (400px) and never past the viewport's 16px edges. Inside a modal or a drawer, Escape in an open select closes only the select.
 
 `GlassBadge` keeps glass labels in the text color and uses the dot for tone. Solid badges pair each default fill with contrasting ink. If you override a semantic fill, set its matching `--state-<tone>-ink` when needed and verify contrast in both themes.
 
-Imperative services (mount the host once, call anywhere):
+`GlassModal` and `GlassDrawer` portal to the document body, trap focus while open, and request closure through `onClose`. Their `header` prop replaces the default title; modal `footer` accepts a React node or `(close) => ReactNode`. Drawer `side` is `left` or `right` and `width` defaults to `20rem`.
 
-```ts
+`GlassPopover` accepts a `trigger` node or `({ open, toggle }) => ReactNode`; its wrapper already toggles on click. Its content is `children` or `({ close }) => ReactNode`. Use `close` after handling a menu choice. `placement` accepts `bottom-start`, `bottom-end`, `top-start`, or `top-end`; `matchWidth` follows the trigger width. `GlassTooltip` wraps its trigger in `children` and takes `text` plus optional `placement="top" | "bottom"`.
+
+Imperative services: mount one `GlassToaster` and one `GlassConfirmHost` near the application root, then call `message` and `confirm` anywhere:
+
+```tsx
 import { GlassToaster, GlassConfirmHost, message, confirm } from 'latere-ui';
-// <GlassToaster /> and <GlassConfirmHost /> near the app root, then:
-message.success('Saved');
-if (await confirm({ message: 'Delete this sandbox?', danger: true })) { /* … */ }
+
+function FeedbackHosts() {
+  return <><GlassToaster /><GlassConfirmHost /></>;
+}
+
+const dismiss = message.success('Saved', { duration: 4000 });
+// dismiss() closes this toast; duration: 0 keeps it until dismissed.
+const approved = await confirm({ message: 'Delete this workspace?', danger: true });
 ```
+
+`message.info/success/warning/error` return a closer; `message.clear()` removes all toasts. `confirm()` queues requests and resolves `true` on confirmation or `false` on cancellation. Mount a single host for each service per application.
 
 ## Session
 
 The session helpers talk to your application's own backend, which holds the
 session cookie and runs the sign-in redirect. The browser never calls an
 identity provider directly. Every path below is a default and can be renamed
-through options:
+through `SessionProvider`'s props:
 
 | Default path | Request | Expected answer |
 |---|---|---|
@@ -508,56 +579,77 @@ passes `mapMe` to translate it. `createApiClient({ csrfCookie })` echoes the
 named cookie in `X-CSRF-Token` on every state-changing request; omit
 `csrfCookie` when your backend does not use double-submit CSRF protection.
 
-In Vue, create the client and the Pinia store once:
+Wrap the application in `SessionProvider` once. It resolves the principal on
+mount, owns the global 401 handler, and exposes org switching and sign-out;
+`useSession()` reads it anywhere below:
 
-```ts
-// session.ts
-import { createApiClient, createSessionStore } from 'latere-ui';
+```tsx
+import { SessionProvider, useSession, AccountMenu } from 'latere-ui';
 
-export const client = createApiClient({ csrfCookie: 'csrf_token' });
-export const useSessionStore = createSessionStore({ client, defaultReturnTo: '/dashboard' });
+function App() {
+  return (
+    <SessionProvider csrfCookie="csrf_token" defaultReturnTo="/dashboard">
+      <Shell />
+    </SessionProvider>
+  );
+}
+
+function Shell() {
+  const { principal, loading, login } = useSession();
+  if (loading) return <Spinner />;
+  return (
+    <>
+      {/* AccountMenu reads principal, login, logout and switchOrg from the
+          provider when the matching prop is omitted. */}
+      <AccountMenu dashboardPath="/dashboard" />
+      {principal ? <Dashboard /> : <button onClick={() => login()}>Sign in</button>}
+    </>
+  );
+}
 ```
 
-Then call `useSession` once in the root component:
+`useSession()` returns `principal` (`null` when signed out), `loading`,
+`error`, `refresh()`, `login(returnTo?)`, `logout()`, `switchOrg(orgId)`,
+`frontChannelLogout()`, `requireSession(returnTo?)` and the shared `client`
+for app-specific calls. Pass a prebuilt `client` instead of `csrfCookie` to
+share one client with code outside React.
 
-```vue
-<script setup lang="ts">
-import { useSession } from 'latere-ui';
-import { useRoute, useRouter } from 'vue-router';
-import { client, useSessionStore } from '@/session';
+A protected view calls `useSessionGate()`. It resolves the session on entry;
+when nobody is signed in, it navigates once to `/login?prompt=none` so a
+session the person already has with the identity provider carries over
+without a prompt. A `sessionStorage` flag keeps the check from looping. When
+the check comes back signed out, `showAuthGate` becomes true and the view
+renders its own sign-in prompt linking to `loginURL`; `ready` is true once the
+check has settled. The gate is router-agnostic: pass your router's current
+path in `path` to re-check on each navigation, and a `stripSsoChecked` that
+uses your router's replace to keep its state in sync.
 
-const store = useSessionStore();
-const { ready, showAuthGate, loginURL } = useSession({
-  me: () => store.me,
-  loaded: () => store.loaded,
-  fetch: store.fetchMe,
-  route: useRoute(),
-  router: useRouter(),
-  shouldProbe: (path) => path.startsWith('/dashboard'),
-  onUnauthorized: (handler) => { client.onUnauthorized = handler; },
-  onExpired: store.handleExpired,
-});
-</script>
+```tsx
+import { useSessionGate } from 'latere-ui';
+import { useLocation } from 'react-router-dom';
+
+function Protected() {
+  const location = useLocation();
+  const { ready, showAuthGate, loginURL } = useSessionGate({ path: location.pathname + location.search });
+  if (!ready) return <Spinner />;
+  if (showAuthGate) return <a href={loginURL}>Sign in</a>;
+  return <Dashboard />;
+}
 ```
 
-On mount it resolves the principal. When nobody is signed in on a path where
-`shouldProbe` is true, it navigates once to `/login?prompt=none` so a session
-the person already has with the identity provider carries over without a
-prompt. A `sessionStorage` flag keeps the check from looping. When the check
-comes back signed out, `showAuthGate` becomes true and the page renders its
-own sign-in prompt linking to `loginURL`. A request that answers 401 in the
-middle of a session runs `onExpired`.
-
-The store's `expiredSessionMode` decides what an expired session does:
-`'silent-recheck'`, the default, tries the silent check once and then an
-interactive sign-in; `'graceful'` never redirects, so a public page stays
-usable while signed out. `useSessionGate(store, route, router)` exposes the
-same `ready`, `showAuthGate`, and `loginURL` for a single protected view that
-renders its own prompt. `runFrontChannelLogout({ client })` signs out from
-the browser side: it reads `GET /api/logout`, loads each entry of the
-answer's `front_channel_uris` in a hidden frame so other applications clear
-their own sessions, waits at most 2 seconds per frame, and then navigates to
-`post_logout_redirect`.
+`requireSession()` is the same check without a gate view: the silent check
+once, then an interactive sign-in, so a directly loaded protected URL always
+resolves. A request that answers 401 in the middle of a session runs the same
+recovery. `expiredSessionMode` decides whether any of this redirects:
+`'silent-recheck'`, the default, behaves as described; `'graceful'` never
+redirects, so a public page stays usable while signed out.
+`runFrontChannelLogout({ client })` (or `frontChannelLogout()` from
+`useSession()`) signs out from the browser side: it reads `GET /api/logout`,
+loads each entry of the answer's `front_channel_uris` in a hidden frame so
+other applications clear their own sessions, waits at most 2 seconds per
+frame, and then navigates to `post_logout_redirect`. `me`, `orgs`,
+`switchOrg`, `switchPersonal`, `login` and `logout` are also exported as plain
+async functions over an `ApiClient`, for code outside React.
 
 ## Browser telemetry
 
@@ -883,12 +975,11 @@ and `JSON.parse` of the element's text returns your data unchanged.
 
 An app that renders only in the browser places its data with `mountJsonLd`:
 
-```ts
-import { onUnmounted } from 'vue';
+```tsx
+import { useEffect } from 'react';
 import { blogPosting, mountJsonLd } from 'latere-ui/structured-data';
 
-const remove = mountJsonLd(blogPosting({ headline: post.title, url: post.url }));
-onUnmounted(remove);
+useEffect(() => mountJsonLd(blogPosting({ headline: post.title, url: post.url })), [post]);
 ```
 
 It keeps one script element per key (`'page'` unless you pass a second
@@ -921,163 +1012,6 @@ and a bad page fails the build instead of publishing a wrong description. Its
 Every URL must be absolute: a crawler or an agent may read a copy of the page
 without knowing where it came from.
 
-## React
-
-Every visual component ships from `latere-ui/react`, including controls, overlays, service hosts, console/account components and DocsLayout. The host compiles the source `.tsx`; React and Vue share component styles and framework-free logic. The visual suite compares matching examples by decoded RGBA pixels, with no channel or antialiasing tolerance, then compares each adapter to its platform baseline.
-
-Install React 18 or 19 and React DOM in your application. They are optional peers of this package. The React entrypoint does not import Vue or Pinia at runtime. The complete adapters shipped in v1.29.0; `PlatformLogoMark` is the one React export not yet in a release.
-
-### Session
-
-`SessionProvider` owns the same state machine the Vue store + `useSession`
-composable do: resolve `/me` on mount, the global 401 seam, org switching,
-front-channel logout: built on the identical framework-agnostic core
-(`session/client.ts`, `me.ts`, `reauth.ts`). `useSession()` reads it;
-`useSessionGate()` is the router-agnostic port of the Vue route gate.
-
-```tsx
-import { SessionProvider, useSession, AccountMenu } from 'latere-ui/react';
-
-function App() {
-  return (
-    <SessionProvider csrfCookie="csrf_token" defaultReturnTo="/dashboard">
-      <Shell />
-    </SessionProvider>
-  );
-}
-
-function Shell() {
-  const { principal, loading, login, logout, switchOrg } = useSession();
-  if (loading) return <Spinner />;
-  return (
-    <>
-      {/* AccountMenu reads principal/login/logout/switchOrg from the
-          ambient SessionProvider automatically when no matching prop is
-          passed: pass `principal` explicitly to override. */}
-      <AccountMenu dashboardPath="/dashboard" />
-      {principal ? <Dashboard /> : <button onClick={() => login()}>Sign in</button>}
-    </>
-  );
-}
-```
-
-### Console shell
-
-```tsx
-import { ConsoleSidebar, AccountMenu, type ConsoleNavModel } from 'latere-ui/react';
-import 'latere-ui/console';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-
-const model: ConsoleNavModel = {
-  groups: [
-    { label: 'Workspace', items: [
-      { id: 'requests', label: 'Requests', to: '/requests', badge: 'live' },
-    ] },
-  ],
-};
-
-function Rail() {
-  const location = useLocation();
-  const navigate = useNavigate();
-  return (
-    <ConsoleSidebar
-      model={model}
-      activeKey={location.pathname.split('/')[1]}
-      brandName="Workspace" brandSub="Console"
-      routerLink={Link}
-      onNavigate={(item) => item.to && navigate(item.to)}
-      foot={<AccountMenu placement="bottom-start" />}
-    />
-  );
-}
-```
-
-`routerLink` must forward `className`/`title`/`onClick`/`children` itself;
-React has no Vue-style attrs fallthrough onto a child component's root
-element; real router `Link` components already do this. Collapse is
-`collapsed`/`onCollapsedChange` (controlled) or uncontrolled if omitted.
-`product` and `productLabels` add the built-in ProductSwitcher to the expanded head. `brandExtra` accepts custom head content. See [React shell APIs](react-shell.md) for the palette, docs layout, preferences and organization state hook.
-
-### Glass primitives
-
-All Glass components listed above are exported. Import `latere-ui/glass` for the material; components import their own shared styles. Controlled React components report proposed values through callbacks; the host must pass the new value back to update the control:
-
-| Component | Controlled props and callback |
-|---|---|
-| `GlassField` | `value` and `onChange(text)` |
-| `GlassCheckbox`, `GlassSwitch` | Boolean `value` and `onChange(checked)` |
-| `GlassSelect`, `GlassSegmented` | `value`, `options`, `onChange(value)`; `ariaLabel` names the group/control. `GlassSelect` also takes `searchable`, `searchPlaceholder` and `noMatchLabel` |
-| `GlassTabs` | `value`, `tabs`, `onChange(value)`; the host renders the active panel |
-| `GlassRadio` | Selected group `value`, option identity `optionValue`, shared `name`, `onChange(value)` |
-| `GlassModal`, `GlassDrawer`, `ConsolePalette` | `open` and `onClose()`; the host updates `open` |
-| `GlassPopover` | Optional `open` / `onOpenChange(open)`; omit `open` for internal state |
-| `GlassMenu` | `items` and `onSelect(value)`; disabled items cannot select |
-
-For radio groups, Vue's `modelValue` becomes React's `value`, while Vue's option `value` becomes React's `optionValue`:
-
-```tsx
-import { useState } from 'react';
-import { GlassRadio } from 'latere-ui/react';
-
-function Schedule() {
-  const [frequency, setFrequency] = useState('daily');
-  return <>
-    <GlassRadio name="frequency" value={frequency} optionValue="daily"
-      label="Daily" onChange={setFrequency} />
-    <GlassRadio name="frequency" value={frequency} optionValue="weekly"
-      label="Weekly" onChange={setFrequency} />
-  </>;
-}
-```
-
-### Overlays and services
-
-`GlassModal` and `GlassDrawer` portal to the document body, trap focus while open, and request closure through `onClose`. Their `header` prop replaces the default title; modal `footer` accepts a React node or `(close) => ReactNode`. Drawer `side` is `left` or `right` and `width` defaults to `20rem`.
-
-`GlassPopover` accepts a `trigger` node or `({ open, toggle }) => ReactNode`; its wrapper already toggles on click. Its content is `children` or `({ close }) => ReactNode`. Use `close` after handling a menu choice. `placement` accepts `bottom-start`, `bottom-end`, `top-start`, or `top-end`; `matchWidth` follows the trigger width. `GlassTooltip` wraps its trigger in `children` and takes `text` plus optional `placement="top" | "bottom"`.
-
-Mount one `GlassToaster` and one `GlassConfirmHost` near the application root:
-
-```tsx
-import { GlassToaster, GlassConfirmHost, message, confirm } from 'latere-ui/react';
-
-function FeedbackHosts() {
-  return <><GlassToaster /><GlassConfirmHost /></>;
-}
-
-const dismiss = message.success('Saved', { duration: 4000 });
-// dismiss() closes this toast; duration: 0 keeps it until dismissed.
-const approved = await confirm({ message: 'Delete this workspace?', danger: true });
-```
-
-Vue and React use the same framework-free message and confirmation stores. `message.info/success/warning/error` return a closer; `message.clear()` removes all toasts. `confirm()` queues requests and resolves `true` on confirmation or `false` on cancellation. Mount a single host for each service per application, using its framework adapter.
-
-### Footer
-
-Same footer the Vue sites render, same `footer.css`. `v-model` splits into
-value + handler; the component imports its own stylesheet, so there is no
-`latere-ui/styles` import to remember.
-
-```tsx
-import { SiteFooter } from 'latere-ui/react';
-
-<SiteFooter
-  theme={theme} onThemeChange={setTheme}
-  locale={locale} onLocaleChange={setLocale}
-/>
-```
-
-`compact` swaps the product columns for wrapping navigation followed by compact preferences. Every label remains visible without horizontal scrolling. `routerLink` keeps internal links inside your SPA
-(relative `to`); without it they are absolute under `baseUrl`. An app that
-ships one language should pass `locales` with just that one, so the dropdown
-tells the truth.
-
-`footer.css` reads `--text`, `--text-secondary`, `--text-muted`, `--accent`,
-`--border`, `--bg-surface`, `--bg-raised`, `--shadow`, `--focus-outline` and
-the `--glass-*` set. If your app already has its own palette, alias them on
-`.site-footer` rather than importing `latere-ui/tokens`, which would redefine
-`--bg-*` for the whole page.
-
 ## Status and stability
 
 The package ships source and is pinned by tag, so a consumer upgrades only when
@@ -1087,7 +1021,7 @@ signatures are the compatibility surface. A breaking change to any of them
 comes with a note in this guide's migration paragraphs, as the v1.10 to v1.20
 Liquid Glass change did.
 
-Vue and React expose the same visual component set. Framework state bindings remain idiomatic: Vue refs and events, React values, hooks and callbacks. The full appearance matrix includes both frameworks at desktop and mobile sizes in light and dark themes; see the [visual reference](visual-reference.md).
+Version 2 is React only: the package root resolves to the React entry, and a Vue application stays on a v1.x tag. The [changelog](../CHANGELOG.md#unreleased) lists what version 2 removed. State bindings are React values, hooks and callbacks. The appearance matrix renders every component at desktop and mobile sizes in light and dark themes; see the [visual reference](visual-reference.md).
 
 ### Compact layout defaults
 
@@ -1099,4 +1033,4 @@ The default button variant and icon buttons draw their hairline from `--lu-butto
 
 ### Product-neutral shell styling
 
-Omit `brandTheme` for neutral UI typography, set `brandName` to the host application name, and use the brand/logo slots for a custom identity. Named brand themes remain opt-in. See the [product styling guidance](design-system.md#keep-product-styling-explicit) for Replichai, Wallfacer and Origo integration choices.
+Omit `brandTheme` for neutral UI typography, set `brandName` to the host application name, and use the `brand` and `logo` props for a custom identity. Named brand themes remain opt-in. See the [product styling guidance](design-system.md#keep-product-styling-explicit) for Replichai, Wallfacer and Origo integration choices.

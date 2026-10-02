@@ -1,6 +1,6 @@
-# React console and account components
+# Console and account components
 
-These components have shipped since v1.29.0. Import them from `latere-ui/react`. They use the same component styles and models as the Vue adapters. Import the layout and material styles once in your app:
+Import these components from `latere-ui`. Import the layout and material styles once in your app:
 
 ```tsx
 import 'latere-ui/tokens';
@@ -9,21 +9,19 @@ import 'latere-ui/console';
 import 'latere-ui/docs';
 import {
   ConsoleSidebar, ConsolePalette, DocsLayout, AccountPrefs,
-  ProductSwitcher, OrgSwitcher, useOrgSwitcher,
-} from 'latere-ui/react';
+  OrgSwitcher, useOrgSwitcher,
+} from 'latere-ui';
 ```
 
 The same components support default glass, Replichai, Wallfacer and Origo. To select a preset, import `latere-ui/presets` after these styles and set `data-design` on `<html>` before mounting. Set `data-theme` to `light` or `dark`; this also styles portals. Load the preset fonts through your application: Inter for Replichai/Wallfacer, IBM Plex Sans and Mono for Origo. See [appearance setup](design-system.md#keep-product-styling-explicit).
 
-The visual matrix includes every shell component in both frameworks, both themes and desktop/mobile. Canonical Vue and React examples must have identical decoded RGBA pixels, including antialiasing, before their references can be recorded. Behavior tests separately exercise the controls described below.
+The visual matrix includes every shell component in both themes at desktop and mobile widths, compared with exact decoded RGBA pixels, antialiasing included. Behavior tests separately exercise the controls described below.
 
-## Navigation and product switching
+## Navigation
 
 `ConsolePalette` accepts `open`, a `ConsoleNavModel` in `model`, and `onClose` / `onNavigate(item)`. Connect the sidebar's `onSearch` callback to the palette's open state. The palette searches enabled rows with a `to` target, sub-pages included, focuses its input, supports arrow selection and Enter, and restores focus when closed. Customize its copy with `placeholder` and `emptyLabel`.
 
 Pass `items` for entries beyond the rail: actions (`action: true`) and other destinations, each with an optional `group` shown at the row's end, `keywords` that also match, and an `icon`. Pass `search(query)` to append results for a query, such as documentation pages. Every word of the query must appear in a row's label, group or keywords; the chosen row, whichever source it came from, reaches `onNavigate`.
-
-`ProductSwitcher` accepts the current product slug in `current`, an optional `products` list, `labels`, and `size` (`sm` or `md`). The current product is marked without a link. Other tiles navigate to their configured URLs. Its panel adjusts to viewport edges and updates when the page scrolls or resizes. Use `ConsoleSidebar`'s `product` and `productLabels` props to include it in the expanded sidebar head; it hides in the collapsed rail.
 
 ## Account preferences
 
@@ -101,17 +99,17 @@ The component is headless and ships no styles of its own. This is the presentati
 
 ## Documentation layout
 
-`DocsLayout` accepts the same grouped document model and navigation props as Vue: `groups`, `activeSlug`, optional `activeGroupId`, `base`, and `routerLink`. An injected router link must forward its DOM attributes and render children. `onNavigate(doc)` receives the selected `FlatDoc`.
+`DocsLayout` accepts the grouped document model and navigation props: `groups`, `activeSlug`, optional `activeGroupId`, `base`, and `routerLink`. An injected router link must forward its DOM attributes and render children. `onNavigate(doc)` receives the selected `FlatDoc`.
 
 Pass rendered, trusted HTML through `articleHtml`, or a React node through `article`. `articleTitle` overrides the active document's title. The `enhance(element)` callback runs after article rendering and before scanning headings. Enhanced markup and assigned heading IDs survive TOC selection updates.
 
-| Vue slot or event | React prop |
+| Prop | Purpose |
 |---|---|
-| `#sidebar-head` | `sidebarHead` |
-| `#group-icon` | `renderGroupIcon(group)` |
-| `#article` | `article` |
-| `#toc` | `renderToc({ items, activeId })` |
-| `navigate` | `onNavigate(doc)` |
-| `toc-select` | `onTocSelect(id)` |
+| `sidebarHead` | Replaces the eyebrow above the document index |
+| `renderGroupIcon(group)` | A group's icon in the index |
+| `article` | A React node in place of `articleHtml` |
+| `renderToc({ items, activeId })` | Replaces the table of contents |
+| `onNavigate(doc)` | Called with the chosen `FlatDoc` |
+| `onTocSelect(id)` | Called with the heading chosen in the table of contents |
 
 `showToc` controls the TOC column; `tocLevels` defaults to `[2, 3]`. Copy overrides are `eyebrow`, `tocLabel`, `prevLabel`, and `nextLabel`. A `DocsLayoutHandle` ref exposes `refresh()` for host-driven article changes and `toc` for explicit outline control. The controller's `getSnapshot()` returns `{ items, activeId }`; `setActive(id)` selects a heading.

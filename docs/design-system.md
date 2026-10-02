@@ -1,6 +1,6 @@
 # A shared visual language
 
-Use the same material, spacing, and interface patterns across product surfaces. This guide helps builders choose a surface, compose a screen, and inspect its reference figure. For props and code examples, use the [integration guide](api-guide.md) or [React shell guide](react-shell.md). The guide describes `main`; the few changes not yet in a release are listed under Unreleased in the [changelog](../CHANGELOG.md#unreleased).
+Use the same material, spacing, and interface patterns across product surfaces. This guide helps builders choose a surface, compose a screen, and inspect its reference figure. For props and code examples, use the [integration guide](api-guide.md) or the [console and account components](react-shell.md). The guide describes `main`; the few changes not yet in a release are listed under Unreleased in the [changelog](../CHANGELOG.md#unreleased).
 
 ![Tokens feed materials, materials support components, and components compose a shell](figures/design-skeleton.svg)
 
@@ -30,7 +30,7 @@ The [Apple macOS reference](https://www.apple.com/os/macos/) informs the restrai
 
 ## Keep product styling explicit
 
-The gallery and integration examples use a neutral Workspace identity. A shell without `brandTheme` inherits its UI typography. Named product themes are opt-in; custom wordmarks and marks belong in the brand/logo slots. The product directory is a catalog, not the identity of the example application.
+The gallery and integration examples use a neutral Workspace identity. A shell without `brandTheme` inherits its UI typography. Named product themes are opt-in; custom wordmarks and marks belong in the `brand` and `logo` props.
 
 Choose an importable appearance for the existing components:
 
@@ -45,7 +45,7 @@ document.documentElement.dataset.design = 'origo';
 document.documentElement.dataset.theme = 'dark';
 ```
 
-Use `replichai`, `wallfacer`, or `origo` on **the document root**. This gives teleported menus, dialogs and notifications the same appearance. Remove `data-design` to return to the default glass style. The stylesheet has no effect without a recognized value. Nested mixed presets are not supported. Set the attributes before mounting to avoid a flash of the default theme.
+Use `replichai`, `wallfacer`, or `origo` on **the document root**. This gives portaled menus, dialogs and notifications the same appearance. Remove `data-design` to return to the default glass style. The stylesheet has no effect without a recognized value. Nested mixed presets are not supported. Set the attributes before mounting to avoid a flash of the default theme.
 
 | Preset | Typography and density | Surfaces and actions | Reference source |
 |---|---|---|---|
@@ -68,7 +68,36 @@ Supply Inter for Replichai/Wallfacer and IBM Plex Sans/Mono for Origo through yo
 | [![Replichai workspace](../tests/visual/goldens/darwin-24/replichai-workspace-light-desktop.png)](../tests/visual/goldens/darwin-24/replichai-workspace-light-desktop.png) | [![Wallfacer workspace](../tests/visual/goldens/darwin-24/wallfacer-workspace-light-desktop.png)](../tests/visual/goldens/darwin-24/wallfacer-workspace-light-desktop.png) | [![Origo workspace](../tests/visual/goldens/darwin-24/origo-workspace-light-desktop.png)](../tests/visual/goldens/darwin-24/origo-workspace-light-desktop.png) |
 | [Dark](../tests/visual/goldens/darwin-24/replichai-workspace-dark-desktop.png) · [Forms](../tests/visual/goldens/darwin-24/replichai-forms-light-desktop.png) | [Dark](../tests/visual/goldens/darwin-24/wallfacer-workspace-dark-desktop.png) · [Forms](../tests/visual/goldens/darwin-24/wallfacer-forms-light-desktop.png) | [Dark](../tests/visual/goldens/darwin-24/origo-workspace-dark-desktop.png) · [Forms](../tests/visual/goldens/darwin-24/origo-forms-light-desktop.png) |
 
-The appearance matrix renders every component in Vue and React, in desktop/light, desktop/dark, mobile/light and mobile/dark. Open the figures at full size or use the [complete per-style component index](visual-reference.md#product-style-variations). Run `bun run visual:dev` to explore their live gallery links.
+The appearance matrix renders every component in light and dark at desktop width in each appearance, and at mobile width in the default appearance. Open the figures at full size or use the [complete per-style component index](visual-reference.md#product-style-variations). Run `bun run visual:dev` to explore their live gallery links.
+
+## Use the ink palette
+
+The platform console, its documentation and the identity pages read the ink palette. Import `latere-ui/ink` after the shared styles and set `data-design="ink"` on the document root; `data-theme="dark"` selects the dark ladder:
+
+```ts
+import 'latere-ui/tokens';
+import 'latere-ui/glass';
+import 'latere-ui/ink';
+
+document.documentElement.dataset.design = 'ink';
+```
+
+Unlike the product presets, ink keeps the default components and recolors them: neutral grays with no hue, ink as the accent, and the primary action inverted between the themes, near-black with a white glyph in light and off-white with a near-black glyph in dark. Every text tone reaches 4.5:1 on every surface it is set on, control edges reach 3:1, and the status and code colors keep 4.5:1 where they are set. `--font-ui` names Inter with system fallbacks; supply Inter through your font pipeline.
+
+| Group | Tokens |
+|---|---|
+| Surfaces | `--bg-deep`, `--bg`, `--bg-surface`, `--bg-raised`, `--bg-hover`, `--bg-code` |
+| Text | `--fg-1`, `--fg-2`, `--fg-3` |
+| Accent | `--accent`, `--accent-hover`, `--accent-subtle`, `--lu-preset-on-accent` (the primary action's glyph) |
+| Edges | `--border`, `--border-strong`, `--border-control` |
+| Status | `--ok`, `--info`, `--warn`, `--danger`; the `--method-write`, `--method-update` and `--method-delete` tones they name; `--state-running`, `--state-creating`, `--state-idle`, `--state-error`, `--state-neutral`, `--state-stopped` |
+| Audience | `--audience-admin`, also set as `--lu-audience-admin` |
+| Code and terminal | `--code-comment`, `--code-keyword`, `--code-string`, `--code-number`, `--code-name`, `--code-variable`; `--bg-terminal`, `--fg-terminal`, `--fg-terminal-muted`, dark in both themes |
+| Geometry | `--radius-chip` 4px, `--radius-control` 6px, `--radius-action` 8px, `--radius-panel` 12px, `--radius-card` 16px; `--control-height` 36px, `--control-height-compact` 30px, `--control-height-sm` 28px, `--control-height-lg` 40px |
+| Type and spacing | `--text-title` 28px, `--text-page` 20px, `--text-heading` 16px, `--text-ui` 14px, `--text-control` 13px, `--text-code` 12.5px, `--text-small` 12px; `--page-gutter` 24px, 16px at or below 900px |
+| Elevation | `--shadow-menu`, `--shadow-dialog`, `--scrim` |
+
+Ink maps the package's own scale onto this ladder: `--radius-md`, `--radius-lg` and `--radius-xl` take the action, panel and card radii, and buttons, fields and selects take a 32px height (28px small) and the 6px control corner through `--lu-control-height`, `--lu-control-height-sm` and `--lu-control-radius`. Badges, alerts and live indicators read the `--state-*` tones. The visual reference has no ink figures.
 
 ## Start with the material
 
@@ -124,7 +153,7 @@ The sidebar supports a collapsed rail and custom brand, row, and footer content.
 
 Compact footer links wrap as complete labels, with the theme and language buttons below them. No horizontal scrolling is required to discover the links.
 
-The full footer leaves room around its content. A lead block on the left holds the site's lockup, the social profiles, a short hairline, and the theme and language buttons. Four link columns sit to its right: Applications with Research below it, Platform, Company, and Legal. Each group is a semibold heading in the full text tone over plain links set 32px apart, and the copyright closes the footer. Below 1024px the lead moves above the columns; on a phone the columns go two up and the lead follows them. A host sets its own lockup in place of the Latere AI mark.
+The full footer leaves room around its content. A lead block on the left holds the site's lockup, the social profiles, a short hairline, and the theme and language buttons. Four link columns sit to its right: Applications (Wallfacer) with Research (ReplicHAI) below it, Platform, Company, and Legal. Each group is a semibold heading in the full text tone over plain links set 32px apart, and the copyright closes the footer. Below 1024px the lead moves above the columns; on a phone the columns go two up and the lead follows them. A host sets its own lockup in place of the Latere AI mark.
 
 Product names in the columns rest in the same face and color as their neighbors, so each column reads as one list. A product takes its gradient under the pointer or keyboard focus; the chat, whose wordmark is the ink, takes the full text color. The compact strip keeps its italic wordmarks.
 
@@ -140,11 +169,11 @@ Theme and language choices belong to the host's preferences. Supply the language
 
 ## Draw the platform in ink
 
-ReplicHAI keeps its blue. The chat's public name is Latere, so its wordmark is the Latere lockup's serif italic in the ink of the text, and its switcher tile shows the Latere mark. The platform is the ground the products stand on, so its mark is the ink itself, near-black to graphite in the light theme and off-white to silver in the dark theme. The gradients are the `--lu-brand-*` tokens.
+ReplicHAI keeps its blue. The chat's public name is Latere, so its wordmark is the Latere lockup's serif italic in the ink of the text. The platform is the ground the products stand on, so its mark is the ink itself, near-black to graphite in the light theme and off-white to silver in the dark theme. The gradients are the `--lu-brand-*` tokens.
 
 ## Add optical effects deliberately
 
-The CSS material works without JavaScript. The optional Liquid Glass runtime adds edge refraction where the browser supports it and a cursor-following sheen on opted-in surfaces. React exports `initLiquidGlass`, `refract` and `sheen`; Vue also provides its lifecycle composable. Use sheen on a deliberate feature panel, where pointer movement helps explain the surface.
+The CSS material works without JavaScript. The optional Liquid Glass runtime adds edge refraction where the browser supports it and a cursor-following sheen on opted-in surfaces. `latere-ui` exports `initLiquidGlass`, `refract` and `sheen`; call `initLiquidGlass` again after new surfaces mount. Use sheen on a deliberate feature panel, where pointer movement helps explain the surface.
 
 ![Glass refraction and sheen fixture in the light theme](../tests/visual/goldens/darwin-24/effects-light-desktop.png)
 
@@ -152,8 +181,8 @@ Test effects over a recognizable backdrop so refraction is visible. Check both t
 
 ## Keep the figures reviewable
 
-Golden figures are committed PNGs from the browser fixtures, using fixed content, platform UI fonts with bundled brand/code fonts, and named viewport/theme combinations. They render at 2× the CSS layout size, as on a high-density display. The design skeleton is SVG and scales without pixelation. Their filenames identify the appearance, scenario, theme, and viewport. For example, `origo-buttons-dark-desktop.png` shows the button fixture in the Origo appearance in dark mode at the desktop size. Vue and React render each fixture with identical pixels, so one figure shows both adapters.
+Golden figures are committed PNGs from the browser fixtures, using fixed content, platform UI fonts with bundled brand/code fonts, and named viewport/theme combinations. They render at 2× the CSS layout size, as on a high-density display. The design skeleton is SVG and scales without pixelation. Their filenames identify the appearance, scenario, theme, and viewport. For example, `origo-buttons-dark-desktop.png` shows the button fixture in the Origo appearance in dark mode at the desktop size.
 
 The [reference index](visual-reference.md) maps components to their figures. Contributors compare, inspect, and update them as described in [Contributing](../CONTRIBUTING.md), and the [review records](reviews/README.md) document each deliberate regeneration, the defects it corrected, and the coverage limits.
 
-Shared styles define the appearance for both adapters. Canonical examples must match every decoded RGBA pixel across Vue and React before either adapter baseline is accepted; no channel differences or antialiased pixels are ignored. Baselines remain separate by framework and rendering platform. A screenshot verifies appearance at one point in a scenario. Interaction tests verify what happens when a reader types, selects, opens, dismisses, or navigates.
+Each figure must match its reference in every decoded RGBA pixel; no channel differences or antialiased pixels are ignored. References are kept per rendering platform. A screenshot verifies appearance at one point in a scenario. Interaction tests verify what happens when a reader types, selects, opens, dismisses, or navigates.
