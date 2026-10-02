@@ -68,6 +68,9 @@ export {
 export { me, orgs, switchOrg, switchPersonal, logout, login } from '../session/me';
 export type { MeOptions, OrgsOptions, SwitchOrgOptions, SwitchOrgNavigation, LogoutOptions } from '../session/me';
 export { createApiClient, ApiError } from '../session/client';
+// The expired-session recovery policy, for an app that keeps its own session
+// state instead of mounting SessionProvider.
+export { createReauth, type Reauth, type ReauthOptions } from '../session/reauth';
 export { runFrontChannelLogout } from '../session/frontChannel';
 export type {
   Principal,
