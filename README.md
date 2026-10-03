@@ -44,7 +44,7 @@ The package ships `.vue`, `.tsx`, `.ts`, and `.css` source. Your application com
 The package is not on a registry. Pin a release tag from the [releases page](https://github.com/latere-ai/latere-ui/releases), for example:
 
 ```sh
-bun add github:latere-ai/latere-ui#v1.32.2
+bun add github:latere-ai/latere-ui#v1.33.0
 ```
 
 These docs and figures track `main`. Changes that are not yet in a release are listed under Unreleased in the [changelog](CHANGELOG.md).
