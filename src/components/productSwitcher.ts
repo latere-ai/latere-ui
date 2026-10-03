@@ -15,7 +15,6 @@ export type ProductSlug =
   | 'topos'
   | 'cella'
   | 'lux'
-  | 'lectio'
   | 'identity';
 
 export interface ProductInfo {
@@ -77,14 +76,6 @@ export const LATERE_PRODUCTS: readonly ProductInfo[] = [
     color: '#3a4ed1',
     brandClass: 'lux-brand',
     icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3a4ed1" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 4l8 14H4z"/><path d="M2 11h2M20 11h2M12 20v2" opacity="0.7"/></svg>',
-  },
-  {
-    slug: 'lectio',
-    name: 'Lectio',
-    url: 'https://lectio.latere.ai',
-    color: '#b87333',
-    brandClass: 'lectio-brand',
-    icon: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b87333" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3 H14 L18 7 V21 H6 Z"/><path d="M14 3 V7 H18"/><path d="M9 12 H15M9 15.5 H15" opacity="0.7"/></svg>',
   },
   {
     slug: 'identity',
