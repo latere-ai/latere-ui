@@ -18,7 +18,7 @@ function mount(props: Partial<SiteFooterProps> = {}) {
 
 const hrefs = (c: Element) => Array.from(c.querySelectorAll('a')).map((a) => a.getAttribute('href'));
 const DESTINATIONS = {
-  applications: ['https://wf.latere.ai/', 'https://lectio.latere.ai/'],
+  applications: ['https://wf.latere.ai/'],
   research: ['https://replichai.latere.ai/'],
   platform: ['https://platform.latere.ai/console', 'https://auth.latere.ai/'],
   company: ['https://latere.ai/about', 'https://latere.ai/blog/why-latere', 'https://latere.ai/blog', 'https://latere.ai/open-source', 'mailto:contact@latere.ai'],
@@ -58,7 +58,7 @@ describe('SiteFooter (React)', () => {
     const { container } = mount();
     const links = Array.from(container.querySelectorAll('.footer-cols a.footer-link'));
     expect(links.filter(a => a.hasAttribute('data-brand')).map(a => [a.textContent, a.getAttribute('data-brand')])).toEqual([
-      ['Wallfacer', 'wallfacer'], ['Lectio', 'lectio'], ['ReplicHAI', 'replichai'], ['Latere Platform', 'platform'],
+      ['Wallfacer', 'wallfacer'], ['ReplicHAI', 'replichai'], ['Latere Platform', 'platform'],
     ]);
     expect(container.querySelector('.footer-cols [class$="-brand"]')).toBeNull();
     expect(links.find(a => a.textContent === 'Identity')!.hasAttribute('data-brand')).toBe(false);
@@ -182,7 +182,7 @@ describe('SiteFooter (React)', () => {
     expect(container.querySelector('.footer-bottom')).toBeNull(); // copyright lives inline
     expect(container.querySelector('.footer-compact-copy')).not.toBeNull();
     const links = container.querySelector('.footer-compact-links')!;
-    for (const name of ['Wallfacer', 'Lectio', 'ReplicHAI', 'Latere Platform', 'Identity', 'Team', 'Impressum']) {
+    for (const name of ['Wallfacer', 'ReplicHAI', 'Latere Platform', 'Identity', 'Team', 'Impressum']) {
       expect(links.textContent).toContain(name);
     }
     expect(container.querySelectorAll('.footer-extra .lu-pref')).toHaveLength(2);
@@ -200,6 +200,15 @@ describe('SiteFooter (React)', () => {
     const { container } = mount({ compact });
     expect(hrefs(container)).not.toContain('https://drive.latere.ai/');
     expect(container.textContent).not.toContain('Drive');
+  });
+
+  // The hosted Lectio service was retired on 2026-10-03, so neither variant
+  // may link it, name it, or carry its hover gradient.
+  it.each([false, true])('offers no retired Lectio service (compact=%s)', (compact) => {
+    const { container } = mount({ compact });
+    expect(hrefs(container)).not.toContain('https://lectio.latere.ai/');
+    expect(container.textContent).not.toContain('Lectio');
+    expect(container.querySelector('[data-brand="lectio"], .lectio-brand')).toBeNull();
   });
 
   // The open source page is a company link, so it carries translated copy in

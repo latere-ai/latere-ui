@@ -14,7 +14,7 @@ function render(props: Record<string, unknown> = {}, options: Record<string, unk
 afterEach(() => { while (mounted.length) mounted.pop()!.unmount(); document.body.innerHTML = ''; });
 
 const DESTINATIONS = {
-  applications: ['https://wf.latere.ai/', 'https://lectio.latere.ai/'],
+  applications: ['https://wf.latere.ai/'],
   research: ['https://replichai.latere.ai/'],
   platform: ['https://platform.latere.ai/console', 'https://auth.latere.ai/'],
   company: ['https://latere.ai/about', 'https://latere.ai/blog/why-latere', 'https://latere.ai/blog', 'https://latere.ai/open-source', 'mailto:contact@latere.ai'],
@@ -24,6 +24,11 @@ const DESTINATIONS = {
 describe('footer dictionaries', () => {
   it.each(Object.entries({ zh, de }))('%s has the same keys as English', (_locale, dict) => {
     expect(Object.keys(dict).sort()).toEqual(Object.keys(en).sort());
+  });
+
+  it.each(Object.entries({ en, zh, de }))('%s names no retired Lectio service', (_locale, dict) => {
+    expect(Object.keys(dict)).not.toContain('footer.products.lectio');
+    expect(Object.values(dict)).not.toContain('Lectio');
   });
 
   it.each(Object.entries({ en, zh, de }))('%s has no blank translations', (locale, dict) => {
@@ -66,7 +71,7 @@ describe('SiteFooter', () => {
     const links = render().findAll('.footer-cols a.footer-link');
     const products = links.filter(a => a.attributes('data-brand'));
     expect(products.map(a => [a.text(), a.attributes('data-brand')])).toEqual([
-      ['Wallfacer', 'wallfacer'], ['Lectio', 'lectio'], ['ReplicHAI', 'replichai'], ['Latere Platform', 'platform'],
+      ['Wallfacer', 'wallfacer'], ['ReplicHAI', 'replichai'], ['Latere Platform', 'platform'],
     ]);
     // No wordmark span: the column reads in one face.
     expect(render().find('.footer-cols [class$="-brand"]').exists()).toBe(false);
@@ -194,7 +199,7 @@ describe('SiteFooter', () => {
     expect(w.find('.footer-bottom').exists()).toBe(false); // copyright lives inline in the bar
     expect(w.find('.footer-compact-copy').exists()).toBe(true);
     const links = w.get('.footer-compact-links');
-    for (const name of ['Wallfacer', 'Lectio', 'ReplicHAI', 'Latere Platform', 'Identity', 'Team', 'Impressum']) {
+    for (const name of ['Wallfacer', 'ReplicHAI', 'Latere Platform', 'Identity', 'Team', 'Impressum']) {
       expect(links.text()).toContain(name);
     }
     expect(w.findAll('.footer-extra .lu-pref')).toHaveLength(2);
@@ -207,6 +212,16 @@ describe('SiteFooter', () => {
     const urls = w.findAll('a').map((a) => a.attributes('href') ?? '');
     expect(urls).not.toContain('https://drive.latere.ai/');
     expect(w.text()).not.toContain('Drive');
+  });
+
+  // The hosted Lectio service was retired on 2026-10-03, so neither variant
+  // may link it, name it, or carry its hover gradient.
+  it.each([false, true])('offers no retired Lectio service (compact=%s)', (compact) => {
+    const w = render({ compact });
+    const urls = w.findAll('a').map((a) => a.attributes('href') ?? '');
+    expect(urls).not.toContain('https://lectio.latere.ai/');
+    expect(w.text()).not.toContain('Lectio');
+    expect(w.find('[data-brand="lectio"], .lectio-brand').exists()).toBe(false);
   });
 
   // The open source page is a company link, so it carries translated copy in
