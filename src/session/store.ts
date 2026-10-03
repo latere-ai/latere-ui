@@ -70,7 +70,7 @@ export function createSessionStore<Raw = Principal>(opts: SessionStoreOptions<Ra
       return false;
     }
 
-    // Router-guard entry point (for apps with no gate UI, e.g. lectio): try the
+    // Router-guard entry point, for apps with no gate UI: try the
     // silent auto-login once; once spent, fall back to an interactive login so
     // a directly-loaded protected URL always lands somewhere usable.
     function requireSession(returnTo: string) {
