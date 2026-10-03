@@ -8,6 +8,10 @@ release. A tag without one fails the release workflow. Write under
 A section says what changed for whoever uses the release, not what was
 committed: the commit log already holds that.
 
+## Unreleased
+
+- Lectio leaves the package: the hosted service at `lectio.latere.ai` was retired on 2026-10-03, and every link to it was dead. The footer's Applications group lists Wallfacer alone, in both layouts, and the product switcher shows five tiles. This breaks a host that still names Lectio: `lectio` is no longer a `ProductSlug` or an entry of `LATERE_PRODUCTS`, `ConsoleSidebar` no longer accepts `brandTheme="lectio"`, and the `.lectio-brand` wordmark class, the `--lu-brand-lectio` token and the `footer.products.lectio` dictionary key are gone. A `ProductSwitcher` given `current="lectio"`, or a `ConsoleSidebar` given `product="lectio"`, still renders and marks no tile as current; remove the value.
+
 ## v1.33.0 - 2026-10-03
 
 - The footer's Legal column, and the compact footer's links, open with Trust Center (信任中心 in Chinese), linked to `/trust` on the company site: what Latere does with a reader's data, where it is kept and for how long.
