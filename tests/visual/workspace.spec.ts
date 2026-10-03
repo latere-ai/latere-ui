@@ -41,6 +41,6 @@ for (const framework of ['vue', 'react']) test(`${framework} shell examples have
     await visit(page, framework, scenario);
     await expect(page.locator('.lu-cs-brand-name')).toHaveText('Workspace');
     await expect(page.locator('.lu-cs-brand-name')).toHaveCSS('font-style', 'normal');
-    await expect(page.locator('.lu-cs-brand-name')).not.toHaveClass(/(?:lux|cella|topos|wallfacer|lectio)-brand/);
+    await expect(page.locator('.lu-cs-brand-name')).not.toHaveClass(/(?:lux|cella|topos|wallfacer)-brand/);
   }
 });

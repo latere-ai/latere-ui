@@ -20,9 +20,17 @@ describe('brand wordmark styles', () => {
 
   it('states the same product gradients in footer.css and brand.css', () => {
     const footer = tokens(read('src/styles/footer.css'));
-    expect(footer).toHaveLength(16); // eight products, light and dark
+    expect(footer).toHaveLength(14); // seven products, light and dark
     expect(tokens(read('src/styles/brand.css'))).toEqual(footer);
   });
+
+  // The hosted Lectio service was retired on 2026-10-03; its wordmark and
+  // gradient left with it, so no host can set a retired product's name.
+  for (const file of ['src/styles/footer.css', 'src/styles/brand.css']) {
+    it(`${file} carries no Lectio wordmark or gradient`, () => {
+      expect(read(file)).not.toMatch(/lectio/i);
+    });
+  }
 
   it('draws the platform in ink: neutral stops only, dark to graphite, light to silver', () => {
     const [light, dark] = tokens(read('src/styles/brand.css')).filter(t => t.startsWith('--lu-brand-platform'));

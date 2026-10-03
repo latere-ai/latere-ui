@@ -39,5 +39,5 @@ export const buttonVariants = ['glass', 'primary', 'ghost', 'danger'] as const;
 export const progressValues = [0, 50, 100, 150, -10];
 // Wordmark tokens, not the product lineup: `drive-brand` outlived the retired
 // Drive console as the Storage section's accent, so the gallery still proves it.
-export const brands = ['cella', 'drive', 'lectio', 'lux', 'topos', 'wallfacer'];
+export const brands = ['cella', 'drive', 'lux', 'topos', 'wallfacer'];
 export function workspaceMetrics(count: number) { return [{ label: 'Active projects', value: count, detail: 'Across your workspace' }, { label: 'Team members', value: 12, detail: 'Working together' }, { label: 'Completed this week', value: 24, detail: '8 more than last week' }]; }

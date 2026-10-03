@@ -12,7 +12,6 @@
     --lu-brand-wallfacer: linear-gradient(135deg, #b45133 0%, #9f432b 60%, #883520 100%);
     --lu-brand-lux: linear-gradient(135deg, #4d5ec0 0%, #3a4ed1 60%, #2b3fb8 100%);
     --lu-brand-topos: linear-gradient(135deg, #49616a 0%, #536c3f 60%, #805831 100%);
-    --lu-brand-lectio: linear-gradient(135deg, #90602f 0%, #885121 60%, #734418 100%);
     --lu-brand-drive: linear-gradient(135deg, #806015 0%, #765812 60%, #674b10 100%);
     --lu-brand-replichai: linear-gradient(135deg, #2369bd 0%, #2369bd 100%);
     --lu-brand-platform: linear-gradient(135deg, #0a0a0a 0%, #262626 55%, #4a4a4a 100%);
@@ -22,7 +21,6 @@
     --lu-brand-wallfacer: linear-gradient(135deg, #ed9a7d 0%, #df886a 60%, #d27b60 100%);
     --lu-brand-lux: linear-gradient(135deg, #aab5ff 0%, #92a0f3 60%, #8290e8 100%);
     --lu-brand-topos: linear-gradient(135deg, #9abcc4 0%, #a9be8d 60%, #c5a47d 100%);
-    --lu-brand-lectio: linear-gradient(135deg, #dfbd91 0%, #cfa577 60%, #be9566 100%);
     --lu-brand-drive: linear-gradient(135deg, #ead080 0%, #dcc268 60%, #cfb65e 100%);
     --lu-brand-replichai: linear-gradient(135deg, #78b1ed 0%, #78b1ed 100%);
     --lu-brand-platform: linear-gradient(135deg, #fafafa 0%, #d8d8d8 55%, #a8a8a8 100%);
@@ -36,7 +34,6 @@
 .wallfacer-brand,
 .lux-brand,
 .topos-brand,
-.lectio-brand,
 .drive-brand,
 .platform-brand {
     font-family: 'Instrument Serif', Georgia, serif !important;
@@ -53,7 +50,6 @@
 .wallfacer-brand { background-image: var(--lu-brand-wallfacer); }
 .lux-brand { background-image: var(--lu-brand-lux); }
 .topos-brand { background-image: var(--lu-brand-topos); }
-.lectio-brand { background-image: var(--lu-brand-lectio); }
 .drive-brand { background-image: var(--lu-brand-drive); }
 .platform-brand { background-image: var(--lu-brand-platform); }
 
