@@ -14,7 +14,7 @@ affects:
   - tests/visual
 effort: medium
 created: 2026-09-20
-updated: 2026-09-20
+updated: 2026-10-03
 author: changkun
 dispatched_task_id: null
 ---
@@ -53,6 +53,8 @@ Implemented one shared navigation model for Vue and React, full and compact foot
 Verification: 65 unit tests, type checking, 98.78% footer line coverage, 33 browser checks, and 32 exact Vue/React visual comparisons passed. Updated 64 affected macOS visual references and reviewed representative images for every design.
 
 The website consumes revision `2b72012`, loads the shared footer stylesheet, and removes obsolete capability URL rewriting. Its build and 15 browser checks passed. A new layout regression assertion failed without the shared stylesheet and passed with it; desktop and mobile screenshots were reviewed.
+
+Since 2026-10-03 Applications lists Wallfacer alone. The hosted Lectio service was retired, and its link, its hover gradient, and its dictionary key left the footer in both adapters and both layouts.
 
 ## Design refinement
 

@@ -138,7 +138,7 @@ Theme and language choices belong to the host's preferences. Supply the language
 
 ## Draw the platform in ink
 
-Each product keeps its hue: Wallfacer's copper, Lectio's amber, ReplicHAI's blue. The platform is the ground they stand on, so its mark is the ink itself, near-black to graphite in the light theme and off-white to silver in the dark theme. The gradients are the `--lu-brand-*` tokens.
+Each product keeps its hue: Wallfacer's copper and ReplicHAI's blue. The platform is the ground they stand on, so its mark is the ink itself, near-black to graphite in the light theme and off-white to silver in the dark theme. The gradients are the `--lu-brand-*` tokens.
 
 ## Add optical effects deliberately
 

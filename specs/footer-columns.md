@@ -27,7 +27,7 @@ affects:
   - tests
 effort: large
 created: 2026-09-25
-updated: 2026-09-26
+updated: 2026-10-03
 author: changkun
 dispatched_task_id: null
 ---
@@ -74,7 +74,7 @@ The groups come from the shared model in `footerNavigation.ts`:
 
 | Column | Groups |
 | --- | --- |
-| 1 | Applications (Wallfacer, Lectio), then Research (ReplicHAI) |
+| 1 | Applications (Wallfacer), then Research (ReplicHAI) |
 | 2 | Platform (Latere Platform, Identity) |
 | 3 | Company (About, Why Latere, Blog, Open Source, Contact) |
 | 4 | Legal (Privacy, Terms, Impressum) |
