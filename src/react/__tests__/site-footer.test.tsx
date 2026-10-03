@@ -22,7 +22,7 @@ const DESTINATIONS = {
   research: ['https://replichai.latere.ai/'],
   platform: ['https://platform.latere.ai/console', 'https://auth.latere.ai/'],
   company: ['https://latere.ai/about', 'https://latere.ai/blog/why-latere', 'https://latere.ai/blog', 'https://latere.ai/open-source', 'mailto:contact@latere.ai'],
-  legal: ['https://latere.ai/legal/privacy', 'https://latere.ai/legal/terms', 'https://latere.ai/legal/impressum'],
+  legal: ['https://latere.ai/trust', 'https://latere.ai/legal/privacy', 'https://latere.ai/legal/terms', 'https://latere.ai/legal/impressum'],
 };
 
 describe('SiteFooter (React)', () => {

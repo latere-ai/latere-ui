@@ -8,6 +8,10 @@ release. A tag without one fails the release workflow. Write under
 A section says what changed for whoever uses the release, not what was
 committed: the commit log already holds that.
 
+## Unreleased
+
+- The footer's Legal column, and the compact footer's links, open with Trust Center (信任中心 in Chinese), linked to `/trust` on the company site: what Latere does with a reader's data, where it is kept and for how long.
+
 ## v1.32.2 - 2026-10-01
 
 - The product switcher's Topos and Cella tiles open the platform console's Agents and Environments sections. They opened `topos.latere.ai` and `cella.latere.ai`, which no longer resolve since those hosted services were retired.

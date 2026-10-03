@@ -61,6 +61,7 @@ const legal: FooterGroup = {
   id: 'legal',
   labelKey: 'footer.legal',
   links: [
+    site('trust', 'footer.trust', '/trust'),
     site('privacy', 'footer.privacy', '/legal/privacy'),
     site('terms', 'footer.terms', '/legal/terms'),
     site('impressum', 'footer.impressum', '/legal/impressum'),
