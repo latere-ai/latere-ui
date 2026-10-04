@@ -7,10 +7,12 @@ import GlassBadge from '../src/components/GlassBadge.vue';
 import GlassAlert from '../src/components/GlassAlert.vue';
 
 describe('GlassButton', () => {
-  it('paints the default variant as thin glass, others own their fill', () => {
-    expect(mount(GlassButton).classes()).toContain('lu-glass-thin');
-    expect(mount(GlassButton, { props: { variant: 'primary' } }).classes()).not.toContain('lu-glass-thin');
-    expect(mount(GlassButton, { props: { variant: 'primary' } }).classes()).toContain('lu-btn-primary');
+  it('carries no glass material class on any variant', () => {
+    for (const variant of ['glass', 'primary', 'ghost', 'danger', 'danger-ghost'] as const) {
+      const classes = mount(GlassButton, { props: { variant } }).classes();
+      expect(classes).toContain(`lu-btn-${variant}`);
+      expect(classes.filter(name => name.startsWith('lu-glass'))).toEqual([]);
+    }
   });
 
   it('defaults to type=button so it never submits by accident', () => {

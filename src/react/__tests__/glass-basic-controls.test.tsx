@@ -26,7 +26,7 @@ describe('GlassIconButton', () => {
     const { getByRole, rerender } = render(<GlassIconButton label="Pin" onClick={click}><svg /></GlassIconButton>);
     const button = getByRole('button', { name: 'Pin' });
     expect(button.getAttribute('type')).toBe('button');
-    expect(button.className).toBe('lu-iconbtn lu-glass-ultrathin lu-iconbtn-md');
+    expect(button.className).toBe('lu-iconbtn lu-iconbtn-md');
     expect(button.hasAttribute('aria-pressed')).toBe(false);
     expect(button.querySelector('svg')).not.toBeNull();
     fireEvent.click(button);

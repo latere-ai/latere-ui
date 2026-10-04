@@ -1,11 +1,15 @@
-// React adapter of GlassButton.vue — a glass action control. Capsule-shaped;
-// the default variant is thin glass, `primary` is smoked ink glass, `danger`
-// destructive. Requires `import 'latere-ui/glass'`.
+// React adapter of GlassButton.vue: an action control in the one control
+// shape, a capsule. The default variant is the secondary action, a hairline
+// outline; `primary` is the ink fill, `ghost` a bare label, `danger` the
+// confirming destructive fill and `danger-ghost` a destructive bare label.
+// Flat: no glass material, blur or shadow (glass-button.css).
 import type { MouseEvent, ReactNode } from 'react';
 import '../styles/components/glass-button.css';
 import { cx } from './internal';
 
 export interface GlassButtonProps {
+  /** `glass` (the default) is the secondary action, a hairline outline;
+   *  `primary` the ink fill; `ghost` a bare label. */
   variant?: 'glass' | 'primary' | 'ghost' | 'danger' | 'danger-ghost';
   size?: 'sm' | 'md';
   /** Show a spinner and block interaction. */
@@ -29,10 +33,6 @@ export function GlassButton({
   children,
   onClick,
 }: GlassButtonProps) {
-  // Only the default variant paints itself as glass; primary/ghost/danger own
-  // their fill so they read as distinct affordances against a glass panel.
-  const glassy = variant === 'glass';
-
   function handleClick(ev: MouseEvent<HTMLButtonElement>) {
     if (disabled || loading) return;
     onClick?.(ev);
@@ -41,7 +41,7 @@ export function GlassButton({
   return (
     <button
       type={type}
-      className={cx('lu-btn', `lu-btn-${variant}`, `lu-btn-${size}`, glassy && 'lu-glass-thin', loading && 'is-loading')}
+      className={cx('lu-btn', `lu-btn-${variant}`, `lu-btn-${size}`, loading && 'is-loading')}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       onClick={handleClick}

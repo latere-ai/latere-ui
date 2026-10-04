@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import '../styles/components/glass-icon-button.css';
-// A square, icon-only glass button for toolbars. Requires an accessible label.
-// Requires `import 'latere-ui/glass'`.
+// An icon-only button for toolbars: round, with the hairline outline of
+// GlassButton's secondary variant and no glass material
+// (glass-icon-button.css). Requires an accessible label.
 withDefaults(defineProps<{
   label: string;
   size?: 'sm' | 'md';
@@ -19,7 +20,7 @@ defineEmits<{ (e: 'click', ev: MouseEvent): void }>();
 <template>
   <button
     type="button"
-    class="lu-iconbtn lu-glass-ultrathin"
+    class="lu-iconbtn"
     :class="[`lu-iconbtn-${size}`, { 'is-pressed': pressed }]"
     :aria-label="label"
     :aria-pressed="pressed || undefined"

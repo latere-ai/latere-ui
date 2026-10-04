@@ -8,14 +8,14 @@ describe('GlassButton (react)', () => {
     const onClick = vi.fn();
     const { getByRole } = render(<GlassButton onClick={onClick}>Go</GlassButton>);
     const btn = getByRole('button');
-    expect(btn.className).toBe('lu-btn lu-btn-glass lu-btn-md lu-glass-thin');
+    expect(btn.className).toBe('lu-btn lu-btn-glass lu-btn-md');
     expect(btn.getAttribute('type')).toBe('button');
     expect(btn.querySelector('.lu-btn-label')!.textContent).toBe('Go');
     fireEvent.click(btn);
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
-  it('variant/size drop the glass class and switch the modifier classes', () => {
+  it('variant/size switch the modifier classes', () => {
     const { getByRole } = render(
       <GlassButton variant="primary" size="sm">
         Save
@@ -32,7 +32,7 @@ describe('GlassButton (react)', () => {
       </GlassButton>,
     );
     const btn = getByRole('button');
-    expect(btn.className).toBe('lu-btn lu-btn-glass lu-btn-md lu-glass-thin is-loading');
+    expect(btn.className).toBe('lu-btn lu-btn-glass lu-btn-md is-loading');
     expect(btn.getAttribute('aria-busy')).toBe('true');
     expect(btn.hasAttribute('disabled')).toBe(true);
     expect(btn.querySelector('.lu-btn-spin')).not.toBeNull();

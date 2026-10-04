@@ -13,6 +13,7 @@ describe('GlassIconButton', () => {
     const w = mount(GlassIconButton, { props: { label: 'Search', pressed: true } });
     expect(w.attributes('aria-label')).toBe('Search');
     expect(w.attributes('aria-pressed')).toBe('true');
+    expect(w.classes()).toEqual(['lu-iconbtn', 'lu-iconbtn-md', 'is-pressed']);
     await w.trigger('click');
     expect(w.emitted('click')).toHaveLength(1);
   });
