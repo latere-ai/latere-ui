@@ -44,7 +44,7 @@ import ConsoleIcon from './ConsoleIcon.vue';
 import ProductSwitcher from './ProductSwitcher.vue';
 import type { ProductSwitcherLabelOverrides } from './productSwitcher';
 
-type BrandTheme = 'lux' | 'cella' | 'topos' | 'wallfacer';
+type BrandTheme = 'lux' | 'cella' | 'topos';
 
 interface Props {
   /** Grouped navigation model. */

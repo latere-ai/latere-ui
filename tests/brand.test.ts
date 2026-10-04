@@ -9,6 +9,8 @@ describe('brand wordmark styles', () => {
   // The footer is self-contained (no @import) so `latere-ui/styles` stays one
   // resolvable file for SSG consumers; console.css uses brand.css for the same
   // values. Guard the background-image rule in BOTH so neither regresses.
+  // Wallfacer left the lineup, but pages that cite it by name still set its
+  // wordmark, so its rule stays in both sheets.
   for (const file of ['src/styles/footer.css', 'src/styles/brand.css']) {
     it(`${file} uses background-image so background-clip:text is not reset by the shorthand`, () => {
       const css = read(file);

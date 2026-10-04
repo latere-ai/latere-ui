@@ -60,9 +60,10 @@
     --lu-brand-replichai: linear-gradient(135deg, #78b1ed 0%, #78b1ed 100%);
     --lu-brand-platform: linear-gradient(135deg, #fafafa 0%, #d8d8d8 55%, #a8a8a8 100%);
 }
-/* `.drive-brand` outlives the retired Drive console: the platform's Storage
- * section keeps the gold as its accent, so hosts still resolve the class even
- * though no component in this package emits it. */
+/* `.drive-brand` and `.wallfacer-brand` outlive their place in the lineup,
+ * and no component in this package emits either: the platform's Storage
+ * section keeps the Drive gold as its accent, and pages that still cite
+ * Wallfacer by name set its wordmark, so hosts still resolve both classes. */
 .cella-brand,
 .wallfacer-brand,
 .lux-brand,

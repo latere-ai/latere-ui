@@ -27,9 +27,10 @@
 }
 
 /* ===== Product brand names ===== */
-/* `.drive-brand` outlives the retired Drive console: the platform's Storage
- * section keeps the gold as its accent, so hosts still resolve the class even
- * though no component in this package emits it. */
+/* `.drive-brand` and `.wallfacer-brand` outlive their place in the lineup,
+ * and no component in this package emits either: the platform's Storage
+ * section keeps the Drive gold as its accent, and pages that still cite
+ * Wallfacer by name set its wordmark, so hosts still resolve both classes. */
 .cella-brand,
 .wallfacer-brand,
 .lux-brand,

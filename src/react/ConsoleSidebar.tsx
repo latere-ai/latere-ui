@@ -54,7 +54,7 @@ import { cx } from './internal';
 import { ProductSwitcher } from './ProductSwitcher';
 import type { ProductSwitcherLabelOverrides } from '../components/productSwitcher';
 
-type BrandTheme = 'lux' | 'cella' | 'topos' | 'wallfacer';
+type BrandTheme = 'lux' | 'cella' | 'topos';
 
 /**
  * Minimal shape accepted for an injected router link component (e.g.
