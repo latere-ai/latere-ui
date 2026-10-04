@@ -62,3 +62,4 @@ specs/
 | [Complete component visual matrix](complete-visual-matrix.md) | Complete | Complete component visual matrix |
 | [Footer navigation groups](footer-navigation-groups.md) | Complete | Applications, Research, and Platform in both footer adapters and all designs |
 | [Footer columns and preference menus](footer-columns.md) | Complete | Lead block and link columns, theme and language menus on fixed menu primitives, the platform's ink mark |
+| [One control shape, the flat capsule](capsule-controls.md) | Complete | Capsule buttons in flat fill, hairline and bare treatments; `--lu-button-radius` apart from `--lu-control-radius` |
