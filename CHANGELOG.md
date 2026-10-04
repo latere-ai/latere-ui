@@ -8,7 +8,7 @@ release. A tag without one fails the release workflow. Write under
 A section says what changed for whoever uses the release, not what was
 committed: the commit log already holds that.
 
-## Unreleased
+## v1.35.0 - 2026-10-04
 
 - Buttons take one shape, a capsule, in flat treatments with no glass, blur or shadow: `GlassButton`'s `primary` is a dark ink fill, the default `glass` variant a 1px hairline outline around an ink label, and `ghost` a bare label. `danger` and `danger-ghost` keep their meaning. `GlassIconButton` is a round hairline button without a fill, and the `ThemeMenu` and `LocaleMenu` buttons are round. Focus rings follow the capsule. Menus, popovers, selects and fields keep their corners and their elevation.
 - `--lu-button-radius` rounds every button, icon button and the theme and language buttons, a capsule by default. `--lu-control-radius` keeps rounding fields, selects, menu rows and menu panels, and no longer rounds buttons: a host that set it to square its buttons sets `--lu-button-radius` instead. A capsule set through `--lu-control-radius` turns menu panels into pills, so keep it there no rounder than a field.
