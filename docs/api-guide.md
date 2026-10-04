@@ -113,8 +113,9 @@ Enter, Space, ArrowDown or ArrowUp open the menu on the checked row; the
 arrows, Home and End move; Escape and a choice return focus to the button.
 The menu surface reads `--lu-menu-bg`, `--lu-menu-border` and
 `--lu-menu-shadow`, falling back to `--bg-surface`, `--border-strong` and
-`--shadow-menu`; the button and rows take `--lu-control-height` and
-`--lu-control-radius`.
+`--shadow-menu`. The button is sized by `--lu-control-height` and rounded by
+the button corner, `--lu-button-radius` (a circle by default); the rows and
+the panel round from `--lu-control-radius`.
 
 The same building blocks are public. `GlassMenu` takes items with `checked`
 for a choice menu, `label` for its name and `autofocus` to focus the checked
@@ -336,10 +337,10 @@ The **five-step material ladder**: pick a tier by prominence, never decoration:
 | Tier | Class | Use for |
 |------|-------|---------|
 | ultrathin | `.lu-glass-ultrathin` | hover targets, chips, badges, search, inputs |
-| thin | `.lu-glass-thin` | nav rows, pills, ghost buttons, bars |
+| thin | `.lu-glass-thin` | nav rows, pills, segmented tracks, bars |
 | regular | `.lu-glass` | cards, panels, the sidebar slab |
 | thick | `.lu-glass-thick` | modals, popovers, palettes: anything over busy content |
-| smoke | `.lu-glass-smoke` | primary buttons, inverse emphasis (ink glass) |
+| smoke | `.lu-glass-smoke` | inverse emphasis (ink glass) |
 
 `smoke` is near-solid ink glass; its label color is `--glass-smoke-ink` (flips
 per theme): never hardcode white on it.
@@ -457,7 +458,20 @@ Every component below is available from `latere-ui` for Vue and `latere-ui/react
 
 `GlassAlert` sets a notice as one grid: a leading 16px icon in the tone's color, then the title and the body sharing one left edge, then an optional dismiss. The frame is a full hairline mixed toward the tone, the fill a faint wash of it; no edge is heavier than another. `tone` picks the color and the icon (`info`, `success`, `warning`, `error`), so a notice never rests on color alone.
 
-Controls share one scale. Set `--lu-control-height` and `--lu-control-height-sm` (32px and 28px by default for buttons, fields and selects) and `--lu-control-radius` once, and every button, icon button, field and select takes them, so a field and the button beside it share a baseline and a corner. A destructive action among other actions is `variant="danger-ghost"`, set as text; the filled `danger` belongs to the confirming button of a dialog.
+Controls share one height scale. Set `--lu-control-height` and `--lu-control-height-sm` (32px and 28px by default for buttons, fields and selects) once, and every button, icon button, field and select takes them, so a field and the button beside it share a baseline.
+
+Buttons have one shape, a capsule, in flat treatments with no glass, blur or shadow: `variant="primary"` is a dark ink fill, the default `variant="glass"` a 1px hairline outline around an ink label, and `variant="ghost"` a bare label in the secondary tone. A destructive action among other actions is `variant="danger-ghost"`, set as text; the filled `danger` belongs to the confirming button of a dialog. `GlassIconButton` is round, with the hairline outline. Focus rings follow the capsule.
+
+Two corner tokens keep buttons and panels apart:
+
+| Custom property | Default | Rounds |
+|---|---|---|
+| `--lu-button-radius` | `--radius-pill` (999px), a capsule | `GlassButton`, `GlassIconButton`, and the `ThemeMenu` and `LocaleMenu` buttons |
+| `--lu-control-radius` | each component's own: 8px fields and selects, 6px menu rows | Fields, selects, menu rows, and menu and popover panels, which add their padding to it |
+
+Set `--lu-button-radius` to give buttons a squarer corner. Never set a capsule through `--lu-control-radius`: menu and popover panels round from it, and a capsule there turns a menu into a pill.
+
+Migrating from v1.34 and earlier: `--lu-control-radius` no longer rounds buttons, so a host that set it to square its buttons sets `--lu-button-radius` to the same value. The button element no longer carries `lu-glass-thin` (default variant) or `lu-glass-ultrathin` (`GlassIconButton`); a host rule that targeted those classes on a button no longer matches. The primary fill reads `--text` and its label `--bg`, where it used to read `--glass-smoke-strong` and `--glass-smoke-ink`; the default variant's label is `--text`, where it was `--text-secondary`. A button inside `GlassBar` keeps the capsule; it no longer takes the bar's corner minus its inset.
 
 `GlassSelect` can be searched by typing. A select with more than `SELECT_SEARCH_THRESHOLD` options (8) opens with a search field at the top of its menu and the focus in it; typing keeps the options whose label or value contains the text, in any case, and marks the matched part. The arrow keys move through what is left, Enter chooses, and Escape clears the field and then closes the menu. Typing a letter on the closed select opens it with that letter in the field. `searchable` (Vue and React) shows the field below the threshold or hides it above; `searchPlaceholder` (default "Search") is the field's placeholder and accessible name, and `noMatchLabel` (default "No matches") the line shown when nothing matches. Each option is one line, cut with an ellipsis and with its full label in a tooltip; the menu grows wider than the select to fit its longest label, up to `--lu-select-menu-max-width` (400px) and never past the viewport's 16px edges. Inside a modal or a drawer, Escape in an open select closes only the select.
 
@@ -1078,7 +1092,7 @@ Vue and React expose the same visual component set. Framework state bindings rem
 
 Import `latere-ui/tokens` for the 4/6/8/14/18/24px radius ladder and `--font-ui` system font. Component CSS includes matching radius fallbacks when the token entrypoint is omitted. Existing host token overrides take precedence. Panels now consume `--space-4` (16px fallback), and toolbars use `--space-1-5`/`--space-3` (6px/12px fallbacks).
 
-Glass buttons and icon buttons use `--lu-button-border` when provided; the default mixes 20% text color into transparent to keep the control boundary visible. Check custom borders in both themes and against the intended backdrop.
+The default button variant and icon buttons draw their hairline from `--lu-button-border` when provided; the default mixes 20% text color into transparent to keep the control boundary visible. Check custom borders in both themes and against the intended backdrop.
 
 `DocsLayout` has a `.lu-docs-frame` containment wrapper around `.lu-docs`. Size the component normally through its parent; the inner grid uses container queries at 1080px and 720px. Consumers with direct-child selectors should account for the new wrapper. The optional TOC contributes no column when `showToc=false`.
 

@@ -6,7 +6,7 @@ Use the same material, spacing, and interface patterns across product surfaces. 
 
 ## Fit the available space
 
-Sibling panels, toolbars and tables share 14px corners. Toolbar buttons use 8px corners: the outer 14px radius minus the 6px vertical inset. Windows use 18px corners; fields and navigation rows use 8px. Panel padding is 16px; table cells use 8px vertical and 16px horizontal insets. Desktop controls are compact while coarse-pointer buttons and fields retain 44px targets. Use `--font-ui` to customize shell typography; the default is the platform system font. Generic controls inherit the host font, and product wordmarks retain their serif identity.
+Sibling panels, toolbars and tables share 14px corners. Buttons are capsules everywhere, toolbars included: a capsule has no corner to nest, so the concentric rule, an inner corner equal to the outer one minus the inset, governs boxes inside a toolbar, not its buttons. Windows use 18px corners; fields and navigation rows use 8px. Panel padding is 16px; table cells use 8px vertical and 16px horizontal insets. Desktop controls are compact while coarse-pointer buttons and fields retain 44px targets. Use `--font-ui` to customize shell typography; the default is the platform system font. Generic controls inherit the host font, and product wordmarks retain their serif identity.
 
 ![Compact workspace at 1280×720 CSS pixels](../tests/visual/goldens/darwin-24/workspace-light-laptop.png)
 
@@ -17,12 +17,14 @@ Size layouts by the browser's available CSS pixels, rather than the monitor's ph
 | Token | Default | Typical use |
 |---|---|---|
 | `--radius-xs` | 4px | Checkboxes and inline code |
-| `--radius-sm` | 6px | Menu rows, and the theme and language buttons when no control corner is set |
+| `--radius-sm` | 6px | Menu rows when no control corner is set |
 | `--radius-md` | 8px | Fields and navigation |
 | `--radius-lg` | 14px | Panels, toolbars, tables and menus |
 | `--radius-xl` | 18px | Dialogs and outer windows |
 | `--radius-2xl` | 24px | Large outer frames |
-| `--radius-pill` | 999px | Standalone buttons, badges and switches |
+| `--radius-pill` | 999px | Buttons when no button corner is set, badges and switches |
+
+Two tokens set the corners of controls apart from the ladder. `--lu-button-radius` (default `--radius-pill`) rounds every button, icon button and the theme and language buttons. `--lu-control-radius` rounds fields, selects, menu rows, and menu and popover panels, which add their padding to it; without it each keeps its ladder step. Keep a capsule out of `--lu-control-radius`: it would turn every menu panel into a pill.
 
 The [Apple macOS reference](https://www.apple.com/os/macos/) informs the restrained chrome and readable material hierarchy. Our web implementation approximates the appearance through CSS blur, tint and light edges; it does not reproduce Apple's native Liquid Glass renderer.
 
@@ -70,12 +72,12 @@ The appearance matrix renders every component in Vue and React, in desktop/light
 
 ## Start with the material
 
-Glass combines a translucent fill, backdrop blur, a highlighted edge, and a shadow. Its depth helps distinguish a control from a panel or an overlay. The default appearance uses ink controls; optional product presets replace the material and interaction palette as described above.
+Glass combines a translucent fill, backdrop blur, a highlighted edge, and a shadow. Its depth separates a panel, a toolbar or an overlay from the content under it. Controls carry no material: a button is a flat capsule that reads by its tone and its 1px edge. Optional product presets replace the material and interaction palette as described above.
 
 | Tier | CSS class | Choose it for |
 |---|---|---|
 | Ultrathin | `.lu-glass-ultrathin` | Fields, badges, lightweight controls |
-| Thin | `.lu-glass-thin` | Button surfaces and segmented tracks |
+| Thin | `.lu-glass-thin` | Segmented tracks and the selected tab |
 | Regular | `.lu-glass` | Panels, toolbars, and navigation |
 | Thick | `.lu-glass-thick` | Dialogs, dropdowns, and other reading overlays |
 | Smoke | `.lu-glass-smoke` | Inverse emphasis with theme-aware foreground |
@@ -96,7 +98,7 @@ A control's shape should survive its different states. Review the resting contro
 
 Use `GlassBadge` for compact status, `GlassAlert` for a message that needs room, and `GlassProgress` or `GlassSpinner` for work in progress. Keep the status label meaningful without relying on its color. An alert leads with an icon in its tone and keeps an even hairline frame; weight on one edge of a box reads as decoration, not as meaning.
 
-Size controls from one scale. Buttons, fields and selects share a height (32px, and 28px for small controls) and a corner, so a field and the button that submits it sit on one baseline. A screen has one primary action in inverted ink; other actions are bordered or quiet. A destructive action among others is set as text, or lives in a row's menu; only the confirming button of a dialog fills with the danger color.
+Size controls from one scale. Buttons, fields and selects share a height (32px, and 28px for small controls), so a field and the button that submits it sit on one baseline. Every button is a capsule in one of three flat treatments: a dark ink fill for the one primary action on a screen, a 1px hairline outline for the other actions, and a bare label for quiet ones. No button carries glass, blur or a shadow; menus, popovers and dialogs keep their elevation. A destructive action among others is set as text, or lives in a row's menu; only the confirming button of a dialog fills with the danger color.
 
 ## Tell links from actions
 
@@ -132,7 +134,7 @@ Account triggers separate the display name from role and workspace metadata with
 
 ## Offer preferences as native menus
 
-The theme and language controls are quiet square icon buttons, 32px, and 44px on touch screens. The theme button shows the current preference, a sun, a moon, or a monitor for following the system; the language button shows a globe. Each opens a menu on a solid surface with a hairline edge and the menu shadow: 32px rows, a check beside the current choice in its own column, and a corner concentric with the rows. The arrow keys move through the rows, Escape closes the menu and returns to the button, and Tab moves on. `ThemeMenu` and `LocaleMenu` are the same controls for a header.
+The theme and language controls are quiet round icon buttons, 32px, and 44px on touch screens. The theme button shows the current preference, a sun, a moon, or a monitor for following the system; the language button shows a globe. Each opens a menu on a solid surface with a hairline edge and the menu shadow: 32px rows, a check beside the current choice in its own column, and a corner concentric with the rows. The arrow keys move through the rows, Escape closes the menu and returns to the button, and Tab moves on. `ThemeMenu` and `LocaleMenu` are the same controls for a header.
 
 Theme and language choices belong to the host's preferences. Supply the language options your application supports; English, Chinese, and German footer copy ships in the package. Resolve an automatic theme to a concrete light or dark theme before applying it to the document. The footer, a header's menu and the account preferences each report a choice and show the value they are given: keep one preference in the host and they stay in step.
 
