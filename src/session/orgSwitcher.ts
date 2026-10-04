@@ -3,8 +3,7 @@
 // visual representation is left entirely to the consumer.
 //
 // Used by the Vue adapter at src/components/OrgSwitcher.vue and by any
-// vanilla-JS harness that wants to render the switcher itself
-// (e.g. wallfacer's ui/js/status-bar.js).
+// vanilla-JS harness that wants to render the switcher itself.
 //
 // Personal context is modeled as an org_id of "" — the same convention the
 // auth server uses in JWT claims and that the store has always exposed.

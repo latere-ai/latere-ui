@@ -1,8 +1,8 @@
 // Framework-agnostic async core for the session client. Pure functions that
 // take an `ApiClient` (and optional per-call config) and resolve to the same
-// values the Pinia store actions surface. Useful for non-Vue harnesses (the
-// wallfacer desktop SPA's vanilla JS, future React adapters) and for the
-// store/useSession reimplementation here that delegates to them.
+// values the Pinia store actions surface. Used by the React adapter
+// (src/react/session.tsx), by non-Vue harnesses, and by the store/useSession
+// reimplementation here that delegates to them.
 //
 // SSR-safe: navigation helpers (`login`, `logout`, switch flows) are no-ops
 // when `window` is undefined, mirroring the store actions.
