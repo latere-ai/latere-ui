@@ -8,6 +8,12 @@ release. A tag without one fails the release workflow. Write under
 A section says what changed for whoever uses the release, not what was
 committed: the commit log already holds that.
 
+## Unreleased
+
+- Fixed: a switch's thumb is centered in its track in a host that sizes
+  every box by its border. With such a reset the thumb sat 2px low and,
+  when on, 2px too far right. The track now states its own box model.
+
 ## v1.34.0 - 2026-10-03
 
 - Lectio leaves the package: the hosted service at `lectio.latere.ai` was retired on 2026-10-03, and every link to it was dead. The footer's Applications group lists Wallfacer alone, in both layouts, and the product switcher shows five tiles. This breaks a host that still names Lectio: `lectio` is no longer a `ProductSlug` or an entry of `LATERE_PRODUCTS`, `ConsoleSidebar` no longer accepts `brandTheme="lectio"`, and the `.lectio-brand` wordmark class, the `--lu-brand-lectio` token and the `footer.products.lectio` dictionary key are gone. A `ProductSwitcher` given `current="lectio"`, or a `ConsoleSidebar` given `product="lectio"`, still renders and marks no tile as current; remove the value.

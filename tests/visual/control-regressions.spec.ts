@@ -130,6 +130,33 @@ for (const theme of ['light', 'dark']) {
   });
 }
 
+{
+  // The stylesheet is one for both adapters; the switch is measured where
+  // the forms sheet renders it. A host that sizes every box by its border, as most resets do, must not
+  // move the thumb: its gap to the track's inner edge is the same above and
+  // below, and the same on the side it rests against, on and off.
+  test('switch thumb is centered in a host that sizes boxes by their border', async ({ page }) => {
+    await visit(page, 'vue', 'forms');
+    await page.addStyleTag({ content: '*, *::before, *::after { box-sizing: border-box; }' });
+    const control = page.getByRole('switch', { name: 'Notifications' });
+    const gaps = () => control.evaluate(async (el) => {
+      await Promise.all(el.getAnimations({ subtree: true }).map(animation => animation.finished));
+      const track = el.querySelector('.lu-switch-track')!, thumb = el.querySelector('.lu-switch-thumb')!;
+      const t = track.getBoundingClientRect(), k = thumb.getBoundingClientRect();
+      const border = parseFloat(getComputedStyle(track).borderTopWidth);
+      return { on: el.classList.contains('is-on'), top: k.top - t.top - border, bottom: t.bottom - border - k.bottom, left: k.left - t.left - border, right: t.right - border - k.right };
+    });
+    for (let i = 0; i < 2; i++) {
+      const g = await gaps();
+      const state = g.on ? 'on' : 'off';
+      expect.soft(g.top, `${state}: gap above the thumb`).toBeGreaterThan(0);
+      expect.soft(Math.abs(g.top - g.bottom), `${state}: thumb off center, top ${g.top} bottom ${g.bottom}`).toBeLessThanOrEqual(0.5);
+      expect.soft(Math.abs((g.on ? g.right : g.left) - g.top), `${state}: side gap ${g.on ? g.right : g.left} differs from ${g.top}`).toBeLessThanOrEqual(0.5);
+      await control.click();
+    }
+  });
+}
+
 for (const framework of ['vue', 'react']) {
   for (const theme of ['light', 'dark']) {
     test(`${framework} ${theme} segmented selection remains visible`, async ({ page }) => {

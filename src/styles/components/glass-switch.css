@@ -12,6 +12,9 @@
 .lu-switch-track {
   position: relative;
   flex: none;
+  /* The size is the track's inside, which the thumb's 2px gap is measured
+     from, whatever box model the host sets for every element. */
+  box-sizing: content-box;
   width: 40px;
   height: 23px;
   border: 1px solid transparent;
