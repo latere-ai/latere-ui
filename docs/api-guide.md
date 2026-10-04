@@ -75,9 +75,10 @@ The footer reports theme choices; the host applies them to `data-theme` and reso
 The shared stylesheet scopes link decoration to `.site-footer a` in both layouts, including router links that render anchors. Navigation links carry no underline, at rest or under the pointer; keyboard focus draws an outline. No global anchor reset is required.
 
 The footer carries Latere's own navigation in four columns: Applications
-(Wallfacer) with Research (ReplicHAI) below it, Platform (the
-platform console and Identity), Company (About, Why Latere, Blog, Open Source,
-Contact) and Legal (Privacy, Terms, Impressum). Product and Identity links
+(the chat, under its public name Latere) with Research (ReplicHAI) below it,
+Platform (the platform console and Identity), Company (About, Why Latere,
+Blog, Open Source, Contact) and Legal (Trust Center, Privacy, Terms,
+Impressum). Product and Identity links
 are always absolute. Latere's own site links (About, Blog, Legal, home)
 resolve against `baseUrl` as plain `<a>` unless `routerLink` is supplied, in
 which case they render through it with a relative `to`.

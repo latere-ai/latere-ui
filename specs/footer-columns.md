@@ -27,7 +27,7 @@ affects:
   - tests
 effort: large
 created: 2026-09-25
-updated: 2026-10-03
+updated: 2026-10-05
 author: changkun
 dispatched_task_id: null
 ---
@@ -74,10 +74,10 @@ The groups come from the shared model in `footerNavigation.ts`:
 
 | Column | Groups |
 | --- | --- |
-| 1 | Applications (Wallfacer), then Research (ReplicHAI) |
+| 1 | Applications (the chat, as Latere), then Research (ReplicHAI) |
 | 2 | Platform (Latere Platform, Identity) |
 | 3 | Company (About, Why Latere, Blog, Open Source, Contact) |
-| 4 | Legal (Privacy, Terms, Impressum) |
+| 4 | Legal (Trust Center, Privacy, Terms, Impressum) |
 
 Identity moves into Platform: one sign-in across the products is part of the
 ground the platform provides. The Community column is gone; the social glyphs

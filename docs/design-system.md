@@ -126,7 +126,7 @@ Compact footer links wrap as complete labels, with the theme and language button
 
 The full footer leaves room around its content. A lead block on the left holds the site's lockup, the social profiles, a short hairline, and the theme and language buttons. Four link columns sit to its right: Applications with Research below it, Platform, Company, and Legal. Each group is a semibold heading in the full text tone over plain links set 32px apart, and the copyright closes the footer. Below 1024px the lead moves above the columns; on a phone the columns go two up and the lead follows them. A host sets its own lockup in place of the Latere AI mark.
 
-Product names in the columns rest in the same face and color as their neighbors, so each column reads as one list. A product takes its gradient under the pointer or keyboard focus. The compact strip keeps its italic wordmarks.
+Product names in the columns rest in the same face and color as their neighbors, so each column reads as one list. A product takes its gradient under the pointer or keyboard focus; the chat, whose wordmark is the ink, takes the full text color. The compact strip keeps its italic wordmarks.
 
 Both footer layouts show navigation without underlines, at rest and under the pointer; the pointer changes the color, and keyboard focus shows an outline. These styles belong to the footer and need no page-wide link reset. Article links outside the footer retain the host's styling.
 
@@ -140,7 +140,7 @@ Theme and language choices belong to the host's preferences. Supply the language
 
 ## Draw the platform in ink
 
-Each product keeps its hue: Wallfacer's copper and ReplicHAI's blue. The platform is the ground they stand on, so its mark is the ink itself, near-black to graphite in the light theme and off-white to silver in the dark theme. The gradients are the `--lu-brand-*` tokens.
+ReplicHAI keeps its blue. The chat's public name is Latere, so its wordmark is the Latere lockup's serif italic in the ink of the text, and its switcher tile shows the Latere mark. The platform is the ground the products stand on, so its mark is the ink itself, near-black to graphite in the light theme and off-white to silver in the dark theme. The gradients are the `--lu-brand-*` tokens.
 
 ## Add optical effects deliberately
 

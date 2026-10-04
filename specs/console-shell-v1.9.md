@@ -17,7 +17,7 @@ affects:
 effort: large
 trigger: five product consoles (Lux, Cella, Topos, Wallfacer, Lectio) each reimplement a near-identical sidebar shell and 2–3 reimplement a docs renderer; visual + structural drift across consoles
 created: 2026-06-14
-updated: 2026-10-03
+updated: 2026-10-05
 author: changkun
 dispatched_task_id: null
 ---
@@ -398,3 +398,5 @@ Still open / deferred:
 - Per-product migrations (rollout steps 2–5) are not done — this is library-only.
 - **Lectio** never migrated: the hosted service was retired on 2026-10-03, and `brandTheme` no longer
   accepts `lectio`.
+- **Wallfacer** replaced the shared sidebar with its own rail, and since 2026-10-05, when it left the
+  product lineup, `brandTheme` no longer accepts `wallfacer`.

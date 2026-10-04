@@ -14,7 +14,7 @@ affects:
   - tests/visual
 effort: medium
 created: 2026-09-20
-updated: 2026-10-03
+updated: 2026-10-05
 author: changkun
 dispatched_task_id: null
 ---
@@ -55,6 +55,8 @@ Verification: 65 unit tests, type checking, 98.78% footer line coverage, 33 brow
 The website consumes revision `2b72012`, loads the shared footer stylesheet, and removes obsolete capability URL rewriting. Its build and 15 browser checks passed. A new layout regression assertion failed without the shared stylesheet and passed with it; desktop and mobile screenshots were reviewed.
 
 Since 2026-10-03 Applications lists Wallfacer alone. The hosted Lectio service was retired, and its link, its hover gradient, and its dictionary key left the footer in both adapters and both layouts.
+
+Since 2026-10-05 Applications lists the chat, under its public name Latere, linked to chat.latere.ai. Wallfacer left the lineup: its link, its hover gradient, and its dictionary key left the footer in both adapters and both layouts, while its wordmark class stays for pages that cite it by name.
 
 ## Design refinement
 
