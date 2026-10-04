@@ -18,6 +18,18 @@ describe('brand wordmark styles', () => {
     });
   }
 
+  // The chat's public name is Latere, so its wordmark is the lockup's serif
+  // italic in the text's ink, as the company site sets it, with no gradient.
+  it('sets the chat wordmark in the ink of the text, the same rule in both sheets', () => {
+    const rule = (css: string) => css.match(/\.chat-brand\s*\{([^}]*)\}/)?.[1].replace(/\s+/g, ' ').trim();
+    const footer = rule(read('src/styles/footer.css'));
+    expect(footer).toBe("font-family: 'Instrument Serif', Georgia, serif !important; font-style: italic !important; font-weight: 400 !important; color: var(--text); padding-right: 0.15em;");
+    expect(rule(read('src/styles/brand.css'))).toBe(footer);
+    for (const file of ['src/styles/footer.css', 'src/styles/brand.css']) {
+      expect(read(file)).not.toMatch(/--lu-brand-chat|\.chat-brand\s*\{[^}]*background/);
+    }
+  });
+
   it('states the same product gradients in footer.css and brand.css', () => {
     const footer = tokens(read('src/styles/footer.css'));
     expect(footer).toHaveLength(14); // seven products, light and dark

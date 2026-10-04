@@ -88,6 +88,15 @@
 /* Research keeps its flat blue wordmark. */
 .replichai-brand { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; color: #2369bd; }
 [data-theme="dark"] .replichai-brand { color: #78b1ed; }
+/* The chat's public name is Latere, so its wordmark is the lockup's: the
+ * serif italic in the ink of the text, with no gradient of its own. */
+.chat-brand {
+    font-family: 'Instrument Serif', Georgia, serif !important;
+    font-style: italic !important;
+    font-weight: 400 !important;
+    color: var(--text);
+    padding-right: 0.15em;
+}
 
 /* ===== Footer ===== */
 /* Room to breathe above; the footer starts after a clear pause in the page. */
