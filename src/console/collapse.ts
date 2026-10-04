@@ -27,9 +27,9 @@ export interface CollapseState {
 }
 
 /**
- * Uncontrolled collapse helper. Hosts that own the state (e.g. wallfacer,
- * which persists it) can ignore this and drive `v-model:collapsed` directly;
- * hosts that want the sidebar to manage its own state use this.
+ * Uncontrolled collapse helper. Hosts that own the state (to persist it, for
+ * example) can ignore this and drive `v-model:collapsed` directly; hosts that
+ * want the sidebar to manage its own state use this.
  */
 export function createCollapse(opts: CollapseOptions = {}): CollapseState {
   const collapsed = ref(opts.initial ?? false);

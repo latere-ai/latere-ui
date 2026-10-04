@@ -7,7 +7,7 @@
 // original console-nav primitive that held Vue state — the uncontrolled
 // collapse ref — lives in `./collapse` instead (react-support v1.27).
 //
-// lux, agents and wallfacer each independently arrived at
+// The product consoles each independently arrived at
 // `groups: { group, items: NavItem[] }[]`; this is that shape, unified.
 
 /** A single navigation row. */
