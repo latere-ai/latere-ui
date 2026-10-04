@@ -18,7 +18,7 @@ function mount(props: Partial<SiteFooterProps> = {}) {
 
 const hrefs = (c: Element) => Array.from(c.querySelectorAll('a')).map((a) => a.getAttribute('href'));
 const DESTINATIONS = {
-  applications: ['https://wf.latere.ai/'],
+  applications: ['https://chat.latere.ai/'],
   research: ['https://replichai.latere.ai/'],
   platform: ['https://platform.latere.ai/console', 'https://auth.latere.ai/'],
   company: ['https://latere.ai/about', 'https://latere.ai/blog/why-latere', 'https://latere.ai/blog', 'https://latere.ai/open-source', 'mailto:contact@latere.ai'],
@@ -58,7 +58,7 @@ describe('SiteFooter (React)', () => {
     const { container } = mount();
     const links = Array.from(container.querySelectorAll('.footer-cols a.footer-link'));
     expect(links.filter(a => a.hasAttribute('data-brand')).map(a => [a.textContent, a.getAttribute('data-brand')])).toEqual([
-      ['Wallfacer', 'wallfacer'], ['ReplicHAI', 'replichai'], ['Latere Platform', 'platform'],
+      ['Latere', 'chat'], ['ReplicHAI', 'replichai'], ['Latere Platform', 'platform'],
     ]);
     expect(container.querySelector('.footer-cols [class$="-brand"]')).toBeNull();
     expect(links.find(a => a.textContent === 'Identity')!.hasAttribute('data-brand')).toBe(false);
@@ -182,9 +182,11 @@ describe('SiteFooter (React)', () => {
     expect(container.querySelector('.footer-bottom')).toBeNull(); // copyright lives inline
     expect(container.querySelector('.footer-compact-copy')).not.toBeNull();
     const links = container.querySelector('.footer-compact-links')!;
-    for (const name of ['Wallfacer', 'ReplicHAI', 'Latere Platform', 'Identity', 'Team', 'Impressum']) {
+    for (const name of ['ReplicHAI', 'Latere Platform', 'Identity', 'Team', 'Impressum']) {
       expect(links.textContent).toContain(name);
     }
+    // The chat sets its public name in its own wordmark.
+    expect(Array.from(links.querySelectorAll('[data-footer-group="applications"] a')).map(a => [a.textContent, a.querySelector('span')!.className])).toEqual([['Latere', 'chat-brand']]);
     expect(container.querySelectorAll('.footer-extra .lu-pref')).toHaveLength(2);
   });
 
@@ -209,6 +211,15 @@ describe('SiteFooter (React)', () => {
     expect(hrefs(container)).not.toContain('https://lectio.latere.ai/');
     expect(container.textContent).not.toContain('Lectio');
     expect(container.querySelector('[data-brand="lectio"], .lectio-brand')).toBeNull();
+  });
+
+  // Wallfacer left the lineup when the chat took the applications' place: its
+  // pages stay up, but neither variant leads a reader there.
+  it.each([false, true])('leads no reader to Wallfacer (compact=%s)', (compact) => {
+    const { container } = mount({ compact });
+    expect(hrefs(container).filter(h => h?.includes('wf.latere.ai'))).toEqual([]);
+    expect(container.textContent).not.toContain('Wallfacer');
+    expect(container.querySelector('[data-brand="wallfacer"], .wallfacer-brand')).toBeNull();
   });
 
   // The open source page is a company link, so it carries translated copy in

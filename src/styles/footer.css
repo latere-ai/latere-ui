@@ -210,8 +210,9 @@
 }
 .footer-link:hover { color: var(--text); }
 /* A product link rests in the body face like its neighbors and takes its
- * product's gradient under the pointer or focus. */
-.footer-link[data-brand="wallfacer"] { --lu-footer-brand: var(--lu-brand-wallfacer); }
+ * product's gradient under the pointer or focus. The chat's wordmark is the
+ * ink itself, so its link fills with the text color alone. */
+.footer-link[data-brand="chat"] { --lu-footer-brand: linear-gradient(var(--text), var(--text)); }
 .footer-link[data-brand="replichai"] { --lu-footer-brand: var(--lu-brand-replichai); }
 .footer-link[data-brand="platform"] { --lu-footer-brand: var(--lu-brand-platform); }
 .footer-link[data-brand]:hover,

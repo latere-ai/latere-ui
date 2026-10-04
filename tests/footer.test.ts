@@ -14,7 +14,7 @@ function render(props: Record<string, unknown> = {}, options: Record<string, unk
 afterEach(() => { while (mounted.length) mounted.pop()!.unmount(); document.body.innerHTML = ''; });
 
 const DESTINATIONS = {
-  applications: ['https://wf.latere.ai/'],
+  applications: ['https://chat.latere.ai/'],
   research: ['https://replichai.latere.ai/'],
   platform: ['https://platform.latere.ai/console', 'https://auth.latere.ai/'],
   company: ['https://latere.ai/about', 'https://latere.ai/blog/why-latere', 'https://latere.ai/blog', 'https://latere.ai/open-source', 'mailto:contact@latere.ai'],
@@ -24,6 +24,17 @@ const DESTINATIONS = {
 describe('footer dictionaries', () => {
   it.each(Object.entries({ zh, de }))('%s has the same keys as English', (_locale, dict) => {
     expect(Object.keys(dict).sort()).toEqual(Object.keys(en).sort());
+  });
+
+  // The chat's public name is Latere, a proper name in every locale.
+  it.each(Object.entries({ en, zh, de }))('%s names the chat Latere', (_locale, dict) => {
+    expect(dict['footer.products.chat']).toBe('Latere');
+  });
+
+  // Wallfacer left the lineup, so no footer copy names it.
+  it.each(Object.entries({ en, zh, de }))('%s carries no Wallfacer label', (_locale, dict) => {
+    expect(Object.keys(dict)).not.toContain('footer.products.wallfacer');
+    expect(Object.values(dict)).not.toContain('Wallfacer');
   });
 
   it.each(Object.entries({ en, zh, de }))('%s names no retired Lectio service', (_locale, dict) => {
@@ -71,7 +82,7 @@ describe('SiteFooter', () => {
     const links = render().findAll('.footer-cols a.footer-link');
     const products = links.filter(a => a.attributes('data-brand'));
     expect(products.map(a => [a.text(), a.attributes('data-brand')])).toEqual([
-      ['Wallfacer', 'wallfacer'], ['ReplicHAI', 'replichai'], ['Latere Platform', 'platform'],
+      ['Latere', 'chat'], ['ReplicHAI', 'replichai'], ['Latere Platform', 'platform'],
     ]);
     // No wordmark span: the column reads in one face.
     expect(render().find('.footer-cols [class$="-brand"]').exists()).toBe(false);
@@ -199,9 +210,11 @@ describe('SiteFooter', () => {
     expect(w.find('.footer-bottom').exists()).toBe(false); // copyright lives inline in the bar
     expect(w.find('.footer-compact-copy').exists()).toBe(true);
     const links = w.get('.footer-compact-links');
-    for (const name of ['Wallfacer', 'ReplicHAI', 'Latere Platform', 'Identity', 'Team', 'Impressum']) {
+    for (const name of ['ReplicHAI', 'Latere Platform', 'Identity', 'Team', 'Impressum']) {
       expect(links.text()).toContain(name);
     }
+    // The chat sets its public name in its own wordmark.
+    expect(links.findAll('[data-footer-group="applications"] a').map(a => [a.text(), a.get('span').classes()])).toEqual([['Latere', ['chat-brand']]]);
     expect(w.findAll('.footer-extra .lu-pref')).toHaveLength(2);
   });
 
@@ -222,6 +235,16 @@ describe('SiteFooter', () => {
     expect(urls).not.toContain('https://lectio.latere.ai/');
     expect(w.text()).not.toContain('Lectio');
     expect(w.find('[data-brand="lectio"], .lectio-brand').exists()).toBe(false);
+  });
+
+  // Wallfacer left the lineup when the chat took the applications' place: its
+  // pages stay up, but neither variant leads a reader there.
+  it.each([false, true])('leads no reader to Wallfacer (compact=%s)', (compact) => {
+    const w = render({ compact });
+    const urls = w.findAll('a').map((a) => a.attributes('href') ?? '');
+    expect(urls.filter((u) => u.includes('wf.latere.ai'))).toEqual([]);
+    expect(w.text()).not.toContain('Wallfacer');
+    expect(w.find('[data-brand="wallfacer"], .wallfacer-brand').exists()).toBe(false);
   });
 
   // The open source page is a company link, so it carries translated copy in

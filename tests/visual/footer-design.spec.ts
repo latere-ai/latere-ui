@@ -76,7 +76,7 @@ for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark'])
     })));
     await visit(page, framework, 'footer-compact', theme);
     const wordmarks = await stops('.footer-compact-links [class$="-brand"]');
-    expect(wordmarks.map(b => b.name)).toEqual(['Wallfacer', 'ReplicHAI', 'Latere Platform']);
+    expect(wordmarks.map(b => b.name)).toEqual(['Latere', 'ReplicHAI', 'Latere Platform']);
     await visit(page, framework, 'footer', theme);
     const hovered = [];
     for (const link of await page.locator('.footer-link[data-brand]').all()) {
@@ -86,7 +86,7 @@ for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark'])
         background: getComputedStyle(document.body).backgroundColor.match(/[\d.]+/g)!.map(Number),
       }]));
     }
-    expect(hovered.map(b => b.name)).toEqual(['Wallfacer', 'ReplicHAI', 'Latere Platform']);
+    expect(hovered.map(b => b.name)).toEqual(['Latere', 'ReplicHAI', 'Latere Platform']);
     for (const brand of [...wordmarks, ...hovered]) {
       const colors = brand.gradient === 'none' ? [brand.color] : brand.gradient.match(/rgb\([^)]+\)/g)!;
       for (const color of colors) expect.soft(ratio(color.match(/[\d.]+/g)!.map(Number), brand.background), `${brand.name}: ${color}`).toBeGreaterThanOrEqual(4.5);
