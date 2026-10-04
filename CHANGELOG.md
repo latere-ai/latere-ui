@@ -10,6 +10,8 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+## v1.36.0 - 2026-10-05
+
 - The chat joins the lineup under its public name, Latere, and takes Wallfacer's place. The footer's Applications group lists Latere, linked to `https://chat.latere.ai/`, in both layouts and all three bundled languages, under the new `footer.products.chat` dictionary key. The compact strip sets the name in the new `.chat-brand` wordmark, the serif italic in the ink of the text with no gradient, and the full footer's column link fills with the text color under the pointer. The product switcher's first tile is the chat, slug `chat`, showing the Latere mark in `currentColor`, with `#c4511f` as its `color`.
 - Wallfacer's pages stay up, but no navigation in the package leads there. This breaks a host that still names it: `wallfacer` is no longer a `ProductSlug` or an entry of `LATERE_PRODUCTS`, `ConsoleSidebar` no longer accepts `brandTheme="wallfacer"`, and the `footer.products.wallfacer` dictionary key is gone. A `ProductSwitcher` given `current="wallfacer"`, or a `ConsoleSidebar` given `product="wallfacer"`, still renders and marks no tile as current; remove the value. The `.wallfacer-brand` wordmark class and the `--lu-brand-wallfacer` token stay for pages that cite Wallfacer by name, and the `data-design="wallfacer"` appearance is unchanged.
 
