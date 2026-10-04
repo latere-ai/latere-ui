@@ -8,6 +8,11 @@ release. A tag without one fails the release workflow. Write under
 A section says what changed for whoever uses the release, not what was
 committed: the commit log already holds that.
 
+## Unreleased
+
+- The chat joins the lineup under its public name, Latere, and takes Wallfacer's place. The footer's Applications group lists Latere, linked to `https://chat.latere.ai/`, in both layouts and all three bundled languages, under the new `footer.products.chat` dictionary key. The compact strip sets the name in the new `.chat-brand` wordmark, the serif italic in the ink of the text with no gradient, and the full footer's column link fills with the text color under the pointer. The product switcher's first tile is the chat, slug `chat`, showing the Latere mark in `currentColor`, with `#c4511f` as its `color`.
+- Wallfacer's pages stay up, but no navigation in the package leads there. This breaks a host that still names it: `wallfacer` is no longer a `ProductSlug` or an entry of `LATERE_PRODUCTS`, `ConsoleSidebar` no longer accepts `brandTheme="wallfacer"`, and the `footer.products.wallfacer` dictionary key is gone. A `ProductSwitcher` given `current="wallfacer"`, or a `ConsoleSidebar` given `product="wallfacer"`, still renders and marks no tile as current; remove the value. The `.wallfacer-brand` wordmark class and the `--lu-brand-wallfacer` token stay for pages that cite Wallfacer by name, and the `data-design="wallfacer"` appearance is unchanged.
+
 ## v1.35.0 - 2026-10-04
 
 - Buttons take one shape, a capsule, in flat treatments with no glass, blur or shadow: `GlassButton`'s `primary` is a dark ink fill, the default `glass` variant a 1px hairline outline around an ink label, and `ghost` a bare label. `danger` and `danger-ghost` keep their meaning. `GlassIconButton` is a round hairline button without a fill, and the `ThemeMenu` and `LocaleMenu` buttons are round. Focus rings follow the capsule. Menus, popovers, selects and fields keep their corners and their elevation.
