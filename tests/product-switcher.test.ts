@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 import ProductSwitcher from '../src/components/ProductSwitcher.vue';
 import {
@@ -9,11 +11,12 @@ import {
 } from '../src/components/productSwitcher';
 
 describe('product registry', () => {
-  it('lists all five consoles with unique slugs', () => {
+  it('lists all six destinations with unique slugs', () => {
     const slugs = LATERE_PRODUCTS.map((p) => p.slug);
     expect(new Set(slugs).size).toBe(slugs.length);
     expect([...slugs].sort()).toEqual([
       'cella',
+      'chat',
       'identity',
       'lux',
       'topos',
@@ -99,6 +102,35 @@ describe('product registry', () => {
     expect(bySlug.identity).toContain('stroke="#6b5fc0"');
   });
 
+  // The chat's public name is Latere, and it leads the applications.
+  it('leads with the chat, named Latere, at chat.latere.ai in its accent', () => {
+    const chat = LATERE_PRODUCTS[0];
+    expect(chat.slug).toBe('chat');
+    expect(chat.name).toBe('Latere');
+    expect(chat.url).toBe('https://chat.latere.ai');
+    expect(chat.color).toBe('#c4511f');
+    expect(chat.brandClass).toBe('chat-brand');
+  });
+
+  // The chat's mark is the Latere mark at rest, copied from the company site,
+  // which draws it from this package's LatereLogoMark. Its arcs and dot must
+  // stay that mark's, so an edit to the mark that skips this copy fails here.
+  it("draws the chat's mark as the Latere mark, in the ink of the tile", () => {
+    const icon = LATERE_PRODUCTS.find((p) => p.slug === 'chat')!.icon;
+    const mark = readFileSync(resolve(process.cwd(), 'src/components/LatereLogoMark.vue'), 'utf8');
+    const paths = (svg: string) => Array.from(svg.matchAll(/<path d="([^"]+)"/g), (m) => m[1]);
+    const attr = (svg: string, name: string) => svg.match(new RegExp(`${name}="([^"]+)"`))![1];
+    const markPaths = paths(mark);
+    expect(markPaths).toHaveLength(6);
+    expect(paths(icon)).toEqual(markPaths.slice(0, 5));
+    // LatereLogoMark draws the dot as two arcs from its leftmost point; the
+    // icon draws the same circle as a <circle>.
+    const [x, y, r] = markPaths[5].match(/^M(\d+) (\d+) a(\d+)/)!.slice(1).map(Number);
+    expect(icon).toContain(`<circle cx="${x + r}" cy="${y}" r="${r}"/>`);
+    for (const name of ['viewBox', 'fill', 'transform']) expect(attr(icon, name)).toBe(attr(mark, name));
+    expect(attr(icon, 'fill')).toBe('currentColor');
+  });
+
   it('carries the brand.css wordmark class for products and none for identity', () => {
     for (const p of LATERE_PRODUCTS) {
       if (p.slug === 'identity') expect(p.brandClass).toBeUndefined();
@@ -137,6 +169,7 @@ describe('<ProductSwitcher />', () => {
     const grid = w.find('.lu-ps-grid');
     expect(grid.attributes('aria-label')).toBe('Latere products');
     expect(w.findAll('.lu-ps-tile').length).toBe(LATERE_PRODUCTS.length);
+    expect(grid.text()).toContain('Latere');
     expect(grid.text()).toContain('Wallfacer');
     expect(grid.text()).toContain('Identity');
   });
@@ -145,6 +178,7 @@ describe('<ProductSwitcher />', () => {
     const w = render();
     await w.find('button.lu-iconbtn').trigger('click');
     const hrefs = w.findAll('a.lu-ps-tile').map((a) => a.attributes('href'));
+    expect(hrefs).toContain('https://chat.latere.ai');
     expect(hrefs).toContain('https://wf.latere.ai');
     expect(hrefs).toContain('https://auth.latere.ai');
     expect(hrefs.length).toBe(LATERE_PRODUCTS.length - 1);
@@ -210,6 +244,10 @@ describe('<ProductSwitcher />', () => {
     expect(lux.find('.lu-ps-ic svg path[d="M12 4l8 14H4z"]').exists()).toBe(true);
     const wallfacer = w.findAll('.lu-ps-tile').find((t) => t.text().includes('Wallfacer'))!;
     expect(wallfacer.find('.lu-ps-ic svg rect[fill="#d97757"]').exists()).toBe(true);
+    const chat = w.findAll('.lu-ps-tile').find((t) => t.find('.lu-ps-name').text() === 'Latere')!;
+    expect(chat.find('.lu-ps-name').classes()).toContain('chat-brand');
+    expect(chat.findAll('.lu-ps-ic svg g path')).toHaveLength(5);
+    expect(chat.find('.lu-ps-ic svg circle').exists()).toBe(true);
   });
 
   it('opens on an opaque own panel anchored below/start by default', async () => {
