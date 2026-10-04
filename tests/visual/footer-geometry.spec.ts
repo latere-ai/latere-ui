@@ -111,6 +111,9 @@ for (const framework of ['vue', 'react']) test(`${framework} the button corner a
     document.documentElement.style.setProperty('--lu-button-radius', '6px');
   });
   await expect(trigger).toHaveCSS('border-radius', '6px');
+});
+
+for (const framework of ['vue', 'react']) test(`${framework} buttons ignore the control corner and follow the button corner`, async ({ page }) => {
   await visit(page, framework, 'buttons', 'light', '&parity=1');
   await page.evaluate(() => document.documentElement.style.setProperty('--lu-control-radius', '6px'));
   for (const selector of ['.lu-btn', '.lu-iconbtn']) await expect(page.locator(selector).first()).toHaveCSS('border-radius', '999px');
