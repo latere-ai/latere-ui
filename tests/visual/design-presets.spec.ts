@@ -83,7 +83,11 @@ for (const design of Object.keys(recipes)) test(`${design} preserves touch targe
     expect((await button.boundingBox())!.height).toBeGreaterThanOrEqual(44);
   }
   await page.evaluate(() => { delete document.documentElement.dataset.design; });
-  await expect(page.locator('.lu-btn-primary').first()).toHaveCSS('backdrop-filter', 'blur(20px) saturate(1.8)');
+  // The default primary is the flat ink capsule again: no preset corner or fill.
+  const primary = page.locator('.lu-btn-primary').first();
+  await expect(primary).toHaveCSS('border-radius', '999px');
+  await expect(primary).toHaveCSS('background-color', 'rgb(10, 10, 10)');
+  await expect(primary).toHaveCSS('backdrop-filter', 'none');
 });
 
 for (const design of Object.keys(recipes)) for (const [framework, scenario, selector] of [

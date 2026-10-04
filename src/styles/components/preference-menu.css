@@ -1,7 +1,9 @@
-/* ThemeMenu and LocaleMenu: the trigger. A quiet square icon button on the
- * control corner, sized by the control scale; it fills on hover and while its
+/* ThemeMenu and LocaleMenu: the trigger. A quiet icon button, sized by the
+ * control height and round from the button corner (`--lu-button-radius`,
+ * glass-button.css), as every button is; it fills on hover and while its
  * menu is open. The menu itself is GlassPopover's solid surface around a
- * choice GlassMenu (glass-popover.css, glass-menu.css). */
+ * choice GlassMenu (glass-popover.css, glass-menu.css), whose panel and rows
+ * keep `--lu-control-radius`. */
 .lu-pref-trigger {
   display: inline-grid;
   place-items: center;
@@ -10,7 +12,7 @@
   height: var(--lu-control-height, 32px);
   padding: 0;
   border: 0;
-  border-radius: var(--lu-control-radius, var(--radius-sm, 6px));
+  border-radius: var(--lu-button-radius, var(--radius-pill, 999px));
   background: transparent;
   color: var(--text-secondary, #666);
   font: inherit;

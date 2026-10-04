@@ -2,9 +2,11 @@
  * Opt-in entrypoint: `import 'latere-ui/glass'`.
  *
  * Modeled on Apple's Liquid Glass (macOS Tahoe / HIG "Materials"). Glass is a
- * distinct FUNCTIONAL LAYER that floats above content — navigation and controls
- * live on glass; content scrolls underneath. It is built from three optical
- * layers Apple names explicitly:
+ * distinct FUNCTIONAL LAYER that floats above content: navigation, bars and
+ * overlays live on glass, and content scrolls underneath. Buttons carry no
+ * material: GlassButton and GlassIconButton are flat capsules (see
+ * components/glass-button.css). It is built from three optical layers Apple
+ * names explicitly:
  *   · illumination → the translucent tint + real-time backdrop blur (the body)
  *   · highlight    → a specular rim light on the top edge (catches the light)
  *   · shadow       → a soft drop shadow that separates the layer from content
@@ -13,10 +15,10 @@
  * geometry, ink-only accent, and a layered floating-glass shadow. Pick a tier by
  * prominence, never decoration:
  *   · ultrathin → hover targets, chips, badges, search fields
- *   · thin      → nav rows, pills, ghost buttons, bars
+ *   · thin      → nav rows, pills, segmented tracks, bars
  *   · regular   → cards, panels, the sidebar slab
  *   · thick     → modals, popovers, palettes — anything over busy content
- *   · smoke     → primary buttons, inverse emphasis (ink glass)
+ *   · smoke     → inverse emphasis (ink glass)
  *
  * Contract for adopters:
  *   1. Set a subtly gradient `--canvas` behind glass so it has something to
@@ -56,7 +58,7 @@
     --glass-bg-thick:     rgba(255, 255, 255, 0.90);
     --glass-overlay-base: var(--bg-surface, #fff);
 
-    /* Smoked ink glass — near-solid stays intentional (primary buttons). */
+    /* Smoked ink glass: near-solid on purpose, for inverse emphasis. */
     --glass-smoke:        rgba(10, 10, 10, 0.68);
     --glass-smoke-strong: rgba(10, 10, 10, 0.82);
     /* Label color on smoke capsules — NEVER hardcode white; dark flips it. */
@@ -108,7 +110,7 @@
         0 6px 18px rgba(0, 0, 0, 0.10),
         inset 0 1px 0 rgba(255, 255, 255, 1),
         inset 0 -1px 0 rgba(0, 0, 0, 0.04);
-    /* v1.10 aliases — keep GlassSurface / GlassButton consumers working. */
+    /* v1.10 aliases, kept for hosts and GlassSurface rules that read them. */
     --glass-edge:       var(--shadow-glass);
     --glass-edge-thick: var(--shadow-glass-hover);
 
@@ -216,8 +218,8 @@
         var(--glass-overlay-base, #fff);
 }
 
-/* Smoked ink glass — primary buttons and inverse emphasis. Near-solid fill,
- * ink-on-paper label that flips with the theme. */
+/* Smoked ink glass for inverse emphasis. Near-solid fill, ink-on-paper label
+ * that flips with the theme. */
 .lu-glass-smoke {
     background: var(--glass-smoke-strong, rgba(10, 10, 10, 0.82));
     border-color: var(--glass-smoke-border);

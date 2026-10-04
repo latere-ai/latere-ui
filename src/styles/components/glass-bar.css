@@ -2,7 +2,12 @@
  * stylesheet. Load after `latere-ui/glass` (the material layer it composes).
  * `.lu-gs.lu-bar*` keeps the specificity the scoped block had, so the rounded
  * radius and sticky positioning still beat GlassSurface's (still-scoped)
- * `.lu-gs` box rules (border-radius, position: relative). */
+ * `.lu-gs` box rules (border-radius, position: relative).
+ *
+ * A button in a bar keeps the one control shape, the capsule of
+ * `--lu-button-radius`: a capsule has no corner to nest, so the concentric
+ * rule (outer radius minus inset) that governs boxes inside the bar does not
+ * apply to it. */
 .lu-gs.lu-bar {
   display: flex;
   align-items: center;
@@ -14,9 +19,4 @@
   position: sticky;
   top: 0;
   z-index: 20;
-}
-
-/* Nested controls follow the container corner minus its vertical inset. */
-.lu-bar .lu-btn {
-  border-radius: max(0px, calc(var(--radius-lg, 14px) - var(--space-1-5, 6px)));
 }

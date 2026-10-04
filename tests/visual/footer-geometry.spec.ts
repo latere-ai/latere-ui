@@ -44,17 +44,16 @@ for (const framework of ['vue', 'react']) for (const theme of ['light', 'dark'])
     expect.soft(panel.x + panel.width).toBeLessThanOrEqual(width);
     await page.keyboard.press('Escape');
   });
-  test(`${framework} ${theme} sibling containers and nested toolbar corners align`, async ({ page }) => {
+  test(`${framework} ${theme} sibling containers align and toolbar buttons keep the capsule`, async ({ page }) => {
     await visit(page, framework, 'containers', theme);
     const radius = await page.locator('.lu-panel').first().evaluate(el => getComputedStyle(el).borderTopLeftRadius);
     await expect(page.locator('.lu-bar')).toHaveCSS('border-radius', radius);
     await expect(page.locator('.lu-table-wrap')).toHaveCSS('border-radius', radius);
-    for (const button of await page.locator('.lu-bar .lu-btn').all()) {
-      const geometry = await button.evaluate(el => {
-        const bar = getComputedStyle(el.closest('.lu-bar')!);
-        return { outer: parseFloat(bar.borderTopLeftRadius), inset: parseFloat(bar.paddingTop), inner: parseFloat(getComputedStyle(el).borderTopLeftRadius) };
-      });
-      expect(geometry.inner + geometry.inset).toBe(geometry.outer);
+    const buttons = await page.locator('.lu-bar .lu-btn').all();
+    expect(buttons.length).toBeGreaterThan(0);
+    for (const button of buttons) {
+      const geometry = await button.evaluate(el => ({ radius: parseFloat(getComputedStyle(el).borderTopLeftRadius), height: el.getBoundingClientRect().height }));
+      expect(geometry.radius).toBeGreaterThanOrEqual(geometry.height / 2);
     }
   });
 }
@@ -71,7 +70,7 @@ for (const [style, radius, inset] of [['reading', 12, 4], ['operator', 14, 6], [
     for (const selector of ['.lu-bar', '.lu-panel', '.lu-table-wrap']) {
       for (const element of await page.locator(selector).all()) await expect(element).toHaveCSS('border-radius', `${radius}px`);
     }
-    for (const button of await page.locator('.lu-bar .lu-btn').all()) await expect(button).toHaveCSS('border-radius', `${radius - inset}px`);
+    for (const button of await page.locator('.lu-bar .lu-btn').all()) await expect(button).toHaveCSS('border-radius', '999px');
     await visit(page, 'vue', 'sidebar');
     await page.evaluate(() => document.documentElement.style.setProperty('--font-ui', 'monospace'));
     await expect(page.locator('.lu-cs-brand-name')).toHaveCSS('font-family', 'monospace');
@@ -93,4 +92,28 @@ test('compact and full footers preserve touch target size', async ({ browser }) 
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
   } finally { await context.close(); }
+});
+
+// Buttons round from --lu-button-radius; panels, menu rows and fields from
+// --lu-control-radius. A capsule set through the control corner once turned
+// the theme menu's panel into a pill, so the two corners must move apart.
+for (const framework of ['vue', 'react']) test(`${framework} the button corner and the control corner stay separate`, async ({ page }) => {
+  await visit(page, framework, 'footer-compact');
+  await page.evaluate(() => document.documentElement.style.setProperty('--lu-control-radius', '6px'));
+  const trigger = page.locator('.lu-theme-menu .lu-pref-trigger');
+  await expect(trigger).toHaveCSS('border-radius', '999px');
+  await trigger.click();
+  await expect(page.locator('.lu-theme-menu .lu-pop-panel')).toHaveCSS('border-radius', '12px');
+  await expect(page.locator('.lu-theme-menu .lu-menu-item').first()).toHaveCSS('border-radius', '6px');
+  await page.keyboard.press('Escape');
+  await page.evaluate(() => {
+    document.documentElement.style.setProperty('--lu-control-radius', '999px');
+    document.documentElement.style.setProperty('--lu-button-radius', '6px');
+  });
+  await expect(trigger).toHaveCSS('border-radius', '6px');
+  await visit(page, framework, 'buttons', 'light', '&parity=1');
+  await page.evaluate(() => document.documentElement.style.setProperty('--lu-control-radius', '6px'));
+  for (const selector of ['.lu-btn', '.lu-iconbtn']) await expect(page.locator(selector).first()).toHaveCSS('border-radius', '999px');
+  await page.evaluate(() => document.documentElement.style.setProperty('--lu-button-radius', '8px'));
+  for (const selector of ['.lu-btn', '.lu-iconbtn']) await expect(page.locator(selector).first()).toHaveCSS('border-radius', '8px');
 });

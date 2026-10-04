@@ -1,63 +1,79 @@
-/* GlassButton: shared by the Vue and React adapters. Load after
- * `latere-ui/glass` (the material layer).
+/* GlassButton: shared by the Vue and React adapters.
  *
- * The control scale is two heights, 32px (md) and 28px (sm), with 13px and
- * 12px labels. A host that sets `--lu-control-height`,
- * `--lu-control-height-sm` and `--lu-control-radius` sizes and rounds every
- * button, icon button, field and select from one place, so a field and the
- * button beside it share a baseline and a corner. */
+ * One control shape: a capsule in three flat treatments. `primary` is a dark
+ * ink fill, `glass` (the default, the secondary action) a 1px hairline
+ * outline, and `ghost` a bare label. `danger` fills with the error tone and
+ * `danger-ghost` sets it as a bare label. A control reads by its tone and its
+ * 1px edge: no backdrop blur, glass tint or drop shadow. Overlays (menus,
+ * popovers, dialogs) keep their elevation; a button does not.
+ *
+ * Tokens:
+ *   --lu-button-radius      the button corner; a full capsule by default.
+ *                           Read by GlassButton, GlassIconButton and the
+ *                           ThemeMenu and LocaleMenu trigger, nothing else.
+ *   --lu-control-height     md height, 32px by default
+ *   --lu-control-height-sm  sm height, 28px by default
+ *   --lu-button-border      the hairline of `glass` and GlassIconButton
+ *
+ * The heights are shared with every field and select, so a field and the
+ * button beside it share a baseline. The corner is not: fields, selects,
+ * menus and popover panels round from `--lu-control-radius`, and a capsule
+ * value there would turn a menu panel into a pill. A host that wants square
+ * buttons sets `--lu-button-radius`, never `--lu-control-radius`. */
 .lu-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  border-radius: var(--lu-control-radius, var(--radius-pill, 999px));
+  border-radius: var(--lu-button-radius, var(--radius-pill, 999px));
   font-family: inherit;
   font-weight: var(--fw-medium, 500);
   line-height: 1;
   cursor: pointer;
   color: var(--text, #0a0a0a);
+  background: transparent;
   border: 1px solid transparent;
-  transition: background 0.16s ease, box-shadow 0.16s ease, opacity 0.16s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
   white-space: nowrap;
+}
+/* A control carries no material. The doubled class outranks a glass tier
+ * class a host still writes on the element (`lu-glass-thin`), whatever order
+ * the stylesheets load in. */
+.lu-btn.lu-btn {
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 .lu-btn-md { box-sizing: border-box; min-height: var(--lu-control-height, 32px); padding: 0 14px; font-size: var(--fs-body-sm, 13px); }
 .lu-btn-sm { box-sizing: border-box; min-height: var(--lu-control-height-sm, 28px); padding: 0 10px; font-size: var(--fs-micro, 12px); }
 
-/* Default: thin glass (the .lu-glass-thin class supplies bg/blur/edge/border). */
+/* Secondary (the default variant): a hairline outline around an ink label.
+ * The variant keeps its historical name, `glass`. */
 .lu-btn-glass {
-  color: var(--text-secondary, #666);
+  background: transparent;
+  color: var(--text, #0a0a0a);
   border-color: var(--lu-button-border, color-mix(in srgb, var(--text, #0a0a0a) 20%, transparent));
 }
-.lu-btn-glass:hover:not(:disabled) { box-shadow: var(--glass-edge-thick, var(--glass-edge)); }
+.lu-btn-glass:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--text, #0a0a0a) 3%, transparent);
+  border-color: color-mix(in srgb, var(--text, #0a0a0a) 34%, transparent);
+}
 
-/* Primary: smoked ink glass — a translucent dark capsule, not a flat accent fill. */
+/* Primary: a flat ink fill with a paper label. Both flip with the theme.
+ * The border stays transparent so the fill shows through it, also when a
+ * host or preset recolors the fill. */
 .lu-btn-primary {
-  background: var(--glass-smoke-strong, #171717);
-  color: var(--glass-smoke-ink, #fafafa);
+  background: var(--text, #0a0a0a);
+  color: var(--bg, #fafafa);
   border-color: transparent;
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  backdrop-filter: blur(20px) saturate(180%);
-  box-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
 }
 .lu-btn-primary:hover:not(:disabled) {
-  box-shadow:
-    0 4px 10px rgba(0, 0, 0, 0.20),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  background: color-mix(in srgb, var(--text, #0a0a0a) 84%, var(--bg, #fafafa));
 }
 
-/* A glass toolbar already blurs the backdrop; avoid a second nested blur layer. */
-.lu-bar .lu-btn-primary {
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-}
-
+/* Text: a bare label in the secondary tone; the pointer tints the capsule. */
 .lu-btn-ghost { background: transparent; color: var(--text-secondary, #666); }
-.lu-btn-ghost:hover:not(:disabled) { background: var(--accent-subtle, rgba(0, 0, 0, 0.04)); }
+.lu-btn-ghost:hover:not(:disabled) { background: var(--accent-subtle, rgba(0, 0, 0, 0.04)); color: var(--text, #0a0a0a); }
 
 /* Danger as text: a destructive action that sits among other actions, such
  * as in a row or a toolbar. The filled `danger` is for the confirming button
@@ -68,14 +84,12 @@
 .lu-btn-danger {
   background: var(--state-error, #a8412e);
   color: #fafafa;
-  box-shadow:
-    0 2px 6px rgba(168, 65, 46, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  border-color: transparent;
 }
 .lu-btn-danger:hover:not(:disabled) { filter: brightness(0.94); }
 
 .lu-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+/* The outline follows the border radius, so the ring is a capsule too. */
 .lu-btn:focus-visible {
   outline: var(--focus-outline, 2px solid var(--accent, #171717));
   outline-offset: 2px;

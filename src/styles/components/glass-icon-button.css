@@ -1,19 +1,40 @@
+/* GlassIconButton: shared by the Vue and React adapters. An icon-only button
+ * in the secondary treatment of GlassButton: a hairline outline, no fill, no
+ * backdrop blur or shadow. It is round by default, from the same
+ * `--lu-button-radius` as GlassButton, and square by the control heights:
+ * `--lu-control-height` (36px by default) and `--lu-control-height-sm`
+ * (28px). The hairline is `--lu-button-border`. Fields, selects and menu
+ * panels round from `--lu-control-radius` instead; see glass-button.css. */
 .lu-iconbtn {
-  border-color: var(--lu-button-border, color-mix(in srgb, var(--text, #0a0a0a) 20%, transparent));
+  box-sizing: border-box;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--lu-control-radius, var(--radius-pill, 999px));
+  padding: 0;
+  border: 1px solid var(--lu-button-border, color-mix(in srgb, var(--text, #0a0a0a) 20%, transparent));
+  border-radius: var(--lu-button-radius, var(--radius-pill, 999px));
+  background: transparent;
   color: var(--text-secondary, #666);
   cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+/* No material on a control, even when a host writes a glass tier class on
+ * the element; the doubled class wins whatever the stylesheet order. */
+.lu-iconbtn.lu-iconbtn {
   box-shadow: none;
-  transition: color 0.16s ease, background 0.16s ease;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
 }
 .lu-iconbtn-md { width: var(--lu-control-height, 36px); height: var(--lu-control-height, 36px); }
 .lu-iconbtn-sm { width: var(--lu-control-height-sm, 28px); height: var(--lu-control-height-sm, 28px); }
-.lu-iconbtn:hover { color: var(--text, #0a0a0a); }
+.lu-iconbtn:hover:not(:disabled, .is-pressed) {
+  color: var(--text, #0a0a0a);
+  background: color-mix(in srgb, var(--text, #0a0a0a) 3%, transparent);
+  border-color: color-mix(in srgb, var(--text, #0a0a0a) 34%, transparent);
+}
 .lu-iconbtn.is-pressed { color: var(--accent, #171717); background: var(--accent-glow-strong, rgba(0, 0, 0, 0.15)); }
 .lu-iconbtn:disabled { opacity: 0.45; cursor: not-allowed; }
+/* The outline follows the border radius: a ring around the circle. */
 .lu-iconbtn:focus-visible { outline: var(--focus-outline, 2px solid var(--accent, #171717)); outline-offset: 2px; }
 .lu-iconbtn > svg { width: 1.05em; height: 1.05em; }
 @media (prefers-reduced-motion: reduce) { .lu-iconbtn { transition: none; } }

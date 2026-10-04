@@ -194,7 +194,7 @@
 /* Every filter-bearing primitive participates, including teleported overlays
  * and their scrims. Opaque presets must not retain nested glass rendering. */
 :root:is([data-design="replichai"], [data-design="wallfacer"], [data-design="origo"]) :is(.lu-glass, .lu-glass-ultrathin, .lu-glass-thin, .lu-glass-thick, .lu-glass-smoke,
-  .lu-btn-primary, .lu-tip, .lu-am-dd, .lu-ps-panel, .lu-cp, .lu-cs, .lu-modal-scrim, .lu-drawer-scrim) {
+  .lu-tip, .lu-am-dd, .lu-ps-panel, .lu-cp, .lu-cs, .lu-modal-scrim, .lu-drawer-scrim) {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
