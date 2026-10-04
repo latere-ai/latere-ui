@@ -85,7 +85,6 @@ option to restore it.
 
 Built as specified: unit tests, typecheck and the browser checks pass, and
 the macOS 26 renders before and after were reviewed image by image (178
-references change, all buttons). The committed macOS 15 references still
-show the glass buttons; they come from a recording run on the hosted runner,
-as every reference does, and the browser suite's comparison fails on those
-178 images until it has run.
+references change, all buttons). The macOS 15 references come from the
+hosted runner's recording [run 37220008860](https://github.com/latere-ai/latere-ui/actions/runs/37220008860):
+the same 178 images changed, and the buttons render as capsules there.
