@@ -11,7 +11,7 @@ import {
 } from '../src/components/productSwitcher';
 
 describe('product registry', () => {
-  it('lists all six destinations with unique slugs', () => {
+  it('lists all five destinations with unique slugs', () => {
     const slugs = LATERE_PRODUCTS.map((p) => p.slug);
     expect(new Set(slugs).size).toBe(slugs.length);
     expect([...slugs].sort()).toEqual([
@@ -20,8 +20,18 @@ describe('product registry', () => {
       'identity',
       'lux',
       'topos',
-      'wallfacer',
     ]);
+  });
+
+  // Wallfacer left the lineup when the chat took the applications' place. Its
+  // pages stay up, but no tile leads a reader there.
+  it('no longer leads to Wallfacer', () => {
+    expect(LATERE_PRODUCTS.map((p) => p.slug)).not.toContain('wallfacer');
+    for (const p of LATERE_PRODUCTS) {
+      expect(new URL(p.url).hostname).not.toBe('wf.latere.ai');
+      expect(p.name).not.toBe('Wallfacer');
+      expect(p.brandClass).not.toBe('wallfacer-brand');
+    }
   });
 
   // Drive shut down on 2026-09-19; durable storage is the platform's Storage
@@ -88,12 +98,9 @@ describe('product registry', () => {
 
   it('carries the canonical marketing-site marks, not invented glyphs', () => {
     const bySlug = Object.fromEntries(LATERE_PRODUCTS.map((p) => [p.slug, p.icon]));
-    // Pixelated 16x16 rect marks for Wallfacer and Cella.
-    for (const slug of ['wallfacer', 'cella']) {
-      expect(bySlug[slug]).toContain('viewBox="0 0 16 16"');
-      expect(bySlug[slug]).toContain('image-rendering:pixelated');
-    }
-    expect(bySlug.wallfacer).toContain('fill="#d97757"');
+    // A pixelated 16x16 rect mark for Cella.
+    expect(bySlug.cella).toContain('viewBox="0 0 16 16"');
+    expect(bySlug.cella).toContain('image-rendering:pixelated');
     expect(bySlug.cella).toContain('fill="#4a7558"');
     // Stroke marks with the brand stroke colors baked in.
     expect(bySlug.topos).toContain('stroke="#55707a"');
@@ -170,7 +177,6 @@ describe('<ProductSwitcher />', () => {
     expect(grid.attributes('aria-label')).toBe('Latere products');
     expect(w.findAll('.lu-ps-tile').length).toBe(LATERE_PRODUCTS.length);
     expect(grid.text()).toContain('Latere');
-    expect(grid.text()).toContain('Wallfacer');
     expect(grid.text()).toContain('Identity');
   });
 
@@ -179,25 +185,24 @@ describe('<ProductSwitcher />', () => {
     await w.find('button.lu-iconbtn').trigger('click');
     const hrefs = w.findAll('a.lu-ps-tile').map((a) => a.attributes('href'));
     expect(hrefs).toContain('https://chat.latere.ai');
-    expect(hrefs).toContain('https://wf.latere.ai');
     expect(hrefs).toContain('https://auth.latere.ai');
     expect(hrefs.length).toBe(LATERE_PRODUCTS.length - 1);
   });
 
   it('marks the current product with a ring and renders it non-navigating', async () => {
-    const w = render({ current: 'wallfacer' });
+    const w = render({ current: 'chat' });
     await w.find('button.lu-iconbtn').trigger('click');
     const current = w.find('.lu-ps-tile.is-current');
     expect(current.exists()).toBe(true);
     expect(current.element.tagName).toBe('SPAN');
     expect(current.attributes('href')).toBeUndefined();
     expect(current.attributes('aria-current')).toBe('true');
-    expect(current.text()).toContain('Wallfacer');
+    expect(current.text()).toContain('Latere');
     // Screen readers get an explicit current marker.
     expect(current.find('.lu-ps-sr').text()).toBe('Current product');
     // And no anchor points back at the console we are already in.
     const hrefs = w.findAll('a.lu-ps-tile').map((a) => a.attributes('href'));
-    expect(hrefs).not.toContain('https://wf.latere.ai');
+    expect(hrefs).not.toContain('https://chat.latere.ai');
   });
 
   it('closes on Escape', async () => {
@@ -219,7 +224,7 @@ describe('<ProductSwitcher />', () => {
 
   it('accepts a products override for filtered lineups', async () => {
     const products: ProductInfo[] = LATERE_PRODUCTS.filter(
-      (p) => p.slug === 'lux' || p.slug === 'wallfacer',
+      (p) => p.slug === 'lux' || p.slug === 'chat',
     );
     const w = render({ products });
     await w.find('button.lu-iconbtn').trigger('click');
@@ -242,8 +247,8 @@ describe('<ProductSwitcher />', () => {
     await w.find('button.lu-iconbtn').trigger('click');
     const lux = w.findAll('.lu-ps-tile').find((t) => t.text().includes('Lux'))!;
     expect(lux.find('.lu-ps-ic svg path[d="M12 4l8 14H4z"]').exists()).toBe(true);
-    const wallfacer = w.findAll('.lu-ps-tile').find((t) => t.text().includes('Wallfacer'))!;
-    expect(wallfacer.find('.lu-ps-ic svg rect[fill="#d97757"]').exists()).toBe(true);
+    const cella = w.findAll('.lu-ps-tile').find((t) => t.text().includes('Cella'))!;
+    expect(cella.find('.lu-ps-ic svg rect[fill="#4a7558"]').exists()).toBe(true);
     const chat = w.findAll('.lu-ps-tile').find((t) => t.find('.lu-ps-name').text() === 'Latere')!;
     expect(chat.find('.lu-ps-name').classes()).toContain('chat-brand');
     expect(chat.findAll('.lu-ps-ic svg g path')).toHaveLength(5);

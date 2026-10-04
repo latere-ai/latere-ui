@@ -125,7 +125,7 @@ for (const framework of ['vue', 'react']) for (const layout of ['desktop', 'mobi
       const current = page.locator('.lu-ps-tile[aria-current="true"]');
       await expect(current).toContainText('Latere');
       expect(await current.evaluate(element => element.tagName)).toBe('SPAN');
-      await expect(page.locator('.lu-ps-grid a')).toHaveCount(5);
+      await expect(page.locator('.lu-ps-grid a')).toHaveCount(4);
       await page.keyboard.press('Escape');
       await expect(page.locator('.lu-ps-panel')).toHaveCount(0);
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');

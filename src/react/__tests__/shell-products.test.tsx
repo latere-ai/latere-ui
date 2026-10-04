@@ -11,10 +11,10 @@ describe('React ProductSwitcher', () => {
   it('renders registry marks, current non-link tile, labels, overrides and dismissal', () => {
     const view = render(<ProductSwitcher current="chat" />);
     const trigger = screen.getByRole('button'); expect(trigger.getAttribute('aria-expanded')).toBe('false');
-    fireEvent.click(trigger); expect(screen.getAllByRole('link')).toHaveLength(5);
+    fireEvent.click(trigger); expect(screen.getAllByRole('link')).toHaveLength(4);
     expect(view.container.querySelector('.is-current')?.tagName).toBe('SPAN');
     expect(view.container.querySelector('.is-current')?.getAttribute('aria-current')).toBe('true');
-    expect(view.container.querySelectorAll('.lu-ps-ic svg')).toHaveLength(6);
+    expect(view.container.querySelectorAll('.lu-ps-ic svg')).toHaveLength(5);
     expect(view.container.querySelector('.is-current .lu-ps-name.chat-brand')?.textContent).toBe('Latere');
     fireEvent.keyDown(document, { key: 'Escape' }); expect(screen.queryByRole('navigation')).toBeNull();
     fireEvent.click(trigger); fireEvent.mouseDown(document.body); expect(screen.queryByRole('navigation')).toBeNull();
