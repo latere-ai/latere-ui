@@ -83,6 +83,9 @@ option to restore it.
 
 ## Outcome
 
-Built as specified. The macOS 15 references are recorded on the hosted
-runner, as every reference is; the local macOS 26 renders before and after
-were reviewed image by image.
+Built as specified: unit tests, typecheck and the browser checks pass, and
+the macOS 26 renders before and after were reviewed image by image (178
+references change, all buttons). The committed macOS 15 references still
+show the glass buttons; they come from a recording run on the hosted runner,
+as every reference does, and the browser suite's comparison fails on those
+178 images until it has run.
