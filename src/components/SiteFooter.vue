@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, type Component } from 'vue';
 import {
+  footerLang,
   translator,
   type Locale,
   type Messages,
@@ -57,6 +58,7 @@ const emit = defineEmits<{
 }>();
 
 const t = computed(() => translator(props.locale, props.messages));
+const lang = computed(() => footerLang(props.locale, props.messages));
 const themeLabels = computed(() => ({
   theme: t.value('footer.theme'),
   light: t.value('footer.theme.light'),
@@ -73,7 +75,7 @@ function linkProps(path: string) {
 
 <template>
   <!-- Compact navigation wraps complete labels; preferences sit below. -->
-  <footer v-if="compact" class="site-footer site-footer-compact">
+  <footer v-if="compact" class="site-footer site-footer-compact" :lang="lang">
     <p class="footer-compact-copy" v-html="t('footer.rights')" />
     <nav class="footer-compact-links" :aria-label="t('footer.products')">
       <div v-for="group in FOOTER_GROUPS" :key="group.id" class="footer-compact-group" :data-footer-group="group.id" role="group" :aria-label="t(group.labelKey)">
@@ -103,7 +105,7 @@ function linkProps(path: string) {
 
   <!-- The lockup, the social row and the preferences lead; the link columns
        follow; the copyright closes the footer. -->
-  <footer v-else class="site-footer">
+  <footer v-else class="site-footer" :lang="lang">
     <div class="footer-container">
       <div class="footer-lead">
         <div class="footer-lockup">

@@ -8,7 +8,7 @@
 // where it links.
 import { type ComponentType, type ReactNode } from 'react';
 import '../styles/footer.css';
-import { translator, type Locale, type Messages, type Theme, type LocaleOption } from '../i18n/footer';
+import { footerLang, translator, type Locale, type Messages, type Theme, type LocaleOption } from '../i18n/footer';
 import { FOOTER_COLUMNS, FOOTER_COMPACT_LINKS, FOOTER_GROUPS, FOOTER_SOCIALS } from '../components/footerNavigation';
 import { DEFAULT_LOCALE_OPTIONS } from '../components/preferenceMenus';
 import { LatereLogoMark } from './LatereLogoMark';
@@ -110,7 +110,7 @@ export function SiteFooter({
   // Compact navigation wraps complete labels; preferences sit below.
   if (compact) {
     return (
-      <footer className="site-footer site-footer-compact">
+      <footer className="site-footer site-footer-compact" lang={footerLang(locale, messages)}>
         <Html as="p" className="footer-compact-copy" html={t('footer.rights')} />
         <nav className="footer-compact-links" aria-label={t('footer.products')}>
           {FOOTER_GROUPS.map(group => (
@@ -136,7 +136,7 @@ export function SiteFooter({
   // The lockup, the social row and the preferences lead; the link columns
   // follow; the copyright closes the footer.
   return (
-    <footer className="site-footer">
+    <footer className="site-footer" lang={footerLang(locale, messages)}>
       <div className="footer-container">
         <div className="footer-lead">
           <div className="footer-lockup">

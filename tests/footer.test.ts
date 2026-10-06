@@ -261,3 +261,16 @@ describe('SiteFooter', () => {
     );
   }
 });
+
+describe('footer language', () => {
+  it('marks the footer with the language its copy is in, in both layouts', () => {
+    expect(render({ locale: 'zh' }).find('footer').attributes('lang')).toBe('zh-Hans');
+    expect(render({ locale: 'de', compact: true }).find('footer').attributes('lang')).toBe('de');
+    expect(render({ locale: 'en' }).find('footer').attributes('lang')).toBe('en');
+  });
+
+  it('says English for a locale without copy of its own, and the host locale for one it supplies', () => {
+    expect(render({ locale: 'fr' }).find('footer').attributes('lang')).toBe('en');
+    expect(render({ locale: 'fr', messages: { fr: { 'footer.language': 'Langue' } } }).find('footer').attributes('lang')).toBe('fr');
+  });
+});

@@ -154,6 +154,19 @@ const dicts: Record<string, Dict> = { en, zh, de };
  * Resolve footer copy for a locale. Lookup order: host `messages` override →
  * bundled dictionary for the locale → English → the key itself.
  */
+/** BCP 47 tags for the bundled languages whose code alone is not one. */
+const LANGUAGE_TAGS: Record<string, string> = { zh: 'zh-Hans' };
+
+/**
+ * The language the footer's copy is in, for its `lang` attribute: a screen
+ * reader voices the copy in that language, and the browser picks fonts and
+ * line breaking by it, on a page whose own language may differ. A locale
+ * without copy of its own is shown in English, and says so.
+ */
+export function footerLang(locale: Locale, messages?: Messages): string {
+  return dicts[locale] || messages?.[locale] ? (LANGUAGE_TAGS[locale] ?? locale) : 'en';
+}
+
 export function translator(locale: Locale, messages?: Messages) {
   return (key: string): string =>
     messages?.[locale]?.[key] ?? dicts[locale]?.[key] ?? en[key] ?? key;
