@@ -15,6 +15,18 @@ describe('slugify()', () => {
     expect(slugify('  Spaces  & symbols  ')).toBe('spaces-symbols');
     expect(slugify('')).toBe('section');
   });
+  it('keeps the words of every script, so a Chinese heading gets an id of its own', () => {
+    expect(slugify('钱包用完之后')).toBe('钱包用完之后');
+    expect(slugify('API 与 Console')).toBe('api-与-console');
+    expect(slugify('Über die Plattform')).toBe('über-die-plattform');
+    const used = new Set<string>();
+    expect(slugify('三个数字', used)).toBe('三个数字');
+    expect(slugify('三个数字', used)).toBe('三个数字-2');
+  });
+  it('leaves out invisible format characters, so the page and the source agree', () => {
+    const joined = ['钱', '包', '用', '完'].join(String.fromCodePoint(0x2060));
+    expect(slugify(joined)).toBe('钱包用完');
+  });
   it('disambiguates duplicates within a used-set', () => {
     const used = new Set<string>();
     expect(slugify('Setup', used)).toBe('setup');

@@ -30,13 +30,22 @@ export interface TocCore {
   dispose: () => void;
 }
 
-/** Turn heading text into a URL-safe, unique-within-doc slug. */
+/**
+ * Turn heading text into a slug, unique within the doc. Letters and digits of
+ * every script are kept, so a Chinese heading gets an id of its own words
+ * (钱包用完之后) rather than every one of them `section`; a browser shows it as
+ * written and sends it percent-encoded. Invisible format characters, such as
+ * the word joiners a host puts between the characters of a Chinese word, are
+ * left out, so the id is the same whether it comes from the source or the page.
+ */
 export function slugify(text: string, used?: Set<string>): string {
   const base =
     text
+      .normalize('NFKC')
+      .replace(/\p{Cf}/gu, '')
       .toLowerCase()
       .trim()
-      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/[^\p{L}\p{M}\p{N}]+/gu, '-')
       .replace(/^-+|-+$/g, '') || 'section';
   if (!used) return base;
   let slug = base;
