@@ -10,6 +10,8 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+## v1.37.0 - 2026-10-07
+
 - The footer says which language its copy is in: `SiteFooter`, in both layouts and both adapters, sets `lang` on its `<footer>`, `zh-Hans` for Chinese, `de` and `en` for German and English, the host's locale for one it supplies through `messages`, and `en` for a locale it falls back to English for. A screen reader then reads Chinese footer copy in Chinese, and the browser picks Chinese faces for it, on a page whose own language is English. `footerLang(locale, messages)` gives the same value to a host.
 - A heading's slug keeps the letters and digits of every script. A Chinese heading's id is its own words, such as `钱包用完之后`, where every Chinese heading was `section`, `section-2`, and so on; links to those numbered ids no longer land. Latin headings keep their ids, except that letters with marks stay (`über-die-plattform`, where it was `ber-die-plattform`). Invisible format characters, such as word joiners, are left out of the slug.
 - The footer's social row leads with Slack, in the place of Discord, whose invite no longer works. `SiteFooter`, in both layouts and both adapters, links the Slack glyph to `https://latere.ai/slack`, a redirect on the company site to the current invite, so a new invite reaches every footer without a release of this package.
