@@ -95,7 +95,9 @@ describe('SiteFooter', () => {
     expect(lead.get('.footer-lockup .logo-link').attributes('href')).toBe('https://latere.ai/');
     expect(lead.get('.logo-text').text()).toBe('Latere AI');
     expect(lead.get('.footer-social').attributes('aria-label')).toBe('Social profiles');
-    expect(lead.findAll('.footer-social a').map(a => a.attributes('aria-label'))).toEqual(['Discord', 'LinkedIn', 'X', 'GitHub']);
+    expect(lead.findAll('.footer-social a').map(a => a.attributes('aria-label'))).toEqual(['Slack', 'LinkedIn', 'X', 'GitHub']);
+    // The company site redirects /slack to the current invite, so a rotated invite needs no footer release.
+    expect(lead.get('.footer-social a').attributes('href')).toBe('https://latere.ai/slack');
     expect(lead.find('hr.footer-rule').exists()).toBe(true);
     expect(lead.findAll('.footer-prefs .lu-pref').map(m => m.classes())).toEqual([
       ['lu-pop', 'lu-pref', 'lu-theme-menu'], ['lu-pop', 'lu-pref', 'lu-locale-menu'],
