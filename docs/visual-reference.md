@@ -29,7 +29,6 @@ Every visual component renders in light and dark themes at desktop and mobile wi
 | preferences | AccountPrefs, ThemeMenu, LocaleMenu | [View](../tests/visual/goldens/darwin-24/preferences-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/preferences-dark-desktop.png) | [Light](../tests/visual/goldens/darwin-24/preferences-light-mobile.png) · [Dark](../tests/visual/goldens/darwin-24/preferences-dark-mobile.png) |
 | organizations | OrgSwitcher | [View](../tests/visual/goldens/darwin-24/organizations-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/organizations-dark-desktop.png) | [Light](../tests/visual/goldens/darwin-24/organizations-light-mobile.png) · [Dark](../tests/visual/goldens/darwin-24/organizations-dark-mobile.png) |
 | footer | SiteFooter | [View](../tests/visual/goldens/darwin-24/footer-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/footer-dark-desktop.png) | [Light](../tests/visual/goldens/darwin-24/footer-light-mobile.png) · [Dark](../tests/visual/goldens/darwin-24/footer-dark-mobile.png) |
-| footer-compact | SiteFooter | [View](../tests/visual/goldens/darwin-24/footer-compact-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/footer-compact-dark-desktop.png) | [Light](../tests/visual/goldens/darwin-24/footer-compact-light-mobile.png) · [Dark](../tests/visual/goldens/darwin-24/footer-compact-dark-mobile.png) |
 | logo | LatereLogoMark, PlatformLogoMark | [View](../tests/visual/goldens/darwin-24/logo-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/logo-dark-desktop.png) | [Light](../tests/visual/goldens/darwin-24/logo-light-mobile.png) · [Dark](../tests/visual/goldens/darwin-24/logo-dark-mobile.png) |
 | effects | GlassSurface | [View](../tests/visual/goldens/darwin-24/effects-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/effects-dark-desktop.png) | [Light](../tests/visual/goldens/darwin-24/effects-light-mobile.png) · [Dark](../tests/visual/goldens/darwin-24/effects-dark-mobile.png) |
 
@@ -62,7 +61,6 @@ Real components rendered with the optional `latere-ui/presets` stylesheet, in bo
 | preferences | AccountPrefs, ThemeMenu, LocaleMenu | [View](../tests/visual/goldens/darwin-24/replichai-preferences-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-preferences-dark-desktop.png) | — |
 | organizations | OrgSwitcher | [View](../tests/visual/goldens/darwin-24/replichai-organizations-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-organizations-dark-desktop.png) | — |
 | footer | SiteFooter | [View](../tests/visual/goldens/darwin-24/replichai-footer-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-footer-dark-desktop.png) | — |
-| footer-compact | SiteFooter | [View](../tests/visual/goldens/darwin-24/replichai-footer-compact-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-footer-compact-dark-desktop.png) | — |
 | logo | LatereLogoMark, PlatformLogoMark | [View](../tests/visual/goldens/darwin-24/replichai-logo-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-logo-dark-desktop.png) | — |
 | effects | GlassSurface | [View](../tests/visual/goldens/darwin-24/replichai-effects-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-effects-dark-desktop.png) | — |
 
@@ -91,7 +89,6 @@ Real components rendered with the optional `latere-ui/presets` stylesheet, in bo
 | preferences | AccountPrefs, ThemeMenu, LocaleMenu | [View](../tests/visual/goldens/darwin-24/wallfacer-preferences-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-preferences-dark-desktop.png) | — |
 | organizations | OrgSwitcher | [View](../tests/visual/goldens/darwin-24/wallfacer-organizations-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-organizations-dark-desktop.png) | — |
 | footer | SiteFooter | [View](../tests/visual/goldens/darwin-24/wallfacer-footer-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-footer-dark-desktop.png) | — |
-| footer-compact | SiteFooter | [View](../tests/visual/goldens/darwin-24/wallfacer-footer-compact-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-footer-compact-dark-desktop.png) | — |
 | logo | LatereLogoMark, PlatformLogoMark | [View](../tests/visual/goldens/darwin-24/wallfacer-logo-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-logo-dark-desktop.png) | — |
 | effects | GlassSurface | [View](../tests/visual/goldens/darwin-24/wallfacer-effects-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-effects-dark-desktop.png) | — |
 
@@ -120,7 +117,6 @@ Real components rendered with the optional `latere-ui/presets` stylesheet, in bo
 | preferences | AccountPrefs, ThemeMenu, LocaleMenu | [View](../tests/visual/goldens/darwin-24/origo-preferences-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-preferences-dark-desktop.png) | — |
 | organizations | OrgSwitcher | [View](../tests/visual/goldens/darwin-24/origo-organizations-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-organizations-dark-desktop.png) | — |
 | footer | SiteFooter | [View](../tests/visual/goldens/darwin-24/origo-footer-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-footer-dark-desktop.png) | — |
-| footer-compact | SiteFooter | [View](../tests/visual/goldens/darwin-24/origo-footer-compact-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-footer-compact-dark-desktop.png) | — |
 | logo | LatereLogoMark, PlatformLogoMark | [View](../tests/visual/goldens/darwin-24/origo-logo-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-logo-dark-desktop.png) | — |
 | effects | GlassSurface | [View](../tests/visual/goldens/darwin-24/origo-effects-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-effects-dark-desktop.png) | — |
 

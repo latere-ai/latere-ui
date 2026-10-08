@@ -24,11 +24,14 @@ The ink palette is a separate stylesheet: import `latere-ui/ink` after the share
 
 ## Footer preferences
 
-The footer is presentational: it takes `theme` and `locale` and reports the
-reader's choices through `onThemeChange` and `onLocaleChange`. Wire it to your
-app's own preference state. `SiteFooter` imports its own stylesheet, so
-`latere-ui/styles` is needed only by a page that styles footer markup without
-the component.
+`SiteFooter` is the one footer every Latere site ends in. Its lineup, its
+company and legal links, the social profiles, the menus and the copyright are
+the same everywhere; a site passes its own lockup and wires the theme and the
+language to its own preference state, and nothing else. The footer takes
+`theme` and `locale` and reports the reader's choices through `onThemeChange`
+and `onLocaleChange`. It imports its own stylesheet, so `latere-ui/styles` is
+needed only by a page that sets the product wordmark classes without the
+component.
 
 ```tsx
 import { SiteFooter } from 'latere-ui';
@@ -37,6 +40,7 @@ import { SiteFooter } from 'latere-ui';
 <SiteFooter
   theme={theme} onThemeChange={setTheme}
   locale={locale} onLocaleChange={setLocale}
+  brand={<a href="/" className="my-lockup">…</a>}
 />
 ```
 
@@ -45,48 +49,50 @@ import { SiteFooter } from 'latere-ui';
 | Prop             | Type                          | Default               | Notes                                                                 |
 | ---------------- | ----------------------------- | --------------------- | --------------------------------------------------------------------- |
 | `theme`          | `'light' \| 'dark' \| 'auto'` | required              | The theme menu's icon and checked item; `auto` follows the system.    |
-| `onThemeChange`  | `(theme) => void`             | `undefined`           | Called with the theme the reader picked.                              |
-| `locale`         | `string` (bundled: `en`, `zh`, `de`) | required       | Selects footer copy and the checked language.                         |
-| `onLocaleChange` | `(locale) => void`            | `undefined`           | Called with the locale the reader picked.                             |
-| `locales`        | `LocaleOption[]`              | `[en, zh]`            | Languages in the language menu (`{ code, label, name? }`), named by `name`. |
-| `compact`        | `boolean`                     | `false`               | One wrapped row of links with the two menu buttons below.             |
-| `messages`       | `Messages`                    | `undefined`           | Per-locale string overrides, merged over the bundled footer copy.     |
-| `baseUrl`        | `string`                      | `'https://latere.ai'` | Origin for the site's own links (About, Blog, Legal, home).           |
-| `routerLink`     | `ComponentType`               | `undefined`           | Your router's `Link`, to keep SPA navigation for internal links on-site. |
-| `brand`          | `ReactNode`                   | Latere AI lockup      | The host site's lockup at the head of the full footer.                |
+| `onThemeChange`  | `(theme) => void`             | `undefined`           | Called with the theme the reader picked. Without it there is no theme menu. |
+| `locale`         | `string` (bundled: `en`, `zh`, `de`) | required       | Selects footer copy and the checked language; any other locale reads English. |
+| `onLocaleChange` | `(locale) => void`            | `undefined`           | Called with the locale the reader picked. Without it there is no language menu. |
+| `locales`        | `LocaleOption[]`              | `[en, zh]`            | Languages in the language menu (`{ code, label, name? }`), named by `name`. With fewer than two there is no language menu. |
+| `baseUrl`        | `string`                      | `'https://latere.ai'` | Origin of the company site's links (About, Blog, Legal).              |
+| `routerLink`     | `ComponentType`               | `undefined`           | Your router's `Link`, for the company site itself, to keep its links in the app. |
+| `brand`          | `ReactNode`                   | Latere AI lockup      | The site's lockup at the head of the footer, linked to its home.      |
 
-The full footer's lead starts with the Latere AI lockup. A site with its own
-lockup passes it through `brand`:
+The lead starts with the site's lockup: its mark and its name as its header
+sets them, linked to its home, such as "Latere | Platform". Without `brand`
+the footer shows the Latere AI lockup linked to `baseUrl`. The lockup is the
+site's own markup and the site's own styles; everything else in the footer
+is the package's.
 
-```tsx
-<SiteFooter theme={theme} locale={locale} brand={<a href="/" className="my-lockup">…</a>} />
-```
+A site in one language passes nothing for the language, or `locales` with
+just that one, and the footer shows no language menu: it never offers a
+language the site does not have. German copy is bundled, but the default
+menu lists English and Chinese; include `de` in `locales` to offer German.
+The theme menu's labels are `footer.theme`, `footer.theme.light`,
+`footer.theme.dark` and `footer.theme.system`.
 
-The language menu lists `locales`. To support a locale the package does not
-bundle (bundled: en, zh, de), pass it in `locales` and supply its footer
-strings via `messages`, e.g. `messages={{ fr: { 'footer.company': '…' } }}`.
-An app that ships one language passes `locales` with just that one, so the
-menu offers only what the app has. The theme menu's labels are
-`footer.theme`, `footer.theme.light`, `footer.theme.dark` and
-`footer.theme.system`.
+The footer reports theme choices; the host applies them to `data-theme` and resolves `auto` with `matchMedia('(prefers-color-scheme: dark)')`. It also persists preferences if needed.
 
-The footer reports theme choices; the host applies them to `data-theme` and resolves `auto` with `matchMedia('(prefers-color-scheme: dark)')`. It also persists preferences if needed. German copy is bundled, but the default menu lists English and Chinese; include `de` in `locales` to offer German.
-
-The shared stylesheet scopes link decoration to `.site-footer a` in both layouts, including router links that render anchors. Navigation links carry no underline, at rest or under the pointer; keyboard focus draws an outline. No global anchor reset is required. `compact` swaps the lead and link columns for wrapping navigation followed by the two menus; every label stays visible without horizontal scrolling.
+Every class the footer draws starts with `lu-footer`, and its stylesheet owns
+its link decoration, including router links that render anchors. Navigation
+links carry no underline, at rest or under the pointer; keyboard focus draws
+an outline. No global anchor reset is required, and a site's own rules for
+classes such as `.footer-links` or `.logo-text` do not reach the footer. A
+site does not restyle `.lu-footer*`: a footer that looks different on one
+site is a change to this package, made for every site.
 
 The footer carries Latere's own navigation in four columns: Applications
-(the chat, under its public name Latere) with Research (ReplicHAI) below it,
-Platform (the platform console and Identity), Company (About, Why Latere,
-Blog, Open Source, Contact) and Legal (Trust Center, Privacy, Terms,
-Impressum). Product and Identity links
-are always absolute. Latere's own site links (About, Blog, Legal, home)
-resolve against `baseUrl` as plain `<a>` unless `routerLink` is supplied, in
-which case they render through it with a relative `to`.
+(the chat, under its public name Latere, then the Gallery at latere.site)
+with Research (ReplicHAI) below it, Platform (the platform console and
+Identity), Company (About, Why Latere, Blog, Open Source, Contact) and Legal
+(Trust Center, Privacy, Terms, Impressum). Product and Identity links are
+always absolute. The company site's links (About, Blog, Legal) resolve
+against `baseUrl` as plain `<a>` unless `routerLink` is supplied, in which
+case they render through it with a relative `to`.
 
-`footer.css` reads `--text`, `--text-secondary`, `--text-muted`, `--accent`,
-`--border`, `--bg-surface`, `--bg-raised`, `--shadow`, `--focus-outline` and
-the `--glass-*` set. If your app already has its own palette, alias them on
-`.site-footer` rather than importing `latere-ui/tokens`, which would redefine
+`footer.css` reads `--text`, `--text-muted`, `--accent`, `--border`,
+`--border-strong` and `--focus-outline`, and the menus read the
+`--glass-*` set. If your app already has its own palette, alias them on
+`.lu-footer` rather than importing `latere-ui/tokens`, which would redefine
 `--bg-*` for the whole page.
 
 ### Theme and language menus

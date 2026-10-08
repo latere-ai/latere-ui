@@ -45,7 +45,7 @@ document.documentElement.dataset.design = 'ink';
 | Overlays | Dialogs, drawers, popovers, menus, tooltips, toasts, and confirms |
 | Console | Grouped navigation, collapsible sidebar, account menu, command palette |
 | Documentation | Grouped index, article, table of contents, previous/next navigation |
-| Site chrome | Full and compact footer, theme and language menus, logo, favicon |
+| Site chrome | The family's footer, theme and language menus, logo, favicon |
 | Session | API client, account resolution, organization switching, session bindings |
 | Telemetry | Page load, request and Core Web Vitals traces sent to your backend's telemetry relay, from any framework or none |
 | Structured data | schema.org descriptions of organizations, sites, books, chapters, articles and blog posts for search engines and AI agents, from any framework or none |
@@ -123,7 +123,7 @@ Use regular glass for panels and navigation, thick glass for readable overlays, 
 
 For exact props, callbacks, router integration, footer locales, session setup, [browser telemetry](docs/api-guide.md#browser-telemetry) and [structured data](docs/api-guide.md#structured-data), see the [integration guide](docs/api-guide.md) and the [console and account component examples](docs/react-shell.md). English, Chinese, and German footer dictionaries are bundled; the default language menu offers English and Chinese.
 
-`SiteFooter` is Latere's site footer. On `main`, the full layout leads with the site's lockup, the social profiles and the theme and language menus, and sets four link columns beside them: Applications (Wallfacer) with Research (ReplicHAI) below it, Platform (Latere Platform and Identity), Company, and Legal. The compact layout wraps the same product groups in one row. `ThemeMenu` and `LocaleMenu` are the footer's menus, exported for a header.
+`SiteFooter` is the one footer every Latere site ends in. It leads with the site's lockup, the social profiles and the theme and language menus, and sets four link columns beside them: Applications (Latere, the chat, and the Gallery) with Research (ReplicHAI) below it, Platform (Latere Platform and Identity), Company, and Legal. A site passes its lockup and wires the theme and the language; it does not restyle the footer. `ThemeMenu` and `LocaleMenu` are the footer's menus, exported for a header.
 
 `latere-ui/favicon` writes the platform's tab icon from the same mark the console navigation draws: `platformFaviconSvg()` returns the SVG document, ink in a light tab and light ink in a dark one. It renders with `react-dom/server`, so call it from a build script or a server, not from client code:
 

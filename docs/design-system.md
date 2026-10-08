@@ -139,7 +139,7 @@ A row, a panel or a page only people with an admin role are shown carries one ma
 
 ## Compose a screen
 
-Put navigation and account controls in the sidebar, content in the main area, and interrupting decisions in an overlay. A compact footer fits application screens; the full footer presents the product family and site links.
+Put navigation and account controls in the sidebar, content in the main area, and interrupting decisions in an overlay. Every site ends in the same footer, which presents the product family and the company's links.
 
 ![Console sidebar with grouped navigation, counters, and live state](../tests/visual/goldens/darwin-24/sidebar-light-desktop.png)
 
@@ -149,15 +149,13 @@ The sidebar supports a collapsed rail and custom brand, row, and footer content.
 
 `DocsLayout` gives long-form material a reading order: grouped index, article, then table of contents. The mobile layout puts navigation above the article. Keep the article readable independently of the surrounding glass chrome.
 
-![Compact footer on a narrow viewport](../tests/visual/goldens/darwin-24/footer-compact-light-mobile.png)
+![The footer on a narrow viewport](../tests/visual/goldens/darwin-24/footer-light-mobile.png)
 
-Compact footer links wrap as complete labels, with the theme and language buttons below them. No horizontal scrolling is required to discover the links.
+The footer leaves room around its content. A lead block on the left holds the site's lockup, the social profiles, a short hairline, and the theme and language buttons. Four link columns sit to its right: Applications (Latere, the chat, and the Gallery) with Research (ReplicHAI) below it, Platform, Company, and Legal. Each group is a semibold heading in the full text tone over plain links set 32px apart, and the copyright closes the footer. Below 1024px the lead moves above the columns; on a phone the columns go two up and the lead follows them. A site sets its own lockup in place of the Latere AI mark, and nothing else: the footer is the same on every site.
 
-The full footer leaves room around its content. A lead block on the left holds the site's lockup, the social profiles, a short hairline, and the theme and language buttons. Four link columns sit to its right: Applications (Wallfacer) with Research (ReplicHAI) below it, Platform, Company, and Legal. Each group is a semibold heading in the full text tone over plain links set 32px apart, and the copyright closes the footer. Below 1024px the lead moves above the columns; on a phone the columns go two up and the lead follows them. A host sets its own lockup in place of the Latere AI mark.
+Product names in the columns rest in the same face and color as their neighbors, so each column reads as one list. A product takes its gradient under the pointer or keyboard focus; the chat, whose wordmark is the ink, takes the full text color.
 
-Product names in the columns rest in the same face and color as their neighbors, so each column reads as one list. A product takes its gradient under the pointer or keyboard focus; the chat, whose wordmark is the ink, takes the full text color. The compact strip keeps its italic wordmarks.
-
-Both footer layouts show navigation without underlines, at rest and under the pointer; the pointer changes the color, and keyboard focus shows an outline. These styles belong to the footer and need no page-wide link reset. Article links outside the footer retain the host's styling.
+The footer shows navigation without underlines, at rest and under the pointer; the pointer changes the color, and keyboard focus shows an outline. These styles belong to the footer and need no page-wide link reset. Article links outside the footer retain the host's styling.
 
 Account triggers separate the display name from role and workspace metadata with a 4px gap. Preference pills center their labels by cap height and alphabetic baseline, keeping selected and unselected labels aligned across fonts. Browsers without CSS `text-box` support retain ordinary flex centering.
 
