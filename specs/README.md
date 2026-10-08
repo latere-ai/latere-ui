@@ -63,3 +63,4 @@ specs/
 | [Footer navigation groups](footer-navigation-groups.md) | Complete | Applications, Research, and Platform in both footer adapters and all designs |
 | [Footer columns and preference menus](footer-columns.md) | Complete | Lead block and link columns, theme and language menus on fixed menu primitives, the platform's ink mark |
 | [One control shape, the flat capsule](capsule-controls.md) | Complete | Capsule buttons in flat fill, hairline and bare treatments; `--lu-button-radius` apart from `--lu-control-radius` |
+| [One footer on every Latere site](one-footer.md) | Testing | One footer shape, `lu-footer` classes, lockup and preference wiring as the only site inputs, the Gallery under Applications |
