@@ -10,6 +10,8 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+## v2.0.0 - 2026-10-08
+
 - latere-ui is React only. The package root, `latere-ui`, now resolves to the React entry, the same module as `latere-ui/react`, so every existing React import keeps working. `react` and `react-dom` 18 or 19 are required peers; `vue` and `pinia` are no longer peers. A Vue application stays on a v1.x tag, such as `github:latere-ai/latere-ui#v1.32.2`.
 - Removed with the Vue entry: every Vue component, the Pinia session store (`createSessionStore`, `SessionStoreOptions`), the Vue `useSession` and `useSessionGate`, `createOrgSwitcher`, `createCollapse`, `createToc`, `useGlass`, `concentricRadius`, `useLiquidGlass`, `useFocusTrap`, `useClickOutside`, the reactive `toasts` and `currentConfirm`, and their option and state types. The package entry carries the counterparts: `SessionProvider` with `useSession` and `useSessionGate`, `useOrgSwitcher`, `createTocCore`, `initLiquidGlass`, and `message` and `confirm` rendered by `GlassToaster` and `GlassConfirmHost`. The framework-free helpers stay public there: `glassClass`, `createReauth` for an app that keeps its own session state, and the option types of `me`, `orgs`, `switchOrg` and `logout`.
 - The product switcher is retired across the family: `ProductSwitcher`, `LATERE_PRODUCTS`, `DEFAULT_PRODUCT_SWITCHER_LABELS`, `ProductInfo`, `ProductSlug`, `ProductSwitcherLabels`, `ProductSwitcherLabelOverrides`, the `.lu-ps-*` styles, and `ConsoleSidebar`'s `product` and `productLabels` props are gone. Remove the props from a sidebar that passes them.
