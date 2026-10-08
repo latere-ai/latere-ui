@@ -26,12 +26,13 @@ export interface FooterGroup {
 
 const site = (slug: string, labelKey: string, href: string): FooterLink => ({ slug, labelKey, href, site: true });
 
-/** The chat, under its public name Latere. */
+/** The chat, under its public name Latere, then the gallery of what people made with it. */
 const applications: FooterGroup = {
   id: 'applications',
   labelKey: 'footer.applications',
   links: [
     { slug: 'chat', labelKey: 'footer.products.chat', href: 'https://chat.latere.ai/', brand: 'chat' },
+    { slug: 'gallery', labelKey: 'footer.products.gallery', href: 'https://latere.site/' },
   ],
 };
 

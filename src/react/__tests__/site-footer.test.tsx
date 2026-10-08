@@ -17,7 +17,7 @@ const wired = { onThemeChange: () => undefined, onLocaleChange: () => undefined 
 
 const hrefs = (c: Element) => Array.from(c.querySelectorAll('a')).map((a) => a.getAttribute('href'));
 const DESTINATIONS = {
-  applications: ['https://chat.latere.ai/'],
+  applications: ['https://chat.latere.ai/', 'https://latere.site/'],
   research: ['https://replichai.latere.ai/'],
   platform: ['https://platform.latere.ai/console', 'https://auth.latere.ai/'],
   company: ['https://latere.ai/about', 'https://latere.ai/blog/why-latere', 'https://latere.ai/blog', 'https://latere.ai/open-source', 'mailto:contact@latere.ai'],
@@ -43,7 +43,21 @@ describe('SiteFooter (React)', () => {
       expect(container.querySelector('.lu-footer-cols')!.getAttribute('aria-label')).toBe(dict['footer.navigation']);
       expect(container.textContent).not.toMatch(/Topos|Cella|Lux/);
     });
+
+    // The gallery of what people made follows the chat they made it in.
+    it(`lists the gallery after the chat under Applications in ${locale}`, () => {
+      const { container } = mount({ locale });
+      const links = Array.from(container.querySelectorAll('[data-footer-group="applications"] a'));
+      expect(links.map(a => [a.textContent, a.getAttribute('href')])).toEqual([
+        [dict['footer.products.chat'], 'https://chat.latere.ai/'],
+        [dict['footer.products.gallery'], 'https://latere.site/'],
+      ]);
+    });
   }
+
+  it('names the gallery in each language', () => {
+    expect([en, zh, de].map(d => d['footer.products.gallery'])).toEqual(['Gallery', '作品广场', 'Galerie']);
+  });
 
   it('sets product names in the columns as plain links that carry their product for the hover gradient', () => {
     const { container } = mount();
@@ -52,7 +66,7 @@ describe('SiteFooter (React)', () => {
       ['Latere', 'chat'], ['ReplicHAI', 'replichai'], ['Latere Platform', 'platform'],
     ]);
     expect(container.querySelector('.lu-footer-cols [class$="-brand"]')).toBeNull();
-    expect(links.find(a => a.textContent === 'Identity')!.hasAttribute('data-brand')).toBe(false);
+    for (const name of ['Identity', 'Gallery']) expect(links.find(a => a.textContent === name)!.hasAttribute('data-brand')).toBe(false);
   });
 
   it('leads with the lockup, the social row, a hairline and the preference menus, in that order', () => {

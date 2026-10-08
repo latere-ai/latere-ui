@@ -2,7 +2,7 @@ import { test, expect, visit } from './fixtures';
 import { designs } from './design-manifest';
 
 const COLUMNS = [
-  ['https://chat.latere.ai/'],
+  ['https://chat.latere.ai/', 'https://latere.site/'],
   ['https://replichai.latere.ai/'],
   ['https://platform.latere.ai/console', 'https://auth.latere.ai/'],
   ['/about', '/blog/why-latere', '/blog', '/open-source', 'mailto:contact@latere.ai'],
