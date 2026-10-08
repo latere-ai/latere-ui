@@ -129,12 +129,12 @@ for (const theme of ['light', 'dark']) {
 }
 
 {
-  // The switch is measured where the forms sheet renders it. A host that
-  // sizes every box by its border, as most resets do, must not move the
-  // thumb: its gap to the track's inner edge is the same above and below,
-  // and the same on the side it rests against, on and off.
+  // The switch is measured where the parity forms sheet renders it. A host
+  // that sizes every box by its border, as most resets do, must not move
+  // the thumb: its gap to the track's inner edge is the same above and
+  // below, and the same on the side it rests against, on and off.
   test('switch thumb is centered in a host that sizes boxes by their border', async ({ page }) => {
-    await visit(page, 'forms');
+    await visit(page, 'forms', 'light', '&parity=1');
     await page.addStyleTag({ content: '*, *::before, *::after { box-sizing: border-box; }' });
     const control = page.getByRole('switch', { name: 'Notifications' });
     const gaps = () => control.evaluate(async (el) => {
