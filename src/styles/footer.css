@@ -1,36 +1,35 @@
-/* Shared Latere footer styles. Depends on design tokens (--text, --bg-surface,
- * --bg-raised, --text-secondary, --text-muted, --border). Import `latere-ui/tokens`
- * if the consuming app does not already define them. The theme and language
- * menus bring their own sheets (preference-menu, glass-popover, glass-menu). */
+/* The shared Latere footer: one shape on every Latere site, its classes all
+ * `lu-footer*`. A site passes its lockup and wires the theme and language
+ * menus; it does not restyle these rules. Depends on design tokens (--text,
+ * --text-muted, --border); import `latere-ui/tokens` if the site does not
+ * define them. The theme and language menus bring their own sheets
+ * (preference-menu, glass-popover, glass-menu). */
 
-/* ===== Brand wordmark + logo ===== */
-.logo-link {
+/* ===== The default lockup ===== */
+/* The Latere AI lockup a site gets when it passes none of its own. */
+.lu-footer-home {
     display: flex;
     align-items: center;
     gap: 10px;
     color: var(--text);
 }
-.logo-link:hover { color: var(--text); }
-.logo-text {
+.lu-footer-home:hover { color: var(--text); }
+.lu-footer-word {
     font-family: 'Instrument Serif', serif;
     font-style: italic;
     font-size: 18px;
     font-weight: 400;
     color: var(--text);
 }
-.logo-mark {
-    width: 38px;
-    height: 38px;
+.lu-footer-mark {
+    width: 40px;
+    height: 40px;
     display: grid;
     place-items: center;
     flex-shrink: 0;
     overflow: hidden;
 }
-.logo-mark-footer {
-    width: 40px;
-    height: 40px;
-}
-.logo-mark-icon {
+.lu-footer-mark-icon {
     width: 100%;
     height: 100%;
     display: block;
@@ -101,16 +100,16 @@
 
 /* ===== Footer ===== */
 /* Room to breathe above; the footer starts after a clear pause in the page. */
-.site-footer {
+.lu-footer {
     border-top: 1px solid var(--border);
     padding: 96px 0 0;
     font-family: var(--font-ui, system-ui, sans-serif);
 }
-/* Both layouts own their link decoration, including brand and social anchors.
+/* The footer owns its link decoration, brand and social anchors included.
  * Reset the anchor itself: a descendant wordmark cannot undo its underline. */
-.site-footer a { text-decoration: none; }
+.lu-footer a { text-decoration: none; }
 /* Lead block on the left, link columns on the right. */
-.footer-container {
+.lu-footer-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 32px;
@@ -124,21 +123,21 @@
 /* The lead: the host's lockup, the social row, a short hairline, then the
  * theme and language menus. The icon buttons' hit boxes overhang to the left
  * so their glyphs line up with the lockup's edge. */
-.footer-lead {
+.lu-footer-lead {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 24px;
     min-width: 0;
 }
-.footer-lockup { display: flex; min-width: 0; }
-.footer-social {
+.lu-footer-lockup { display: flex; min-width: 0; }
+.lu-footer-social {
     display: flex;
     align-items: center;
     gap: 4px;
 }
-.footer-lead .footer-social { margin-left: -6px; }
-.footer-social a {
+.lu-footer-lead .lu-footer-social { margin-left: -6px; }
+.lu-footer-social a {
     display: grid;
     place-items: center;
     width: 28px;
@@ -147,43 +146,43 @@
     color: var(--text-muted);
     transition: color 0.15s;
 }
-.footer-social a:hover { color: var(--text); }
-.footer-social svg { display: block; }
-.footer-rule {
+.lu-footer-social a:hover { color: var(--text); }
+.lu-footer-social svg { display: block; }
+.lu-footer-rule {
     width: 32px;
     height: 0;
     margin: 0;
     border: 0;
     border-top: 1px solid var(--border-strong, var(--border));
 }
-.footer-prefs {
+.lu-footer-prefs {
     display: flex;
     align-items: center;
     gap: 4px;
 }
-.footer-lead .footer-prefs { margin-left: -8px; }
+.lu-footer-lead .lu-footer-prefs { margin-left: -8px; }
 
 /* Link columns: a semibold heading in the full text tone over plain links set
  * 32px apart, so weight and tone both separate the label from the links under
  * it. A second group in a column sits below the first. */
-.footer-cols {
+.lu-footer-cols {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 40px 32px;
     min-width: 0;
 }
-.footer-col {
+.lu-footer-col {
     display: flex;
     flex-direction: column;
     gap: 40px;
     min-width: 0;
 }
-.footer-group {
+.lu-footer-group {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
-.footer-col-title {
+.lu-footer-col-title {
     margin: 0;
     font: inherit;
     font-size: var(--text-ui, 14px);
@@ -193,7 +192,7 @@
     text-transform: none;
     color: var(--text);
 }
-.footer-links {
+.lu-footer-links {
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -201,35 +200,35 @@
     padding: 0;
     list-style: none;
 }
-.footer-links li { display: flex; min-width: 0; }
-.footer-link {
+.lu-footer-links li { display: flex; min-width: 0; }
+.lu-footer-link {
     font-size: var(--text-ui, 14px);
     line-height: 20px;
     color: color-mix(in srgb, var(--text) 82%, transparent);
     overflow-wrap: anywhere;
     transition: color 0.15s;
 }
-.footer-link:hover { color: var(--text); }
+.lu-footer-link:hover { color: var(--text); }
 /* A product link rests in the body face like its neighbors and takes its
  * product's gradient under the pointer or focus. The chat's wordmark is the
  * ink itself, so its link fills with the text color alone. */
-.footer-link[data-brand="chat"] { --lu-footer-brand: linear-gradient(var(--text), var(--text)); }
-.footer-link[data-brand="replichai"] { --lu-footer-brand: var(--lu-brand-replichai); }
-.footer-link[data-brand="platform"] { --lu-footer-brand: var(--lu-brand-platform); }
-.footer-link[data-brand]:hover,
-.footer-link[data-brand]:focus-visible {
+.lu-footer-link[data-brand="chat"] { --lu-footer-brand: linear-gradient(var(--text), var(--text)); }
+.lu-footer-link[data-brand="replichai"] { --lu-footer-brand: var(--lu-brand-replichai); }
+.lu-footer-link[data-brand="platform"] { --lu-footer-brand: var(--lu-brand-platform); }
+.lu-footer-link[data-brand]:hover,
+.lu-footer-link[data-brand]:focus-visible {
     background-image: var(--lu-footer-brand);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
 }
-.footer-bottom {
+.lu-footer-bottom {
     max-width: 1200px;
     margin: 72px auto 0;
     padding: 0 32px 32px;
     box-sizing: border-box;
 }
-.footer-bottom p {
+.lu-footer-bottom p {
     margin: 0;
     font-size: var(--text-small, 12px);
     line-height: 16px;
@@ -237,88 +236,26 @@
 }
 /* Design-system ink focus ring (never the browser-default blue) for every
  * footer link; the menu triggers carry the same ring in their own sheet. */
-.site-footer a:focus-visible {
+.lu-footer a:focus-visible {
     outline: var(--focus-outline, 2px solid var(--accent, #171717));
     outline-offset: 2px;
     border-radius: 2px;
 }
 
-/* ===== Compact variant (single-line bar) ===== */
-.site-footer-compact {
-    display: flex;
-    align-items: center;
-    gap: 8px 16px;
-    flex-wrap: wrap;
-    /* full-width app toolbar (matches the host header), not the marketing
-       footer's centered max-width — gives the links row room on wide screens */
-    padding: 8px 24px;
-    /* App-surface footer: a regular-tier Liquid Glass strip over the canvas.
-     * Opaque fallback via the token contract (glass.css zeroes the tokens under
-     * reduce-transparency / increase-contrast). The full marketing footer keeps
-     * its transparent page-base treatment. */
-    background: var(--glass-bg, transparent);
-    -webkit-backdrop-filter: blur(var(--glass-blur, 0)) saturate(var(--glass-saturate, 100%)) brightness(var(--glass-brightness, 1));
-            backdrop-filter: blur(var(--glass-blur, 0)) saturate(var(--glass-saturate, 100%)) brightness(var(--glass-brightness, 1));
-    border-top: 1px solid var(--glass-border, var(--border));
-}
-.footer-compact-copy {
-    margin: 0;
-    flex-shrink: 0;
-    font-size: 12px;
-    color: var(--text-muted);
-    white-space: nowrap;
-}
-.footer-compact-links {
-    flex: 1 1 100%;
-    min-width: 0;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 4px 14px;
-    font-size: 13px;
-    line-height: 24px;
-}
-.footer-compact-group { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; max-width: 100%; }
-.footer-group-title { font-size: 10px; font-weight: 600; letter-spacing: .04em; color: var(--text-muted); }
-.footer-compact-links a {
-    color: var(--text-secondary);
-    transition: color 0.15s;
-    white-space: nowrap;
-}
-.footer-compact-links a:hover { color: var(--text); }
-.site-footer-compact .footer-extra {
-    display: flex;
-    flex-shrink: 0;
-    flex-direction: row;
-    align-items: center;
-    gap: 16px;
-    margin-left: auto;
-}
-
-.site-footer-compact .footer-compact-links { order: -1; }
 /* Touch keeps 44px targets; the menu triggers size themselves the same way. */
 @media (pointer: coarse) {
-    .footer-social a { width: 44px; height: 44px; }
-    .site-footer-compact .footer-compact-links a { min-height: 44px; display: inline-flex; align-items: center; }
+    .lu-footer-social a { width: 44px; height: 44px; }
 }
 
 /* ===== Responsive ===== */
 /* Narrower than the four columns need: the lead takes its own row above them. */
 @media (max-width: 1024px) {
-    .footer-container { grid-template-columns: minmax(0, 1fr); }
-}
-@media (max-width: 768px) {
-    .site-footer-compact { gap: 8px; padding: 10px 16px; }
-    .site-footer-compact .footer-compact-links { flex: 1 0 100%; }
-    .site-footer-compact .footer-extra { margin-left: auto; }
-    /* drop the copyright on narrow screens so the wayfinding links get the room */
-    .site-footer-compact .footer-compact-copy { display: none; }
-    .site-footer-compact .footer-social { display: none; }
+    .lu-footer-container { grid-template-columns: minmax(0, 1fr); }
 }
 /* Phone: the columns two up, then the lead, then the copyright. */
 @media (max-width: 640px) {
-    .site-footer { padding-top: 56px; }
-    .footer-container { gap: 48px; padding: 0 16px; }
-    .footer-cols { order: -1; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 24px; }
-    .footer-bottom { margin-top: 48px; padding: 0 16px 32px; }
+    .lu-footer { padding-top: 56px; }
+    .lu-footer-container { gap: 48px; padding: 0 16px; }
+    .lu-footer-cols { order: -1; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 24px; }
+    .lu-footer-bottom { margin-top: 48px; padding: 0 16px 32px; }
 }

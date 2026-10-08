@@ -38,7 +38,7 @@ export type { ConsoleIconName } from '../console/icons';
 export { paletteEntries, filterPalette } from '../console/palette';
 export type { ConsolePaletteItem, ConsolePaletteSearch } from '../console/palette';
 
-// Site footer: the shared Latere footer in both variants, with its copy from
+// Site footer: the one footer every Latere site ends in, with its copy from
 // the framework-free i18n module.
 export { SiteFooter, type SiteFooterProps } from './SiteFooter';
 export { LatereLogoMark } from './LatereLogoMark';

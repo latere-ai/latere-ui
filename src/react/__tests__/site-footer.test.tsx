@@ -1,11 +1,11 @@
-// SiteFooter: the link columns and compact strip, the lead block, the
-// preference menus, link routing and the bundled translations.
+// SiteFooter: the link columns, the lead block, the preference menus, link
+// routing and the bundled translations.
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { cleanup, fireEvent, render } from '@testing-library/react';
 import { SiteFooter, type SiteFooterProps } from '../SiteFooter';
-import { FOOTER_GROUPS } from '../../components/footerNavigation';
+import { FOOTER_COLUMNS } from '../../components/footerNavigation';
 import { en, zh, de } from '../../i18n/footer';
 
 afterEach(cleanup);
@@ -13,6 +13,7 @@ afterEach(cleanup);
 function mount(props: Partial<SiteFooterProps> = {}) {
   return render(<SiteFooter theme="auto" locale="en" {...props} />);
 }
+const wired = { onThemeChange: () => undefined, onLocaleChange: () => undefined };
 
 const hrefs = (c: Element) => Array.from(c.querySelectorAll('a')).map((a) => a.getAttribute('href'));
 const DESTINATIONS = {
@@ -27,101 +28,103 @@ describe('SiteFooter (React)', () => {
   for (const [locale, dict] of Object.entries({ en, zh, de })) {
     it(`lays five groups out in four columns in ${locale}`, () => {
       const { container } = mount({ locale });
-      const columns = Array.from(container.querySelectorAll('.footer-cols > .footer-col'));
+      const columns = Array.from(container.querySelectorAll('.lu-footer-cols > .lu-footer-col'));
       expect(columns.map(c => Array.from(c.querySelectorAll('[data-footer-group]')).map(g => g.getAttribute('data-footer-group')))).toEqual([
         ['applications', 'research'], ['platform'], ['company'], ['legal'],
       ]);
       const groups = Array.from(container.querySelectorAll('[data-footer-group]'));
       expect(groups.map(g => g.getAttribute('role'))).toEqual(Array(5).fill('group'));
-      expect(groups.map(g => g.querySelector('h2.footer-col-title')!.textContent)).toEqual([
+      expect(groups.map(g => g.querySelector('h2.lu-footer-col-title')!.textContent)).toEqual([
         dict['footer.applications'], dict['footer.research'], dict['footer.platform'], dict['footer.company'], dict['footer.legal'],
       ]);
       expect(groups.map(g => g.getAttribute('aria-label'))).toEqual(groups.map(g => g.querySelector('h2')!.textContent));
-      expect(groups.map(g => Array.from(g.querySelectorAll('li > a.footer-link')).map(a => a.getAttribute('href')))).toEqual(Object.values(DESTINATIONS));
-      expect(container.querySelector('.footer-cols')!.tagName).toBe('NAV');
-      expect(container.querySelector('.footer-cols')!.getAttribute('aria-label')).toBe(dict['footer.navigation']);
+      expect(groups.map(g => Array.from(g.querySelectorAll('li > a.lu-footer-link')).map(a => a.getAttribute('href')))).toEqual(Object.values(DESTINATIONS));
+      expect(container.querySelector('.lu-footer-cols')!.tagName).toBe('NAV');
+      expect(container.querySelector('.lu-footer-cols')!.getAttribute('aria-label')).toBe(dict['footer.navigation']);
       expect(container.textContent).not.toMatch(/Topos|Cella|Lux/);
-    });
-
-    it(`keeps the three product groups in the compact strip in ${locale}`, () => {
-      const { container } = mount({ locale, compact: true });
-      const groups = Array.from(container.querySelectorAll('[data-footer-group]'));
-      expect(groups.map(g => g.getAttribute('data-footer-group'))).toEqual(['applications', 'research', 'platform']);
-      expect(groups.map(g => g.querySelector('.footer-group-title')!.textContent)).toEqual([dict['footer.applications'], dict['footer.research'], dict['footer.platform']]);
-      expect(groups.map(g => hrefs(g))).toEqual([DESTINATIONS.applications, DESTINATIONS.research, DESTINATIONS.platform]);
     });
   }
 
   it('sets product names in the columns as plain links that carry their product for the hover gradient', () => {
     const { container } = mount();
-    const links = Array.from(container.querySelectorAll('.footer-cols a.footer-link'));
+    const links = Array.from(container.querySelectorAll('.lu-footer-cols a.lu-footer-link'));
     expect(links.filter(a => a.hasAttribute('data-brand')).map(a => [a.textContent, a.getAttribute('data-brand')])).toEqual([
       ['Latere', 'chat'], ['ReplicHAI', 'replichai'], ['Latere Platform', 'platform'],
     ]);
-    expect(container.querySelector('.footer-cols [class$="-brand"]')).toBeNull();
+    expect(container.querySelector('.lu-footer-cols [class$="-brand"]')).toBeNull();
     expect(links.find(a => a.textContent === 'Identity')!.hasAttribute('data-brand')).toBe(false);
   });
 
   it('leads with the lockup, the social row, a hairline and the preference menus, in that order', () => {
-    const lead = mount().container.querySelector('.footer-lead')!;
-    expect(Array.from(lead.children).map(el => el.className)).toEqual(['footer-lockup', 'footer-social', 'footer-rule', 'footer-prefs']);
-    expect(lead.querySelector('.footer-lockup .logo-link')!.getAttribute('href')).toBe('https://latere.ai/');
-    expect(lead.querySelector('.logo-text')!.textContent).toBe('Latere AI');
-    expect(lead.querySelector('.footer-social')!.getAttribute('aria-label')).toBe('Social profiles');
-    expect(Array.from(lead.querySelectorAll('.footer-social a')).map(a => a.getAttribute('aria-label'))).toEqual(['Slack', 'LinkedIn', 'X', 'GitHub']);
+    const lead = mount(wired).container.querySelector('.lu-footer-lead')!;
+    expect(Array.from(lead.children).map(el => el.className)).toEqual(['lu-footer-lockup', 'lu-footer-social', 'lu-footer-rule', 'lu-footer-prefs']);
+    expect(lead.querySelector('.lu-footer-lockup .lu-footer-home')!.getAttribute('href')).toBe('https://latere.ai/');
+    expect(lead.querySelector('.lu-footer-word')!.textContent).toBe('Latere AI');
+    expect(lead.querySelector('.lu-footer-social')!.getAttribute('aria-label')).toBe('Social profiles');
+    expect(Array.from(lead.querySelectorAll('.lu-footer-social a')).map(a => a.getAttribute('aria-label'))).toEqual(['Slack', 'LinkedIn', 'X', 'GitHub']);
     // The company site redirects /slack to the current invite, so a rotated invite needs no footer release.
-    expect(lead.querySelector('.footer-social a')!.getAttribute('href')).toBe('https://latere.ai/slack');
-    expect(lead.querySelector('hr.footer-rule')).not.toBeNull();
-    expect(Array.from(lead.querySelectorAll('.footer-prefs .lu-pref')).map(m => m.className)).toEqual([
+    expect(lead.querySelector('.lu-footer-social a')!.getAttribute('href')).toBe('https://latere.ai/slack');
+    expect(lead.querySelector('hr.lu-footer-rule')).not.toBeNull();
+    expect(Array.from(lead.querySelectorAll('.lu-footer-prefs .lu-pref')).map(m => m.className)).toEqual([
       'lu-pop lu-pref lu-theme-menu', 'lu-pop lu-pref lu-locale-menu',
     ]);
   });
 
   it('takes the host lockup through the brand prop', () => {
     const { container } = mount({ brand: <a className="host-lockup" href="https://platform.latere.ai/">Latere Platform</a> });
-    expect(container.querySelector('.footer-lockup .host-lockup')!.getAttribute('href')).toBe('https://platform.latere.ai/');
-    expect(container.querySelector('.footer-lockup .logo-link')).toBeNull();
+    expect(container.querySelector('.lu-footer-lockup .host-lockup')!.getAttribute('href')).toBe('https://platform.latere.ai/');
+    expect(container.querySelector('.lu-footer-lockup .lu-footer-home')).toBeNull();
+  });
+
+  // Every class the footer draws is in its own namespace, so a site's own
+  // `.footer-*` or `.logo-*` rules never reach it, and a site that restyles
+  // it is easy to find.
+  it('draws only lu-footer classes outside the lockup a site passes and the shared menus', () => {
+    const { container } = mount({ ...wired, brand: <span className="host-lockup">Latere</span> });
+    const own = Array.from(container.querySelectorAll('footer, footer *'))
+      .filter(el => !el.closest('.lu-footer-lockup') && !el.closest('.lu-pref') && !(el instanceof SVGElement))
+      .flatMap(el => Array.from(el.classList));
+    expect(own.length).toBeGreaterThan(0);
+    expect(own.filter(name => !name.startsWith('lu-footer'))).toEqual([]);
   });
 
   it('closes with the copyright line, rendered as HTML rather than escaped text', () => {
     const { container } = mount();
-    expect(container.querySelector('footer')!.lastElementChild!.className).toBe('footer-bottom');
-    expect(container.querySelector('.footer-bottom p')!.textContent).toBe('© 2026 Latere AI. All rights reserved.');
+    expect(container.querySelector('footer')!.lastElementChild!.className).toBe('lu-footer-bottom');
+    expect(container.querySelector('.lu-footer-bottom p')!.textContent).toBe('© 2026 Latere AI. All rights reserved.');
     expect(container.innerHTML).not.toContain('&amp;copy;');
   });
 
-  // The registry is the only sanctioned source of product links. Both footer
-  // variants are checked because they are mutually exclusive branches, so a
-  // hardcoded link in either one is invisible to a single render.
-  it.each([false, true])('links to no site outside the registry (compact=%s)', (compact) => {
-    const allowed = new Set(FOOTER_GROUPS.flatMap(group => group.links.map(p => p.href)));
-    const { container } = mount({ compact });
-    const found = hrefs(container).filter((h): h is string => !!h && h.includes('latere.ai') && !h.startsWith('mailto:'));
+  // The navigation module is the only sanctioned source of the footer's links.
+  it('links to no site outside the navigation module', () => {
+    const allowed = new Set(FOOTER_COLUMNS.flat().flatMap(group => group.links.map(p => p.href)));
+    const { container } = mount();
+    const found = hrefs(container).filter((h): h is string => !!h && /latere\.(ai|site)/.test(h) && !h.startsWith('mailto:'));
     const products = found.filter((h) => !h.startsWith('https://latere.ai'));
     expect(products.length).toBeGreaterThan(0);
     for (const h of products) expect(allowed).toContain(h);
   });
 
-  it.each([false, true])('renders internal links as absolute URLs against baseUrl by default (compact=%s)', (compact) => {
-    const found = hrefs(mount({ baseUrl: 'https://example.test', compact }).container);
+  it('renders internal links as absolute URLs against baseUrl by default', () => {
+    const found = hrefs(mount({ baseUrl: 'https://example.test' }).container);
     expect(found).toEqual(expect.arrayContaining(['https://example.test/about', 'https://example.test/blog', 'https://example.test/legal/privacy']));
-    if (!compact) expect(found).toContain('https://example.test/');
+    expect(found).toContain('https://example.test/');
   });
 
-  it.each([false, true])('routes internal links through a provided routerLink component (compact=%s)', (compact) => {
+  it('routes internal links through a provided routerLink component', () => {
     const Stub = ({ to, children, ...rest }: any) => <a data-to={to} {...rest}>{children}</a>;
-    const { container } = mount({ routerLink: Stub, compact });
+    const { container } = mount({ routerLink: Stub });
     const tos = Array.from(container.querySelectorAll('[data-to]')).map((a) => a.getAttribute('data-to'));
     expect(tos).toEqual(expect.arrayContaining(['/about', '/blog', '/open-source', '/legal/terms']));
     expect(container.innerHTML).not.toContain('https://latere.ai/about');
   });
 
-  it.each([false, true])('reports the theme and the language picked from their menus (compact=%s)', (compact) => {
+  it('reports the theme and the language picked from their menus', () => {
     const onThemeChange = vi.fn();
     const onLocaleChange = vi.fn();
-    const { container } = mount({ onThemeChange, onLocaleChange, compact });
+    const { container } = mount({ onThemeChange, onLocaleChange });
     fireEvent.click(container.querySelector('.lu-theme-menu .lu-pref-trigger')!);
-    expect(container.querySelector('.lu-theme-menu .lu-pop-panel')!.classList.contains(compact ? 'lu-pop-panel--top-end' : 'lu-pop-panel--top-start')).toBe(true);
+    expect(container.querySelector('.lu-theme-menu .lu-pop-panel')!.classList.contains('lu-pop-panel--top-start')).toBe(true);
     fireEvent.click(container.querySelectorAll('.lu-theme-menu [role="menuitemradio"]')[1]);
     fireEvent.click(container.querySelector('.lu-locale-menu .lu-pref-trigger')!);
     fireEvent.click(container.querySelectorAll('.lu-locale-menu [role="menuitemradio"]')[1]);
@@ -130,7 +133,7 @@ describe('SiteFooter (React)', () => {
   });
 
   it('checks the current theme and offers the default languages', () => {
-    const { container } = mount({ theme: 'dark' });
+    const { container } = mount({ ...wired, theme: 'dark' });
     expect(container.querySelector('.lu-theme-menu .lu-pref-trigger')!.getAttribute('aria-label')).toBe('Theme: Dark');
     fireEvent.click(container.querySelector('.lu-theme-menu .lu-pref-trigger')!);
     expect(Array.from(container.querySelectorAll('.lu-theme-menu [role="menuitemradio"]')).map(r => [r.textContent, r.getAttribute('aria-checked')])).toEqual([
@@ -142,6 +145,7 @@ describe('SiteFooter (React)', () => {
 
   it('checks the active language from a custom list', () => {
     const { container } = mount({
+      ...wired,
       locale: 'de',
       locales: [
         { code: 'en', label: 'EN', name: 'English' },
@@ -156,38 +160,34 @@ describe('SiteFooter (React)', () => {
     ]);
   });
 
+  // A site in one language offers no other, and a menu whose pick changes
+  // nothing is not offered: the site wires what it has.
+  it('offers a language menu only for two languages or more and a handler', () => {
+    const one = [{ code: 'en', label: 'EN', name: 'English' }];
+    expect(mount({ onLocaleChange: () => undefined, locales: one }).container.querySelector('.lu-locale-menu')).toBeNull();
+    cleanup();
+    expect(mount({ locales: [...one, { code: 'zh', label: '中', name: '中文' }] }).container.querySelector('.lu-locale-menu')).toBeNull();
+    cleanup();
+    const theme = mount({ onThemeChange: () => undefined }).container;
+    expect(theme.querySelector('.lu-theme-menu')).not.toBeNull();
+    expect(theme.querySelector('.lu-locale-menu')).toBeNull();
+    expect(theme.querySelector('hr.lu-footer-rule')).not.toBeNull();
+  });
+
+  it('draws no hairline or menus when the site wires neither', () => {
+    const { container } = mount();
+    expect(container.querySelector('.lu-pref')).toBeNull();
+    expect(container.querySelector('.lu-footer-rule')).toBeNull();
+    expect(container.querySelector('.lu-footer-prefs')).toBeNull();
+  });
+
   it('localizes the headings and the theme menu from the locale prop', () => {
-    const { container } = mount({ locale: 'zh' });
+    const { container } = mount({ ...wired, locale: 'zh' });
     expect(Array.from(container.querySelectorAll('h2')).map(x => x.textContent)).toEqual(['应用', '研究', '平台', '公司', '法律']);
     expect(container.querySelector('.lu-theme-menu .lu-pref-trigger')!.getAttribute('aria-label')).toBe('主题: 跟随系统');
     fireEvent.click(container.querySelector('.lu-theme-menu .lu-pref-trigger')!);
     expect(Array.from(container.querySelectorAll('[role="menuitemradio"]')).map(r => r.textContent)).toEqual(['浅色', '深色', '跟随系统']);
-    expect(container.querySelector('.footer-bottom')!.textContent).toBe('© 2026 Latere AI. 保留所有权利。');
-  });
-
-  it('applies host messages overrides over the bundled dictionary', () => {
-    const { container } = mount({ locale: 'de', messages: { de: { 'footer.company': 'Firma' } } });
-    expect(Array.from(container.querySelectorAll('h2')).map(x => x.textContent)).toEqual(['Anwendungen', 'Forschung', 'Plattform', 'Firma', 'Rechtliches']);
-  });
-
-  it('renders the compact variant as a single-line bar, no link columns', () => {
-    const full = mount();
-    expect(full.container.querySelector('.footer-cols')).not.toBeNull();
-    expect(full.container.querySelector('.site-footer-compact')).toBeNull();
-    full.unmount();
-
-    const { container } = mount({ compact: true });
-    expect(container.querySelector('.site-footer-compact')).not.toBeNull();
-    expect(container.querySelector('.footer-cols')).toBeNull();
-    expect(container.querySelector('.footer-bottom')).toBeNull(); // copyright lives inline
-    expect(container.querySelector('.footer-compact-copy')).not.toBeNull();
-    const links = container.querySelector('.footer-compact-links')!;
-    for (const name of ['ReplicHAI', 'Latere Platform', 'Identity', 'Team', 'Impressum']) {
-      expect(links.textContent).toContain(name);
-    }
-    // The chat sets its public name in its own wordmark.
-    expect(Array.from(links.querySelectorAll('[data-footer-group="applications"] a')).map(a => [a.textContent, a.querySelector('span')!.className])).toEqual([['Latere', 'chat-brand']]);
-    expect(container.querySelectorAll('.footer-extra .lu-pref')).toHaveLength(2);
+    expect(container.querySelector('.lu-footer-bottom')!.textContent).toBe('© 2026 Latere AI. 保留所有权利。');
   });
 
   it('renders the brand mark as a painting SVG', () => {
@@ -197,44 +197,39 @@ describe('SiteFooter (React)', () => {
   });
 
   // Drive shut down on 2026-09-19; durable storage is the platform's Storage
-  // section, so the retired console must not survive in either variant.
-  it.each([false, true])('offers no retired Drive console (compact=%s)', (compact) => {
-    const { container } = mount({ compact });
+  // section, so the retired console must not come back.
+  it('offers no retired Drive console', () => {
+    const { container } = mount();
     expect(hrefs(container)).not.toContain('https://drive.latere.ai/');
     expect(container.textContent).not.toContain('Drive');
   });
 
-  // The hosted Lectio service was retired on 2026-10-03, so neither variant
-  // may link it, name it, or carry its hover gradient.
-  it.each([false, true])('offers no retired Lectio service (compact=%s)', (compact) => {
-    const { container } = mount({ compact });
+  // The hosted Lectio service was retired on 2026-10-03, so the footer may
+  // not link it, name it, or carry its hover gradient.
+  it('offers no retired Lectio service', () => {
+    const { container } = mount();
     expect(hrefs(container)).not.toContain('https://lectio.latere.ai/');
     expect(container.textContent).not.toContain('Lectio');
     expect(container.querySelector('[data-brand="lectio"], .lectio-brand')).toBeNull();
   });
 
   // Wallfacer left the lineup when the chat took the applications' place: its
-  // pages stay up, but neither variant leads a reader there.
-  it.each([false, true])('leads no reader to Wallfacer (compact=%s)', (compact) => {
-    const { container } = mount({ compact });
+  // pages stay up, but the footer leads no reader there.
+  it('leads no reader to Wallfacer', () => {
+    const { container } = mount();
     expect(hrefs(container).filter(h => h?.includes('wf.latere.ai'))).toEqual([]);
     expect(container.textContent).not.toContain('Wallfacer');
     expect(container.querySelector('[data-brand="wallfacer"], .wallfacer-brand')).toBeNull();
   });
 
   // The open source page is a company link, so it carries translated copy in
-  // every bundled locale and appears in both variants.
-  for (const compact of [false, true]) {
-    it.each(Object.entries({ en, zh, de }))(
-      `links the open source page in %s (compact=${compact})`,
-      (locale, dict) => {
-        const { container } = mount({ locale, compact, locales: [{ code: locale, label: locale.toUpperCase() }] });
-        const link = Array.from(container.querySelectorAll('a')).find((a) => a.getAttribute('href') === 'https://latere.ai/open-source');
-        expect(link, `${locale}: open source link`).toBeTruthy();
-        expect(link!.textContent).toBe(dict['footer.openSource']);
-      },
-    );
-  }
+  // every bundled locale.
+  it.each(Object.entries({ en, zh, de }))('links the open source page in %s', (locale, dict) => {
+    const { container } = mount({ locale, locales: [{ code: locale, label: locale.toUpperCase() }] });
+    const link = Array.from(container.querySelectorAll('a')).find((a) => a.getAttribute('href') === 'https://latere.ai/open-source');
+    expect(link, `${locale}: open source link`).toBeTruthy();
+    expect(link!.textContent).toBe(dict['footer.openSource']);
+  });
 });
 
 describe('the footer social row', () => {

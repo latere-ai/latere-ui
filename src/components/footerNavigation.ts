@@ -3,39 +3,52 @@
  * site when `site` is set: those render through the host's `routerLink`
  * with a relative `to`, or as `baseUrl + href` without one.
  */
-interface FooterLink {
+export interface FooterLink {
   slug: string;
   labelKey: string;
   href: string;
   site?: boolean;
   /** The label copy carries entities or markup and renders as HTML. */
   html?: boolean;
-  /** Product wordmark class for the compact strip. */
-  brandClass?: string;
   /**
-   * Product whose gradient the full footer's column link takes on hover. The
-   * link rests in the body face like its neighbors, so the columns read
-   * evenly; the brand appears where the pointer or focus is.
+   * Product whose gradient the column link takes on hover. The link rests in
+   * the body face like its neighbors, so the columns read evenly; the brand
+   * appears where the pointer or focus is.
    */
   brand?: string;
 }
 
-interface FooterGroup {
+export interface FooterGroup {
   id: string;
   labelKey: string;
   links: readonly FooterLink[];
 }
 
-const identity: FooterLink = { slug: 'identity', labelKey: 'footer.identity', href: 'https://auth.latere.ai/', html: true };
-const contact: FooterLink = { slug: 'contact', labelKey: 'footer.contact', href: 'mailto:contact@latere.ai', html: true };
 const site = (slug: string, labelKey: string, href: string): FooterLink => ({ slug, labelKey, href, site: true });
 
-const applications: FooterGroup = { id: 'applications', labelKey: 'footer.applications', links: [{ slug: 'chat', labelKey: 'footer.products.chat', href: 'https://chat.latere.ai/', brandClass: 'chat-brand', brand: 'chat' }] };
-const research: FooterGroup = { id: 'research', labelKey: 'footer.research', links: [{ slug: 'replichai', brandClass: 'replichai-brand', brand: 'replichai', labelKey: 'footer.products.replichai', href: 'https://replichai.latere.ai/' }] };
-const platform: FooterGroup = { id: 'platform', labelKey: 'footer.platform', links: [{ slug: 'platform', brandClass: 'platform-brand', brand: 'platform', labelKey: 'footer.products.platform', href: 'https://platform.latere.ai/console' }, identity] };
+/** The chat, under its public name Latere. */
+const applications: FooterGroup = {
+  id: 'applications',
+  labelKey: 'footer.applications',
+  links: [
+    { slug: 'chat', labelKey: 'footer.products.chat', href: 'https://chat.latere.ai/', brand: 'chat' },
+  ],
+};
 
-/** The product groups, in order, shared by both layouts. */
-export const FOOTER_GROUPS: readonly FooterGroup[] = [applications, research, platform];
+const research: FooterGroup = {
+  id: 'research',
+  labelKey: 'footer.research',
+  links: [{ slug: 'replichai', labelKey: 'footer.products.replichai', href: 'https://replichai.latere.ai/', brand: 'replichai' }],
+};
+
+const platform: FooterGroup = {
+  id: 'platform',
+  labelKey: 'footer.platform',
+  links: [
+    { slug: 'platform', labelKey: 'footer.products.platform', href: 'https://platform.latere.ai/console', brand: 'platform' },
+    { slug: 'identity', labelKey: 'footer.identity', href: 'https://auth.latere.ai/', html: true },
+  ],
+};
 
 /** Company pages under the host's base URL, and the contact address. */
 const company: FooterGroup = {
@@ -46,7 +59,7 @@ const company: FooterGroup = {
     site('why-latere', 'footer.whyLatere', '/blog/why-latere'),
     site('blog', 'footer.blog', '/blog'),
     site('open-source', 'footer.openSource', '/open-source'),
-    contact,
+    { slug: 'contact', labelKey: 'footer.contact', href: 'mailto:contact@latere.ai', html: true },
   ],
 };
 
@@ -62,24 +75,16 @@ const legal: FooterGroup = {
 };
 
 /**
- * The full footer's link columns, left to right. A column holds one or more
+ * The footer's link columns, left to right. A column holds one or more
  * groups; Research sits under Applications as a second heading, so the five
- * groups fill four columns of similar height.
+ * groups fill four columns of similar height. Every Latere site draws these
+ * columns, so they are the one list of where the family's footer leads.
  */
 export const FOOTER_COLUMNS: readonly (readonly FooterGroup[])[] = [
   [applications, research],
   [platform],
   [company],
   [legal],
-];
-
-/** The compact strip's company links: shorter labels, same destinations. */
-export const FOOTER_COMPACT_LINKS: readonly FooterLink[] = [
-  site('team', 'footer.team', '/about'),
-  site('blog', 'footer.blog', '/blog'),
-  site('open-source', 'footer.openSource', '/open-source'),
-  contact,
-  ...legal.links,
 ];
 
 /**

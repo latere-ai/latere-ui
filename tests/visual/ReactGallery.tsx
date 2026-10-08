@@ -150,10 +150,10 @@ function Sidebar({ initiallyCollapsed }: { initiallyCollapsed: boolean }) {
   </div></Sample>;
 }
 
-function Footer({ compact }: { compact: boolean }) {
+function Footer() {
   const [locale, setLocale] = useState<Locale>('en');
   const [theme, setTheme] = useState<Theme>(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
-  return <Sample name="SiteFooter" label={compact ? 'Compact footer' : 'Full footer'}><SiteFooter compact={compact} locale={locale}
+  return <Sample name="SiteFooter" label="Footer"><SiteFooter locale={locale}
     theme={theme} onLocaleChange={setLocale} onThemeChange={value => { setTheme(value); document.documentElement.dataset.theme = value; }}
     locales={[{ code: 'en', label: 'EN', name: 'English' }, { code: 'zh', label: '中', name: '中文' }, { code: 'de', label: 'DE', name: 'Deutsch' }]} />
   </Sample>;
@@ -169,8 +169,7 @@ function Gallery({ scenario }: { scenario: string }) {
     case 'sidebar': return <Sidebar initiallyCollapsed={false} />;
     case 'sidebar-collapsed': return <Sidebar initiallyCollapsed />;
     case 'account': return <Sample name="AccountMenu"><div style={{ minHeight: 530, display: 'flex', justifyContent: 'flex-end' }}><div><Account /></div></div><AccountMenu principal={null} onLogin={() => undefined} /></Sample>;
-    case 'footer': return <Footer compact={false} />;
-    case 'footer-compact': return <Footer compact />;
+    case 'footer': return <Footer />;
     case 'logo': return <Sample name="LatereLogoMark"><div className="row">{[24, 48, 96].map(size => <div key={size} style={{ width: size, height: size }}><LatereLogoMark width={size} height={size} /></div>)}</div></Sample>;
     default: throw new Error(`Unknown React visual scenario: ${scenario}`);
   }

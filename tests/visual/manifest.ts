@@ -21,7 +21,6 @@ export const scenarios = {
     preferences: ['AccountPrefs', 'ThemeMenu', 'LocaleMenu'],
     organizations: ['OrgSwitcher'],
     footer: ['SiteFooter'],
-    'footer-compact': ['SiteFooter'],
     logo: ['LatereLogoMark', 'PlatformLogoMark'],
     effects: ['GlassSurface'],
   } as const;

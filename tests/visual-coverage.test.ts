@@ -133,7 +133,7 @@ describe('visual fixture inventory', () => {
   it('registers light/dark for every sheet and appearance, and mobile for the default appearance', () => {
     const figures = registeredGoldens('tests/visual/design-goldens.spec.ts');
     const sheets = Object.keys(scenarios);
-    expect(sheets).toHaveLength(24);
+    expect(sheets).toHaveLength(23);
     expect(sorted(manifest.mobileScenarios)).toEqual(sorted(sheets));
     expect(sorted(designManifest.designMobileScenarios)).toEqual([]);
     expect(figures.size).toBe(sheets.length * 2 * 2 + sheets.length * designs.length * 2);

@@ -23,7 +23,7 @@ const theme = 'light';
 
 // Every component that renders anchors, including teleported menus and the
 // sidebar inside a workspace. Prose retains its separately defined link style.
-const linkSheets = ['workspace', 'sidebar', 'sidebar-collapsed', 'docs', 'account', 'footer', 'footer-compact'];
+const linkSheets = ['workspace', 'sidebar', 'sidebar-collapsed', 'docs', 'account', 'footer'];
 for (const design of ['default', ...designs]) {
   for (const layout of ['desktop', 'mobile']) {
     test(`${design} ${layout} link decoration contract`, async ({ page }) => {
@@ -52,7 +52,7 @@ for (const design of ['default', ...designs]) {
         if (scenario.startsWith('footer')) {
           // Navigation answers the pointer with color alone, even under the
           // host's underline rule: no underline appears on hover.
-          const navigation = page.locator('.footer-col a, .footer-compact-links a').first();
+          const navigation = page.locator('.lu-footer-col a').first();
           await navigation.hover();
           await expect(navigation).toHaveCSS('text-decoration-line', 'none');
           await page.mouse.move(0, 0);
@@ -61,11 +61,9 @@ for (const design of ['default', ...designs]) {
           await expect(navigation).toHaveCSS('text-decoration-line', 'none');
           await expect(navigation).toHaveCSS('outline-style', 'solid');
           expect(await navigation.evaluate(element => element.matches(':focus-visible'))).toBe(true);
-          if (scenario === 'footer') {
-            const brand = page.locator('.logo-link');
-            await brand.hover();
-            await expectUndecorated(brand);
-          }
+          const brand = page.locator('.lu-footer-home');
+          await brand.hover();
+          await expectUndecorated(brand);
         }
       });
     });

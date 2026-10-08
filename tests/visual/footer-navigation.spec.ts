@@ -15,9 +15,9 @@ for (const design of ['default', ...designs]) for (const theme of ['light', 'dar
     for (const width of [320, 390, 768, 1280]) await test.step(`${width}px`, async () => {
       await page.setViewportSize({ width, height: 900 });
       await visit(page, 'footer', theme, `&parity=1&design=${design}`);
-      const groups = page.locator('.footer-cols [data-footer-group]');
+      const groups = page.locator('.lu-footer-cols [data-footer-group]');
       await expect(groups).toHaveCount(5);
-      await expect(page.locator('.footer-cols > .footer-col')).toHaveCount(4);
+      await expect(page.locator('.lu-footer-cols > .lu-footer-col')).toHaveCount(4);
       await expect(groups.locator('h2')).toHaveText(['Applications', 'Research', 'Platform', 'Company', 'Legal']);
       for (const [index, hrefs] of COLUMNS.entries()) {
         const links = groups.nth(index).locator('a');
@@ -51,16 +51,16 @@ for (const design of ['default', ...designs]) for (const theme of ['light', 'dar
           const x = luminance(rgba(getComputedStyle(document.querySelector(selector)!).color)), y = luminance([...background.slice(0, 3), 1]);
           return (Math.max(x, y) + .05) / (Math.min(x, y) + .05);
         };
-        return [contrast('.footer-col-title'), contrast('.footer-link')];
+        return [contrast('.lu-footer-col-title'), contrast('.lu-footer-link')];
       });
       expect(headingContrast).toBeGreaterThan(linkContrast);
       const pitch = await page.locator('[data-footer-group="company"] li').evaluateAll(items => items.map(item => item.getBoundingClientRect().top));
       for (let i = 1; i < pitch.length; i++) expect.soft(pitch[i] - pitch[i - 1]).toBeCloseTo(32, 0);
 
       const box = async (selector: string) => (await page.locator(selector).boundingBox())!;
-      const lead = await box('.footer-lead');
-      const columns = await box('.footer-cols');
-      const lefts = new Set(await page.locator('.footer-cols > .footer-col').evaluateAll(cols => cols.map(col => Math.round(col.getBoundingClientRect().left))));
+      const lead = await box('.lu-footer-lead');
+      const columns = await box('.lu-footer-cols');
+      const lefts = new Set(await page.locator('.lu-footer-cols > .lu-footer-col').evaluateAll(cols => cols.map(col => Math.round(col.getBoundingClientRect().left))));
       if (width > 1024) {
         // The lead on the left, four columns on the right, tops aligned.
         expect(lead.x + lead.width).toBeLessThanOrEqual(columns.x);
@@ -74,30 +74,30 @@ for (const design of ['default', ...designs]) for (const theme of ['light', 'dar
         expect(lefts.size).toBe(2);
         expect(columns.y + columns.height).toBeLessThanOrEqual(lead.y);
       }
-      expect((await box('.footer-bottom')).y).toBeGreaterThanOrEqual(Math.max(lead.y + lead.height, columns.y + columns.height));
+      expect((await box('.lu-footer-bottom')).y).toBeGreaterThanOrEqual(Math.max(lead.y + lead.height, columns.y + columns.height));
 
       // The lead: lockup, socials, a short hairline, then the two menus.
-      await expect(page.locator('.footer-lead > *')).toHaveClass(['footer-lockup', 'footer-social', 'footer-rule', 'footer-prefs']);
-      await expect(page.locator('.footer-lead .lu-pref-trigger')).toHaveCount(2);
-      const offsets = await page.locator('.footer-lead .lu-pref-trigger').evaluateAll(buttons => buttons.map(button => {
+      await expect(page.locator('.lu-footer-lead > *')).toHaveClass(['lu-footer-lockup', 'lu-footer-social', 'lu-footer-rule', 'lu-footer-prefs']);
+      await expect(page.locator('.lu-footer-lead .lu-pref-trigger')).toHaveCount(2);
+      const offsets = await page.locator('.lu-footer-lead .lu-pref-trigger').evaluateAll(buttons => buttons.map(button => {
         const b = button.getBoundingClientRect(), icon = button.querySelector('svg')!.getBoundingClientRect();
         return Math.max(Math.abs(b.x + b.width / 2 - icon.x - icon.width / 2), Math.abs(b.y + b.height / 2 - icon.y - icon.height / 2));
       }));
       expect(Math.max(...offsets)).toBeLessThan(1);
       // Glyphs line up with the lockup's left edge.
-      const lockup = await box('.footer-lockup');
-      const firstGlyph = (await page.locator('.footer-lead .lu-pref-icon').first().boundingBox())!;
+      const lockup = await box('.lu-footer-lockup');
+      const firstGlyph = (await page.locator('.lu-footer-lead .lu-pref-icon').first().boundingBox())!;
       expect(Math.abs(firstGlyph.x - lockup.x)).toBeLessThanOrEqual(1);
 
       expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
-      await expect(page.locator('.site-footer')).not.toContainText(/Topos|Cella|Lux/);
+      await expect(page.locator('.lu-footer')).not.toContainText(/Topos|Cella|Lux/);
     });
   });
 
   test(`${design} ${theme} footer links: plain at rest, product gradient under pointer and focus`, async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await visit(page, 'footer', theme, `&parity=1&design=${design}`);
-    const links = page.locator('.footer-cols a.footer-link');
+    const links = page.locator('.lu-footer-cols a.lu-footer-link');
     const rest = await links.first().evaluate(el => getComputedStyle(el).color);
     for (const link of await links.all()) {
       await expect(link).toHaveCSS('text-decoration-line', 'none');
@@ -106,7 +106,7 @@ for (const design of ['default', ...designs]) for (const theme of ['light', 'dar
       await expect(link).toHaveCSS('color', rest);
     }
     for (const slug of ['chat', 'replichai', 'platform']) {
-      const link = page.locator(`.footer-link[data-brand="${slug}"]`);
+      const link = page.locator(`.lu-footer-link[data-brand="${slug}"]`);
       await link.hover();
       await expect(link).toHaveCSS('background-image', /linear-gradient/);
       await expect(link).toHaveCSS('-webkit-text-fill-color', 'rgba(0, 0, 0, 0)');
@@ -121,25 +121,5 @@ for (const design of ['default', ...designs]) for (const theme of ['light', 'dar
     await plain.hover();
     await expect(plain).toHaveCSS('background-image', 'none');
     expect(await plain.evaluate(el => getComputedStyle(el).color)).not.toBe(rest);
-  });
-
-  test(`${design} ${theme} compact footer keeps the product groups`, async ({ page }) => {
-    for (const width of [320, 1280]) {
-      await page.setViewportSize({ width, height: 900 });
-      await visit(page, 'footer-compact', theme, `&parity=1&design=${design}`);
-      const groups = page.locator('[data-footer-group]');
-      await expect(groups).toHaveCount(3);
-      await expect(groups.locator('.footer-group-title')).toHaveText(['Applications', 'Research', 'Platform']);
-      for (const [index, hrefs] of COLUMNS.slice(0, 3).entries()) {
-        const links = groups.nth(index).locator('a');
-        await expect(links).toHaveCount(hrefs.length);
-        for (const [i, href] of hrefs.entries()) await expect(links.nth(i)).toHaveAttribute('href', href);
-      }
-      // The platform wordmark is the ink; research keeps its blue.
-      await expect(groups.locator('.platform-brand')).toHaveCSS('background-image', theme === 'dark' ? /rgb\(250, 250, 250\)/ : /rgb\(10, 10, 10\)/);
-      await expect(groups.locator('.replichai-brand')).toHaveCSS('color', theme === 'dark' ? 'rgb(120, 177, 237)' : 'rgb(35, 105, 189)');
-      await expect(page.locator('.site-footer-compact .lu-pref-trigger')).toHaveCount(2);
-      expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
-    }
   });
 }

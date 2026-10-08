@@ -46,7 +46,7 @@ describe('focus-visible treatment', () => {
 
   it('puts footer links and the theme and language menu triggers on the ink ring', () => {
     const css = read('src/styles/footer.css');
-    expect(css, 'footer.css must style .site-footer a:focus-visible').toContain('.site-footer a:focus-visible');
+    expect(css, 'footer.css must style .lu-footer a:focus-visible').toContain('.lu-footer a:focus-visible');
     expect(css).toContain('var(--focus-outline');
     const menus = read('src/styles/components/preference-menu.css');
     expect(menus).toMatch(/\.lu-pref-trigger:focus-visible \{ outline: var\(--focus-outline/);

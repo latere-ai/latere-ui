@@ -1,13 +1,13 @@
 // Self-contained dictionary for the shared footer. Mirrors the footer.* and
 // nav.cat.* keys from the marketing site so consuming apps need not provide them.
 //
-// `Locale` is an open string: the package bundles en, zh and de. Hosts can
-// supply additional locales through the footer's `messages` overrides.
+// `Locale` is an open string: the package bundles en, zh and de, and a
+// locale without copy of its own reads English.
 export type Locale = string;
 
 type Dict = Record<string, string>;
 
-/** Per-locale string overrides supplied by the host, merged over the bundled dicts. */
+/** Per-locale strings merged over the bundled dictionaries by `translator`. */
 export type Messages = Record<string, Dict>;
 
 /** Theme selection driving the footer's theme toggle. */
@@ -150,10 +150,6 @@ export const de: Dict = {
 
 const dicts: Record<string, Dict> = { en, zh, de };
 
-/**
- * Resolve footer copy for a locale. Lookup order: host `messages` override →
- * bundled dictionary for the locale → English → the key itself.
- */
 /** BCP 47 tags for the bundled languages whose code alone is not one. */
 const LANGUAGE_TAGS: Record<string, string> = { zh: 'zh-Hans' };
 
@@ -167,6 +163,10 @@ export function footerLang(locale: Locale, messages?: Messages): string {
   return dicts[locale] || messages?.[locale] ? (LANGUAGE_TAGS[locale] ?? locale) : 'en';
 }
 
+/**
+ * Resolve footer copy for a locale. Lookup order: `messages` for the locale,
+ * the bundled dictionary for the locale, English, then the key itself.
+ */
 export function translator(locale: Locale, messages?: Messages) {
   return (key: string): string =>
     messages?.[locale]?.[key] ?? dicts[locale]?.[key] ?? en[key] ?? key;

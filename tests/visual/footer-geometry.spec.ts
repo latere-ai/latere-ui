@@ -5,8 +5,8 @@ test.setTimeout(10000);
 for (const theme of ['light', 'dark']) {
   for (const width of [320, 390, 768, 1100]) test(`${theme} footer exposes every link at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
-    await visit(page, 'footer-compact', theme);
-    const nav = page.locator('.footer-compact-links');
+    await visit(page, 'footer', theme);
+    const nav = page.locator('.lu-footer-cols');
     const layout = await nav.evaluate(el => {
       const box = el.getBoundingClientRect();
       return { overflow: el.scrollWidth - el.clientWidth, clipped: [...el.children].filter(child => {
@@ -16,7 +16,9 @@ for (const theme of ['light', 'dark']) {
     });
     expect.soft(layout.overflow).toBeLessThanOrEqual(1);
     expect.soft(layout.clipped).toEqual([]);
-    await expect(nav.getByRole('link', { name: 'Identity', exact: true })).toBeInViewport();
+    const identity = nav.getByRole('link', { name: 'Identity', exact: true });
+    await identity.scrollIntoViewIfNeeded();
+    await expect(identity).toBeInViewport();
     for (const link of await nav.locator('a').all()) {
       await expect.soft(link).toHaveCSS('text-decoration-line', 'none');
       expect.soft(await link.evaluate(el => getComputedStyle(el, '::after').content)).toBe('none');
@@ -35,7 +37,7 @@ for (const theme of ['light', 'dark']) {
     await languageTrigger.click();
     await page.getByRole('menuitemradio', { name: 'Deutsch' }).click();
     await expect(languageTrigger).toHaveAttribute('aria-label', 'Sprache: Deutsch');
-    // The menus open upward from the bar and stay inside the viewport.
+    // The menus open upward from their triggers and stay inside the viewport.
     await expect(page.locator('.lu-locale-menu .lu-pop-panel')).toHaveCount(0);
     await themeTrigger.click();
     const panel = (await page.locator('.lu-theme-menu .lu-pop-panel').boundingBox())!;
@@ -77,17 +79,12 @@ for (const [style, radius, inset] of [['reading', 12, 4], ['operator', 14, 6], [
   });
 }
 
-test('compact and full footers preserve touch target size', async ({ browser }) => {
+test('the footer preserves touch target size', async ({ browser }) => {
   const context = await browser.newContext({ hasTouch: true, viewport: { width: 390, height: 844 } });
   try {
     const page = await context.newPage();
-    await visit(page, 'footer-compact', 'light', '&parity=1');
-    for (const control of await page.locator('.lu-pref-trigger, .footer-compact-links a').all()) {
-      expect((await control.boundingBox())!.height).toBeGreaterThanOrEqual(44);
-    }
-    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
     await visit(page, 'footer', 'light', '&parity=1');
-    for (const control of await page.locator('.lu-pref-trigger, .footer-social a').all()) {
+    for (const control of await page.locator('.lu-pref-trigger, .lu-footer-social a').all()) {
       expect((await control.boundingBox())!.height).toBeGreaterThanOrEqual(44);
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
@@ -98,7 +95,7 @@ test('compact and full footers preserve touch target size', async ({ browser }) 
 // --lu-control-radius. A capsule set through the control corner once turned
 // the theme menu's panel into a pill, so the two corners must move apart.
 test('the button corner and the control corner stay separate', async ({ page }) => {
-  await visit(page, 'footer-compact');
+  await visit(page, 'footer');
   await page.evaluate(() => document.documentElement.style.setProperty('--lu-control-radius', '6px'));
   const trigger = page.locator('.lu-theme-menu .lu-pref-trigger');
   await expect(trigger).toHaveCSS('border-radius', '999px');

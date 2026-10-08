@@ -10,7 +10,7 @@ for (const hasTouch of [false, true]) test.describe(hasTouch ? 'touch' : 'pointe
   for (const design of ['default', ...designs]) {
     test(`${design} preference controls share geometry`, async ({ page }) => {
       test.setTimeout(60000);
-      for (const width of [320, 1280]) for (const scenario of ['footer', 'footer-compact']) {
+      for (const width of [320, 1280]) for (const scenario of ['footer']) {
         await test.step(`${scenario} at ${width}px`, async () => {
           await page.setViewportSize({ width, height: 900 });
           await visit(page, scenario, theme, `&parity=1&design=${design}`);
