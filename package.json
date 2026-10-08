@@ -1,6 +1,6 @@
 {
   "name": "latere-ui",
-  "version": "1.36.0",
+  "version": "2.0.0",
   "description": "Shared Latere platform UI for React: Liquid Glass design system (material + component library), the ink palette, footer, logo and favicon, console sidebar, docs renderer, the session/auth client and React bindings with an account menu, a lazy browser telemetry entry, and schema.org structured data builders.",
   "type": "module",
   "license": "MIT",
