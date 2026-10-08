@@ -92,8 +92,9 @@ case they render through it with a relative `to`.
 `footer.css` reads `--text`, `--text-muted`, `--accent`, `--border`,
 `--border-strong` and `--focus-outline`, and the menus read the
 `--glass-*` set. If your app already has its own palette, alias them on
-`.lu-footer` rather than importing `latere-ui/tokens`, which would redefine
-`--bg-*` for the whole page.
+an element of your own around the footer rather than importing
+`latere-ui/tokens`, which would redefine `--bg-*` for the whole page. A
+rule that names `.lu-footer` is a restyle, which the footer does not take.
 
 ### Theme and language menus
 
