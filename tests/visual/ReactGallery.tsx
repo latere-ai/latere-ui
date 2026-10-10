@@ -162,7 +162,7 @@ function Layers() {
       </GlassModal>
     </Sample>
     <Sample name="GlassSelect" label="Select at the bottom of a scrolling panel">
-      <div className="layers-scroller" data-testid="scroller" style={{ height: 160, overflowY: 'auto', border: '1px solid var(--border, #ddd)', borderRadius: 8, padding: 12 }}>
+      <div className="layers-scroller" data-testid="scroller" style={{ height: 160, overflowY: 'auto', border: '1px solid var(--border, #ddd)', borderRadius: 8, padding: 12, textAlign: 'center' }}>
         {Array.from({ length: 3 }, (_, i) => <p key={i}>{`Line ${i + 1} of the schedule notes.`}</p>)}
         <div style={{ width: 220 }}><GlassSelect value={schedule} options={options} ariaLabel="Schedule" onChange={setSchedule} /></div>
         {Array.from({ length: 8 }, (_, i) => <p key={i}>{`Line ${i + 4} of the schedule notes.`}</p>)}

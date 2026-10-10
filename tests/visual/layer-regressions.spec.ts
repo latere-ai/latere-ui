@@ -162,6 +162,8 @@ test.describe('floating panels in scrolling boxes', () => {
     await page.keyboard.press('ArrowDown');
     const list = page.getByRole('listbox');
     await expectWhole(list);
+    // The scroller centers its text; the rows still start at the panel's edge.
+    await expect(list.getByRole('option').first()).toHaveCSS('text-align', 'start');
     const side = await sideOf(schedule, list, 4);
     await scroller.evaluate(el => { el.scrollTop += 24; });
     await settle(page);

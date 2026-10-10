@@ -36,12 +36,14 @@
  * up to a cap and never past the viewport's 16px gutters; GlassSelect moves
  * it left when it would cross the right gutter. Without a search field the
  * panel is the scroller, with the padding inside the scrolled area. The
- * inset, margin and color lines undo the browser's [popover] defaults.
+ * inset, margin and color lines undo the browser's [popover] defaults, and
+ * text-align keeps the rows at the start inside a centered host.
  * Hosts that restyle the panel (padding, border, background) target this class. */
 .lu-select-list {
   position: fixed;
   inset: auto;
   margin: 0;
+  text-align: start;
   z-index: 900;
   box-sizing: border-box;
   min-width: var(--lu-anchor-width, 100%);
