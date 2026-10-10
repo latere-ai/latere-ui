@@ -19,11 +19,18 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type RefObject } from 'react';
 import { anchoredPlacement, type AnchoredAlign, type AnchoredSide } from '../glass/anchoredPlacement';
 
+/**
+ * The attributes a panel is rendered with while open. They are spread rather
+ * than written as JSX attributes because @types/react before 19 does not
+ * declare `popover`, and a host on React 18 typechecks this source.
+ */
+export const layerAttributes: Record<string, string> = { popover: 'manual', 'data-lu-layer': '' };
+
 export interface AnchoredLayerOptions {
   open: boolean;
   /** The control the panel opens from. Its width is set on the panel as `--lu-anchor-width`. */
   anchor: RefObject<HTMLElement | null>;
-  /** The panel, rendered with `popover="manual"` and `data-lu-layer` while open. */
+  /** The panel, rendered with `layerAttributes` while open. */
   panel: RefObject<HTMLElement | null>;
   side?: AnchoredSide;
   align?: AnchoredAlign;

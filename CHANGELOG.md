@@ -10,6 +10,8 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+- A host on React 18 typechecks again: v2.1.0's select and popover set the `popover` attribute, which @types/react before 19 does not declare. `bun run typecheck` now checks the package against React 18's types as well as 19's.
+
 ## v2.1.0 - 2026-10-10
 
 - A select's open menu and a popover's panel are no longer cut off by a dialog, a drawer or a scrolling box around them. `GlassSelect` and `GlassPopover` draw them in the browser's top layer, over the whole page, against the control that opened them. A menu that has no room under its control opens above it, and a popover set to open above opens below where only that side has the room; with no room on either side, it takes the roomier side and scrolls. It moves sideways to stay inside the viewport, follows its control when the page or the dialog scrolls, and closes once the control has scrolled out of sight. The arrow keys scroll only the menu, never the dialog around it.

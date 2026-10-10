@@ -21,7 +21,7 @@
 import { useId, useRef, useState, type FocusEvent, type KeyboardEvent, type ReactNode } from 'react';
 import type { AnchoredAlign, AnchoredSide } from '../glass/anchoredPlacement';
 import { cx, useClickOutside } from './internal';
-import { useAnchoredLayer } from './useAnchoredLayer';
+import { layerAttributes, useAnchoredLayer } from './useAnchoredLayer';
 import '../styles/components/glass-popover.css';
 
 /** Space between the trigger and the panel, in CSS pixels. */
@@ -95,8 +95,7 @@ export function GlassPopover({
         <div
           ref={panel}
           id={id}
-          popover="manual"
-          data-lu-layer=""
+          {...layerAttributes}
           className={cx('lu-pop-panel', surface === 'solid' ? 'lu-pop-panel--solid' : 'lu-glass-thick', `lu-pop-panel--${placed}-${align}`, matchWidth && 'lu-pop-panel--match')}
         >
           {typeof children === 'function' ? children({ close }) : children}

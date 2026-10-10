@@ -1,0 +1,15 @@
+{
+  // The package source as a host on React 18 typechecks it: latere-ui ships
+  // its .tsx, and its peer range admits React 18, whose types lack some of
+  // the attributes React 19's declare.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["node"],
+    "paths": {
+      "react": ["./node_modules/@types/react-18/index.d.ts"],
+      "react/*": ["./node_modules/@types/react-18/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["src/**/__tests__"]
+}

@@ -1,6 +1,6 @@
 {
   "name": "latere-ui",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Shared Latere platform UI for React: Liquid Glass design system (material + component library), the ink palette, footer, logo and favicon, console sidebar, docs renderer, the session/auth client and React bindings with an account menu, a lazy browser telemetry entry, and schema.org structured data builders.",
   "type": "module",
   "license": "MIT",
@@ -25,7 +25,7 @@
   },
   "scripts": {
     "test": "vitest run",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.react18.json",
     "visual:dev": "vite --config tests/visual/vite.config.ts",
     "test:visual": "playwright test",
     "test:visual:update": "playwright test --update-snapshots=all",
@@ -59,6 +59,7 @@
     "@types/node": "^25.9.1",
     "@types/pngjs": "6.0.5",
     "@types/react": "^19.0.0",
+    "@types/react-18": "npm:@types/react@^18.3.12",
     "@types/react-dom": "^19.0.0",
     "@vitest/coverage-v8": "4.1.7",
     "happy-dom": "^15.11.0",

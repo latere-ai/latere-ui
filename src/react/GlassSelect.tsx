@@ -17,7 +17,7 @@ import {
 } from '../glass/selectSearch';
 import '../styles/components/glass-select.css';
 import { cx, useClickOutside } from './internal';
-import { scrollIntoList, useAnchoredLayer } from './useAnchoredLayer';
+import { layerAttributes, scrollIntoList, useAnchoredLayer } from './useAnchoredLayer';
 
 export interface GlassSelectProps {
   value: string;
@@ -205,8 +205,7 @@ export function GlassSelect({
       {open && (
         <div
           ref={panel}
-          popover="manual"
-          data-lu-layer=""
+          {...layerAttributes}
           className={cx('lu-select-list', 'lu-glass-thick', search && 'is-searchable')}
           style={{ minWidth: lockedWidth ? `${lockedWidth}px` : undefined }}
           onMouseDown={keepFocus}
