@@ -38,8 +38,13 @@ export function activateFocusTrap(
     if (traps.at(-1) !== trap) return;
     // An open control inside the trap, such as a select's menu, marks itself
     // with data-lu-owns-escape and handles Escape at its target: the key
-    // clears or closes that control and leaves the dialog open.
-    if (event.key === 'Escape' && (event.target as Element | null)?.closest?.('[data-lu-owns-escape]')) return;
+    // clears or closes that control and leaves the dialog open. An open
+    // floating panel (data-lu-layer, a select's menu or a popover's panel)
+    // takes the key wherever the focus is in the dialog, as after a pointer
+    // press in Safari, which does not focus the pressed button; the panel's
+    // own document listener then closes it.
+    if (event.key === 'Escape' && ((event.target as Element | null)?.closest?.('[data-lu-owns-escape]')
+      || container()?.querySelector('[data-lu-layer]'))) return;
     if (event.key === 'Escape') {
       event.preventDefault();
       event.stopImmediatePropagation();

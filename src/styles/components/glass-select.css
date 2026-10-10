@@ -1,4 +1,9 @@
 /* GlassSelect. Load after `latere-ui/glass` (the material layer). */
+/* The placement properties GlassSelect and GlassPopover write on their
+ * open panel. They do not inherit, so a panel opened inside another panel
+ * never reads the outer one's room or width. */
+@property --lu-anchor-width { syntax: '*'; inherits: false; }
+@property --lu-layer-max-height { syntax: '*'; inherits: false; }
 .lu-select { position: relative; }
 .lu-select-trigger {
   display: flex;
@@ -23,35 +28,44 @@
 .lu-select-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; }
 .lu-select-value.is-placeholder { color: var(--text-muted, #707070); }
 .lu-select-chevron { flex: none; color: var(--text-muted, #707070); font-size: 10px; }
-/* The menu panel. It is at least as wide as the trigger and grows to fit its
- * longest label, up to a cap and never past the viewport's 16px gutters;
- * GlassSelect moves it left when it would cross the right gutter. Without a search
- * field the panel is the scroller, with the padding inside the scrolled area.
+/* The menu panel. GlassSelect shows it in the top layer as a fixed panel and
+ * places it under the trigger, or above it where only that side has the
+ * room, writing its top and left and two properties: --lu-anchor-width, the
+ * trigger's width, and --lu-layer-max-height, the room on the side it took.
+ * It is at least as wide as the trigger and grows to fit its longest label,
+ * up to a cap and never past the viewport's 16px gutters; GlassSelect moves
+ * it left when it would cross the right gutter. Without a search field the
+ * panel is the scroller, with the padding inside the scrolled area. The
+ * inset, margin and color lines undo the browser's [popover] defaults.
  * Hosts that restyle the panel (padding, border, background) target this class. */
 .lu-select-list {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
+  position: fixed;
+  inset: auto;
+  margin: 0;
   z-index: 900;
   box-sizing: border-box;
-  min-width: 100%;
+  min-width: var(--lu-anchor-width, 100%);
   width: max-content;
-  max-width: max(100%, min(var(--lu-select-menu-max-width, 400px), calc(100vw - 32px)));
-  max-height: 238px; /* Seven 32px rows, the 6px padding and the 1px border, before scrolling. */
+  max-width: max(var(--lu-anchor-width, 100%), min(var(--lu-select-menu-max-width, 400px), calc(100vw - 32px)));
+  /* Seven 32px rows, the 6px padding and the 1px border, before scrolling,
+   * and never more than the room beside the trigger. */
+  max-height: min(238px, var(--lu-layer-max-height, 238px));
   overflow-y: auto;
   padding: 6px;
   border-radius: var(--radius-lg, 14px);
+  color: inherit;
 }
 .lu-select-options {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-/* A searchable menu keeps its field in place and scrolls only the list. */
+/* A searchable menu keeps its field in place and scrolls only the list,
+ * which gives up rows when the room beside the trigger is short. */
 .lu-select-list.is-searchable {
   display: flex;
   flex-direction: column;
-  max-height: none;
+  max-height: var(--lu-layer-max-height, none);
   overflow: visible;
 }
 .lu-select-list.is-searchable .lu-select-options {

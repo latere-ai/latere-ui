@@ -2,6 +2,9 @@
 // trigger over a thick-glass menu that holds a listbox. With more than
 // SELECT_SEARCH_THRESHOLD options, or with `searchable`, the menu opens with a
 // search field at its top that filters the options as the reader types.
+// The menu opens in the top layer (useAnchoredLayer), so a dialog or a
+// scrolling container around the select never clips it: it opens below the
+// select, or above it where only that side has the room.
 // `value` + `onChange` replace v-model. Requires `import 'latere-ui/glass'`.
 import {
   useEffect, useId, useLayoutEffect, useMemo, useRef, useState,
@@ -9,11 +12,12 @@ import {
 } from 'react';
 import type { SelectOption } from '../glass/types';
 import {
-  filterSelectOptions, initialVisibleOption, isSelectSearchable, isTypeToSearchKey,
-  nextVisibleOption, selectLabelRuns, selectMenuShift,
+  SELECT_MENU_GAP, SELECT_MENU_VIEWPORT_GUTTER, filterSelectOptions, initialVisibleOption, isSelectSearchable,
+  isTypeToSearchKey, nextVisibleOption, selectLabelRuns,
 } from '../glass/selectSearch';
 import '../styles/components/glass-select.css';
 import { cx, useClickOutside } from './internal';
+import { scrollIntoList, useAnchoredLayer } from './useAnchoredLayer';
 
 export interface GlassSelectProps {
   value: string;
@@ -45,13 +49,13 @@ export function GlassSelect({
   const trigger = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const field = useRef<HTMLInputElement>(null);
+  const list = useRef<HTMLUListElement>(null);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
   const [query, setQuery] = useState('');
-  // The menu's widest measured width while open, so it does not narrow as a
-  // search hides long labels, and how far it moves left to stay in the viewport.
+  // The menu's widest measured width while a search is open, so it does not
+  // narrow as the search hides long labels.
   const [lockedWidth, setLockedWidth] = useState(0);
-  const [shift, setShift] = useState(0);
   const id = useId();
   const listId = `${id}-list`;
   const optionId = (index: number) => `${id}-option-${index}`;
@@ -62,6 +66,20 @@ export function GlassSelect({
   const noMatch = search && query.trim() !== '' && visible.length === 0;
   const activeId = open && visible.includes(active) ? optionId(active) : undefined;
 
+  // Placed first, so the width measured below is the placed menu's.
+  useAnchoredLayer(
+    { open, anchor: root, panel, gap: SELECT_MENU_GAP, gutter: SELECT_MENU_VIEWPORT_GUTTER, onHidden: () => close() },
+    [visible, search, lockedWidth],
+  );
+
+  // Hold a searchable menu at its widest measured width.
+  useLayoutEffect(() => {
+    const menu = panel.current;
+    if (!open || !search || !menu) return;
+    const width = menu.getBoundingClientRect().width;
+    if (width > lockedWidth) setLockedWidth(width);
+  }, [open, visible, search, lockedWidth]);
+
   useEffect(() => {
     if (!open) return;
     const option = options[active];
@@ -69,19 +87,9 @@ export function GlassSelect({
       setActive(initialVisibleOption(options, visible, value));
       return;
     }
-    panel.current?.querySelector('.is-active')?.scrollIntoView({ block: 'nearest' });
-  }, [open, active, options, visible, value]);
-
-  // Measure the open menu: hold its widest width and keep it inside the viewport.
-  useLayoutEffect(() => {
-    const menu = panel.current;
-    if (!open || !menu || !root.current) return;
-    const width = menu.getBoundingClientRect().width;
-    const held = search && width > lockedWidth ? width : lockedWidth;
-    if (held !== lockedWidth) setLockedWidth(held);
-    const viewport = document.documentElement.clientWidth || window.innerWidth;
-    setShift(selectMenuShift(root.current.getBoundingClientRect().left, Math.max(width, held), viewport));
-  }, [open, visible, search, lockedWidth]);
+    // A searchable menu scrolls its list under the field; a plain one scrolls itself.
+    scrollIntoList(search ? list.current : panel.current, panel.current?.querySelector('.is-active'));
+  }, [open, active, options, visible, value, search]);
 
   useEffect(() => {
     if (!open || !search) return;
@@ -103,7 +111,6 @@ export function GlassSelect({
     setOpen(false);
     setQuery('');
     setLockedWidth(0);
-    setShift(0);
     if (restoreFocus) trigger.current?.focus({ preventScroll: true });
   }
   function toggle() {
@@ -198,8 +205,10 @@ export function GlassSelect({
       {open && (
         <div
           ref={panel}
+          popover="manual"
+          data-lu-layer=""
           className={cx('lu-select-list', 'lu-glass-thick', search && 'is-searchable')}
-          style={{ minWidth: lockedWidth ? `${lockedWidth}px` : undefined, left: shift ? `${-shift}px` : undefined }}
+          style={{ minWidth: lockedWidth ? `${lockedWidth}px` : undefined }}
           onMouseDown={keepFocus}
         >
           {search && (
@@ -224,7 +233,7 @@ export function GlassSelect({
           )}
           {/* tabIndex -1 keeps the scrolling list out of the Tab order; the
               arrows reach its options through aria-activedescendant. */}
-          <ul id={listId} className="lu-select-options" role="listbox" tabIndex={-1}>
+          <ul ref={list} id={listId} className="lu-select-options" role="listbox" tabIndex={-1}>
             {visible.map((i) => {
               const opt = options[i];
               const runs = selectLabelRuns(opt.label, search ? query : '');

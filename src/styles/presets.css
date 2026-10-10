@@ -241,8 +241,8 @@
 :root[data-design="origo"] .lu-cs-group-label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
 :root[data-design="origo"] .lu-table-head th { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
 :root[data-design="origo"] .lu-select-option { padding: 4px 8px; }
-:root[data-design="origo"] .lu-select-list { max-height: 210px; }
-:root[data-design="origo"] .lu-select-list.is-searchable { max-height: none; }
+:root[data-design="origo"] .lu-select-list { max-height: min(210px, var(--lu-layer-max-height, 210px)); }
+:root[data-design="origo"] .lu-select-list.is-searchable { max-height: var(--lu-layer-max-height, none); }
 :root[data-design="origo"] .lu-select-list.is-searchable .lu-select-options { max-height: 196px; }
 :root[data-design="origo"] .lu-select-search { padding: 7px 14px; }
 :root[data-design="origo"] .lu-select-empty { padding: 4px 8px; }

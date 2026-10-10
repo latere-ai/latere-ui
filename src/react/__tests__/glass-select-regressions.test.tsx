@@ -47,14 +47,37 @@ describe('GlassSelect keyboard regressions', () => {
     expect(w.container.querySelector('.is-active')).toBeNull();
   });
 
-  it('scrolls the initial and keyboard-active options into view', () => {
-    const scrolled: Element[] = [];
-    vi.spyOn(Element.prototype, 'scrollIntoView').mockImplementation(function (this: Element) { scrolled.push(this); });
-    const w = render(<GlassSelect value="15" options={Array.from({ length: 30 }, (_, i) => ({ value: String(i), label: `Option ${i}` }))} />);
+  for (const searchable of [false, true]) it(`scrolls the initial and keyboard-active options into view, inside the ${searchable ? 'searchable list' : 'menu'} only`, () => {
+    // The scroller (the plain menu, or a searchable menu's list under its
+    // field) shows 236px from y 106, its options 32px apart from 6px down.
+    const scroller = searchable ? 'lu-select-options' : 'lu-select-list';
+    const scrollIntoView = vi.spyOn(Element.prototype, 'scrollIntoView');
+    vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockImplementation(function (this: HTMLElement) {
+      return this.classList.contains(scroller) ? 236 : 0;
+    });
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+      const box = this.closest<HTMLElement>(`.${scroller}`);
+      if (this.classList.contains('lu-select-option') && box) {
+        const index = [...box.querySelectorAll('.lu-select-option')].indexOf(this);
+        const top = 106 + 6 + index * 32 - box.scrollTop;
+        return { top, bottom: top + 32, left: 0, right: 200, width: 200, height: 32 } as DOMRect;
+      }
+      if (this.classList.contains(scroller)) return { top: 106, bottom: 342, left: 0, right: 200, width: 200, height: 236 } as DOMRect;
+      return { top: 60, bottom: 92, left: 0, right: 200, width: 200, height: 32 } as DOMRect;
+    });
+    const w = render(<GlassSelect value="15" searchable={searchable} options={Array.from({ length: 30 }, (_, i) => ({ value: String(i), label: `Option ${i}` }))} />);
     const button = w.getByRole('combobox');
     fireEvent.click(button);
-    expect(scrolled.at(-1)?.textContent).toBe('Option 15');
-    fireEvent.keyDown(button, { key: 'ArrowDown' });
-    expect(scrolled.at(-1)?.textContent).toBe('Option 16');
+    const box = document.querySelector<HTMLElement>(`.${scroller}`)!;
+    // Option 15 spans 592-624 against a scrollport ending at 342.
+    expect(box.scrollTop).toBe(624 - 342);
+    fireEvent.keyDown(searchable ? document.querySelector('.lu-select-search')! : button, { key: 'ArrowDown' });
+    expect(box.scrollTop).toBe(624 - 342 + 32);
+    fireEvent.keyDown(searchable ? document.querySelector('.lu-select-search')! : button, { key: 'Home' });
+    for (let i = 0; i < 16; i++) fireEvent.keyDown(searchable ? document.querySelector('.lu-select-search')! : button, { key: 'ArrowUp' });
+    // Back at option 0, above the scrollport: it scrolls up to show it whole.
+    expect(document.querySelector('.is-active')?.textContent).toBe('Option 0');
+    expect(box.scrollTop).toBe(6);
+    expect(scrollIntoView).not.toHaveBeenCalled();
   });
 });

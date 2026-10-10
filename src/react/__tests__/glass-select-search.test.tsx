@@ -203,15 +203,20 @@ describe('GlassSelect search (react)', () => {
 
   it('holds its widest width and moves left to stay inside the viewport', () => {
     vi.spyOn(document.documentElement, 'clientWidth', 'get').mockReturnValue(1000);
+    vi.spyOn(document.documentElement, 'clientHeight', 'get').mockReturnValue(800);
     const rect = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
-      return (this.classList.contains('lu-select') ? { left: 800 } : { width: this.querySelector('.lu-select-match') ? 180 : 300 }) as unknown as DOMRect;
+      if (this.classList.contains('lu-select')) return { top: 100, bottom: 132, left: 800, right: 960, width: 160, height: 32 } as DOMRect;
+      return { width: this.querySelector('.lu-select-match') ? 180 : 300, height: 200 } as DOMRect;
     });
     const w = render(<GlassSelect value="" options={zones} />);
     fireEvent.click(w.getByRole('combobox'));
     const panel = document.querySelector<HTMLElement>('.lu-select-list')!;
     expect(panel.classList.contains('is-searchable')).toBe(true);
     expect(panel.style.minWidth).toBe('300px');
-    expect(panel.style.left).toBe('-116px');
+    // The trigger starts at 800; a 300px menu ends 16px inside the 1000px viewport at 684.
+    expect(panel.style.left).toBe('684px');
+    expect(panel.style.top).toBe('136px');
+    expect(panel.style.getPropertyValue('--lu-anchor-width')).toBe('160px');
     typeInto('asia');
     expect(panel.style.minWidth).toBe('300px');
     expect(rect).toHaveBeenCalled();

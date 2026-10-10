@@ -10,8 +10,11 @@ import type { SelectOption } from './types';
  */
 export const SELECT_SEARCH_THRESHOLD = 8;
 
-/** Gap kept between an open menu and either edge of the viewport, in CSS pixels. */
+/** Gap kept between an open menu and every edge of the viewport, in CSS pixels. */
 export const SELECT_MENU_VIEWPORT_GUTTER = 16;
+
+/** Space between the select and its open menu, in CSS pixels. */
+export const SELECT_MENU_GAP = 4;
 
 export function isSelectSearchable(optionCount: number, searchable?: boolean): boolean {
   return searchable ?? optionCount > SELECT_SEARCH_THRESHOLD;
@@ -97,15 +100,4 @@ export function initialVisibleOption(options: SelectOption[], visible: number[],
  */
 export function isTypeToSearchKey(event: { key: string; ctrlKey?: boolean; metaKey?: boolean; altKey?: boolean }): boolean {
   return [...event.key].length === 1 && event.key !== ' ' && !event.ctrlKey && !event.metaKey && !event.altKey;
-}
-
-/**
- * How far to move a menu left of its trigger's left edge so its right edge
- * stays `gutter` pixels inside the viewport, without moving its left edge
- * past the same gutter on the other side. 0 when it already fits.
- */
-export function selectMenuShift(triggerLeft: number, menuWidth: number, viewportWidth: number, gutter = SELECT_MENU_VIEWPORT_GUTTER): number {
-  const overflow = triggerLeft + menuWidth - (viewportWidth - gutter);
-  if (overflow <= 0) return 0;
-  return Math.max(0, Math.min(overflow, triggerLeft - gutter));
 }

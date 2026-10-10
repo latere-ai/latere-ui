@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   SELECT_MENU_VIEWPORT_GUTTER, SELECT_SEARCH_THRESHOLD, filterSelectOptions, initialVisibleOption,
-  isSelectSearchable, isTypeToSearchKey, nextVisibleOption, selectLabelRuns, selectMenuShift,
+  isSelectSearchable, isTypeToSearchKey, nextVisibleOption, selectLabelRuns,
 } from '../src/glass/selectSearch';
 import { SELECT_SEARCH_THRESHOLD as publicExport } from '../src/react/index';
 
@@ -92,22 +92,5 @@ describe('isTypeToSearchKey', () => {
     expect(isTypeToSearchKey({ key: 'b', ctrlKey: true })).toBe(false);
     expect(isTypeToSearchKey({ key: 'b', metaKey: true })).toBe(false);
     expect(isTypeToSearchKey({ key: 'b', altKey: true })).toBe(false);
-  });
-});
-
-describe('selectMenuShift', () => {
-  it('leaves a menu that fits where it is', () => {
-    expect(selectMenuShift(100, 300, 1000)).toBe(0);
-    expect(selectMenuShift(684, 300, 1000)).toBe(0);
-  });
-
-  it('moves a menu left so its right edge keeps the gutter', () => {
-    expect(SELECT_MENU_VIEWPORT_GUTTER).toBe(16);
-    expect(selectMenuShift(800, 300, 1000)).toBe(116);
-  });
-
-  it('never moves the left edge past the gutter on the other side', () => {
-    expect(selectMenuShift(40, 990, 1000)).toBe(24);
-    expect(selectMenuShift(10, 990, 1000)).toBe(0);
   });
 });

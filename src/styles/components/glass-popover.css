@@ -1,11 +1,28 @@
+/* The placement properties GlassSelect and GlassPopover write on their
+ * open panel. They do not inherit, so a panel opened inside another panel
+ * never reads the outer one's room or width. */
+@property --lu-anchor-width { syntax: '*'; inherits: false; }
+@property --lu-layer-max-height { syntax: '*'; inherits: false; }
+/* GlassPopover shows the panel in the top layer as a fixed panel and places
+ * it against .lu-pop, writing its top and left, --lu-anchor-width (the
+ * trigger's width) and --lu-layer-max-height (the room on the side it took).
+ * A panel taller than that room scrolls, marked data-lu-scroll. The inset,
+ * margin, color and overflow lines undo the browser's [popover] defaults. */
 .lu-pop { position: relative; display: inline-block; }
 .lu-pop-panel {
-  position: absolute;
+  position: fixed;
+  inset: auto;
+  margin: 0;
   z-index: var(--lu-z-popover, 900);
   min-width: 180px;
+  max-width: calc(100vw - 16px);
+  max-height: var(--lu-layer-max-height, none);
+  overflow: visible;
   padding: 6px;
   border-radius: var(--radius-md, 8px);
+  color: inherit;
 }
+.lu-pop-panel[data-lu-scroll] { overflow-y: auto; overscroll-behavior: contain; }
 /* The opaque menu surface: no glass layer, so it reads the same with or
  * without `latere-ui/glass` and over any backdrop. A hairline edge, the menu
  * shadow, and a corner concentric with the rows inside it: the row radius
@@ -22,12 +39,10 @@
   color: var(--text, #0a0a0a);
 }
 .lu-pop-panel--solid .lu-menu { min-width: 0; }
-.lu-pop-panel--match { box-sizing: border-box; width: 100%; min-width: 0; overflow-wrap: anywhere; }
+/* .lu-pop-panel--<side>-<edge> names the placement the panel took, after
+ * any flip, for host styles such as a transform origin. */
+.lu-pop-panel--match { box-sizing: border-box; width: var(--lu-anchor-width, 100%); min-width: 0; overflow-wrap: anywhere; }
 .lu-pop-panel--match .lu-menu { min-width: 0; }
-.lu-pop-panel--bottom-start { top: calc(100% + 6px); left: 0; }
-.lu-pop-panel--bottom-end   { top: calc(100% + 6px); right: 0; }
-.lu-pop-panel--top-start    { bottom: calc(100% + 6px); left: 0; }
-.lu-pop-panel--top-end      { bottom: calc(100% + 6px); right: 0; }
 .lu-pop-enter-active, .lu-pop-leave-active { transition: opacity 0.14s ease, transform 0.14s ease; }
 .lu-pop-enter-from, .lu-pop-leave-to { opacity: 0; transform: translateY(-4px); }
 @media (prefers-reduced-motion: reduce) {
