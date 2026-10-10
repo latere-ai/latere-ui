@@ -2,7 +2,7 @@ import React, { useState, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import {
   AccountMenu, ConsoleSidebar, GlassAlert, GlassBadge, GlassBar, GlassButton,
-  GlassCheckbox, GlassField, GlassModal, GlassPanel, GlassSegmented, GlassSelect,
+  GlassCheckbox, GlassField, GlassMenu, GlassModal, GlassPanel, GlassPopover, GlassSegmented, GlassSelect,
   GlassSpinner, GlassTable, LatereLogoMark, SiteFooter,
   type ConsoleNavModel, type GlassTier, type Locale, type Principal, type Theme,
 } from '../../src/react';
@@ -129,6 +129,54 @@ function Modal() {
   </Sample>;
 }
 
+// Floating panels where a box would clip them: a select and a menu in a
+// dialog's form, a select at the bottom of a scrolling panel, and a select
+// and a menu in a bar pinned to the bottom of the viewport, where only the
+// room above holds them.
+const roles = [{ value: 'member', label: 'Member' }, { value: 'admin', label: 'Admin' }];
+const keyActions = [{ value: 'rotate', label: 'Rotate key' }, { value: 'copy', label: 'Copy key ID' }, { value: 'revoke', label: 'Revoke key', danger: true }];
+
+function Layers() {
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState('');
+  const [role, setRole] = useState('member');
+  const [schedule, setSchedule] = useState('weekly');
+  const [effort, setEffort] = useState('daily');
+  return <div className="stack">
+    <Sample name="GlassModal" label="Select and menu in a dialog">
+      <GlassButton onClick={() => setOpen(true)}>Create service account</GlassButton>
+      <GlassModal open={open} title="Create a service account" width="32rem" onClose={() => setOpen(false)} footer={<>
+        <GlassButton onClick={() => setOpen(false)}>Cancel</GlassButton>
+        <GlassButton variant="primary" onClick={() => setOpen(false)}>Create service account</GlassButton>
+      </>}>
+        <p>A service account acts for the organization in scripts and pipelines, with keys of its own.</p>
+        {/* The select is the body's last line, as in the console's form, so
+            its menu reaches past the dialog's lower edge. */}
+        <GlassField label="Name" value={name} placeholder="Nightly builds" onChange={setName} />
+        <div className="row" style={{ marginTop: 12 }}>
+          <div style={{ flex: 1 }}><GlassSelect value={role} options={roles} ariaLabel="Role" onChange={setRole} /></div>
+          <GlassPopover placement="bottom-end" trigger={<GlassButton>Key actions</GlassButton>}>{({ close }) =>
+            <GlassMenu items={keyActions} label="Key actions" autofocus onSelect={() => close()} />}
+          </GlassPopover>
+        </div>
+      </GlassModal>
+    </Sample>
+    <Sample name="GlassSelect" label="Select at the bottom of a scrolling panel">
+      <div className="layers-scroller" data-testid="scroller" style={{ height: 160, overflowY: 'auto', border: '1px solid var(--border, #ddd)', borderRadius: 8, padding: 12 }}>
+        {Array.from({ length: 3 }, (_, i) => <p key={i}>{`Line ${i + 1} of the schedule notes.`}</p>)}
+        <div style={{ width: 220 }}><GlassSelect value={schedule} options={options} ariaLabel="Schedule" onChange={setSchedule} /></div>
+        {Array.from({ length: 8 }, (_, i) => <p key={i}>{`Line ${i + 4} of the schedule notes.`}</p>)}
+      </div>
+    </Sample>
+    <div className="layers-bar" style={{ position: 'fixed', left: 16, right: 16, bottom: 16, display: 'flex', gap: 12, alignItems: 'center' }}>
+      <div style={{ width: 200 }}><GlassSelect value={effort} options={options} ariaLabel="Effort" onChange={setEffort} /></div>
+      <GlassPopover trigger={<GlassButton>Composer actions</GlassButton>}>{({ close }) =>
+        <GlassMenu items={keyActions} label="Composer actions" autofocus onSelect={() => close()} />}
+      </GlassPopover>
+    </div>
+  </div>;
+}
+
 function Account({ sidebar = false }: { sidebar?: boolean }) {
   const [account, setAccount] = useState(principal);
   const [appearance, setAppearance] = useState(document.documentElement.dataset.theme ?? 'light');
@@ -166,6 +214,7 @@ function Gallery({ scenario }: { scenario: string }) {
     case 'feedback': return <Feedback />;
     case 'containers': return <Containers />;
     case 'modal': return <Modal />;
+    case 'layers': return <Layers />;
     case 'sidebar': return <Sidebar initiallyCollapsed={false} />;
     case 'sidebar-collapsed': return <Sidebar initiallyCollapsed />;
     case 'account': return <Sample name="AccountMenu"><div style={{ minHeight: 530, display: 'flex', justifyContent: 'flex-end' }}><div><Account /></div></div><AccountMenu principal={null} onLogin={() => undefined} /></Sample>;
