@@ -152,7 +152,7 @@ describe('GlassSelect in the top layer', () => {
     expect(w.queryByRole('listbox')).toBeNull();
   });
 
-  it('keeps the menu open and the dialog open when Escape comes from elsewhere in the dialog', () => {
+  it('closes the menu and leaves the dialog open when Escape comes from elsewhere in the dialog', () => {
     const onClose = vi.fn();
     function Dialog() {
       const [role, setRole] = useState('member');
