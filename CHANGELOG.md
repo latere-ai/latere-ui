@@ -10,6 +10,8 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+## v2.1.1 - 2026-10-10
+
 - A host on React 18 typechecks again: v2.1.0's select and popover set the `popover` attribute, which @types/react before 19 does not declare. `bun run typecheck` now checks the package against React 18's types as well as 19's.
 
 ## v2.1.0 - 2026-10-10
