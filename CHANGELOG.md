@@ -10,6 +10,8 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+## v2.2.0 - 2026-10-11
+
 - The footer's Company group links the product catalog, `https://latere.ai/products`, after About: Products in English, 产品 in Chinese, Produkte in German, under the `footer.products` key. Every site that draws the footer now leads to the catalog, and the company site follows the link through its own router. The Company group holds six links.
 - The footer's Applications group lists the chat as Latere Chat in every language, where it read Latere, the company's own name. The link and its hover gradient are unchanged.
 
