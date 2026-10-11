@@ -10,6 +10,9 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+- The footer's Company group links the product catalog, `https://latere.ai/products`, after About: Products in English, 产品 in Chinese, Produkte in German, under the `footer.products` key. Every site that draws the footer now leads to the catalog, and the company site follows the link through its own router. The Company group holds six links.
+- The footer's Applications group lists the chat as Latere Chat in every language, where it read Latere, the company's own name. The link and its hover gradient are unchanged.
+
 ## v2.1.1 - 2026-10-10
 
 - A host on React 18 typechecks again: v2.1.0's select and popover set the `popover` attribute, which @types/react before 19 does not declare. `bun run typecheck` now checks the package against React 18's types as well as 19's.

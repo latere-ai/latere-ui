@@ -26,7 +26,7 @@ export interface FooterGroup {
 
 const site = (slug: string, labelKey: string, href: string): FooterLink => ({ slug, labelKey, href, site: true });
 
-/** The chat, under its public name Latere, then the gallery of what people made with it. */
+/** The chat, listed as Latere Chat, then the gallery of what people made with it. */
 const applications: FooterGroup = {
   id: 'applications',
   labelKey: 'footer.applications',
@@ -51,12 +51,13 @@ const platform: FooterGroup = {
   ],
 };
 
-/** Company pages under the host's base URL, and the contact address. */
+/** Company pages under the host's base URL, the product catalog among them, and the contact address. */
 const company: FooterGroup = {
   id: 'company',
   labelKey: 'footer.company',
   links: [
     site('about', 'footer.about', '/about'),
+    site('products', 'footer.products', '/products'),
     site('why-latere', 'footer.whyLatere', '/blog/why-latere'),
     site('blog', 'footer.blog', '/blog'),
     site('open-source', 'footer.openSource', '/open-source'),

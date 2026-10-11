@@ -62,7 +62,7 @@ for (const theme of ['light', 'dark']) {
         background: getComputedStyle(document.body).backgroundColor.match(/[\d.]+/g)!.map(Number),
       }]));
     }
-    expect(hovered.map(b => b.name)).toEqual(['Latere', 'ReplicHAI', 'Latere Platform']);
+    expect(hovered.map(b => b.name)).toEqual(['Latere Chat', 'ReplicHAI', 'Latere Platform']);
     for (const brand of hovered) {
       const colors = brand.gradient === 'none' ? [brand.color] : brand.gradient.match(/rgb\([^)]+\)/g)!;
       for (const color of colors) expect.soft(ratio(color.match(/[\d.]+/g)!.map(Number), brand.background), `${brand.name}: ${color}`).toBeGreaterThanOrEqual(4.5);

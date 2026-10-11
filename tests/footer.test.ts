@@ -8,9 +8,14 @@ describe('footer dictionaries', () => {
     expect(Object.keys(dict).sort()).toEqual(Object.keys(en).sort());
   });
 
-  // The chat's public name is Latere, a proper name in every locale.
-  it.each(Object.entries({ en, zh, de }))('%s names the chat Latere', (_locale, dict) => {
-    expect(dict['footer.products.chat']).toBe('Latere');
+  // The lineup lists the chat as Latere Chat, a proper name in every locale,
+  // so it reads apart from the company's name beside it.
+  it.each(Object.entries({ en, zh, de }))('%s names the chat Latere Chat', (_locale, dict) => {
+    expect(dict['footer.products.chat']).toBe('Latere Chat');
+  });
+
+  it('names the product catalog in each language', () => {
+    expect([en, zh, de].map(d => d['footer.products'])).toEqual(['Products', '产品', 'Produkte']);
   });
 
   // Wallfacer left the lineup, so no footer copy names it.

@@ -20,7 +20,7 @@ const DESTINATIONS = {
   applications: ['https://chat.latere.ai/', 'https://latere.site/'],
   research: ['https://replichai.latere.ai/'],
   platform: ['https://platform.latere.ai/console', 'https://auth.latere.ai/'],
-  company: ['https://latere.ai/about', 'https://latere.ai/blog/why-latere', 'https://latere.ai/blog', 'https://latere.ai/open-source', 'mailto:contact@latere.ai'],
+  company: ['https://latere.ai/about', 'https://latere.ai/products', 'https://latere.ai/blog/why-latere', 'https://latere.ai/blog', 'https://latere.ai/open-source', 'mailto:contact@latere.ai'],
   legal: ['https://latere.ai/trust', 'https://latere.ai/legal/privacy', 'https://latere.ai/legal/terms', 'https://latere.ai/legal/impressum'],
 };
 
@@ -63,7 +63,7 @@ describe('SiteFooter (React)', () => {
     const { container } = mount();
     const links = Array.from(container.querySelectorAll('.lu-footer-cols a.lu-footer-link'));
     expect(links.filter(a => a.hasAttribute('data-brand')).map(a => [a.textContent, a.getAttribute('data-brand')])).toEqual([
-      ['Latere', 'chat'], ['ReplicHAI', 'replichai'], ['Latere Platform', 'platform'],
+      ['Latere Chat', 'chat'], ['ReplicHAI', 'replichai'], ['Latere Platform', 'platform'],
     ]);
     expect(container.querySelector('.lu-footer-cols [class$="-brand"]')).toBeNull();
     for (const name of ['Identity', 'Gallery']) expect(links.find(a => a.textContent === name)!.hasAttribute('data-brand')).toBe(false);
@@ -234,6 +234,24 @@ describe('SiteFooter (React)', () => {
     expect(hrefs(container).filter(h => h?.includes('wf.latere.ai'))).toEqual([]);
     expect(container.textContent).not.toContain('Wallfacer');
     expect(container.querySelector('[data-brand="wallfacer"], .wallfacer-brand')).toBeNull();
+  });
+
+  // The product catalog is a page of the company site, the second company
+  // link, so every site's footer leads to it and the company site follows it
+  // without a reload.
+  it.each(Object.entries({ en, zh, de }))('links the product catalog after About in %s', (locale, dict) => {
+    const { container } = mount({ locale, locales: [{ code: locale, label: locale.toUpperCase() }] });
+    const links = Array.from(container.querySelectorAll('[data-footer-group="company"] a'));
+    expect(links[1].getAttribute('href')).toBe('https://latere.ai/products');
+    expect(links[1].textContent).toBe(dict['footer.products']);
+    expect(links[1].hasAttribute('data-brand')).toBe(false);
+  });
+
+  it('routes the product catalog through the host router', () => {
+    const Stub = ({ to, children, ...rest }: any) => <a data-to={to} {...rest}>{children}</a>;
+    const { container } = mount({ routerLink: Stub });
+    expect(container.querySelector('[data-footer-group="company"] [data-to="/products"]')!.textContent).toBe(en['footer.products']);
+    expect(container.innerHTML).not.toContain('https://latere.ai/products');
   });
 
   // The open source page is a company link, so it carries translated copy in
