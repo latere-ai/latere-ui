@@ -129,13 +129,16 @@ export function SessionProvider<Raw = Principal>({
   // before React has committed the corresponding state update.
   const principalRef = useRef<Principal | null>(null);
   const loadedRef = useRef(false);
+  // Set on every mount, not only at creation: StrictMode mounts, unmounts
+  // and mounts again the same instance, and a flag left false by that
+  // unmount would drop every `/me` answer and keep the provider loading.
   const mountedRef = useRef(true);
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
       mountedRef.current = false;
-    },
-    [],
-  );
+    };
+  }, []);
 
   const mapMeRef = useRef(mapMe);
   mapMeRef.current = mapMe;

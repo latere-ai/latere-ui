@@ -2,8 +2,8 @@
 // session core: the expired-session recovery (silent prompt=none re-check
 // once, then an interactive login), the logged-out carve-out, the org-switch
 // redirect modes and the route gate's sso_checked round-trip.
-import { act, renderHook, waitFor } from '@testing-library/react';
-import type { ReactNode } from 'react';
+import { act, render, renderHook, waitFor } from '@testing-library/react';
+import { Activity, type ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { Principal } from '../../session/types';
@@ -63,6 +63,35 @@ describe('SessionProvider / useSession', () => {
     await waitFor(() => expect(result.current.loading).toBe(false));
     expect(result.current.principal?.principal_id).toBe('p1');
     expect(result.current.error).toBeNull();
+  });
+
+  // StrictMode in development, as under `vite dev`, runs every effect's
+  // cleanup and then its setup again on the same instance before the first
+  // `/me` answer arrives. Activity does the same when hidden and shown, and
+  // does it in a test, where StrictMode's second pass does not run.
+  it('resolves after its effects are cleaned up and set up again, as StrictMode does', async () => {
+    vi.stubGlobal('fetch', mockFetch([[200, PRINCIPAL]]));
+    function Probe({ seen }: { seen: (v: { ready: boolean; id?: string }) => void }) {
+      const { principal } = useSession();
+      const gate = useSessionGate({ path: '/console' });
+      seen({ ready: gate.ready, id: principal?.principal_id });
+      return null;
+    }
+    let last: { ready: boolean; id?: string } = { ready: false };
+    const seen = (v: typeof last) => {
+      last = v;
+    };
+    const tree = (mode: 'visible' | 'hidden') => (
+      <Activity mode={mode}>
+        <SessionProvider>
+          <Probe seen={seen} />
+        </SessionProvider>
+      </Activity>
+    );
+    const view = render(tree('visible'));
+    view.rerender(tree('hidden'));
+    view.rerender(tree('visible'));
+    await waitFor(() => expect(last).toEqual({ ready: true, id: 'p1' }));
   });
 
   it('goes loading -> anonymous on 401 (no error surfaced)', async () => {
