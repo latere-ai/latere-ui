@@ -10,6 +10,10 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+## v2.2.1 - 2026-10-13
+
+- `SessionProvider` settles under React's StrictMode in development, as a `vite dev` server renders it. It stayed loading there, and a console behind `useSessionGate` never got past its session check: StrictMode runs every effect's cleanup and then its setup again on the same component, and the provider dropped the `/me` answer that arrived after that. A production build was not affected.
+
 ## v2.2.0 - 2026-10-11
 
 - The footer's Company group links the product catalog, `https://latere.ai/products`, after About: Products in English, 产品 in Chinese, Produkte in German, under the `footer.products` key. Every site that draws the footer now leads to the catalog, and the company site follows the link through its own router. The Company group holds six links.
