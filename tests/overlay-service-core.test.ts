@@ -112,4 +112,28 @@ describe('focus trap', () => {
       expect(document.activeElement).toBe(input);
     } finally { trap.dispose(); container.remove(); }
   });
+
+  it('lets Tab go on from a disclosure summary to the controls after it', () => {
+    const container = document.createElement('div');
+    container.innerHTML = '<input class="name"><details><summary>More</summary></details><button class="cancel">Cancel</button>';
+    document.body.append(container);
+    // The test DOM lays nothing out, so no element has an offset parent;
+    // stand in for a dialog whose controls are all shown.
+    for (const el of container.querySelectorAll('*')) Object.defineProperty(el, 'offsetParent', { get: () => document.body });
+    const summary = container.querySelector<HTMLElement>('summary')!;
+    const trap = activateFocusTrap(() => container);
+    try {
+      summary.focus();
+      const tab = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true });
+      document.dispatchEvent(tab);
+      expect(tab.defaultPrevented).toBe(false);
+      expect(document.activeElement).toBe(summary);
+
+      const back = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true, bubbles: true, cancelable: true });
+      container.querySelector<HTMLInputElement>('input')!.focus();
+      document.dispatchEvent(back);
+      expect(back.defaultPrevented).toBe(true);
+      expect(document.activeElement).toBe(container.querySelector('.cancel'));
+    } finally { trap.dispose(); container.remove(); }
+  });
 });

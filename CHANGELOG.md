@@ -10,6 +10,8 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+- A modal, drawer or confirm with a disclosure (`<details>`) lets Tab go on from its summary to the controls after it. Before, Tab from the summary jumped back to the first control, so a keyboard could not reach the buttons below a disclosure.
+
 ## v2.2.1 - 2026-10-13
 
 - `SessionProvider` settles under React's StrictMode in development, as a `vite dev` server renders it. It stayed loading there, and a console behind `useSessionGate` never got past its session check: StrictMode runs every effect's cleanup and then its setup again on the same component, and the provider dropped the `/me` answer that arrived after that. A production build was not affected.

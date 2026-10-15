@@ -1,6 +1,8 @@
 // DOM-only overlay ownership. Only the most recently opened trap handles
 // keyboard events, so nested dialogs close one at a time.
-const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),textarea:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])';
+// A disclosure's summary takes focus too; without it, Tab from the summary
+// jumps back to the first control and skips everything after it.
+const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),textarea:not([disabled]),select:not([disabled]),details>summary:first-of-type,[tabindex]:not([tabindex="-1"])';
 
 interface Trap {
   container: () => HTMLElement | null | undefined;
