@@ -79,7 +79,7 @@ describe('AccountMenu (react)', () => {
         onItemSelect={onItemSelect}
         extraItems={[
           { label: 'Admin Panel', href: 'https://auth.test/admin' },
-          { label: 'Deck access', to: '/admin/decks' },
+          { label: 'Settings', to: '/settings' },
           { label: 'Do thing', id: 'thing' },
         ]}
       />,
@@ -88,12 +88,12 @@ describe('AccountMenu (react)', () => {
     const items = container.querySelectorAll('.lu-am-item');
     const labels = Array.from(items).map((i) => i.textContent);
     expect(labels).toContain('Admin Panel');
-    expect(labels).toContain('Deck access');
+    expect(labels).toContain('Settings');
     const a = container.querySelector('a.lu-am-item')!;
     expect(a.getAttribute('href')).toBe('https://auth.test/admin');
     let buttons = Array.from(container.querySelectorAll('button.lu-am-item'));
-    fireEvent.click(buttons.find((b) => b.textContent === 'Deck access')!);
-    expect(onNavigate).toHaveBeenCalledWith('/admin/decks');
+    fireEvent.click(buttons.find((b) => b.textContent === 'Settings')!);
+    expect(onNavigate).toHaveBeenCalledWith('/settings');
     // Clicking a row closes the dropdown; reopen it before exercising the
     // second row.
     fireEvent.click(container.querySelector('.lu-am-trigger')!);

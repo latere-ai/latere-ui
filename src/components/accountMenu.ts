@@ -1,6 +1,6 @@
 // Types and defaults for AccountMenu.
 
-// A per-app custom menu row (e.g. "Admin Panel", "Deck access"). Rendered by
+// A per-app custom menu row (e.g. "Admin Panel", "Settings"). Rendered by
 // AccountMenu as one of its own rows, so it always matches the menu's item
 // style.
 export interface AccountMenuItem {
