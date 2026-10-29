@@ -109,6 +109,9 @@ export function AccountMenu({
   const hasDropdown = !!principal || !!prefs || !!extra || extraItems.length > 0;
 
   const [open, setOpen] = useState(false);
+  // The avatar address whose image last failed to load. Both avatars draw the
+  // initials while `avatar_url` still equals it; a new address is tried again.
+  const [failedAvatarUrl, setFailedAvatarUrl] = useState('');
   const root = useRef<HTMLDivElement>(null);
   useClickOutside(root, open, () => setOpen(false));
 
@@ -119,6 +122,8 @@ export function AccountMenu({
 
   const initials = principal?.initials || '?';
   const avatarUrl = principal?.avatar_url || '';
+  const showAvatar = avatarUrl !== '' && avatarUrl !== failedAvatarUrl;
+  const onAvatarError = () => setFailedAvatarUrl(avatarUrl);
   const name = principal?.display_name || principal?.name || principal?.email || t.account;
   const email = principal?.email || '';
   const orgName = principal?.org_name || '';
@@ -172,10 +177,14 @@ export function AccountMenu({
         aria-expanded={hasDropdown ? open : undefined}
         title={principal ? t.account : t.signIn}
       >
-        {/* Avatar always present so the pill keeps its shape; logged out shows
-            the "?" initials fallback. */}
+        {/* Avatar always present so the pill keeps its shape; logged out, with
+            no avatar_url, or when the image fails, it shows the initials. */}
         <span className="lu-am-avatar">
-          {avatarUrl ? <img src={avatarUrl} alt="" referrerPolicy="no-referrer" /> : <span>{initials}</span>}
+          {showAvatar ? (
+            <img src={avatarUrl} alt="" referrerPolicy="no-referrer" onError={onAvatarError} />
+          ) : (
+            <span>{initials}</span>
+          )}
         </span>
         <span className="lu-am-id">
           <span className="lu-am-id-name">{principal ? name : t.signIn}</span>
@@ -224,8 +233,8 @@ export function AccountMenu({
           {principal ? (
             <div className="lu-am-head">
               <span className="lu-am-head-avatar">
-                {avatarUrl ? (
-                  <img src={avatarUrl} alt="" referrerPolicy="no-referrer" />
+                {showAvatar ? (
+                  <img src={avatarUrl} alt="" referrerPolicy="no-referrer" onError={onAvatarError} />
                 ) : (
                   <span>{initials}</span>
                 )}

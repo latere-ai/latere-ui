@@ -40,7 +40,7 @@ export interface Principal {
   name?: string;
   display_name?: string;
   avatar_url?: string;
-  /** Letters shown in the avatar when no `avatar_url` is present. */
+  /** Letters shown in the avatar when there is no `avatar_url` or its image fails to load. */
   initials?: string;
   /** Active org id; empty string means the personal (no-org) view. */
   org_id: string;

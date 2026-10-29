@@ -10,6 +10,8 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+- The account menu shows the person's initials when their picture cannot be loaded, in its button and in the open menu's header, where it showed a broken image. When `avatar_url` changes to another address, the menu tries the new picture.
+
 ## v2.2.2 - 2026-10-15
 
 - A modal, drawer or confirm with a disclosure (`<details>`) lets Tab go on from its summary to the controls after it. Before, Tab from the summary jumped back to the first control, so a keyboard could not reach the buttons below a disclosure.
