@@ -10,6 +10,8 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+## v2.2.3 - 2026-10-29
+
 - The account menu shows the person's initials when their picture cannot be loaded, in its button and in the open menu's header, where it showed a broken image. When `avatar_url` changes to another address, the menu tries the new picture.
 
 ## v2.2.2 - 2026-10-15
