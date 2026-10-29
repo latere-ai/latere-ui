@@ -1,6 +1,6 @@
 # latere-ui Specs
 
-Design specs for the shared Vue, React and framework-agnostic UI, auth, and session code used by the Latere product frontends.
+Design specs for the shared React and framework-agnostic UI, auth, and session code used by the Latere product frontends.
 
 ## Tree
 
@@ -27,7 +27,7 @@ specs/
 ## Conventions
 
 - Frontmatter mirrors the platform-wide spec model.
-- Vue + Pinia are peerDependencies; React bindings shipped in v1.27, Svelte remains out of scope until a consumer appears.
+- React and React DOM (18 or 19) are the only peerDependencies. Since v2.0.0 the package is React only; the Vue components and the Pinia store live on the v1.x tags.
 - SSR safety: every browser-coupled helper must be a no-op without `window`.
 - CSS strategy: **headless primitives** ship without styles; **styled adapter
   components** (`SiteFooter`, `ConsoleSidebar`, `DocsLayout`, and the `Glass*`
