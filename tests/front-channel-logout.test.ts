@@ -52,13 +52,27 @@ describe('runFrontChannelLogout()', () => {
         ],
       ]),
     );
+    // happy-dom fails an iframe's page load at once, which settles and
+    // removes it, so record the iframes as they are appended.
+    const appended: string[] = [];
+    const observer = new MutationObserver((records) => {
+      for (const record of records) {
+        record.addedNodes.forEach((node) => {
+          if (node instanceof HTMLIFrameElement) appended.push(node.src);
+        });
+      }
+    });
+    observer.observe(document.body, { childList: true });
     const c = createApiClient();
     const promise = runFrontChannelLogout({ client: c, iframeTimeoutMs: 50 });
 
     // Wait a tick for the iframes to be appended.
     await new Promise((r) => setTimeout(r, 0));
-    const iframes = document.querySelectorAll('iframe');
-    expect(iframes.length).toBe(2);
+    observer.disconnect();
+    expect(appended).toEqual([
+      'https://a.example/logout/notify',
+      'https://b.example/logout/notify',
+    ]);
 
     await promise;
     expect(hrefSpy).toHaveBeenCalledWith('/signed-out');
