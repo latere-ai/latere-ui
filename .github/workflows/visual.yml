@@ -27,8 +27,8 @@ jobs:
     # Every golden figure at high resolution plus behavioral and state regressions.
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: '24'
       - uses: oven-sh/setup-bun@v2
@@ -42,14 +42,14 @@ jobs:
         if: ${{ inputs.record_goldens }}
         env:
           RECORDING_GREP: ${{ inputs.record_grep }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ inputs.record_goldens }}
         with:
           name: golden-candidates
           if-no-files-found: error
           path: tests/visual/goldens/darwin-24/
           retention-days: 14
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: visual-comparison-report
