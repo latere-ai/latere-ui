@@ -9,8 +9,14 @@
 // `[[diagram:name]]` mounts) stay in each app, applied via DocsLayout's
 // `enhance` hook over the rendered DOM.
 
-import type MarkdownIt from 'markdown-it';
-import type { Options as MarkdownItOptions } from 'markdown-it';
+import type MarkdownItConstructor from 'markdown-it';
+
+// markdown-it 14 (typed by @types/markdown-it) exports the class, and 15
+// ships its own types with a callable wrapper as the default export. Both
+// types come from that default export so the source typechecks in a host on
+// either major.
+type MarkdownIt = InstanceType<typeof MarkdownItConstructor>;
+type MarkdownItOptions = Partial<MarkdownIt['options']>;
 
 import { headingSlugSource, slugify } from './tocCore';
 
@@ -39,7 +45,7 @@ function addHeadingIds(md: MarkdownIt, levels: number[]): void {
       const text = inline ? headingSlugSource(inline) : '';
       if (!text) continue;
       if (t.attrIndex('id') < 0) t.attrSet('id', slugify(text, used));
-      else used.add(t.attrGet('id') ?? '');
+      else used.add(String(t.attrGet('id') ?? ''));
     }
   });
 }
@@ -55,7 +61,7 @@ function addLinkRewrite(
     const token = tokens[idx];
     const hi = token.attrIndex('href');
     if (hi >= 0 && token.attrs) {
-      const next = rewrite(token.attrs[hi][1]);
+      const next = rewrite(String(token.attrs[hi][1]));
       if (next != null) token.attrs[hi][1] = next;
     }
     return fallback(tokens, idx, options, env, self);
@@ -67,7 +73,7 @@ function addLinkRewrite(
  * the constructor: `createMarkdown(MarkdownIt, { rewriteLink })`.
  */
 export function createMarkdown(
-  MarkdownItCtor: typeof MarkdownIt,
+  MarkdownItCtor: typeof MarkdownItConstructor,
   config: MarkdownConfig = {},
 ): MarkdownIt {
   const md = new MarkdownItCtor({
@@ -76,6 +82,9 @@ export function createMarkdown(
     breaks: false,
     ...config.options,
   });
+  // Bare domains such as latere.ai stay links: markdown-it 15's linkify-it 6
+  // turned fuzzy links off by default, where 14 had them on.
+  md.linkify.set({ fuzzyLink: true });
   addHeadingIds(md, config.headingLevels ?? [2, 3, 4]);
   if (config.rewriteLink) addLinkRewrite(md, config.rewriteLink);
   return md;
