@@ -10,6 +10,8 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+- The footer's Legal column links the Data Processing Agreement at latere.ai/legal/dpa, after the Terms, in English, German and Chinese.
+
 ## v2.2.3 - 2026-10-29
 
 - The account menu shows the person's initials when their picture cannot be loaded, in its button and in the open menu's header, where it showed a broken image. When `avatar_url` changes to another address, the menu tries the new picture.
