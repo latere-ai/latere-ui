@@ -6,7 +6,7 @@ const COLUMNS = [
   ['https://replichai.latere.ai/'],
   ['https://platform.latere.ai/console', 'https://auth.latere.ai/'],
   ['/about', '/products', '/blog/why-latere', '/blog', '/open-source', 'mailto:contact@latere.ai'],
-  ['/trust', '/legal/privacy', '/legal/terms', '/legal/impressum'],
+  ['/trust', '/legal/privacy', '/legal/terms', '/legal/dpa', '/legal/impressum'],
 ];
 
 for (const design of ['default', ...designs]) for (const theme of ['light', 'dark']) {

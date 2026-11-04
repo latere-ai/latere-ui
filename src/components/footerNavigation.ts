@@ -72,6 +72,7 @@ const legal: FooterGroup = {
     site('trust', 'footer.trust', '/trust'),
     site('privacy', 'footer.privacy', '/legal/privacy'),
     site('terms', 'footer.terms', '/legal/terms'),
+    site('dpa', 'footer.dpa', '/legal/dpa'),
     site('impressum', 'footer.impressum', '/legal/impressum'),
   ],
 };
