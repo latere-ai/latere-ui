@@ -137,6 +137,24 @@ the subsequent push must pass comparison without update mode.
 See [Playwright's visual comparison guide](https://playwright.dev/docs/test-snapshots)
 for how stable screenshots and platform-specific rendering work.
 
+## Releasing
+
+Consumers take this package from a git tag. With the release's changes
+written under `## Unreleased` in the [changelog](CHANGELOG.md), cut it from a
+clean checkout of `main` at origin's tip:
+
+```sh
+go tool lateregate release vX.Y.Z
+```
+
+The command moves the notes into a `## vX.Y.Z` section, sets `"version"` in
+`package.json` and the install example in the README to the release, commits
+`changelog: vX.Y.Z`, and pushes that commit and an annotated tag in one
+push. `release.yml` then publishes the GitHub release from the changelog
+section. It refuses while CI is red on `main`, so wait for the latest push to
+pass first. The Go toolchain is only for this command: the root `go.mod`
+pins `lateregate` and nothing else.
+
 ## Documentation
 
 The [README](README.md) and the guides in [`docs/`](docs/README.md) are

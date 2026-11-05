@@ -1,8 +1,7 @@
 ---
 title: latere-ui v1.8 — shared auth client (vanilla async core + OrgSwitcher + front-channel logout)
 status: complete
-depends_on:
-  - platform auth unification (tracked outside this repo)
+depends_on: []
 affects:
   - src/session/me.ts (new)
   - src/session/frontChannel.ts (new)

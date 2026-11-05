@@ -3,3 +3,14 @@
 # the family check reads the role and lists it.
 identity:
   role: none
+
+release:
+  # `lateregate release vX.Y.Z` rewrites these in the release commit, so the
+  # package and the install example in the README name the tag they ship in.
+  # The patterns carry their context: the README also names an old v1.x tag
+  # as an example, which a bare version pattern would match too.
+  stamp:
+    - file: package.json
+      pattern: '"version": "\d+\.\d+\.\d+"'
+    - file: README.md
+      pattern: 'bun add github:latere-ai/latere-ui#v\d+\.\d+\.\d+'

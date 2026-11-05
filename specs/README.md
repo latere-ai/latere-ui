@@ -2,22 +2,19 @@
 
 Design specs for the shared React and framework-agnostic UI, auth, and session code used by the Latere product frontends.
 
-## Tree
+## Releases and shared libraries
 
-Active specs:
-
-```
-specs/
-  auth-client-v1.8.md      (complete, leaf: v1.8 adds vanilla async core, OrgSwitcher, runFrontChannelLogout)
-  console-shell-v1.9.md    (complete: shared ConsoleSidebar + DocsLayout shipped in v1.9.0; per-product migrations pending)
-  liquid-glass-v1.10.md    (complete: shared Liquid Glass design system: material tokens + a reusable component library (sidebar, button, modal, alert, message, field, ...); products adopt by setting canvas tokens and importing Glass* components)
-  liquid-glass-v2-v1.20.md (complete: Liquid Glass v2: five-tier material ladder (ultrathin/thin/regular/thick/smoke), capsule geometry + radii ladder, ink-only accent, layered floating-glass shadows; shell adopts the 1d floating-capsule rail; token-layer reskin on the existing .lu-glass-* contracts, released as v1.20.0)
-  react-support-v1.27.md   (complete: React bindings for the Glass primitives, console shell, and session client, from `latere-ui/react`)
-  react-site-footer-v1.28.md (validated: SiteFooter + LatereLogoMark for React consumers)
-  browser-telemetry.md     (complete: `latere-ui/telemetry`, one lazy browser telemetry entry paired with otel.TelemetryProxy)
-  structured-data.md       (complete: `latere-ui/structured-data`, schema.org JSON-LD builders and an escaped script serializer for public pages)
-  select-search.md         (complete: GlassSelect search by typing above SELECT_SEARCH_THRESHOLD options, shared in src/glass)
-```
+| Spec | Status | Deliverable |
+|---|---|---|
+| [Shared auth client](auth-client-v1.8.md) | Complete | v1.8: vanilla async core, OrgSwitcher, runFrontChannelLogout |
+| [Console shell](console-shell-v1.9.md) | Complete | Shared ConsoleSidebar and DocsLayout shipped in v1.9.0; per-product migrations pending |
+| [Liquid Glass design system](liquid-glass-v1.10.md) | Complete | Material tokens and a reusable component library (sidebar, button, modal, alert, message, field); products adopt by setting canvas tokens and importing Glass* components |
+| [Liquid Glass v2](liquid-glass-v2-v1.20.md) | Complete | Five-tier material ladder, capsule geometry and radii ladder, ink-only accent, layered floating-glass shadows; the shell adopts the floating-capsule rail; released as v1.20.0 |
+| [React support](react-support-v1.27.md) | Validated | React bindings for the Glass primitives, console shell and session client, from `latere-ui/react` |
+| [React site footer](react-site-footer-v1.28.md) | Validated | SiteFooter and LatereLogoMark for React consumers |
+| [Browser telemetry](browser-telemetry.md) | Complete | `latere-ui/telemetry`, one lazy browser telemetry entry paired with otel.TelemetryProxy |
+| [Structured data](structured-data.md) | Complete | `latere-ui/structured-data`, schema.org JSON-LD builders and an escaped script serializer for public pages |
+| [Select search](select-search.md) | Complete | GlassSelect search by typing above SELECT_SEARCH_THRESHOLD options, shared in src/glass |
 
 ## Dependencies
 
