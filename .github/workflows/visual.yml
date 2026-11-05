@@ -1,13 +1,17 @@
 name: UI verification
 on:
   # Typecheck and unit tests run on Linux in ci.yml for every change. This
-  # macOS job runs only when a change can alter a render, so Markdown-only
-  # changes skip it.
+  # macOS job runs only when a change can alter a render, so a change to
+  # specs or Markdown alone skips it.
   push:
     branches: [main]
-    paths-ignore: ['**.md']
+    paths-ignore:
+      - "specs/**"
+      - "**.md"
   pull_request:
-    paths-ignore: ['**.md']
+    paths-ignore:
+      - "specs/**"
+      - "**.md"
   workflow_dispatch:
     inputs:
       record_goldens:
