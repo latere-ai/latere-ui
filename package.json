@@ -24,14 +24,13 @@
     "./favicon": "./src/react/favicon.ts"
   },
   "scripts": {
-    "test": "vitest run",
+    "test": "vitest run --coverage",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.react18.json",
     "visual:dev": "vite --config tests/visual/vite.config.ts",
     "test:visual": "playwright test",
     "test:visual:update": "playwright test --update-snapshots=all",
     "test:visual:report": "playwright show-report output/playwright/report",
-    "visual:index": "bun tests/visual/write-index.ts",
-    "test:coverage": "vitest run --coverage"
+    "visual:index": "bun tests/visual/write-index.ts"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",

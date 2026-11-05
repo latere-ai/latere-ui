@@ -43,7 +43,7 @@ The gallery is a development fixture; it is not included in the published packag
 ## Compare visual references
 
 ```sh
-bun run test:coverage    # Unit tests; enforces 90% source line coverage
+bun run test             # Unit tests; enforces 90% source line coverage
 bun run typecheck
 bun run test:visual      # Browser behavior and golden comparisons
 bun run test:visual:report

@@ -14,3 +14,11 @@ release:
       pattern: '"version": "\d+\.\d+\.\d+"'
     - file: README.md
       pattern: 'bun add github:latere-ai/latere-ui#v\d+\.\d+\.\d+'
+
+frontend:
+  # The root is the package. The gate installs from the lockfile, then runs the
+  # typecheck script (both tsconfigs, so the React 18 types stay honest) and the
+  # test script, which runs with coverage so the 90 percent line floor in
+  # vitest.config.ts holds on every push. The browser suite needs the macOS
+  # references and stays in visual.yml.
+  projects: ['.']

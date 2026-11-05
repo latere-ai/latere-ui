@@ -80,7 +80,7 @@ composition diagram. Component PNGs are actual renders, not illustrations.
 
 ## Recheck a change
 
-Run `bun run test:coverage`, `bun run typecheck`, and `bun run test:visual`.
+Run `bun run test`, `bun run typecheck`, and `bun run test:visual`.
 Inspect differences before using the explicit baseline-update command. The
 [contributor guide](../../CONTRIBUTING.md) explains the reference platform and
 review workflow.

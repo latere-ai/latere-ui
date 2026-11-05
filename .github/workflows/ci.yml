@@ -1,34 +1,26 @@
 name: ci
 
-# A push or pull request that changes only specs or markdown starts no run,
-# because no build or test here reads them. `lateregate release` runs the whole
-# bar, the spec tree included, before every tag.
+# The bar lives in latere-ai/ci-gate, pinned in go.mod, and the shared
+# workflow runs it. What this repository decides is in .lateregate.yaml.
+# `lateregate init` writes this file, the same in every repository.
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - "specs/**"
-      - "**.md"
   pull_request:
-    paths-ignore:
-      - "specs/**"
-      - "**.md"
+  workflow_dispatch:
+
+# A newer push to the same ref supersedes this run: its commit carries every
+# change this one would verify.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+# actions: read lets the gate find the last commit whose CI passed, which it
+# measures the change from.
 permissions:
   contents: read
+  actions: read
+
 jobs:
-  check:
-    # Typecheck and unit tests render nothing, so they run on Linux; the
-    # browser suite needs the macOS references and runs in visual.yml.
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with:
-          node-version: '26'
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: '1.4.4'
-      - run: bun install --frozen-lockfile
-      - run: bun run typecheck
-      - run: bun run test:coverage
+  gate:
+    uses: latere-ai/ci/.github/workflows/lateregate.yml@v1
