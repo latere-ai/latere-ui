@@ -11,8 +11,13 @@ on:
 
 permissions:
   contents: write
+  # The release first checks that CI passed on the tagged commit.
+  actions: read
 
 jobs:
   release:
     uses: latere-ai/ci/.github/workflows/notes-release.yml@v1
+    with:
+      # This repository's per-push check, which runs no shared gate.
+      verify_workflow: ci.yml
     secrets: inherit
