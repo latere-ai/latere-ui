@@ -1,0 +1,36 @@
+name: lateregate
+
+# The shared gate for a repository whose code is not Go: latere-ai/ci's
+# reusable pipeline asks the pinned lateregate which gates apply (identity,
+# workflow lint, spec lint, the module pin) and runs one job per gate. The
+# checks live in latere.ai/x/ci-gate, pinned in go.mod, so each runs
+# identically from a laptop with `go tool lateregate`. The repository's own
+# build and test workflow is separate.
+#
+# workflow_dispatch lets the daily ci-gate bump run this gate on the commit
+# it pushes: a push made with the Actions token starts no workflow.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "specs/**"
+      - "**.md"
+  pull_request:
+    paths-ignore:
+      - "specs/**"
+      - "**.md"
+  workflow_dispatch:
+
+# A newer push to the same ref supersedes this run: its commit carries every
+# change this one would verify, and the runner is better spent on it.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    uses: latere-ai/ci/.github/workflows/lateregate.yml@v1
