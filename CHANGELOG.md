@@ -10,6 +10,8 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+## v2.3.0 - 2026-11-06
+
 - The footer's Legal column links the Data Processing Agreement at latere.ai/legal/dpa, after the Terms, in English, German and Chinese.
 
 ## v2.2.3 - 2026-10-29
