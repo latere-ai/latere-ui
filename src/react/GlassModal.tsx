@@ -1,11 +1,12 @@
 // GlassModal: a modal dialog on thick glass, portaled to
 // <body> over a scrim. Traps focus, closes on Escape / scrim click, restores
-// focus on close, and is labeled for assistive tech. Controlled through
+// focus on close, and is labeled for assistive tech: by the title, by
+// `labelledBy`, or by a custom `header` when it stands alone. Controlled through
 // `open` and `onClose`. Requires `import 'latere-ui/glass'`.
 import { useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import '../styles/components/glass-modal.css';
-import { cx, useFocusTrap, useScrimDismiss } from './internal';
+import { cx, dialogName, useFocusTrap, useScrimDismiss } from './internal';
 import { useCssTransition } from './useCssTransition';
 
 export interface GlassModalProps {
@@ -25,7 +26,11 @@ export interface GlassModalProps {
   labelledBy?: string;
   /** Id of the element that describes the dialog. */
   describedBy?: string;
-  /** Custom header — the `header` slot; defaults to the titled <h2>. */
+  /**
+   * Custom header — the `header` slot; defaults to the titled <h2>. With a
+   * `title` too, the title is the dialog's accessible name; alone, the header's
+   * content is.
+   */
   header?: ReactNode;
   /** Footer content — the `footer` slot (receives `close`). */
   footer?: ReactNode | ((close: () => void) => ReactNode);
@@ -68,12 +73,12 @@ export function GlassModal({
         className="lu-modal lu-glass-thick"
         role="dialog"
         aria-modal="true"
-        aria-labelledby={labelledBy ?? (title ? `${id}-title` : undefined)}
+        {...dialogName(id, { title, header, labelledBy })}
         aria-describedby={describedBy}
         style={{ maxWidth: width }}
       >
         {(title || header) && (
-          <header className="lu-modal-head">
+          <header id={header ? `${id}-head` : undefined} className="lu-modal-head">
             {header ?? (
               <h2 id={`${id}-title`} className="lu-modal-title">
                 {title}

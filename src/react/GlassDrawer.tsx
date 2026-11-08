@@ -1,6 +1,6 @@
 import { useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { useFocusTrap, useScrimDismiss } from './internal';
+import { dialogName, useFocusTrap, useScrimDismiss } from './internal';
 import '../styles/components/glass-drawer.css';
 
 export interface GlassDrawerProps {
@@ -36,11 +36,11 @@ export function GlassDrawer({
         className={`lu-drawer lu-glass-thick lu-drawer--${side}`}
         role="dialog"
         aria-modal="true"
-        aria-labelledby={title ? `${id}-title` : undefined}
+        {...dialogName(id, { title, header })}
         style={{ width }}
       >
         {(title || header) && (
-          <header className="lu-drawer-head">
+          <header id={header ? `${id}-head` : undefined} className="lu-drawer-head">
             {header ?? <h2 id={`${id}-title`} className="lu-drawer-title">{title}</h2>}
           </header>
         )}

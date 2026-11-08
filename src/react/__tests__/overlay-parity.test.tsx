@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, render, cleanup, screen, waitFor } from '@testing-library/react';
 import { renderToString } from 'react-dom/server';
 import { confirmStore } from '../../glass/confirmCore';
+import { GlassModal } from '../GlassModal';
 import { GlassPopover, GlassTooltip, GlassMenu, GlassDrawer, GlassToaster, GlassConfirmHost, message, confirm, resolveConfirm } from '../overlays';
 
 afterEach(() => {
@@ -97,7 +98,8 @@ describe('React drawer', () => {
     const dialog = w.getByRole('dialog');
     expect(dialog.style.width).toBe('20rem');
     expect(dialog.className).toContain('lu-drawer--right');
-    expect(dialog.hasAttribute('aria-labelledby')).toBe(false);
+    expect(dialog.getAttribute('aria-labelledby')).toBe(dialog.querySelector('.lu-drawer-head')?.id);
+    expect(w.getByRole('dialog', { name: 'Custom' })).toBe(dialog);
     expect(w.getByText('Custom').parentElement?.className).toBe('lu-drawer-head');
     fireEvent.click(dialog.parentElement!);
     expect(close).not.toHaveBeenCalled();
@@ -203,5 +205,20 @@ describe('GlassConfirmHost requests', () => {
     fireEvent.click(confirmButton);
     expect(document.querySelector('.lu-confirm-msg')?.textContent).toBe('Second?');
     expect(document.activeElement?.textContent).toBe(initial);
+  });
+});
+
+describe.each([['GlassModal', GlassModal], ['GlassDrawer', GlassDrawer]] as const)('%s name with a custom header', (_, Dialog) => {
+  it('names the dialog by its title when a header replaces the title element', () => {
+    render(<Dialog open title="Rename project" header={<h2>Rename project</h2>} onClose={() => {}}>Body</Dialog>);
+    const dialog = screen.getByRole('dialog');
+    const labelledBy = dialog.getAttribute('aria-labelledby');
+    expect(labelledBy === null || document.getElementById(labelledBy) !== null).toBe(true);
+    expect(screen.queryByRole('dialog', { name: 'Rename project' })).not.toBeNull();
+  });
+
+  it('names the dialog by a custom header when no title is passed', () => {
+    render(<Dialog open header={<h2>Rename project</h2>} onClose={() => {}}>Body</Dialog>);
+    expect(screen.queryByRole('dialog', { name: 'Rename project' })).not.toBeNull();
   });
 });

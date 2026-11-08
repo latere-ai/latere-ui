@@ -1,5 +1,5 @@
 // Shared plumbing for the React components.
-import { useEffect, useRef, type MouseEvent as ReactMouseEvent, type RefObject } from 'react';
+import { useEffect, useRef, type MouseEvent as ReactMouseEvent, type ReactNode, type RefObject } from 'react';
 import { activateFocusTrap } from '../glass/focusTrap';
 
 /** Join truthy class parts, in argument order. */
@@ -76,4 +76,19 @@ export function useScrimDismiss(enabled: boolean, close: () => void) {
       if (event.target === event.currentTarget && enabled && !inside) close();
     },
   };
+}
+
+/**
+ * The attributes that name a dialog. `<id>-title` is the default title's id
+ * and `<id>-head` the header slot's. A custom header replaces the title
+ * element, so a title given with it names the dialog through `aria-label`
+ * and a header alone names it by its content.
+ */
+export function dialogName(
+  id: string,
+  { title, header, labelledBy }: { title?: string; header?: ReactNode; labelledBy?: string },
+): { 'aria-labelledby'?: string; 'aria-label'?: string } {
+  if (labelledBy) return { 'aria-labelledby': labelledBy };
+  if (header) return title ? { 'aria-label': title } : { 'aria-labelledby': `${id}-head` };
+  return title ? { 'aria-labelledby': `${id}-title` } : {};
 }
