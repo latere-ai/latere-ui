@@ -49,6 +49,13 @@ export function createReauth(opts: ReauthOptions = {}): Reauth {
 
   // One-shot guard so a burst of 401s triggers a single navigation.
   let navigating = false;
+  // A page restored from the back/forward cache keeps this state although the
+  // navigation it guarded was left; a restored page may navigate again.
+  if (hasWindow()) {
+    window.addEventListener('pageshow', (e) => {
+      if (e.persisted) navigating = false;
+    });
+  }
 
   function currentPath(): string {
     if (!hasWindow()) return defaultReturnTo;
