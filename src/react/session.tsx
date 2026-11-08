@@ -346,17 +346,24 @@ export function useSessionGate(opts: UseSessionGateOptions = {}): UseSessionGate
     let cancelled = false;
     setChecked(false);
     void (async () => {
-      const authed = await ensureSession(fullPath || path);
-      if (cancelled) return;
-      if (!authed && hasWindow()) {
-        const params = new URLSearchParams(window.location.search);
-        if (params.has('sso_checked')) {
-          params.delete('sso_checked');
-          const qs = params.toString();
-          stripSsoChecked(window.location.pathname + (qs ? `?${qs}` : ''));
+      try {
+        const authed = await ensureSession(fullPath || path);
+        if (cancelled) return;
+        if (!authed && hasWindow()) {
+          const params = new URLSearchParams(window.location.search);
+          if (params.has('sso_checked')) {
+            params.delete('sso_checked');
+            const qs = params.toString();
+            stripSsoChecked(window.location.pathname + (qs ? `?${qs}` : ''));
+          }
         }
+      } catch (e) {
+        // The gate must settle so the view is not stuck on its spinner; the
+        // failure is reported for the developer.
+        console.error('useSessionGate: the session check failed', e);
+      } finally {
+        if (!cancelled) setChecked(true);
       }
-      setChecked(true);
     })();
     return () => {
       cancelled = true;

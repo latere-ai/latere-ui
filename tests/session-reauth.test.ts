@@ -49,3 +49,28 @@ describe('createReauth() navigation guard', () => {
     expect(hrefSpy).toHaveBeenCalledTimes(1);
   });
 });
+
+describe('createReauth() with sessionStorage unavailable', () => {
+  function blockStorage() {
+    const blocked = () => {
+      throw new DOMException('The operation is insecure.', 'SecurityError');
+    };
+    vi.stubGlobal('sessionStorage', { getItem: blocked, setItem: blocked, removeItem: blocked, clear: blocked });
+  }
+
+  it('skips the silent check and goes straight to the interactive login', () => {
+    blockStorage();
+    const reauth = createReauth();
+    reauth.recoverSession('/a');
+    expect(hrefSpy).toHaveBeenCalledTimes(1);
+    expect(String(hrefSpy.mock.calls[0][0])).not.toContain('prompt=none');
+  });
+
+  it('attemptSilentReauth does nothing and clearRecheck does not throw', () => {
+    blockStorage();
+    const reauth = createReauth();
+    reauth.attemptSilentReauth('/a');
+    expect(hrefSpy).not.toHaveBeenCalled();
+    expect(() => reauth.clearRecheck()).not.toThrow();
+  });
+});

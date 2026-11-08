@@ -340,3 +340,47 @@ describe('useSessionGate', () => {
     expect(result.current.loginURL).toBe('/signin?return_to=%2Fbilling');
   });
 });
+
+describe('SessionProvider with sessionStorage unavailable', () => {
+  function blockStorage() {
+    const blocked = () => {
+      throw new DOMException('The operation is insecure.', 'SecurityError');
+    };
+    vi.stubGlobal('sessionStorage', { getItem: blocked, setItem: blocked, removeItem: blocked, clear: blocked });
+  }
+
+  it('settles the gate and shows the sign-in prompt for a signed-out visitor', async () => {
+    blockStorage();
+    vi.stubGlobal('fetch', mockFetch([[401, {}]]));
+    const { result } = renderHook(() => useSessionGate({ path: '/overview' }), { wrapper: wrapper() });
+    await waitFor(() => expect(result.current.ready).toBe(true));
+    expect(result.current.showAuthGate).toBe(true);
+    expect(hrefSpy).not.toHaveBeenCalled();
+  });
+
+  it('reports no error once a signed-in principal resolves', async () => {
+    blockStorage();
+    vi.stubGlobal('fetch', mockFetch([[200, PRINCIPAL]]));
+    const { result } = renderHook(() => useSession(), { wrapper: wrapper() });
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.principal?.principal_id).toBe('p1');
+    expect(result.current.error).toBeNull();
+  });
+
+  it('settles the gate and logs when the session check itself throws', async () => {
+    const logged = vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.stubGlobal('fetch', mockFetch([[401, {}]]));
+    // The silent re-check navigates; a location that refuses the assignment
+    // makes ensureSession reject.
+    const loc = window.location as { href: string };
+    Object.defineProperty(loc, 'href', {
+      get: () => 'http://localhost/',
+      set: () => {
+        throw new Error('navigation refused');
+      },
+    });
+    const { result } = renderHook(() => useSessionGate({ path: '/overview' }), { wrapper: wrapper() });
+    await waitFor(() => expect(result.current.ready).toBe(true));
+    expect(logged).toHaveBeenCalledWith('useSessionGate: the session check failed', expect.any(Error));
+  });
+});

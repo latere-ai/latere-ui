@@ -38,13 +38,31 @@ export function createReauth(opts: ReauthOptions = {}): Reauth {
   const RECHECK_KEY = `latere.sso_checked.${opts.storeId ?? 'session'}`;
 
   const hasWindow = () => typeof window !== 'undefined';
-  const recheckDone = () =>
-    typeof sessionStorage !== 'undefined' && sessionStorage.getItem(RECHECK_KEY) === '1';
+  // sessionStorage can be missing or throw (a sandboxed frame, a browser that
+  // blocks site data). Without a flag store the silent check could not be
+  // limited to once, so unavailable storage counts as "already checked" and
+  // recovery goes straight to the interactive login. Writes are best effort
+  // for the same reason: the read side already refuses the silent check.
+  const recheckDone = () => {
+    try {
+      return typeof sessionStorage === 'undefined' || sessionStorage.getItem(RECHECK_KEY) === '1';
+    } catch {
+      return true;
+    }
+  };
   const markRecheck = () => {
-    if (typeof sessionStorage !== 'undefined') sessionStorage.setItem(RECHECK_KEY, '1');
+    try {
+      sessionStorage.setItem(RECHECK_KEY, '1');
+    } catch {
+      // Unavailable storage: see recheckDone.
+    }
   };
   const clearRecheck = () => {
-    if (typeof sessionStorage !== 'undefined') sessionStorage.removeItem(RECHECK_KEY);
+    try {
+      sessionStorage.removeItem(RECHECK_KEY);
+    } catch {
+      // Unavailable storage: nothing was stored to clear.
+    }
   };
 
   // One-shot guard so a burst of 401s triggers a single navigation.
