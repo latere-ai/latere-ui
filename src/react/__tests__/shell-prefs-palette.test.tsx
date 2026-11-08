@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AccountPrefs } from '../AccountPrefs';
 import { ConsolePalette } from '../ConsolePalette';
+import type { ConsoleNavModel } from '../../console/nav';
 
 const model = { groups: [{ label: 'Pages', items: [{ id: 'a', label: 'Alpha', to: '/a' }, { id: 'b', label: 'Beta', to: '/b' }, { id: 'off', label: 'Hidden', to: '/off', disabled: true }, { id: 'action', label: 'Action' }] }] };
 beforeEach(() => { Element.prototype.scrollIntoView = vi.fn(); });
@@ -81,5 +82,39 @@ describe('ConsolePalette input method composition', () => {
     expect(onNavigate).not.toHaveBeenCalled();
     fireEvent.keyDown(input, { key: 'Enter' });
     expect(onNavigate).toHaveBeenCalledOnce();
+  });
+});
+
+describe('ConsolePalette highlight', () => {
+  const keys: ConsoleNavModel = { groups: [{ items: [
+    { id: 'home', label: 'Home', to: '/' },
+    { id: 'keys', label: 'Keys', to: '/keys' },
+    { id: 'billing', label: 'Billing', to: '/billing' },
+  ] }] };
+
+  it('keeps the highlighted row when the host re-renders with an equal inline items list', () => {
+    const onNavigate = vi.fn();
+    const view = render(<ConsolePalette open model={keys} items={[{ id: 'new-key', label: 'Create a key', action: true }]} onNavigate={onNavigate} />);
+    const input = document.querySelector<HTMLInputElement>('.lu-cp-input')!;
+    fireEvent.keyDown(input, { key: 'ArrowDown' });
+    fireEvent.keyDown(input, { key: 'ArrowDown' });
+    expect(document.querySelector('[data-active="true"]')?.textContent).toContain('Billing');
+    view.rerender(<ConsolePalette open model={keys} items={[{ id: 'new-key', label: 'Create a key', action: true }]} onNavigate={onNavigate} />);
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(onNavigate).toHaveBeenCalledWith(expect.objectContaining({ id: 'billing' }));
+  });
+
+  it('returns to the first row when the query changes or the row leaves the results', () => {
+    const view = render(<ConsolePalette open model={keys} />);
+    const input = document.querySelector<HTMLInputElement>('.lu-cp-input')!;
+    fireEvent.keyDown(input, { key: 'ArrowDown' });
+    fireEvent.keyDown(input, { key: 'ArrowDown' });
+    fireEvent.change(input, { target: { value: 'o' } });
+    expect(document.querySelector('[data-active="true"]')?.textContent).toContain('Home');
+    fireEvent.change(input, { target: { value: '' } });
+    fireEvent.keyDown(input, { key: 'ArrowDown' });
+    fireEvent.keyDown(input, { key: 'ArrowDown' });
+    view.rerender(<ConsolePalette open model={{ groups: [{ items: keys.groups[0].items.slice(0, 2) }] }} />);
+    expect(document.querySelector('[data-active="true"]')?.textContent).toContain('Home');
   });
 });
