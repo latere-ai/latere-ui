@@ -40,85 +40,85 @@ Real components rendered with the optional `latere-ui/presets` stylesheet, in bo
 
 | Sheet | Components | Light | Dark | Mobile |
 |---|---|---|---|---|
-| workspace | ConsoleSidebar, GlassBar, GlassPanel, GlassTable | [View](../tests/visual/goldens/darwin-24/replichai-workspace-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-workspace-dark-desktop.png) | — |
-| buttons | GlassButton, GlassIconButton | [View](../tests/visual/goldens/darwin-24/replichai-buttons-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-buttons-dark-desktop.png) | — |
-| forms | GlassField, GlassCheckbox, GlassRadio, GlassSwitch, GlassSegmented, GlassTabs | [View](../tests/visual/goldens/darwin-24/replichai-forms-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-forms-dark-desktop.png) | — |
-| select | GlassSelect | [View](../tests/visual/goldens/darwin-24/replichai-select-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-select-dark-desktop.png) | — |
-| feedback | GlassBadge, GlassAlert, GlassSpinner, GlassProgress, GlassSkeleton | [View](../tests/visual/goldens/darwin-24/replichai-feedback-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-feedback-dark-desktop.png) | — |
-| containers | GlassSurface, GlassPanel, GlassBar, GlassTable | [View](../tests/visual/goldens/darwin-24/replichai-containers-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-containers-dark-desktop.png) | — |
-| popover | GlassPopover, GlassMenu | [View](../tests/visual/goldens/darwin-24/replichai-popover-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-popover-dark-desktop.png) | — |
-| tooltip | GlassTooltip | [View](../tests/visual/goldens/darwin-24/replichai-tooltip-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-tooltip-dark-desktop.png) | — |
-| modal | GlassModal | [View](../tests/visual/goldens/darwin-24/replichai-modal-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-modal-dark-desktop.png) | — |
-| drawer-left | GlassDrawer | [View](../tests/visual/goldens/darwin-24/replichai-drawer-left-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-drawer-left-dark-desktop.png) | — |
-| drawer-right | GlassDrawer | [View](../tests/visual/goldens/darwin-24/replichai-drawer-right-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-drawer-right-dark-desktop.png) | — |
-| toast | GlassToaster | [View](../tests/visual/goldens/darwin-24/replichai-toast-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-toast-dark-desktop.png) | — |
-| confirm | GlassConfirmHost | [View](../tests/visual/goldens/darwin-24/replichai-confirm-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-confirm-dark-desktop.png) | — |
-| sidebar | ConsoleSidebar | [View](../tests/visual/goldens/darwin-24/replichai-sidebar-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-sidebar-dark-desktop.png) | — |
-| sidebar-collapsed | ConsoleSidebar | [View](../tests/visual/goldens/darwin-24/replichai-sidebar-collapsed-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-sidebar-collapsed-dark-desktop.png) | — |
-| palette | ConsolePalette | [View](../tests/visual/goldens/darwin-24/replichai-palette-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-palette-dark-desktop.png) | — |
-| docs | DocsLayout | [View](../tests/visual/goldens/darwin-24/replichai-docs-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-docs-dark-desktop.png) | — |
-| account | AccountMenu, AccountPrefs | [View](../tests/visual/goldens/darwin-24/replichai-account-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-account-dark-desktop.png) | — |
-| preferences | AccountPrefs, ThemeMenu, LocaleMenu | [View](../tests/visual/goldens/darwin-24/replichai-preferences-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-preferences-dark-desktop.png) | — |
-| organizations | OrgSwitcher | [View](../tests/visual/goldens/darwin-24/replichai-organizations-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-organizations-dark-desktop.png) | — |
-| footer | SiteFooter | [View](../tests/visual/goldens/darwin-24/replichai-footer-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-footer-dark-desktop.png) | — |
-| logo | LatereLogoMark, PlatformLogoMark | [View](../tests/visual/goldens/darwin-24/replichai-logo-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-logo-dark-desktop.png) | — |
-| effects | GlassSurface | [View](../tests/visual/goldens/darwin-24/replichai-effects-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-effects-dark-desktop.png) | — |
+| workspace | ConsoleSidebar, GlassBar, GlassPanel, GlassTable | [View](../tests/visual/goldens/darwin-24/replichai-workspace-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-workspace-dark-desktop.png) | none |
+| buttons | GlassButton, GlassIconButton | [View](../tests/visual/goldens/darwin-24/replichai-buttons-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-buttons-dark-desktop.png) | none |
+| forms | GlassField, GlassCheckbox, GlassRadio, GlassSwitch, GlassSegmented, GlassTabs | [View](../tests/visual/goldens/darwin-24/replichai-forms-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-forms-dark-desktop.png) | none |
+| select | GlassSelect | [View](../tests/visual/goldens/darwin-24/replichai-select-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-select-dark-desktop.png) | none |
+| feedback | GlassBadge, GlassAlert, GlassSpinner, GlassProgress, GlassSkeleton | [View](../tests/visual/goldens/darwin-24/replichai-feedback-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-feedback-dark-desktop.png) | none |
+| containers | GlassSurface, GlassPanel, GlassBar, GlassTable | [View](../tests/visual/goldens/darwin-24/replichai-containers-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-containers-dark-desktop.png) | none |
+| popover | GlassPopover, GlassMenu | [View](../tests/visual/goldens/darwin-24/replichai-popover-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-popover-dark-desktop.png) | none |
+| tooltip | GlassTooltip | [View](../tests/visual/goldens/darwin-24/replichai-tooltip-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-tooltip-dark-desktop.png) | none |
+| modal | GlassModal | [View](../tests/visual/goldens/darwin-24/replichai-modal-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-modal-dark-desktop.png) | none |
+| drawer-left | GlassDrawer | [View](../tests/visual/goldens/darwin-24/replichai-drawer-left-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-drawer-left-dark-desktop.png) | none |
+| drawer-right | GlassDrawer | [View](../tests/visual/goldens/darwin-24/replichai-drawer-right-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-drawer-right-dark-desktop.png) | none |
+| toast | GlassToaster | [View](../tests/visual/goldens/darwin-24/replichai-toast-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-toast-dark-desktop.png) | none |
+| confirm | GlassConfirmHost | [View](../tests/visual/goldens/darwin-24/replichai-confirm-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-confirm-dark-desktop.png) | none |
+| sidebar | ConsoleSidebar | [View](../tests/visual/goldens/darwin-24/replichai-sidebar-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-sidebar-dark-desktop.png) | none |
+| sidebar-collapsed | ConsoleSidebar | [View](../tests/visual/goldens/darwin-24/replichai-sidebar-collapsed-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-sidebar-collapsed-dark-desktop.png) | none |
+| palette | ConsolePalette | [View](../tests/visual/goldens/darwin-24/replichai-palette-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-palette-dark-desktop.png) | none |
+| docs | DocsLayout | [View](../tests/visual/goldens/darwin-24/replichai-docs-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-docs-dark-desktop.png) | none |
+| account | AccountMenu, AccountPrefs | [View](../tests/visual/goldens/darwin-24/replichai-account-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-account-dark-desktop.png) | none |
+| preferences | AccountPrefs, ThemeMenu, LocaleMenu | [View](../tests/visual/goldens/darwin-24/replichai-preferences-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-preferences-dark-desktop.png) | none |
+| organizations | OrgSwitcher | [View](../tests/visual/goldens/darwin-24/replichai-organizations-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-organizations-dark-desktop.png) | none |
+| footer | SiteFooter | [View](../tests/visual/goldens/darwin-24/replichai-footer-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-footer-dark-desktop.png) | none |
+| logo | LatereLogoMark, PlatformLogoMark | [View](../tests/visual/goldens/darwin-24/replichai-logo-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-logo-dark-desktop.png) | none |
+| effects | GlassSurface | [View](../tests/visual/goldens/darwin-24/replichai-effects-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/replichai-effects-dark-desktop.png) | none |
 
 ### wallfacer
 
 | Sheet | Components | Light | Dark | Mobile |
 |---|---|---|---|---|
-| workspace | ConsoleSidebar, GlassBar, GlassPanel, GlassTable | [View](../tests/visual/goldens/darwin-24/wallfacer-workspace-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-workspace-dark-desktop.png) | — |
-| buttons | GlassButton, GlassIconButton | [View](../tests/visual/goldens/darwin-24/wallfacer-buttons-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-buttons-dark-desktop.png) | — |
-| forms | GlassField, GlassCheckbox, GlassRadio, GlassSwitch, GlassSegmented, GlassTabs | [View](../tests/visual/goldens/darwin-24/wallfacer-forms-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-forms-dark-desktop.png) | — |
-| select | GlassSelect | [View](../tests/visual/goldens/darwin-24/wallfacer-select-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-select-dark-desktop.png) | — |
-| feedback | GlassBadge, GlassAlert, GlassSpinner, GlassProgress, GlassSkeleton | [View](../tests/visual/goldens/darwin-24/wallfacer-feedback-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-feedback-dark-desktop.png) | — |
-| containers | GlassSurface, GlassPanel, GlassBar, GlassTable | [View](../tests/visual/goldens/darwin-24/wallfacer-containers-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-containers-dark-desktop.png) | — |
-| popover | GlassPopover, GlassMenu | [View](../tests/visual/goldens/darwin-24/wallfacer-popover-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-popover-dark-desktop.png) | — |
-| tooltip | GlassTooltip | [View](../tests/visual/goldens/darwin-24/wallfacer-tooltip-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-tooltip-dark-desktop.png) | — |
-| modal | GlassModal | [View](../tests/visual/goldens/darwin-24/wallfacer-modal-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-modal-dark-desktop.png) | — |
-| drawer-left | GlassDrawer | [View](../tests/visual/goldens/darwin-24/wallfacer-drawer-left-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-drawer-left-dark-desktop.png) | — |
-| drawer-right | GlassDrawer | [View](../tests/visual/goldens/darwin-24/wallfacer-drawer-right-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-drawer-right-dark-desktop.png) | — |
-| toast | GlassToaster | [View](../tests/visual/goldens/darwin-24/wallfacer-toast-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-toast-dark-desktop.png) | — |
-| confirm | GlassConfirmHost | [View](../tests/visual/goldens/darwin-24/wallfacer-confirm-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-confirm-dark-desktop.png) | — |
-| sidebar | ConsoleSidebar | [View](../tests/visual/goldens/darwin-24/wallfacer-sidebar-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-sidebar-dark-desktop.png) | — |
-| sidebar-collapsed | ConsoleSidebar | [View](../tests/visual/goldens/darwin-24/wallfacer-sidebar-collapsed-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-sidebar-collapsed-dark-desktop.png) | — |
-| palette | ConsolePalette | [View](../tests/visual/goldens/darwin-24/wallfacer-palette-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-palette-dark-desktop.png) | — |
-| docs | DocsLayout | [View](../tests/visual/goldens/darwin-24/wallfacer-docs-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-docs-dark-desktop.png) | — |
-| account | AccountMenu, AccountPrefs | [View](../tests/visual/goldens/darwin-24/wallfacer-account-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-account-dark-desktop.png) | — |
-| preferences | AccountPrefs, ThemeMenu, LocaleMenu | [View](../tests/visual/goldens/darwin-24/wallfacer-preferences-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-preferences-dark-desktop.png) | — |
-| organizations | OrgSwitcher | [View](../tests/visual/goldens/darwin-24/wallfacer-organizations-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-organizations-dark-desktop.png) | — |
-| footer | SiteFooter | [View](../tests/visual/goldens/darwin-24/wallfacer-footer-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-footer-dark-desktop.png) | — |
-| logo | LatereLogoMark, PlatformLogoMark | [View](../tests/visual/goldens/darwin-24/wallfacer-logo-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-logo-dark-desktop.png) | — |
-| effects | GlassSurface | [View](../tests/visual/goldens/darwin-24/wallfacer-effects-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-effects-dark-desktop.png) | — |
+| workspace | ConsoleSidebar, GlassBar, GlassPanel, GlassTable | [View](../tests/visual/goldens/darwin-24/wallfacer-workspace-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-workspace-dark-desktop.png) | none |
+| buttons | GlassButton, GlassIconButton | [View](../tests/visual/goldens/darwin-24/wallfacer-buttons-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-buttons-dark-desktop.png) | none |
+| forms | GlassField, GlassCheckbox, GlassRadio, GlassSwitch, GlassSegmented, GlassTabs | [View](../tests/visual/goldens/darwin-24/wallfacer-forms-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-forms-dark-desktop.png) | none |
+| select | GlassSelect | [View](../tests/visual/goldens/darwin-24/wallfacer-select-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-select-dark-desktop.png) | none |
+| feedback | GlassBadge, GlassAlert, GlassSpinner, GlassProgress, GlassSkeleton | [View](../tests/visual/goldens/darwin-24/wallfacer-feedback-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-feedback-dark-desktop.png) | none |
+| containers | GlassSurface, GlassPanel, GlassBar, GlassTable | [View](../tests/visual/goldens/darwin-24/wallfacer-containers-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-containers-dark-desktop.png) | none |
+| popover | GlassPopover, GlassMenu | [View](../tests/visual/goldens/darwin-24/wallfacer-popover-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-popover-dark-desktop.png) | none |
+| tooltip | GlassTooltip | [View](../tests/visual/goldens/darwin-24/wallfacer-tooltip-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-tooltip-dark-desktop.png) | none |
+| modal | GlassModal | [View](../tests/visual/goldens/darwin-24/wallfacer-modal-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-modal-dark-desktop.png) | none |
+| drawer-left | GlassDrawer | [View](../tests/visual/goldens/darwin-24/wallfacer-drawer-left-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-drawer-left-dark-desktop.png) | none |
+| drawer-right | GlassDrawer | [View](../tests/visual/goldens/darwin-24/wallfacer-drawer-right-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-drawer-right-dark-desktop.png) | none |
+| toast | GlassToaster | [View](../tests/visual/goldens/darwin-24/wallfacer-toast-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-toast-dark-desktop.png) | none |
+| confirm | GlassConfirmHost | [View](../tests/visual/goldens/darwin-24/wallfacer-confirm-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-confirm-dark-desktop.png) | none |
+| sidebar | ConsoleSidebar | [View](../tests/visual/goldens/darwin-24/wallfacer-sidebar-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-sidebar-dark-desktop.png) | none |
+| sidebar-collapsed | ConsoleSidebar | [View](../tests/visual/goldens/darwin-24/wallfacer-sidebar-collapsed-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-sidebar-collapsed-dark-desktop.png) | none |
+| palette | ConsolePalette | [View](../tests/visual/goldens/darwin-24/wallfacer-palette-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-palette-dark-desktop.png) | none |
+| docs | DocsLayout | [View](../tests/visual/goldens/darwin-24/wallfacer-docs-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-docs-dark-desktop.png) | none |
+| account | AccountMenu, AccountPrefs | [View](../tests/visual/goldens/darwin-24/wallfacer-account-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-account-dark-desktop.png) | none |
+| preferences | AccountPrefs, ThemeMenu, LocaleMenu | [View](../tests/visual/goldens/darwin-24/wallfacer-preferences-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-preferences-dark-desktop.png) | none |
+| organizations | OrgSwitcher | [View](../tests/visual/goldens/darwin-24/wallfacer-organizations-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-organizations-dark-desktop.png) | none |
+| footer | SiteFooter | [View](../tests/visual/goldens/darwin-24/wallfacer-footer-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-footer-dark-desktop.png) | none |
+| logo | LatereLogoMark, PlatformLogoMark | [View](../tests/visual/goldens/darwin-24/wallfacer-logo-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-logo-dark-desktop.png) | none |
+| effects | GlassSurface | [View](../tests/visual/goldens/darwin-24/wallfacer-effects-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/wallfacer-effects-dark-desktop.png) | none |
 
 ### origo
 
 | Sheet | Components | Light | Dark | Mobile |
 |---|---|---|---|---|
-| workspace | ConsoleSidebar, GlassBar, GlassPanel, GlassTable | [View](../tests/visual/goldens/darwin-24/origo-workspace-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-workspace-dark-desktop.png) | — |
-| buttons | GlassButton, GlassIconButton | [View](../tests/visual/goldens/darwin-24/origo-buttons-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-buttons-dark-desktop.png) | — |
-| forms | GlassField, GlassCheckbox, GlassRadio, GlassSwitch, GlassSegmented, GlassTabs | [View](../tests/visual/goldens/darwin-24/origo-forms-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-forms-dark-desktop.png) | — |
-| select | GlassSelect | [View](../tests/visual/goldens/darwin-24/origo-select-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-select-dark-desktop.png) | — |
-| feedback | GlassBadge, GlassAlert, GlassSpinner, GlassProgress, GlassSkeleton | [View](../tests/visual/goldens/darwin-24/origo-feedback-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-feedback-dark-desktop.png) | — |
-| containers | GlassSurface, GlassPanel, GlassBar, GlassTable | [View](../tests/visual/goldens/darwin-24/origo-containers-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-containers-dark-desktop.png) | — |
-| popover | GlassPopover, GlassMenu | [View](../tests/visual/goldens/darwin-24/origo-popover-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-popover-dark-desktop.png) | — |
-| tooltip | GlassTooltip | [View](../tests/visual/goldens/darwin-24/origo-tooltip-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-tooltip-dark-desktop.png) | — |
-| modal | GlassModal | [View](../tests/visual/goldens/darwin-24/origo-modal-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-modal-dark-desktop.png) | — |
-| drawer-left | GlassDrawer | [View](../tests/visual/goldens/darwin-24/origo-drawer-left-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-drawer-left-dark-desktop.png) | — |
-| drawer-right | GlassDrawer | [View](../tests/visual/goldens/darwin-24/origo-drawer-right-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-drawer-right-dark-desktop.png) | — |
-| toast | GlassToaster | [View](../tests/visual/goldens/darwin-24/origo-toast-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-toast-dark-desktop.png) | — |
-| confirm | GlassConfirmHost | [View](../tests/visual/goldens/darwin-24/origo-confirm-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-confirm-dark-desktop.png) | — |
-| sidebar | ConsoleSidebar | [View](../tests/visual/goldens/darwin-24/origo-sidebar-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-sidebar-dark-desktop.png) | — |
-| sidebar-collapsed | ConsoleSidebar | [View](../tests/visual/goldens/darwin-24/origo-sidebar-collapsed-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-sidebar-collapsed-dark-desktop.png) | — |
-| palette | ConsolePalette | [View](../tests/visual/goldens/darwin-24/origo-palette-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-palette-dark-desktop.png) | — |
-| docs | DocsLayout | [View](../tests/visual/goldens/darwin-24/origo-docs-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-docs-dark-desktop.png) | — |
-| account | AccountMenu, AccountPrefs | [View](../tests/visual/goldens/darwin-24/origo-account-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-account-dark-desktop.png) | — |
-| preferences | AccountPrefs, ThemeMenu, LocaleMenu | [View](../tests/visual/goldens/darwin-24/origo-preferences-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-preferences-dark-desktop.png) | — |
-| organizations | OrgSwitcher | [View](../tests/visual/goldens/darwin-24/origo-organizations-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-organizations-dark-desktop.png) | — |
-| footer | SiteFooter | [View](../tests/visual/goldens/darwin-24/origo-footer-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-footer-dark-desktop.png) | — |
-| logo | LatereLogoMark, PlatformLogoMark | [View](../tests/visual/goldens/darwin-24/origo-logo-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-logo-dark-desktop.png) | — |
-| effects | GlassSurface | [View](../tests/visual/goldens/darwin-24/origo-effects-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-effects-dark-desktop.png) | — |
+| workspace | ConsoleSidebar, GlassBar, GlassPanel, GlassTable | [View](../tests/visual/goldens/darwin-24/origo-workspace-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-workspace-dark-desktop.png) | none |
+| buttons | GlassButton, GlassIconButton | [View](../tests/visual/goldens/darwin-24/origo-buttons-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-buttons-dark-desktop.png) | none |
+| forms | GlassField, GlassCheckbox, GlassRadio, GlassSwitch, GlassSegmented, GlassTabs | [View](../tests/visual/goldens/darwin-24/origo-forms-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-forms-dark-desktop.png) | none |
+| select | GlassSelect | [View](../tests/visual/goldens/darwin-24/origo-select-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-select-dark-desktop.png) | none |
+| feedback | GlassBadge, GlassAlert, GlassSpinner, GlassProgress, GlassSkeleton | [View](../tests/visual/goldens/darwin-24/origo-feedback-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-feedback-dark-desktop.png) | none |
+| containers | GlassSurface, GlassPanel, GlassBar, GlassTable | [View](../tests/visual/goldens/darwin-24/origo-containers-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-containers-dark-desktop.png) | none |
+| popover | GlassPopover, GlassMenu | [View](../tests/visual/goldens/darwin-24/origo-popover-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-popover-dark-desktop.png) | none |
+| tooltip | GlassTooltip | [View](../tests/visual/goldens/darwin-24/origo-tooltip-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-tooltip-dark-desktop.png) | none |
+| modal | GlassModal | [View](../tests/visual/goldens/darwin-24/origo-modal-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-modal-dark-desktop.png) | none |
+| drawer-left | GlassDrawer | [View](../tests/visual/goldens/darwin-24/origo-drawer-left-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-drawer-left-dark-desktop.png) | none |
+| drawer-right | GlassDrawer | [View](../tests/visual/goldens/darwin-24/origo-drawer-right-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-drawer-right-dark-desktop.png) | none |
+| toast | GlassToaster | [View](../tests/visual/goldens/darwin-24/origo-toast-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-toast-dark-desktop.png) | none |
+| confirm | GlassConfirmHost | [View](../tests/visual/goldens/darwin-24/origo-confirm-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-confirm-dark-desktop.png) | none |
+| sidebar | ConsoleSidebar | [View](../tests/visual/goldens/darwin-24/origo-sidebar-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-sidebar-dark-desktop.png) | none |
+| sidebar-collapsed | ConsoleSidebar | [View](../tests/visual/goldens/darwin-24/origo-sidebar-collapsed-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-sidebar-collapsed-dark-desktop.png) | none |
+| palette | ConsolePalette | [View](../tests/visual/goldens/darwin-24/origo-palette-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-palette-dark-desktop.png) | none |
+| docs | DocsLayout | [View](../tests/visual/goldens/darwin-24/origo-docs-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-docs-dark-desktop.png) | none |
+| account | AccountMenu, AccountPrefs | [View](../tests/visual/goldens/darwin-24/origo-account-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-account-dark-desktop.png) | none |
+| preferences | AccountPrefs, ThemeMenu, LocaleMenu | [View](../tests/visual/goldens/darwin-24/origo-preferences-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-preferences-dark-desktop.png) | none |
+| organizations | OrgSwitcher | [View](../tests/visual/goldens/darwin-24/origo-organizations-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-organizations-dark-desktop.png) | none |
+| footer | SiteFooter | [View](../tests/visual/goldens/darwin-24/origo-footer-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-footer-dark-desktop.png) | none |
+| logo | LatereLogoMark, PlatformLogoMark | [View](../tests/visual/goldens/darwin-24/origo-logo-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-logo-dark-desktop.png) | none |
+| effects | GlassSurface | [View](../tests/visual/goldens/darwin-24/origo-effects-light-desktop.png) | [View](../tests/visual/goldens/darwin-24/origo-effects-dark-desktop.png) | none |
 
 ## Interaction and accessibility states
 

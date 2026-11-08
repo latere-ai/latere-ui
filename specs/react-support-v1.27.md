@@ -1,13 +1,13 @@
 ---
-title: latere-ui v1.27 — dual framework support (React bindings alongside Vue)
+title: latere-ui v1.27: dual framework support (React bindings alongside Vue)
 status: validated
 depends_on:
   - specs/auth-client-v1.8.md
   - specs/console-shell-v1.9.md
   - specs/liquid-glass-v1.10.md
 affects:
-  - src/styles/components/* (new — de-scoped single-source component CSS)
-  - src/react/* (new — React components + session bindings)
+  - src/styles/components/* (new, de-scoped single-source component CSS)
+  - src/react/* (new, React components + session bindings)
   - src/components/*.vue (scoped styles moved to shared CSS, markup unchanged)
   - package.json (./react export, optional react peer dep, bump to 1.27.0)
   - tsconfig.json (jsx for src/react)
@@ -21,7 +21,7 @@ author: changkun
 dispatched_task_id: null
 ---
 
-# latere-ui v1.27 — dual framework support
+# latere-ui v1.27: dual framework support
 
 ## Overview
 
@@ -31,7 +31,7 @@ source-shipped; a React host compiles `src/react/**` (tsx) exactly as
 Vue hosts compile SFCs. Nothing changes for the six existing Vue
 consumers: same exports, same markup, same rendered CSS.
 
-## Architecture — one source of truth per layer
+## Architecture: one source of truth per layer
 
 | Layer | Single source | Vue adapter | React adapter |
 |---|---|---|---|
@@ -55,7 +55,7 @@ Components NOT ported keep their scoped styles untouched.
 React components in `src/react/`, named as the Vue ones:
 `GlassButton, GlassPanel, GlassBar, GlassField, GlassBadge,
 GlassAlert, GlassSpinner, GlassSelect, GlassCheckbox, GlassTable,
-GlassModal, GlassSegmented` — plus the two console-shell pieces
+GlassModal, GlassSegmented`, plus the two console-shell pieces
 `ConsoleSidebar` and `AccountMenu` (reusing their headless cores), and
 session bindings `SessionProvider` / `useSession` /
 `useSessionGate` over the vanilla core. Props/slots map 1:1 (slots

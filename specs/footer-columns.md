@@ -36,7 +36,7 @@ dispatched_task_id: null
 
 ## Overview
 
-The full footer read as one dense line: bold grey group labels, product names
+The full footer read as one dense line: bold gray group labels, product names
 as italic serif gradient wordmarks, plain links after them, and below that a
 bordered three-way theme pill beside a bordered language select whose menu is
 the browser's own popup. Three problems follow from it. The footer is too

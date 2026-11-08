@@ -1,5 +1,5 @@
 ---
-title: latere-ui v1.8 — shared auth client (vanilla async core + OrgSwitcher + front-channel logout)
+title: latere-ui v1.8: shared auth client (vanilla async core + OrgSwitcher + front-channel logout)
 status: complete
 depends_on: []
 affects:
@@ -21,7 +21,7 @@ author: changkun
 dispatched_task_id: null
 ---
 
-# latere-ui v1.8 — Shared Auth Client
+# latere-ui v1.8: Shared Auth Client
 
 ## Overview
 
@@ -34,12 +34,12 @@ Independent of backend changes; can land in parallel.
 `src/index.ts` exports `createApiClient`, `createSessionStore`, `createReauth`, `useSession`, `useSessionGate`, `AccountMenu`, `AccountPrefs`.
 
 `src/session/`:
-- `client.ts:14-56` — `createApiClient({ csrfCookie })`: fetch wrapper with CSRF header injection on non-GET/HEAD (`client.ts:36-39`), 401 reauth seam, credentials forwarding.
-- `store.ts:18-123` — `createSessionStore` Pinia factory; `me()`/`orgs()`/`switchOrg()` are private closure methods buried inside the store.
-- `useSession.ts:67` — bootstrap composable.
-- `gate.ts:41` — route gate.
-- `reauth.ts:68-72` — silent recheck guard.
-- `types.ts:8-77` — `ApiClient`, `Principal`, `OrgEntry`, `SessionStoreOptions`, `UseSessionOptions`.
+- `client.ts:14-56`, `createApiClient({ csrfCookie })`: fetch wrapper with CSRF header injection on non-GET/HEAD (`client.ts:36-39`), 401 reauth seam, credentials forwarding.
+- `store.ts:18-123`, `createSessionStore` Pinia factory; `me()`/`orgs()`/`switchOrg()` are private closure methods buried inside the store.
+- `useSession.ts:67`, bootstrap composable.
+- `gate.ts:41`, route gate.
+- `reauth.ts:68-72`, silent recheck guard.
+- `types.ts:8-77`, `ApiClient`, `Principal`, `OrgEntry`, `SessionStoreOptions`, `UseSessionOptions`.
 
 Each consumer frontend currently picks its own CSRF cookie name, one per
 product, and one console sends no CSRF token at all because it never calls
@@ -89,7 +89,7 @@ The vanilla core (`me.ts`, `frontChannel.ts`, `orgSwitcher.ts`) is usable from a
 
 ## Components
 
-### Vanilla async core — `src/session/me.ts`
+### Vanilla async core: `src/session/me.ts`
 
 Pure functions taking an `ApiClient` and per-product config:
 
@@ -128,7 +128,7 @@ export function login(loginPath: string, returnTo?: string): void
 
 Behavior mirrors today's `store.ts:39-123` closures, extracted and decoupled from Pinia. `me` returns `null` on 401/404 (never throws on logged-out). `switchOrg` POSTs JSON body, follows `{redirect_url}` response, falls back to `/login?org_id=…&return_to=…` if endpoint returns 404. `logout` defaults to `window.location.href = logoutPath`.
 
-### Front-channel logout helper — `src/session/frontChannel.ts`
+### Front-channel logout helper: `src/session/frontChannel.ts`
 
 ```ts
 export interface FrontChannelOptions {
@@ -143,13 +143,13 @@ export async function runFrontChannelLogout(opts: FrontChannelOptions): Promise<
 Behavior:
 1. GET `/api/logout` (server returns `{app_url, front_channel_uris[], post_logout_redirect}`).
 2. For each URI in `front_channel_uris`, append a hidden `<iframe>` with `sandbox="allow-same-origin"` so the iframe's session cookie clears.
-3. Race each iframe's `load` event against `iframeTimeoutMs` (default 2000ms — a dead RP must not block the user's logout).
+3. Race each iframe's `load` event against `iframeTimeoutMs` (default 2000ms, a dead RP must not block the user's logout).
 4. `Promise.allSettled` over all iframe races.
 5. Remove iframes, navigate to `post_logout_redirect || app_url`.
 
 SSR-safe: no-op without `window`. For the SSR marketing site the existing server-side iframe rendering stays canonical; SPAs use this helper.
 
-### Headless org-switcher — `src/session/orgSwitcher.ts`
+### Headless org-switcher: `src/session/orgSwitcher.ts`
 
 ```ts
 export interface OrgSwitcherDeps {
@@ -173,13 +173,13 @@ export function createOrgSwitcher(deps: OrgSwitcherDeps): OrgSwitcherState
 
 Vue-reactive state via `ref` + `computed` from `vue` (peer dep). Item ordering: Personal first, orgs in API order, owner badge from `OrgEntry.owner`. The factory renders nothing; consumer products either use the Vue adapter (`OrgSwitcher.vue`) or a vanilla mountpoint (`mountOrgSwitcher(el, opts)`, which covers the non-Vue harness).
 
-### Vue adapter — `src/components/OrgSwitcher.vue`
+### Vue adapter: `src/components/OrgSwitcher.vue`
 
 Unstyled `<ul>` of `<button>`s. Items have `data-active="true"` and `data-owner="true"` attributes for host CSS. Slots: `header`, `item`, `personal-row`. Emits no events (selection goes through the state's `select`).
 
-Visual design is intentionally minimal — each consumer applies its own CSS.
+Visual design is intentionally minimal, each consumer applies its own CSS.
 
-### Vue store refactor — `src/session/store.ts`
+### Vue store refactor: `src/session/store.ts`
 
 Existing `createSessionStore` public API preserved. Internals reimplemented to call the new vanilla core:
 
@@ -190,11 +190,11 @@ Existing `createSessionStore` public API preserved. Internals reimplemented to c
 
 Same for `orgs`, `switchOrg`, `switchPersonal`. Existing consumers see no public-API change.
 
-### `useSession` refactor — `src/session/useSession.ts`
+### `useSession` refactor: `src/session/useSession.ts`
 
 Existing composable preserved. Internally calls the refactored store + vanilla helpers. A consumer with a bespoke `me` store continues to work via the existing `mapMe` extension point.
 
-### CSRF cookie naming — `src/session/client.ts`
+### CSRF cookie naming: `src/session/client.ts`
 
 No code change; `createApiClient` already takes `csrfCookie` as a config option. The doc updates this spec ships specify the unified target name: `__Host-latere-csrf`. Each consumer changes its `createApiClient({ csrfCookie: '__Host-latere-csrf' })` argument after the auth backend ships its dual-read cookie shim.
 
@@ -230,7 +230,7 @@ One console also overrides the session-cookie name server-side. That is a backen
 ## Sequencing
 
 1. Land `me.ts`, `frontChannel.ts`, `orgSwitcher.ts`, `OrgSwitcher.vue` as additive code in `latere-ui v1.8.0`. Public API preserved.
-2. Refactor `store.ts` + `useSession.ts` internals onto the new core — no public-API change.
+2. Refactor `store.ts` + `useSession.ts` internals onto the new core, no public-API change.
 3. Update README with auth-client API section + `OrgSwitcher` example + CSRF cookie naming note.
 4. Tag and publish `latere-ui v1.8.0`.
 5. Per-product frontend `package.json` bump + `csrfCookie` rename happens in each consumer's migration PR after backend dual-read is in production.
@@ -254,7 +254,7 @@ One console also overrides the session-cookie name server-side. That is a backen
 - **Consumer version skew**: the oldest consumer is pinned to `latere-ui v1.2.3`. The bump from v1.2.3 to v1.8.0 is its own migration step, handled on that consumer's side.
 - **`__Host-` requires Secure**: dev environments using HTTP need the legacy non-`__Host-` name; the existing `InsecureCookies` toggle must mirror for CSRF cookie. Documented in README.
 - **Front-channel iframe timeout** at 2000ms is heuristic. Dead RPs leave their session stale at the cost of the user's logout completing fast. Document this tradeoff in `frontChannel.ts` JSDoc.
-- **`OrgSwitcher.vue` styling is unopinionated** — consumers must apply CSS. Provide a minimal example in README so adopters do not see an unstyled list and reach for a different lib.
+- **`OrgSwitcher.vue` styling is unopinionated**, consumers must apply CSS. Provide a minimal example in README so adopters do not see an unstyled list and reach for a different lib.
 
 ## References
 

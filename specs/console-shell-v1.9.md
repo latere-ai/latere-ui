@@ -1,16 +1,16 @@
 ---
-title: latere-ui v1.9 — shared console shell (ConsoleSidebar) + docs renderer (DocsLayout)
+title: latere-ui v1.9: shared console shell (ConsoleSidebar) + docs renderer (DocsLayout)
 status: complete
 depends_on:
   - specs/auth-client-v1.8.md
 affects:
-  - src/console/nav.ts (new — headless nav model + collapse primitive)
-  - src/components/ConsoleSidebar.vue (new — Vue adapter, phase 1)
-  - src/styles/console.css (new — token-based sidebar styles, phase 1)
-  - src/docs/markdown.ts (new — base markdown-it config + helpers, phase 2)
-  - src/docs/toc.ts (new — headless TOC / scroll-spy primitive, phase 2)
-  - src/components/DocsLayout.vue (new — Vue adapter, phase 2)
-  - src/styles/docs.css (new — token-based docs styles, phase 2)
+  - src/console/nav.ts (new, headless nav model + collapse primitive)
+  - src/components/ConsoleSidebar.vue (new, Vue adapter, phase 1)
+  - src/styles/console.css (new, token-based sidebar styles, phase 1)
+  - src/docs/markdown.ts (new, base markdown-it config + helpers, phase 2)
+  - src/docs/toc.ts (new, headless TOC / scroll-spy primitive, phase 2)
+  - src/components/DocsLayout.vue (new, Vue adapter, phase 2)
+  - src/styles/docs.css (new, token-based docs styles, phase 2)
   - src/index.ts (re-exports)
   - package.json (bump to 1.9.0; add markdown-it as a peer/optional dep)
   - README.md (ConsoleSidebar + DocsLayout API sections)
@@ -26,7 +26,7 @@ dispatched_task_id: null
 > tests (125 passing) and typecheck clean; the per-product migrations (rollout
 > steps 2–5) remain. See the Outcome section for what diverged from this plan.
 
-# latere-ui v1.9 — Shared Console Shell + Docs Renderer
+# latere-ui v1.9: Shared Console Shell + Docs Renderer
 
 ## Overview
 
@@ -36,7 +36,7 @@ account control pinned at the bottom; plus, in several products, a docs
 section that lists grouped documents and renders Markdown with diagrams and a
 table of contents.
 
-The **account layer is already shared** — `AccountMenu`, `AccountPrefs`,
+The **account layer is already shared**, `AccountMenu`, `AccountPrefs`,
 `OrgSwitcher`, and the whole `session/` client ship from `latere-ui` today, and
 each console consumes them through a thin local `AccountControl.vue` wrapper.
 What is *not* shared is the **sidebar shell around** that account control, and
@@ -86,9 +86,9 @@ excluded). Per-component consumer counts set the realistic payoff.
 | --------- | ----------------------------------------------- | --------------------------------------------------- |
 | Lux       | collapsible, `pin:'bottom'` groups, badges      | `[[diagram:name]]` Vue mounts                       |
 | Cella     | **fixed** (no collapse), command palette        | mermaid + zoom/pan modal                            |
-| Topos     | collapsible, internal `open` ref                | — none                                              |
+| Topos     | collapsible, internal `open` ref                | none                                               |
 | Wallfacer | collapsible, workspace switcher                 | TOC, light/dark images                              |
-| Lectio    | app shell + nav                                 | — (not deep-dived)                                  |
+| Lectio    | app shell + nav                                 | (not deep-dived)                                  |
 
 **Sidebar: ~5 consumers. Docs: ~3 consumers.** Sidebar is the clean win and
 ships first (phase 1). All three consoles inspected share the same underlying
@@ -110,9 +110,9 @@ The divergences collapse cleanly:
 
 ---
 
-## Phase 1 — `ConsoleSidebar`
+## Phase 1: `ConsoleSidebar`
 
-### Headless core — `src/console/nav.ts`
+### Headless core: `src/console/nav.ts`
 
 Pure types + a tiny collapse primitive. No DOM, no router.
 
@@ -162,7 +162,7 @@ export function createCollapse(opts?: CollapseOptions): CollapseState;
 export function partitionGroups(groups: NavGroup[]): { top: NavGroup[]; bottom: NavGroup[] };
 ```
 
-### Vue adapter — `src/components/ConsoleSidebar.vue`
+### Vue adapter: `src/components/ConsoleSidebar.vue`
 
 ```
 Props
@@ -194,7 +194,7 @@ Behavior reproduced from the three consoles:
 - Disabled items (no `to`) render non-interactive with a "not yet wired" title.
 - Bottom-pinned groups sit below a flex spacer; `#foot` is last.
 
-### Styling — `src/styles/console.css`
+### Styling: `src/styles/console.css`
 
 Token-based, imported as `latere-ui/console`. Reuses the existing brand-wordmark
 gradients already defined in `footer.css` (`.lux-brand`, `.cella-brand`, …) by
@@ -249,26 +249,26 @@ const model: ConsoleNavModel = {
 
 ---
 
-## Phase 2 — `DocsLayout`
+## Phase 2: `DocsLayout`
 
 Lower priority, ~3 consumers, partial extraction.
 
 ### Shareable
 
-- **`src/docs/markdown.ts`** — base `markdown-it` config (anchor slugs, `.md →
+- **`src/docs/markdown.ts`**, base `markdown-it` config (anchor slugs, `.md →
   /docs/:slug` link rewriting, fenced-code passthrough) factored from
   Wallfacer's markdown module. Exports `createMarkdown(opts)` and
   `stripFirstHeading(src)`. `markdown-it` becomes an optional peer dependency so
   apps that don't render docs don't pay for it.
-- **`src/docs/toc.ts`** — headless TOC + scroll-spy primitive (h2/h3 extraction
+- **`src/docs/toc.ts`**, headless TOC + scroll-spy primitive (h2/h3 extraction
   + `IntersectionObserver`), factored from Wallfacer's TOC composable. SSR-safe
   (no-op without `window`).
-- **`src/components/DocsLayout.vue`** — two-column layout: grouped doc-index
+- **`src/components/DocsLayout.vue`**, two-column layout: grouped doc-index
   sidebar (collapsible) + article column + floating TOC + prev/next nav.
   - Props: `index: DocGroup[]` (`{ label, entries: { slug, title, badge? }[] }`),
     `activeSlug`, `articleHtml`, `routerLink`.
   - Slots: `#article` (override the rendered body), `#toc`, `#sidebar-head`.
-- **`src/styles/docs.css`** — token-based docs styling (`latere-ui/docs`).
+- **`src/styles/docs.css`**, token-based docs styling (`latere-ui/docs`).
 
 ### Not shareable (left to each app, exposed as a hook)
 
@@ -305,17 +305,17 @@ adapters.
 
 Per the repo rule, every behavior ships with a test that fails without it.
 
-- `tests/console-nav.test.ts` — `createCollapse` controlled/uncontrolled +
+- `tests/console-nav.test.ts`, `createCollapse` controlled/uncontrolled +
   `onChange`; `partitionGroups` ordering and pin handling.
-- `tests/console-sidebar.test.ts` (`@vue/test-utils` + `happy-dom`) — renders
+- `tests/console-sidebar.test.ts` (`@vue/test-utils` + `happy-dom`), renders
   groups; active row by `activeKey`; collapse toggle emits `update:collapsed`;
   disabled item is non-interactive; `navigate` emitted with the right item;
   `collapsible=false` hides the fold; badge variants render; slots override.
-- `tests/docs-toc.test.ts` — heading extraction; scroll-spy active id; SSR no-op
+- `tests/docs-toc.test.ts`, heading extraction; scroll-spy active id; SSR no-op
   without `window`.
-- `tests/docs-markdown.test.ts` — anchor slugs; `.md` link rewriting;
+- `tests/docs-markdown.test.ts`, anchor slugs; `.md` link rewriting;
   `stripFirstHeading`.
-- `tests/docs-layout.test.ts` — index renders grouped; active slug; prev/next;
+- `tests/docs-layout.test.ts`, index renders grouped; active slug; prev/next;
   `enhanceArticle` invoked after mount/update.
 
 ## Rollout
@@ -336,7 +336,7 @@ Per the repo rule, every behavior ships with a test that fails without it.
 - **Brand gradients** (`*-brand`) currently live in `footer.css`. Extract to a
   shared `brand.css` partial both `footer.css` and `console.css` import, or keep
   `footer.css` a prerequisite of `console.css`? (Leaning: extract.)
-- **Icon rendering** — each app has its own `Icon.vue` with a private name set.
+- **Icon rendering**, each app has its own `Icon.vue` with a private name set.
   `ConsoleSidebar` should take icons via an `#item`/icon slot rather than
   bundling an icon font. Confirm no app needs a built-in icon set.
 - **Lectio** was not deep-dived; confirm its app shell and nav match the model
@@ -366,7 +366,7 @@ Decisions that diverged from the plan:
 - **Brand gradients shared without touching the footer.** `src/styles/brand.css`
   holds the `*-brand` wordmark rules and is `@import`-ed by the new `console.css`
   (and exported as `latere-ui/brand`). `footer.css` was deliberately left
-  self-contained — it ships to every marketing/SSG consumer as `latere-ui/styles`,
+  self-contained, it ships to every marketing/SSG consumer as `latere-ui/styles`,
   and adding a relative `@import` there risked the wordmarks vanishing site-wide if
   it failed to resolve in any consumer's CSS pipeline (a failure the unit tests,
   which only grep the source, could not catch). The ~23 static gradient lines are
@@ -377,7 +377,7 @@ Decisions that diverged from the plan:
   latere-ui has zero markdown runtime dependency and docs-free consoles pay
   nothing. It is exported only from the `latere-ui/markdown` subpath, never the
   main barrel, so importing latere-ui never pulls markdown-it types. (Resolves
-  the open question — chose injection over an optional peer dep.) markdown-it is
+  the open question, chose injection over an optional peer dep.) markdown-it is
   a devDependency for tests only.
 - **Heading ids align with the TOC.** `createMarkdown` assigns heading ids using
   the exact `slugify` the TOC primitive uses, so anchors and the on-this-page
@@ -395,7 +395,7 @@ Decisions that diverged from the plan:
 
 Still open / deferred:
 
-- Per-product migrations (rollout steps 2–5) are not done — this is library-only.
+- Per-product migrations (rollout steps 2–5) are not done, this is library-only.
 - **Lectio** never migrated: the hosted service was retired on 2026-10-03, and `brandTheme` no longer
   accepts `lectio`.
 - **Wallfacer** replaced the shared sidebar with its own rail, and since 2026-10-05, when it left the

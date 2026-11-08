@@ -1,5 +1,5 @@
 ---
-title: latere-ui v1.28 — SiteFooter for React consumers
+title: latere-ui v1.28: SiteFooter for React consumers
 status: validated
 depends_on:
   - specs/react-support-v1.27.md
@@ -18,7 +18,7 @@ author: changkun
 dispatched_task_id: null
 ---
 
-# latere-ui v1.28 — SiteFooter for React
+# latere-ui v1.28: SiteFooter for React
 
 ## Overview
 
@@ -62,7 +62,7 @@ Props: `theme`, `onThemeChange`, `locale`, `onLocaleChange`, `locales`,
 
 The keys the SFC renders through `v-html` (`footer.rights`, `footer.tagline`,
 `footer.contact`, `footer.identity`, and the column titles) carry HTML
-entities, so React renders them through `dangerouslySetInnerHTML` — same
+entities, so React renders them through `dangerouslySetInnerHTML`, same
 nodes, same output. Host `messages` are trusted here exactly as they are in
 the Vue adapter.
 

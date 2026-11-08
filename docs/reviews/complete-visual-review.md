@@ -62,7 +62,7 @@ The comparator accepts zero changed pixels and zero channel tolerance, including
 
 This expands the [initial appearance rollout](product-style-review.md), which recorded a smaller, selective matrix.
 
-### Footer decoration follow-up — 2026-09-13
+### Footer decoration follow-up: 2026-09-13
 
 The earlier review missed browser-default underlines in the full footer. Compact links had their own reset, so the two layouts differed across every appearance. The shared footer now resets decoration on the anchors themselves, including brand and social links. Navigation retains hover underlines and keyboard focus outlines.
 
@@ -74,7 +74,7 @@ All 16 changed compositions were inspected separately on each platform, with exa
 
 The first full [main run](https://github.com/latere-ai/latere-ui/actions/runs/34756542808) passed 862 checks, including every golden comparison and link-decoration case. Its sole failure measured a 24px toast dismiss button as 23.999998px. A new regression reproduces a residual transform after transition classes disappear; it fails with the previous waiter. The waiter now follows actual finite animations and two rendered frames before measuring. All 34 local toast checks pass. The 24px requirement, screenshot comparator and golden files remain unchanged by this test synchronization fix.
 
-### Preference height follow-up — 2026-09-13
+### Preference height follow-up: 2026-09-13
 
 The full footer retained intrinsic control sizing after the compact footer gained explicit dimensions. Its theme selector measured 28px while the language dropdown measured 24px, offsetting both edges by 2px. The shared footer rules now give both controls a 28px outer height, matching corner insets and centered theme icons. Coarse-pointer devices use 50px outer heights with 44px theme-button targets.
 
@@ -82,7 +82,7 @@ The [regression](../../tests/visual/preference-geometry.spec.ts) fails against t
 
 The 16 changed full-footer compositions were inspected separately on each platform, including control details at native resolution. All 64 updated files retain 300 DPI metadata and exact Vue/React pixel parity. The other 1,640 figures, including every compact-footer reference, retain their previous hashes.
 
-### Origo selected corners — 2026-09-13
+### Origo selected corners: 2026-09-13
 
 Subtracting an inset from Origo's 4px radius left selected segments with nearly square 1px corners. Both footer layouts and the form segmented control now use a visible 3px inner radius. Their outer radii include the actual border and padding: 6px for footer controls and 7px for form segments.
 
@@ -90,7 +90,7 @@ The [corner regression](../../tests/visual/segment-corners.spec.ts) fails agains
 
 The changed regions of all 12 compositions were inspected at native resolution separately on each platform. All 48 updated Origo PNGs retain 300 DPI metadata and exact Vue/React pixel parity. The other 1,656 references retain their previous hashes.
 
-### Balanced footer taglines — 2026-09-13
+### Balanced footer taglines: 2026-09-13
 
 The full footer's English tagline left “loop.” alone on its last line. Shared balanced wrapping now produces “Human intelligence” / “in the loop.” at desktop widths, without manual breaks in translations or host copy.
 
@@ -98,7 +98,7 @@ The wrapping regression, since retired with the tagline, failed against the prev
 
 All eight changed compositions were inspected at native resolution separately on each platform. The 32 updated desktop PNGs retain 300 DPI metadata and exact Vue/React pixel parity. The other 1,672 references retain their previous hashes, including every mobile and compact-footer figure.
 
-### Account typography — 2026-09-13
+### Account typography: 2026-09-13
 
 The account trigger's 1px name-to-metadata gap crowded the role badge against the display name. Shared styling now reserves 4px in standalone and sidebar triggers. Preference pills centered the font's line box, leaving the visible capitals slightly below the control's center. Their labels now use cap-height and alphabetic-baseline trimming inside a centered flex container; controls retain their 24px outer height. Browsers without CSS text-box support keep ordinary flex centering.
 
