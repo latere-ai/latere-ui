@@ -181,3 +181,11 @@ describe('roving tab stop with no matching value', () => {
     expect([...document.querySelectorAll<HTMLElement>('[role="tab"]')].map(el => el.tabIndex)).toEqual([-1, 0]);
   });
 });
+
+describe('GlassIconButton toggle state', () => {
+  it('announces an unpressed toggle as a toggle and a plain button as neither', () => {
+    const view = render(<><GlassIconButton label="Pin" pressed={false}>P</GlassIconButton><GlassIconButton label="Open">O</GlassIconButton></>);
+    expect(view.getByRole('button', { name: 'Pin' }).getAttribute('aria-pressed')).toBe('false');
+    expect(view.getByRole('button', { name: 'Open' }).hasAttribute('aria-pressed')).toBe(false);
+  });
+});

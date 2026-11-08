@@ -7,14 +7,15 @@ export interface GlassIconButtonProps extends Omit<ButtonHTMLAttributes<HTMLButt
   label: string;
   size?: 'sm' | 'md';
   disabled?: boolean;
+  /** Makes the button a toggle: `false` is an unpressed toggle, unset a plain button. */
   pressed?: boolean;
 }
 
-export function GlassIconButton({ label, size = 'md', disabled = false, pressed = false,
+export function GlassIconButton({ label, size = 'md', disabled = false, pressed,
   children, onClick, className, ...attributes }: GlassIconButtonProps) {
   return <button {...attributes} type="button"
     className={cx('lu-iconbtn', `lu-iconbtn-${size}`, pressed && 'is-pressed', className)}
-    aria-label={label} aria-pressed={pressed || undefined} disabled={disabled} onClick={onClick}>
+    aria-label={label} aria-pressed={pressed} disabled={disabled} onClick={onClick}>
     {children}
   </button>;
 }
