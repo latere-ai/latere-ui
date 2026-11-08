@@ -3,3 +3,6 @@ contact_links:
   - name: Security problem
     url: https://github.com/latere-ai/latere-ui/security/advisories/new
     about: Report a vulnerability privately; do not open a public issue.
+  - name: Documentation
+    url: https://github.com/latere-ai/latere-ui/tree/main/docs
+    about: How to use the components; a question the docs do not answer is a documentation bug.

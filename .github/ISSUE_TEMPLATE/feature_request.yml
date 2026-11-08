@@ -14,3 +14,8 @@ body:
     attributes:
       label: What you would like the code to look like
       render: tsx
+  - type: textarea
+    id: workaround
+    attributes:
+      label: What you do today instead
+      description: The workaround in use, if any, such as a wrapper component or your own CSS.
