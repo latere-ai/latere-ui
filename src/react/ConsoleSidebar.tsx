@@ -46,7 +46,7 @@ import {
   type NavOpenState,
 } from '../console/openState';
 import { ConsoleIcon } from './ConsoleIcon';
-import { cx } from './internal';
+import { cx, useIsomorphicLayoutEffect } from './internal';
 
 type BrandTheme = 'lux' | 'cella' | 'topos';
 
@@ -252,10 +252,14 @@ export function ConsoleSidebar({
   const navRef = useRef<HTMLElement>(null);
   const footNavRef = useRef<HTMLDivElement>(null);
   const path = useMemo(() => activePath(model.groups, activeKey), [model.groups, activeKey]);
-  const [openState, setOpenState] = useState<NavOpenState>(() => readNavOpen(openKey));
+  // The server has no storage and renders every parent as the page leaves it,
+  // so the first client render starts from the same state and the viewer's
+  // remembered parents are read before the first paint.
+  const [openState, setOpenState] = useState<NavOpenState>({});
+  useIsomorphicLayoutEffect(() => { setOpenState(readNavOpen(openKey)); }, [openKey]);
   // Arriving at a page opens every parent above it; the viewer's choice for
   // any other parent stays as they left it.
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     setOpenState((prev) => {
       const next = openActivePath(prev, path);
       if (next !== prev) writeNavOpen(openKey, next);

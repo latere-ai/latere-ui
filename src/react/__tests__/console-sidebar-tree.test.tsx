@@ -1,6 +1,8 @@
 // The expandable tree, the compact head, foot rows and built-in icons of the
 // ConsoleSidebar.
-import { fireEvent, render } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
+import { renderToString } from 'react-dom/server';
+import { hydrateRoot } from 'react-dom/client';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ConsoleIcon } from '../ConsoleIcon';
@@ -218,5 +220,31 @@ describe('ConsoleSidebar compact head and foot rows (react)', () => {
   it('keeps an empty foot empty', () => {
     const { container } = render(<ConsoleSidebar model={model} footItems={[]} />);
     expect(container.querySelector('.lu-cs-foot')!.innerHTML).toBe('');
+  });
+});
+
+describe('ConsoleSidebar hydration (react)', () => {
+  it('shows a remembered open parent after server rendering and hydration', () => {
+    // The server has no storage: every parent that is off the page's path is folded.
+    const html = renderToString(<ConsoleSidebar model={model} activeKey="home" openKey="k" />);
+    localStorage.setItem('k', JSON.stringify({ storage: true }));
+    const container = document.createElement('div');
+    container.innerHTML = html;
+    document.body.append(container);
+    const errors = vi.spyOn(console, 'error').mockImplementation(() => {});
+    let root!: ReturnType<typeof hydrateRoot>;
+    act(() => { root = hydrateRoot(container, <ConsoleSidebar model={model} activeKey="home" openKey="k" />); });
+    try {
+      expect(parent(container, 'storage').getAttribute('aria-expanded')).toBe('true');
+      expect(container.querySelector<HTMLElement>('.lu-cs-children')!.hidden).toBe(false);
+      // The first click folds it, as the open state shown says it should.
+      act(() => { parent(container, 'storage').click(); });
+      expect(parent(container, 'storage').getAttribute('aria-expanded')).toBe('false');
+      expect(errors.mock.calls.map(call => String(call[0])).join('\n')).not.toMatch(/hydrat/i);
+    } finally {
+      act(() => root.unmount());
+      container.remove();
+      errors.mockRestore();
+    }
   });
 });

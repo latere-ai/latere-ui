@@ -1,5 +1,5 @@
 // Shared plumbing for the React components.
-import { useEffect, useRef, type MouseEvent as ReactMouseEvent, type ReactNode, type RefObject } from 'react';
+import { useEffect, useLayoutEffect, useRef, type MouseEvent as ReactMouseEvent, type ReactNode, type RefObject } from 'react';
 import { activateFocusTrap } from '../glass/focusTrap';
 
 /** Join truthy class parts, in argument order. */
@@ -92,3 +92,9 @@ export function dialogName(
   if (header) return title ? { 'aria-label': title } : { 'aria-labelledby': `${id}-head` };
   return title ? { 'aria-labelledby': `${id}-title` } : {};
 }
+
+/**
+ * A layout effect on the client and an ordinary effect during server
+ * rendering, where React 18 warns that a layout effect does nothing.
+ */
+export const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
