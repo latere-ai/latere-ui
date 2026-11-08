@@ -133,7 +133,7 @@ Use regular glass for panels and navigation, thick glass for readable overlays, 
 | `latere-ui/styles` | Footer styles; `SiteFooter` imports them |
 | `latere-ui/presets` | Optional Replichai, Wallfacer and Origo component appearances |
 | `latere-ui/brand` | Product wordmark gradients |
-| `latere-ui/markdown` | Markdown helpers with TOC-compatible heading IDs |
+| `latere-ui/markdown` | Markdown helpers with TOC-compatible heading IDs. Raw HTML in the source passes through unless you set `options: { html: false }`, so render only trusted source |
 | `latere-ui/telemetry` | Browser telemetry through your backend's relay, loaded after the page |
 | `latere-ui/structured-data` | schema.org JSON-LD builders and the escaped script element for a page's head |
 | `latere-ui/favicon` | The platform's browser tab icon as an SVG document, for a build script or a server |
