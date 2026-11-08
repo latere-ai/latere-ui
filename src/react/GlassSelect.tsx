@@ -52,7 +52,9 @@ export function GlassSelect({
   const field = useRef<HTMLInputElement>(null);
   const list = useRef<HTMLUListElement>(null);
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState(-1);
+  // The highlighted option is held by value, so a list that gains or loses
+  // entries while open keeps the highlight on the same option.
+  const [activeValue, setActiveValue] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   // The menu's widest measured width while a search is open, so it does not
   // narrow as the search hides long labels.
@@ -65,6 +67,8 @@ export function GlassSelect({
   const visible = useMemo(() => filterSelectOptions(options, search ? query : ''), [options, search, query]);
   const selected = options.find((o) => o.value === value);
   const noMatch = search && query.trim() !== '' && visible.length === 0;
+  const active = activeValue === null ? -1 : options.findIndex((o) => o.value === activeValue);
+  const setActive = (index: number) => setActiveValue(options[index]?.value ?? null);
   const activeId = open && visible.includes(active) ? optionId(active) : undefined;
 
   // Placed first, so the width measured below is the placed menu's.
@@ -160,11 +164,13 @@ export function GlassSelect({
     }
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setActive((a) => nextVisibleOption(options, visible, a, 1));
+      setActive(nextVisibleOption(options, visible, active, 1));
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setActive((a) => nextVisibleOption(options, visible, a, -1));
-    } else if (e.key === 'Enter') {
+      setActive(nextVisibleOption(options, visible, active, -1));
+    } else if (e.key === 'Enter' || (e.key === ' ' && e.target !== field.current)) {
+      // Space chooses on the trigger, as Enter does; in the search field it is
+      // a typed character.
       e.preventDefault();
       choose(visible.includes(active) ? options[active] : undefined);
     } else if (e.key === 'Escape') {

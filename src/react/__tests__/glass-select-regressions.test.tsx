@@ -81,3 +81,34 @@ describe('GlassSelect keyboard regressions', () => {
     expect(scrollIntoView).not.toHaveBeenCalled();
   });
 });
+
+describe('GlassSelect highlight and Space', () => {
+  it('keeps the highlighted option when the options list gains an entry while open', () => {
+    const onChange = vi.fn();
+    const options = [{ value: 'a', label: 'Alpha' }, { value: 'b', label: 'Beta' }, { value: 'c', label: 'Gamma' }];
+    const view = render(<GlassSelect value="" options={options} onChange={onChange} />);
+    const trigger = view.getByRole('combobox');
+    fireEvent.click(trigger);
+    fireEvent.keyDown(trigger, { key: 'ArrowDown' });
+    expect(document.querySelector('.is-active')?.textContent).toBe('Beta');
+    view.rerender(<GlassSelect value="" options={[{ value: 'z', label: 'New' }, ...options]} onChange={onChange} />);
+    expect(document.querySelector('.is-active')?.textContent).toBe('Beta');
+    fireEvent.keyDown(trigger, { key: 'Enter' });
+    expect(onChange).toHaveBeenCalledWith('b');
+  });
+
+  it('chooses the active option with Space while the menu is open, as Enter does', () => {
+    const onChange = vi.fn();
+    const view = render(<GlassSelect value="a" options={[{ value: 'a', label: 'Alpha' }, { value: 'b', label: 'Beta' }]} onChange={onChange} />);
+    const trigger = view.getByRole('combobox');
+    fireEvent.click(trigger);
+    fireEvent.keyDown(trigger, { key: 'ArrowDown' });
+    // Space on a focused button: keydown, keyup, then the browser's click
+    // activation unless keydown was prevented.
+    const notPrevented = fireEvent.keyDown(trigger, { key: ' ' });
+    fireEvent.keyUp(trigger, { key: ' ' });
+    if (notPrevented) fireEvent.click(trigger);
+    expect(onChange).toHaveBeenCalledWith('b');
+    expect(view.queryByRole('listbox')).toBeNull();
+  });
+});
