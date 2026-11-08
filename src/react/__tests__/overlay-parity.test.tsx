@@ -184,6 +184,12 @@ describe('GlassConfirmHost requests', () => {
   const settled = <T,>(promise: Promise<T>) =>
     Promise.race([promise.then(value => ({ value })), new Promise(resolve => setTimeout(() => resolve('pending'), 0))]);
 
+  it('plays the enter transition when a request opens the closed dialog', () => {
+    render(<GlassConfirmHost />);
+    act(() => { void confirm({ message: 'Delete this workspace?' }); });
+    expect(document.querySelector('.lu-modal-scrim')?.classList.contains('lu-modal-enter-active')).toBe(true);
+  });
+
   it('names the dialog with the question when no title is given', () => {
     render(<GlassConfirmHost />);
     act(() => { void confirm({ message: 'Delete this workspace?', danger: true }); });

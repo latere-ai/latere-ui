@@ -8,15 +8,21 @@ import '../styles/components/glass-confirm-host.css';
 export function GlassConfirmHost() {
   const { current: c } = useSyncExternalStore(confirmStore.subscribe, confirmStore.getSnapshot, getServerConfirm);
   const messageId = useId();
-  // Each request gets its own dialog, so its focus trap sets up again and
-  // focus starts on the new request's first control instead of staying on
-  // the button that answered the last one. The id outlives the last request
-  // so the closing dialog keeps its leave transition.
-  const lastId = useRef(0);
-  if (c) lastId.current = c.id;
+  // A request that follows another while the dialog is open gets a new
+  // dialog, so its focus trap sets up again and focus starts on its first
+  // control instead of staying on the button that answered the last one. A
+  // request that opens the closed dialog keeps it, so the dialog plays its
+  // enter transition, and the key outlives the last request so the closing
+  // dialog keeps its leave transition.
+  const dialog = useRef({ id: 0, key: 0, open: false });
+  if (c && c.id !== dialog.current.id) {
+    if (dialog.current.open) dialog.current.key += 1;
+    dialog.current.id = c.id;
+  }
+  dialog.current.open = c !== null;
   return (
     <GlassModal
-      key={lastId.current}
+      key={dialog.current.key}
       open={c !== null}
       title={c?.title}
       closeOnScrim={false}
