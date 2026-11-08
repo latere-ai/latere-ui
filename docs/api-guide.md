@@ -581,13 +581,17 @@ const approved = await confirm({ message: 'Delete this workspace?', danger: true
 
 The session helpers talk to your application's own backend, which holds the
 session cookie and runs the sign-in redirect. The browser never calls an
-identity provider directly. Every path below is a default and can be renamed
-through `SessionProvider`'s props:
+identity provider directly. Every path below is a default. `SessionProvider`'s
+props rename the principal, switch-org, login and logout paths; the plain
+`orgs` function and `runFrontChannelLogout` take their path as an `endpoint`
+option:
 
 | Default path | Request | Expected answer |
 |---|---|---|
 | `/api/me` | `GET` | The signed-in principal as JSON; 401 or 404 when signed out |
-| `/api/me/switch-org` | `POST {"org_id"}` | `{"redirect"}` to follow; an empty `org_id` selects the personal context |
+| `/api/me/switch-org` | `POST {"org_id"}` | `{"redirect"}` to follow when it is an `http:` or `https:` address; an empty `org_id` selects the personal context |
+| `/me/orgs` | `GET` | The principal's organizations as a list (read by `orgs`; unlike the others it has no `/api` prefix) |
+| `/api/logout` | `GET` | The front-channel logout answer: `post_logout_redirect`, `app_url`, `front_channel_uris` |
 | `/login?return_to=…` | Browser navigation | Starts sign-in; `prompt=none` in the query asks for a silent check |
 | `/logout` | Browser navigation | Ends the session |
 
@@ -630,9 +634,11 @@ function Shell() {
 
 `useSession()` returns `principal` (`null` when signed out), `loading`,
 `error`, `refresh()`, `login(returnTo?)`, `logout()`, `switchOrg(orgId)`,
-`frontChannelLogout()`, `requireSession(returnTo?)` and the shared `client`
-for app-specific calls. Pass a prebuilt `client` instead of `csrfCookie` to
-share one client with code outside React.
+`frontChannelLogout()`, `requireSession(returnTo?)`,
+`ensureSession(returnTo)`, the provider's `loginPath` and the shared `client`
+for app-specific calls. Overlapping `refresh()` calls are safe: the newest
+request's answer is the one applied. Pass a prebuilt `client` instead of
+`csrfCookie` to share one client with code outside React.
 
 A protected view calls `useSessionGate()`. It resolves the session on entry;
 when nobody is signed in, it navigates once to `/login?prompt=none` so a
@@ -671,7 +677,10 @@ redirects, so a public page stays usable while signed out.
 `useSession()`) signs out from the browser side: it reads `GET /api/logout`,
 loads each entry of the answer's `front_channel_uris` in a hidden frame so
 other applications clear their own sessions, waits at most 2 seconds per
-frame, and then navigates to `post_logout_redirect`. `me`, `orgs`,
+frame, and then navigates to the first usable target among the `finalRedirect`
+option, the answer's `post_logout_redirect`, its `app_url` and `/`. Only
+`http:` and `https:` addresses are followed, on any origin; the page leaves
+even when the answer is empty or malformed. `me`, `orgs`,
 `switchOrg`, `switchPersonal`, `login` and `logout` are also exported as plain
 async functions over an `ApiClient`, for code outside React.
 
@@ -720,8 +729,9 @@ turns every export into a failed request in the network log. Guard the call
 the way the example does, or on whatever tells your application it is
 deployed.
 
-`startTelemetry` returns nothing and never throws. The first call with valid options wins and later calls are ignored,
-and on the server (server rendering, Node tests) the call does nothing. The
+`startTelemetry` returns nothing and never throws. The first call with valid
+options wins and later calls are ignored; a call whose options are refused
+(no `service`, an endpoint on another origin) does not count. On the server (server rendering, Node tests) the call does nothing. The
 OpenTelemetry SDK is not part of your entry bundle: the call waits for the
 page's `load` event and an idle moment, then imports the SDK as its own chunk
 (about 28 KB gzipped). Any bundler with code splitting emits that chunk, for
@@ -735,7 +745,7 @@ What gets recorded:
 | Span | Recorded for |
 |---|---|
 | `documentLoad`, `documentFetch`, `resourceFetch` | The page load and each resource it fetched, from the browser's navigation and resource timing |
-| `HTTP GET`, `HTTP POST`, … | Each `fetch()` and `XMLHttpRequest`, with method, URL and status |
+| `HTTP GET`, `HTTP POST`, … (from `fetch()`); `GET`, `POST`, … (from `XMLHttpRequest`) | Each `fetch()` and `XMLHttpRequest`, with method, URL and status |
 | `browser.web_vital` | Each Core Web Vitals report: LCP, INP, CLS, FCP and TTFB |
 
 A `browser.web_vital` span carries `browser.web_vital.name` (`lcp`, `inp`,
@@ -753,8 +763,9 @@ upload uses `fetch` with `keepalive`, so it completes after the page is gone.
 
 Privacy: the module sets no cookies, reads no storage, and adds no user,
 account or session identifier. URLs are the only page data it records, and
-the query string and fragment are removed from every recorded URL, so tokens
-and search terms in links are not sent. The browser's user agent string is
+the query string, the fragment and any user name and password are removed
+from every recorded URL, so tokens, search terms and credentials in links are
+not sent. The browser's user agent string is
 recorded with page loads and requests.
 
 ## Structured data
@@ -1034,7 +1045,9 @@ and a bad page fails the build instead of publishing a wrong description. Its
 | `invalid_value` | Any other value of the wrong shape, such as a `position` of 0 or an `author` given as a string |
 
 Every URL must be absolute: a crawler or an agent may read a copy of the page
-without knowing where it came from.
+without knowing where it came from. An `author`, `publisher` or `translator`
+written by hand is checked like one made by `person()` or `organization()`,
+and `field` names its position, such as `author[1].name`.
 
 ## Status and stability
 

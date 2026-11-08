@@ -118,7 +118,11 @@ export async function switchPersonal(client: ApiClient, opts: SwitchOrgOptions =
 export interface LogoutOptions {
   /** Server logout entry point. Default `'/logout'`. */
   logoutPath?: string;
-  /** Pass `false` to suppress navigation (e.g. chain into `runFrontChannelLogout`). */
+  /**
+   * Pass `false` to suppress navigation (e.g. chain into `runFrontChannelLogout`).
+   * A non-empty string replaces `logoutPath` as the navigation target, so it
+   * navigates there without ending the session at the server.
+   */
   redirect?: string | false;
 }
 
