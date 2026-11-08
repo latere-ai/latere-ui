@@ -1,7 +1,9 @@
 // A floating surface anchored to a trigger: dropdown menus, filter panels.
 // Toggles on trigger click, closes on outside click and Escape, and returns
 // focus to the trigger when it closes from inside. Focus moving to another
-// element outside the popover closes it too. ArrowDown/ArrowUp on a closed
+// element outside the popover closes it too. Shift+Tab from the panel's first
+// tab stop closes it with focus on the trigger; from any later control it
+// moves back within the panel. ArrowDown/ArrowUp on a closed
 // trigger open it, as on a menu button. While it is open it owns Escape, so
 // inside a dialog or a drawer the key closes the popover and leaves the
 // dialog open.
@@ -28,6 +30,8 @@ import '../styles/components/glass-popover.css';
 const POPOVER_GAP = 6;
 /** Space the panel keeps from every edge of the viewport, in CSS pixels. */
 const POPOVER_GUTTER = 8;
+/** Elements a browser puts in the Tab order, before the tabindex filter. */
+const TAB_STOPS = 'a[href],button:not(:disabled),input:not(:disabled),select:not(:disabled),textarea:not(:disabled),[tabindex],[contenteditable]:not([contenteditable="false"])';
 
 export interface GlassPopoverProps {
   placement?: 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end';
@@ -76,10 +80,17 @@ export function GlassPopover({
     change(false);
   };
   useClickOutside(root, open, () => change(false));
+  // Whether Shift+Tab from `target` would leave the panel: no tab stop in the
+  // panel comes before it. A browser then moves one stop back from the
+  // trigger, so the key is cancelled and focus is put on the trigger.
+  function leavesPanelBackward(target: Element | null): boolean {
+    const stops = Array.from(panel.current?.querySelectorAll<HTMLElement>(TAB_STOPS) ?? []).filter((stop) => stop.tabIndex >= 0);
+    return !stops.some((stop) => stop !== target && !!(stop.compareDocumentPosition(target as Node) & Node.DOCUMENT_POSITION_FOLLOWING));
+  }
   function onKey(event: KeyboardEvent<HTMLDivElement>) {
     const inPanel = !!(event.target as Element | null)?.closest?.('.lu-pop-panel');
     if (open && event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); close(); }
-    else if (open && inPanel && event.key === 'Tab' && event.shiftKey) close();
+    else if (open && inPanel && event.key === 'Tab' && event.shiftKey && leavesPanelBackward(event.target as Element)) { event.preventDefault(); close(); }
     else if (!open && !inPanel && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) { event.preventDefault(); change(true); }
   }
   function onFocusOut(event: FocusEvent<HTMLDivElement>) {
