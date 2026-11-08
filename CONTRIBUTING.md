@@ -1,8 +1,38 @@
 # Contributing
 
-Start with the [README](README.md) for what this repository is and how to
-build and test it. Every bug fix ships with a test that fails without it,
-and every change is one small commit with a message that says why.
+Start with the [README](README.md) for what this package is. Design
+reasoning lives in [`specs/`](specs/README.md). Report a vulnerability as
+[SECURITY.md](SECURITY.md) says, never in a public issue.
+
+## Getting set up
+
+You need [Bun](https://bun.sh) for the package and its suites, and Go for
+the shared check and the release command; the root `go.mod` pins
+`lateregate` and nothing else.
+
+```sh
+bun install --frozen-lockfile
+bun run test        # Unit tests; enforces 90% source line coverage
+bun run typecheck   # Against React 19 and React 18 types
+go tool lateregate  # The checks CI runs on every push
+```
+
+The browser suite and the component gallery need Chromium, which the
+pinned Playwright version installs:
+
+```sh
+bunx playwright install chromium
+```
+
+### Preview the components
+
+```sh
+bun run visual:dev
+```
+
+Open <http://127.0.0.1:4173>. Choose an appearance, component sheet, and theme.
+Each page mounts source components with local fonts and fixed sample content. `tests/visual/main.ts` reads the query: `?scenario=<sheet>&theme=<light|dark>&parity=1` mounts `ReactParityGallery.tsx`, the reference examples every component figure records, with fixture data in `parity-data.ts`; without `parity=1` it mounts `ReactGallery.tsx`, a second set of examples captioned "react / …". Add `&design=<appearance>` for a product appearance.
+The gallery is a development fixture; it is not included in the published package.
 
 ## Writing
 
@@ -27,18 +57,6 @@ document in pkg:
 https://github.com/latere-ai/pkg/blob/main/docs/writing/registers.md
 The rule applies to new text and to reviews; existing text is fixed as it is
 touched.
-
-## Preview the components
-
-```sh
-bun install --frozen-lockfile
-bunx playwright install chromium
-bun run visual:dev
-```
-
-Open <http://127.0.0.1:4173>. Choose an appearance, component sheet, and theme.
-Each page mounts source components with local fonts and fixed sample content. `tests/visual/main.ts` reads the query: `?scenario=<sheet>&theme=<light|dark>&parity=1` mounts `ReactParityGallery.tsx`, the reference examples every component figure records, with fixture data in `parity-data.ts`; without `parity=1` it mounts `ReactGallery.tsx`, a second set of examples captioned "react / …". Add `&design=<appearance>` for a product appearance.
-The gallery is a development fixture; it is not included in the published package.
 
 ## Compare visual references
 
@@ -136,6 +154,25 @@ the subsequent push must pass comparison without update mode.
 
 See [Playwright's visual comparison guide](https://playwright.dev/docs/test-snapshots)
 for how stable screenshots and platform-specific rendering work.
+
+## Sending a change
+
+1. Fork the repository and make a branch.
+2. Make one logical change per commit, and stage files by name.
+3. Write the subject as `scope: what changed`, in lowercase, for example
+   `select: keep the highlighted option in view while typing`.
+4. Open a pull request.
+
+A bug fix comes with a test that fails without the fix. A change that moves
+a pixel carries the reviewed references as described above, in the same
+pull request. A change a user would notice gets a line under
+`## Unreleased` in the [changelog](CHANGELOG.md); one that can break a
+consumer starts with **Breaking**. Maintainers push to `main` directly, and
+CI runs the same checks on every push and pull request. If you plan a large
+change, open an issue first.
+
+Contributions are accepted under the [MIT License](LICENSE) that covers the
+package. There is no contributor agreement and no sign-off line.
 
 ## Releasing
 
