@@ -18,6 +18,10 @@ export interface GlassSegmentedProps {
 export function GlassSegmented({ value, options, ariaLabel, onChange }: GlassSegmentedProps) {
   const btns = useRef<(HTMLButtonElement | null)[]>([]);
 
+  // One segment is the Tab stop: the chosen one, or the first when `value`
+  // matches none, so the control stays reachable with the keyboard.
+  const stop = Math.max(0, options.findIndex((opt) => opt.value === value));
+
   function select(v: string) {
     if (v !== value) onChange?.(v);
   }
@@ -45,7 +49,7 @@ export function GlassSegmented({ value, options, ariaLabel, onChange }: GlassSeg
           role="radio"
           className={cx('lu-seg-item', opt.value === value && 'is-active')}
           aria-checked={opt.value === value}
-          tabIndex={opt.value === value ? 0 : -1}
+          tabIndex={i === stop ? 0 : -1}
           onClick={() => select(opt.value)}
           onKeyDown={(e) => onKey(e, i)}
         >

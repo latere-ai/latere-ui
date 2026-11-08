@@ -5,6 +5,7 @@ import { GlassIconButton } from '../GlassIconButton';
 import { GlassSwitch } from '../GlassSwitch';
 import { GlassRadio } from '../GlassRadio';
 import { GlassTabs } from '../GlassTabs';
+import { GlassSegmented } from '../GlassSegmented';
 
 describe('GlassIconButton', () => {
   it('forwards popup semantics and caller styling without losing button classes', () => {
@@ -159,5 +160,24 @@ describe('GlassTabs', () => {
     expect(document.activeElement).toBe(b);
     fireEvent.click(b);
     expect(c.getAttribute('aria-selected')).toBe('true');
+  });
+});
+
+describe('roving tab stop with no matching value', () => {
+  it('GlassSegmented keeps its first segment in the Tab order', () => {
+    render(<GlassSegmented value="" ariaLabel="Range" options={[{ value: 'day', label: 'Day' }, { value: 'week', label: 'Week' }]} />);
+    const radios = [...document.querySelectorAll<HTMLElement>('[role="radio"]')];
+    expect(radios.map(el => el.tabIndex)).toEqual([0, -1]);
+  });
+
+  it('GlassTabs keeps its first tab in the Tab order', () => {
+    render(<GlassTabs value="missing" ariaLabel="Sections" tabs={[{ value: 'a', label: 'A' }, { value: 'b', label: 'B' }]} />);
+    const tabs = [...document.querySelectorAll<HTMLElement>('[role="tab"]')];
+    expect(tabs.map(el => el.tabIndex)).toEqual([0, -1]);
+  });
+
+  it('keeps the chosen item as the Tab stop when value matches', () => {
+    render(<GlassTabs value="b" ariaLabel="Sections" tabs={[{ value: 'a', label: 'A' }, { value: 'b', label: 'B' }]} />);
+    expect([...document.querySelectorAll<HTMLElement>('[role="tab"]')].map(el => el.tabIndex)).toEqual([-1, 0]);
   });
 });

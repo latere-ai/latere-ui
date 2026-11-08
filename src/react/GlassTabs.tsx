@@ -14,6 +14,10 @@ export interface GlassTabsProps {
 export function GlassTabs({ value, tabs, ariaLabel, onChange }: GlassTabsProps) {
   const buttons = useRef<(HTMLButtonElement | null)[]>([]);
 
+  // One tab is the Tab stop: the selected one, or the first when `value`
+  // matches none, so the strip stays reachable with the keyboard.
+  const stop = Math.max(0, tabs.findIndex(tab => tab.value === value));
+
   function select(next: string) {
     if (next !== value) onChange?.(next);
   }
@@ -30,7 +34,7 @@ export function GlassTabs({ value, tabs, ariaLabel, onChange }: GlassTabsProps) 
   return <div className="lu-tabs" role="tablist" aria-label={ariaLabel}>
     {tabs.map((tab, index) => <button key={tab.value} ref={element => { buttons.current[index] = element; }}
       type="button" role="tab" className={cx('lu-tab', tab.value === value && 'is-active')}
-      aria-selected={tab.value === value} tabIndex={tab.value === value ? 0 : -1}
+      aria-selected={tab.value === value} tabIndex={index === stop ? 0 : -1}
       onClick={() => select(tab.value)} onKeyDown={event => onKey(event, index)}>
       {tab.label}
       {tab.value === value && <span className="lu-tab-ind lu-glass-thin" aria-hidden="true" />}
