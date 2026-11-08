@@ -134,9 +134,3 @@
 .lu-select-option.is-selected { box-shadow: inset 0 0 0 1px var(--lu-control-border, color-mix(in srgb, var(--text, #0a0a0a) 45%, transparent)); font-weight: var(--fw-semibold, 600); color: var(--text, #0a0a0a); background: var(--glass-pill-fill, rgba(255, 255, 255, 0.70)); }
 .lu-select-option.is-selected.is-active { background: var(--glass-pill-fill, rgba(255, 255, 255, 0.70)); }
 .lu-select-option.is-disabled { opacity: 0.45; cursor: not-allowed; }
-.lu-select-enter-active, .lu-select-leave-active { transition: opacity 0.14s ease, transform 0.14s ease; }
-.lu-select-enter-from, .lu-select-leave-to { opacity: 0; transform: translateY(-4px); }
-@media (prefers-reduced-motion: reduce) {
-  .lu-select-enter-active, .lu-select-leave-active { transition: none; }
-  .lu-select-enter-from, .lu-select-leave-to { transform: none; }
-}

@@ -43,9 +43,3 @@
  * any flip, for host styles such as a transform origin. */
 .lu-pop-panel--match { box-sizing: border-box; width: var(--lu-anchor-width, 100%); min-width: 0; overflow-wrap: anywhere; }
 .lu-pop-panel--match .lu-menu { min-width: 0; }
-.lu-pop-enter-active, .lu-pop-leave-active { transition: opacity 0.14s ease, transform 0.14s ease; }
-.lu-pop-enter-from, .lu-pop-leave-to { opacity: 0; transform: translateY(-4px); }
-@media (prefers-reduced-motion: reduce) {
-  .lu-pop-enter-active, .lu-pop-leave-active { transition: none; }
-  .lu-pop-enter-from, .lu-pop-leave-to { transform: none; }
-}

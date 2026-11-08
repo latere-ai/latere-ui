@@ -39,8 +39,8 @@ export function useClickOutside(
 
 /**
  * Trap Tab focus inside `container` while `active`, close on Escape, and
- * restore focus to the previously-focused element on deactivation. The React
- * port of `glass/overlay.ts`'s useFocusTrap.
+ * restore focus to the previously-focused element on deactivation. A React
+ * wrapper over `activateFocusTrap` in `glass/focusTrap.ts`.
  */
 export function useFocusTrap(
   active: boolean,
