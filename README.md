@@ -1,19 +1,97 @@
 # latere-ui
 
+**latere-ui is the React component library Latere's web products are built with: glass materials, controls, overlays, a console shell and a documentation layout, shipped as source from a git tag.**
+
 [![UI verification](https://github.com/latere-ai/latere-ui/actions/workflows/visual.yml/badge.svg)](https://github.com/latere-ai/latere-ui/actions/workflows/visual.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Latest tag](https://img.shields.io/github/v/tag/latere-ai/latere-ui?label=version)](https://github.com/latere-ai/latere-ui/tags)
 [![React 18 or 19](https://img.shields.io/badge/react-18%20%7C%2019-61dafb.svg)](https://react.dev/)
 
-Shared glass materials, interface components, and application chrome for React. Build forms, navigation, dialogs, consoles, and documentation pages, in default glass, the ink palette, or the matte Replichai, Wallfacer and Origo appearances.
-
-The materials, controls, overlays, console shell, and documentation layout are product-neutral. A few parts are Latere's own and are published for Latere's products: the site footer carries Latere's product lineup and links, the logo marks and the favicon helper are Latere's, and the session helpers expect a backend that serves the [session contract](docs/api-guide.md#session) Latere's backends serve, under paths you can rename.
+Build forms, navigation, dialogs, consoles and documentation pages in default glass, the ink palette, or the matte Replichai, Wallfacer and Origo appearances.
 
 ![Compact workspace with navigation, toolbar, summary panels and projects](tests/visual/goldens/darwin-24/workspace-light-laptop.png)
 
-[Design guide](docs/design-system.md) · [Integration guide](docs/api-guide.md) · [Console components](docs/react-shell.md) · [Visual reference](docs/visual-reference.md) · [Changelog](CHANGELOG.md) · [Contributing](CONTRIBUTING.md)
+## Status
+
+Version 2 is current and is React only, for React 18 and 19. The package is not on a registry: you install a release tag from git, and your application compiles the `.tsx`, `.ts` and `.css` source with its own toolchain. A Vue application stays on a v1.x tag, such as `github:latere-ai/latere-ui#v1.32.2`; the [changelog](CHANGELOG.md) lists what v2 removed and how a React application moves to it. These docs and figures track `main`; changes not yet in a release are under Unreleased in the changelog.
+
+The materials, controls, overlays, console shell and documentation layout are product-neutral. A few parts are Latere's own and are published for Latere's products: the site footer carries Latere's product lineup and links, the logo marks and the favicon helper are Latere's, and the session helpers expect a backend that serves the [session contract](docs/api-guide.md#session) Latere's backends serve, under paths you can rename.
+
+| Surface | Included |
+|---|---|
+| Controls and forms | Buttons, fields, choices, tabs, status, and tables |
+| Overlays | Dialogs, drawers, popovers, menus, tooltips, toasts, and confirms |
+| Console | Grouped navigation, collapsible sidebar, account menu, command palette |
+| Documentation | Grouped index, article, table of contents, previous/next navigation |
+| Site chrome | The family's footer, theme and language menus, logo, favicon |
+| Session | API client, account resolution, organization switching, session bindings |
+| Telemetry | Page load, request and Core Web Vitals traces sent to your backend's telemetry relay, from any framework or none |
+| Structured data | schema.org descriptions of organizations, sites, books, chapters, articles and blog posts for search engines and AI agents, from any framework or none |
 
 Every component has light and dark figures in all four appearances, and mobile figures in the default appearance; the [visual reference](docs/visual-reference.md) indexes them.
+
+## Quickstart
+
+Pin a release tag from the [releases page](https://github.com/latere-ai/latere-ui/releases), with React 18 or 19 and React DOM, which are required peers:
+
+```sh
+bun add react react-dom github:latere-ai/latere-ui#v2.3.0
+```
+
+Import the palette and the material, then mount a component:
+
+```tsx
+import { GlassPanel, GlassButton } from 'latere-ui';
+import 'latere-ui/tokens';
+import 'latere-ui/glass';
+
+export function Workspace() {
+  return (
+    <GlassPanel>
+      <h2>Your workspace</h2>
+      <p>Keep projects, people, and activity together.</p>
+      <GlassButton variant="primary">Create project</GlassButton>
+    </GlassPanel>
+  );
+}
+```
+
+Give the page a canvas background, so translucent surfaces have something to blur:
+
+```css
+body {
+  margin: 0;
+  color: var(--text);
+  background: radial-gradient(ellipse at top left, #dce6df, transparent 65%), var(--bg);
+}
+```
+
+`latere-ui/tokens` supplies a default palette. If your app already defines the expected CSS variables, keep its palette instead. Set `data-theme="dark"` on the document root to select the dark tokens. Footer theme controls report the reader's choice; your app applies it and resolves `auto` from the system preference. For server rendering with Vite, add `ssr: { noExternal: ['latere-ui'] }` so the package source is compiled for the server too.
+
+## How it fits
+
+```mermaid
+flowchart LR
+  app["Your React app"]
+  subgraph pkg["latere-ui"]
+    direction LR
+    tokens["Tokens and palettes<br/>tokens, ink, presets"]
+    glass["Glass material<br/>glass"]
+    comps["Components<br/>controls, overlays, console,<br/>docs layout, footer"]
+    session["Session client<br/>and bindings"]
+    tele["Telemetry"]
+    sd["Structured data"]
+  end
+  backend["Your backend<br/>session contract,<br/>telemetry relay"]
+  head["The page's head<br/>JSON-LD"]
+  tokens --> glass --> comps
+  app --> comps
+  app --> session --> backend
+  app --> tele --> backend
+  app --> sd --> head
+```
+
+The stylesheets set CSS variables and materials that every component reads, so a palette or an appearance changes all of them at once. The session client and the telemetry entry talk only to the backend your app names; the structured data builders return the escaped script element for the page's head.
 
 ## Choose an appearance
 
@@ -36,67 +114,6 @@ document.documentElement.dataset.design = 'ink';
 ```
 
 `data-theme="dark"` selects the dark ladder. Every text tone reaches 4.5:1 on every surface it is set on, and control edges reach 3:1. Besides surfaces, text, borders and the primary action, the stylesheet defines the status tones (`--ok`, `--info`, `--warn`, `--danger`, and the `--state-*` tones the badges and alerts read), the admin-audience tone, code syntax and terminal colors, a radius ladder from `--radius-chip` (4px) to `--radius-card` (16px), the control heights, the console type scale, and the page gutter. It maps the package's own radius and control-scale tokens onto that ladder, so the components follow it. The [design guide](docs/design-system.md#use-the-ink-palette) lists the tokens.
-
-## What you can build
-
-| Surface | Included |
-|---|---|
-| Controls and forms | Buttons, fields, choices, tabs, status, and tables |
-| Overlays | Dialogs, drawers, popovers, menus, tooltips, toasts, and confirms |
-| Console | Grouped navigation, collapsible sidebar, account menu, command palette |
-| Documentation | Grouped index, article, table of contents, previous/next navigation |
-| Site chrome | The family's footer, theme and language menus, logo, favicon |
-| Session | API client, account resolution, organization switching, session bindings |
-| Telemetry | Page load, request and Core Web Vitals traces sent to your backend's telemetry relay, from any framework or none |
-| Structured data | schema.org descriptions of organizations, sites, books, chapters, articles and blog posts for search engines and AI agents, from any framework or none |
-
-The package ships `.tsx`, `.ts`, and `.css` source. Your application compiles it with its own toolchain. Components import from [latere-ui](src/react/index.ts) (also published as `latere-ui/react`); the [API guide](docs/api-guide.md) explains controlled values and callbacks.
-
-## Install
-
-The package is not on a registry. Pin a release tag from the [releases page](https://github.com/latere-ai/latere-ui/releases), for example:
-
-```sh
-bun add github:latere-ai/latere-ui#v2.3.0
-```
-
-These docs and figures track `main`. Changes that are not yet in a release are listed under Unreleased in the [changelog](CHANGELOG.md).
-
-Install React 18 or 19 and React DOM; both are required peers. For server rendering with Vite, include `ssr: { noExternal: ['latere-ui'] }` so the package source is compiled for the server too.
-
-Version 2 is React only. A Vue application stays on a v1.x tag, such as `github:latere-ai/latere-ui#v1.32.2`; the [changelog](CHANGELOG.md) lists what v2 removed and how a React application moves to it.
-
-## Start with a panel
-
-Import the palette and material before mounting components:
-
-```tsx
-import { GlassPanel, GlassButton } from 'latere-ui';
-import 'latere-ui/tokens';
-import 'latere-ui/glass';
-
-export function Workspace() {
-  return (
-    <GlassPanel>
-      <h2>Your workspace</h2>
-      <p>Keep projects, people, and activity together.</p>
-      <GlassButton variant="primary">Create project</GlassButton>
-    </GlassPanel>
-  );
-}
-```
-
-Apply a canvas background so translucent surfaces have something to blur:
-
-```css
-body {
-  margin: 0;
-  color: var(--text);
-  background: radial-gradient(ellipse at top left, #dce6df, transparent 65%), var(--bg);
-}
-```
-
-`latere-ui/tokens` supplies a default palette. If your app already defines the expected CSS variables, keep its palette instead. Set `data-theme="dark"` on the document root to select the dark tokens. Footer theme controls report the reader's choice; your app applies it and resolves `auto` from the system preference.
 
 ## Compose the interface
 
@@ -146,6 +163,20 @@ The repository keeps golden PNGs of real components in light and dark themes, re
 
 Use the [visual reference index](docs/visual-reference.md) to find a component and browse its golden figures. The figures show fixed content and rendering conditions; separate interaction tests cover focus, keyboard, and scrolling behavior.
 
+## Documentation
+
+| Page | For |
+|---|---|
+| [Design guide](docs/design-system.md) | Choosing a material, sizing a layout, the appearances and their fonts, the ink palette, composing a screen |
+| [Integration guide](docs/api-guide.md) | Imports, props and callbacks, the footer, the console sidebar, the documentation layout, the session contract, browser telemetry, structured data |
+| [Console and account components](docs/react-shell.md) | The command palette, account preferences, the organization chooser, the documentation layout |
+| [Visual reference](docs/visual-reference.md) | Every component's golden figure by appearance, theme and viewport |
+| [Changelog](CHANGELOG.md) | What changed in each release |
+| [Contributing](CONTRIBUTING.md) | Setting up, the unit and browser suites, recording and reviewing a visual change |
+| [Review records](docs/reviews/README.md) | What each deliberate regeneration of the figures inspected |
+| [Specs](specs/README.md) | The design of each feature and the reasoning behind it |
+| [Security](SECURITY.md) | Reporting a vulnerability, and what the package does and does not protect |
+
 ## Contributing
 
 ```sh
@@ -154,8 +185,8 @@ bun run test
 bun run typecheck
 ```
 
-The unit suite covers the components, the framework-free modules and the stylesheets' contrast. Browser fixtures exercise actual layout and generate the visual references shown here. [Contributing](CONTRIBUTING.md) covers the browser setup, screenshot comparison, and how an intended visual change is reviewed; the [review records](docs/reviews/README.md) document each past regeneration. Design specs are in [`specs/`](specs/README.md).
+The unit suite covers the components, the framework-free modules and the stylesheets' contrast. Browser fixtures exercise actual layout and generate the visual references shown here. [Contributing](CONTRIBUTING.md) covers the browser setup, screenshot comparison, and how an intended visual change is reviewed.
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+[MIT](LICENSE).
