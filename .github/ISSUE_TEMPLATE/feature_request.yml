@@ -1,0 +1,16 @@
+name: Feature request
+description: Something the components or styles should do that they do not.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: What you are trying to build
+      description: The screen or interaction, and where the package gets in the way.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What you would like the code to look like
+      render: tsx

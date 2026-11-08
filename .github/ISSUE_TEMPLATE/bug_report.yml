@@ -1,0 +1,36 @@
+name: Bug report
+description: A component, style or helper does not work as documented.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not report a security vulnerability here. Follow
+        [SECURITY.md](https://github.com/latere-ai/latere-ui/blob/main/SECURITY.md).
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you rendered or called, what you expected, and what happened instead. A screenshot helps for anything visual; include the browser console's error if there is one.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce
+      description: The smallest component or page that shows it, and the steps (keys pressed, window size, theme). Leave out tokens and personal data.
+      render: tsx
+  - type: input
+    id: version
+    attributes:
+      label: latere-ui version
+      description: The tag your package.json pins.
+      placeholder: github:latere-ai/latere-ui#vX.Y.Z
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: React version, browser and platform
+      placeholder: React 19.2, Safari 26, macOS
