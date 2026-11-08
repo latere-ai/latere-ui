@@ -50,7 +50,7 @@ Use `replichai`, `wallfacer`, or `origo` on **the document root**. This gives po
 | Preset | Typography and density | Surfaces and actions | Reference source |
 |---|---|---|---|
 | `replichai` | Inter, 14px reading text, 32px fields | Warm matte surfaces, 18px cards, 8px fields; 30px ink actions with blue hover | Replichai's reading interface |
-| `wallfacer` | Inter, 13px operator UI, 32px fields | Warm matte surfaces, compact 14px cards, 10px fields; 30px ink actions with clay hover | [Wallfacer tokens](https://github.com/latere-ai/wallfacer/blob/main/frontend/src/styles/tokens.css) and [primitives](https://github.com/latere-ai/wallfacer/blob/main/frontend/src/styles/primitives.css) |
+| `wallfacer` | Inter, 13px operator UI, 32px fields | Warm matte surfaces, compact 14px cards, 10px fields; 30px ink actions with clay hover | Wallfacer's operator interface |
 | `origo` | IBM Plex Sans/Mono, 13px UI, 28px table rows | Opaque surfaces without shadows, 4px panels/fields, 3px standalone buttons; iris primary actions | [Origo styles](https://github.com/latere-ai/origo-web/blob/main/internal/web/assets/app.css) |
 
 These presets apply real geometry, typography, material and state changes to shared components. Replichai's actual card is 18px despite its 12px radius token; Wallfacer's preset chooses its compact 14px card rather than its generic 18px card. Toolbar actions keep concentric corners derived from their parent and inset. Circular status dots, avatars, radio indicators and switch thumbs retain their functional shapes.
@@ -151,7 +151,7 @@ The sidebar supports a collapsed rail and custom brand, row, and footer content.
 
 ![The footer on a narrow viewport](../tests/visual/goldens/darwin-24/footer-light-mobile.png)
 
-The footer leaves room around its content. A lead block on the left holds the site's lockup, the social profiles, a short hairline, and the theme and language buttons. Four link columns sit to its right: Applications (Latere, the chat, and the Gallery) with Research (ReplicHAI) below it, Platform, Company, and Legal. Each group is a semibold heading in the full text tone over plain links set 32px apart, and the copyright closes the footer. Below 1024px the lead moves above the columns; on a phone the columns go two up and the lead follows them. A site sets its own lockup in place of the Latere AI mark, and nothing else: the footer is the same on every site.
+The footer leaves room around its content. A lead block on the left holds the site's lockup, the social profiles, a short hairline, and the theme and language buttons. Four link columns sit to its right: Applications (Latere Chat and the Gallery) with Research (ReplicHAI) below it, Platform, Company, and Legal. Each group is a semibold heading in the full text tone over plain links set 32px apart, and the copyright closes the footer. Below 1024px the lead moves above the columns; on a phone the columns go two up and the lead follows them. A site sets its own lockup in place of the Latere AI mark, and nothing else: the footer is the same on every site.
 
 Product names in the columns rest in the same face and color as their neighbors, so each column reads as one list. A product takes its gradient under the pointer or keyboard focus; the chat, whose wordmark is the ink, takes the full text color.
 

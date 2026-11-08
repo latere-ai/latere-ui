@@ -53,7 +53,7 @@ import { SiteFooter } from 'latere-ui';
 | `locale`         | `string` (bundled: `en`, `zh`, `de`) | required       | Selects footer copy and the checked language; any other locale reads English. |
 | `onLocaleChange` | `(locale) => void`            | `undefined`           | Called with the locale the reader picked. Without it there is no language menu. |
 | `locales`        | `LocaleOption[]`              | `[en, zh]`            | Languages in the language menu (`{ code, label, name? }`), named by `name`. With fewer than two there is no language menu. |
-| `baseUrl`        | `string`                      | `'https://latere.ai'` | Origin of the company site's links (About, Blog, Legal).              |
+| `baseUrl`        | `string`                      | `'https://latere.ai'` | Origin of the company site's links (About, Products, Blog, Legal).              |
 | `routerLink`     | `ComponentType`               | `undefined`           | Your router's `Link`, for the company site itself, to keep its links in the app. |
 | `brand`          | `ReactNode`                   | Latere AI lockup      | The site's lockup at the head of the footer, linked to its home.      |
 
@@ -81,12 +81,13 @@ site does not restyle `.lu-footer*`: a footer that looks different on one
 site is a change to this package, made for every site.
 
 The footer carries Latere's own navigation in four columns: Applications
-(the chat, under its public name Latere, then the Gallery at latere.site)
+(Latere Chat, then the Gallery at latere.site)
 with Research (ReplicHAI) below it, Platform (the platform console and
-Identity), Company (About, Why Latere, Blog, Open Source, Contact) and Legal
-(Trust Center, Privacy, Terms, Impressum). Product and Identity links are
-always absolute. The company site's links (About, Blog, Legal) resolve
-against `baseUrl` as plain `<a>` unless `routerLink` is supplied, in which
+Identity), Company (About, Products, Why Latere, Blog, Open Source, Contact)
+and Legal (Trust Center, Privacy, Terms, Data Processing Agreement,
+Impressum). Product, Identity and Contact links are always absolute. The
+company site's links (About, Products, Why Latere, Blog, Open Source and every
+Legal link) resolve against `baseUrl` as plain `<a>` unless `routerLink` is supplied, in which
 case they render through it with a relative `to`.
 
 `footer.css` reads `--text`, `--text-muted`, `--accent`, `--border`,
@@ -210,8 +211,8 @@ switcher) with `brandExtra`, `top` or `extra`. `brand`, `brandExtra`, `top`,
 **Icons.** An item's `icon` that names a built-in stroke icon renders at 16px
 in the text color: `home`, `key`, `card`, `folder`, `cube`, `globe`,
 `sparkles`, `bot`, `branch`, `repo`, `org`, `shield`, `book`, `coins`,
-`terminal`, `plus`, `search`, `chevron`, `external` (Lucide shapes, ISC
-license). `renderIcon` replaces a row's icon fallback. A row with no icon has
+`terminal`, `plus`, `search`, `chevron`, `external`, `info`, `check-circle`,
+`alert-triangle`, `x-circle`, `more` (Lucide shapes, ISC license). `renderIcon` replaces a row's icon fallback. A row with no icon has
 no icon slot, so its label starts at the row's padding.
 
 **Sections with sub-pages.** Give an item `children` and it becomes an
@@ -705,7 +706,7 @@ turns every export into a failed request in the network log. Guard the call
 the way the example does, or on whatever tells your application it is
 deployed.
 
-`startTelemetry` returns nothing and never throws. A second call is ignored,
+`startTelemetry` returns nothing and never throws. The first call with valid options wins and later calls are ignored,
 and on the server (server rendering, Node tests) the call does nothing. The
 OpenTelemetry SDK is not part of your entry bundle: the call waits for the
 page's `load` event and an idle moment, then imports the SDK as its own chunk
