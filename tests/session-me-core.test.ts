@@ -6,6 +6,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createApiClient } from '../src/session/client';
+import { createReauth } from '../src/session/reauth';
 import { ApiError } from '../src/session/types';
 import {
   login,
@@ -240,5 +241,23 @@ describe('me() answer shape', () => {
   it('throws when the mapped value has no string principal_id', async () => {
     vi.stubGlobal('fetch', mockFetch([[200, { sub: 'x' }]]));
     await expect(me(createApiClient(), { mapMe: () => ({}) as Principal })).rejects.toBeInstanceOf(ApiError);
+  });
+});
+
+describe('switchOrg() on a 401', () => {
+  it('leaves the navigation to the client onUnauthorized handler', async () => {
+    vi.stubGlobal('fetch', mockFetch([[401, { error: 'unauthorized' }]]));
+    const reauth = createReauth();
+    const client = createApiClient({ onUnauthorized: () => reauth.recoverSession() });
+    await switchOrg(client, 'org-2');
+    expect(hrefSpy).toHaveBeenCalledTimes(1);
+    expect(String(hrefSpy.mock.calls[0][0])).toContain('prompt=none');
+  });
+
+  it('still bounces to the login path when the client has no handler', async () => {
+    vi.stubGlobal('fetch', mockFetch([[401, { error: 'unauthorized' }]]));
+    await switchOrg(createApiClient(), 'org-2');
+    expect(hrefSpy).toHaveBeenCalledTimes(1);
+    expect(String(hrefSpy.mock.calls[0][0])).toContain('/login?return_to=');
   });
 });

@@ -75,7 +75,8 @@ export interface SwitchOrgOptions {
 /**
  * POST a switch-org request and navigate to the resulting destination. Falls
  * back to a `loginPath?return_to=…&org_id=…` bounce when the endpoint is
- * missing or fails.
+ * missing or fails, except for a 401 when the client has an `onUnauthorized`
+ * handler: that handler owns the navigation.
  * No-op when called outside a browser.
  */
 export async function switchOrg(
@@ -101,7 +102,10 @@ export async function switchOrg(
     const res = await client.api<{ redirect?: string }>('POST', endpoint, { org_id: orgID });
     if (mode === 'login-bounce') bounce();
     else window.location.href = webTarget(res?.redirect, defaultReturnTo);
-  } catch {
+  } catch (e) {
+    // A 401 already went to the client's `onUnauthorized` handler, which runs
+    // the session recovery; a second navigation here would race it.
+    if (e instanceof ApiError && e.status === 401 && client.onUnauthorized) return;
     bounce();
   }
 }
