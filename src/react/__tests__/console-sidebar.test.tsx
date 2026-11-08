@@ -1,6 +1,6 @@
 // The ConsoleSidebar's rows, brand, collapse state, search and render props.
 import { fireEvent, render } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { ConsoleSidebar } from '../ConsoleSidebar';
 import type { ConsoleNavModel } from '../../console/nav';
@@ -203,8 +203,10 @@ describe('<ConsoleSidebar /> (react)', () => {
     expect(bar.textContent).toContain('Search & run');
     fireEvent.click(bar);
     expect(onSearch).toHaveBeenCalledTimes(1);
+    vi.spyOn(navigator, 'platform', 'get').mockReturnValue('MacIntel');
     document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', metaKey: true }));
     expect(onSearch).toHaveBeenCalledTimes(2);
+    vi.restoreAllMocks();
   });
 
   it('omits the search bar unless search is enabled', () => {
@@ -313,5 +315,55 @@ describe('ConsoleSidebar collapsed names', () => {
   it('leaves expanded rows named by their content', () => {
     const { container } = render(<ConsoleSidebar model={model} />);
     expect(container.querySelector('.lu-cs-item[aria-label]')).toBeNull();
+  });
+});
+
+describe('ConsoleSidebar search shortcut', () => {
+  const press = (init: KeyboardEventInit) => {
+    const event = new KeyboardEvent('keydown', { key: 'k', bubbles: true, cancelable: true, ...init });
+    document.body.dispatchEvent(event);
+  };
+  const platform = (value: string) => vi.spyOn(navigator, 'platform', 'get').mockReturnValue(value);
+  afterEach(() => vi.restoreAllMocks());
+
+  it('leaves Ctrl-K to a field that already handled it', () => {
+    platform('Win32');
+    const onSearch = vi.fn();
+    render(<><ConsoleSidebar model={model} search onSearch={onSearch} /><textarea aria-label="Editor" onKeyDown={event => event.preventDefault()} /></>);
+    const editor = document.querySelector('textarea')!;
+    editor.focus();
+    fireEvent.keyDown(editor, { key: 'k', ctrlKey: true });
+    expect(onSearch).not.toHaveBeenCalled();
+    press({ ctrlKey: true });
+    expect(onSearch).toHaveBeenCalledOnce();
+  });
+
+  it('takes Cmd-K on a Mac and leaves it Ctrl-K, which edits text there', () => {
+    platform('MacIntel');
+    const onSearch = vi.fn();
+    render(<ConsoleSidebar model={model} search onSearch={onSearch} />);
+    press({ ctrlKey: true });
+    expect(onSearch).not.toHaveBeenCalled();
+    press({ metaKey: true });
+    expect(onSearch).toHaveBeenCalledOnce();
+  });
+
+  it('takes Ctrl-K elsewhere and shows it in the hint', () => {
+    platform('Win32');
+    const onSearch = vi.fn();
+    const { container } = render(<ConsoleSidebar model={model} search onSearch={onSearch} />);
+    expect(container.querySelector('.lu-cs-search-hint')!.textContent).toBe('Ctrl K');
+    press({ metaKey: true });
+    expect(onSearch).not.toHaveBeenCalled();
+    press({ ctrlKey: true });
+    expect(onSearch).toHaveBeenCalledOnce();
+  });
+
+  it('shows the Command hint on a Mac and keeps a hint the host passes', () => {
+    platform('MacIntel');
+    const view = render(<ConsoleSidebar model={model} search />);
+    expect(view.container.querySelector('.lu-cs-search-hint')!.textContent).toBe('⌘K');
+    view.rerender(<ConsoleSidebar model={model} search searchHint="/" />);
+    expect(view.container.querySelector('.lu-cs-search-hint')!.textContent).toBe('/');
   });
 });

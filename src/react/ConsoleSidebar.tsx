@@ -46,7 +46,7 @@ import {
   type NavOpenState,
 } from '../console/openState';
 import { ConsoleIcon } from './ConsoleIcon';
-import { cx, useIsomorphicLayoutEffect } from './internal';
+import { cx, isApplePlatform, useIsomorphicLayoutEffect } from './internal';
 
 type BrandTheme = 'lux' | 'cella' | 'topos';
 
@@ -118,11 +118,11 @@ export interface ConsoleSidebarProps {
   brandColor?: string;
   /** When collapsed, clicking the brand expands the rail (optional). */
   expandOnBrandClick?: boolean;
-  /** Show the built-in search bar (fires `onSearch`; also Cmd/Ctrl-K). */
+  /** Show the built-in search bar (fires `onSearch`; also Cmd-K on Apple platforms, Ctrl-K elsewhere). */
   search?: boolean;
   /** Search bar placeholder label. */
   searchLabel?: string;
-  /** Keyboard hint shown in the search bar. */
+  /** Keyboard hint shown in the search bar; unset, `⌘K` on Apple platforms and `Ctrl K` elsewhere. */
   searchHint?: string;
   /** Label rendered next to the live-badge dot. */
   liveLabel?: string;
@@ -187,7 +187,7 @@ export function ConsoleSidebar({
   expandOnBrandClick,
   search,
   searchLabel = 'Search',
-  searchHint = '⌘K',
+  searchHint,
   liveLabel = 'Live',
   expandLabel = 'Expand sidebar',
   collapseLabel = 'Collapse sidebar',
@@ -217,8 +217,11 @@ export function ConsoleSidebar({
     setCollapsed(!collapsed);
   }
 
-  // Global Cmd/Ctrl-K opens search: one always-on listener that no-ops unless
-  // `search` is enabled, so it is not re-attached on every prop change.
+  // Global Cmd-K (Ctrl-K off Apple platforms) opens search: one always-on
+  // listener that no-ops unless `search` is enabled, so it is not re-attached
+  // on every prop change. A field that already used the key (an editor's
+  // insert-link shortcut) keeps it, and so does the other modifier: Ctrl-K is
+  // "delete to end of line" in macOS text fields.
   const searchRef = useRef(search);
   searchRef.current = search;
   const onSearchRef = useRef(onSearch);
@@ -226,8 +229,9 @@ export function ConsoleSidebar({
   useEffect(() => {
     if (typeof document === 'undefined') return;
     function onKeydown(e: KeyboardEvent) {
-      if (!searchRef.current) return;
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      if (!searchRef.current || e.defaultPrevented) return;
+      const modifier = isApplePlatform() ? e.metaKey && !e.ctrlKey : e.ctrlKey && !e.metaKey;
+      if (modifier && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         onSearchRef.current?.();
       }
@@ -247,6 +251,12 @@ export function ConsoleSidebar({
       footGroups: (inFoot ? pinned.map((g) => ({ ...g, firstPinned: false })) : []) as (NavGroup & { firstPinned: boolean })[],
     };
   }, [model.groups, bottomGroups]);
+
+  // The hint follows the platform after mount, so the server's markup and the
+  // first client render agree.
+  const [apple, setApple] = useState(true);
+  useIsomorphicLayoutEffect(() => { setApple(isApplePlatform()); }, []);
+  const hint = searchHint ?? (apple ? '⌘K' : 'Ctrl K');
 
   const navId = useId();
   const navRef = useRef<HTMLElement>(null);
@@ -557,7 +567,7 @@ export function ConsoleSidebar({
           type="button"
           className="lu-cs-search"
           data-collapsed={collapsed ? 'true' : 'false'}
-          title={`${searchLabel} (${searchHint})`}
+          title={`${searchLabel} (${hint})`}
           onClick={() => onSearch?.()}
         >
           <span className="lu-cs-search-ic" aria-hidden="true">
@@ -576,7 +586,7 @@ export function ConsoleSidebar({
             </svg>
           </span>
           {!collapsed && <span className="lu-cs-search-label">{searchLabel}</span>}
-          {!collapsed && searchHint && <span className="lu-cs-search-hint">{searchHint}</span>}
+          {!collapsed && hint && <span className="lu-cs-search-hint">{hint}</span>}
         </button>
       )}
 

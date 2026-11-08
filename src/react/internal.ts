@@ -98,3 +98,13 @@ export function dialogName(
  * rendering, where React 18 warns that a layout effect does nothing.
  */
 export const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
+
+/**
+ * Whether the keyboard's command key is Cmd: macOS and iOS. Server rendering
+ * has no navigator and answers true.
+ */
+export function isApplePlatform(): boolean {
+  if (typeof navigator === 'undefined') return true;
+  const { userAgentData, platform } = navigator as Navigator & { userAgentData?: { platform?: string } };
+  return /mac|iphone|ipad|ipod/i.test(userAgentData?.platform || platform || '');
+}
