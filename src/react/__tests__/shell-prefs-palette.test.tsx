@@ -118,3 +118,15 @@ describe('ConsolePalette highlight', () => {
     expect(document.querySelector('[data-active="true"]')?.textContent).toContain('Home');
   });
 });
+
+describe('ConsolePalette empty results', () => {
+  it('announces the empty line in a status region outside the listbox', () => {
+    render(<ConsolePalette open model={model} emptyLabel="Nothing here" />);
+    expect(screen.getByRole('status').textContent).toBe('');
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'absent' } });
+    expect(screen.getByRole('status').textContent).toBe('Nothing here');
+    const listbox = screen.getByRole('listbox');
+    expect(listbox.contains(screen.getByText('Nothing here'))).toBe(false);
+    expect(listbox.children).toHaveLength(0);
+  });
+});

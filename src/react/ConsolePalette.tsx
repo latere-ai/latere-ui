@@ -58,8 +58,10 @@ export function ConsolePalette({ open, model, placeholder = 'Jump to…', emptyL
           {consoleIcon(item.icon) && <span className="lu-cp-item-icon"><ConsoleIcon name={item.icon!} /></span>}
           <span className="lu-cp-item-label">{item.label}</span>{item.group && <span className="lu-cp-item-group">{item.group}</span>}
         </li>)}
-        {!results.length && <li className="lu-cp-empty">{emptyLabel}</li>}
       </ul>
+      {/* A listbox holds only options, so the empty line sits beside it in a
+          status region that is always present and announces when it fills. */}
+      <div role="status">{!results.length && <p className="lu-cp-empty">{emptyLabel}</p>}</div>
     </div>
   </div>, document.body);
 }

@@ -70,7 +70,10 @@
   letter-spacing: 0.15em;
   color: var(--text-muted, #a0a0a0);
 }
+/* Sits after the list, whose 6px padding it takes back, so the line stays
+   where it was when it was a row of the list. */
 .lu-cp-empty {
+  margin: -6px 6px 6px;
   padding: 16px;
   text-align: center;
   color: var(--text-muted, #a0a0a0);
