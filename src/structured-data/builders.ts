@@ -46,7 +46,11 @@ function party(check: Checker, field: string, value: unknown): PartyValue {
   if (type !== 'Person' && type !== 'Organization') {
     check.fail('invalid_value', `${field}.@type`, type, 'must be "Person" or "Organization"');
   }
-  return prune(withoutContext(value)) as PartyValue;
+  // The same checks organization() and person() apply, with the field path of
+  // the embedding page (`author[0].name`). Keys beyond the checked ones stay.
+  const at = `${field}.`;
+  const fields = type === 'Person' ? personFields(check, at, value) : organizationFields(check, at, value);
+  return prune({ ...withoutContext(value), ...fields }) as PartyValue;
 }
 
 // A work reference keeps only what identifies the work and sets the type the
@@ -90,20 +94,40 @@ function creativeWork<T extends string>(check: Checker, type: T, input: Creative
   };
 }
 
+// The checked fields of an Organization and of a Person, in output order.
+// `at` prefixes the field path in errors: empty for a node built directly,
+// `author[0].` for a party embedded in a page.
+function organizationFields(check: Checker, at: string, input: Record<string, unknown>) {
+  return {
+    '@id': check.optId(`${at}@id`, input['@id']),
+    name: check.text(`${at}name`, input.name),
+    url: check.url(`${at}url`, input.url),
+    alternateName: check.optText(`${at}alternateName`, input.alternateName),
+    description: check.optText(`${at}description`, input.description),
+    logo: check.optUrl(`${at}logo`, input.logo),
+    image: check.optUrls(`${at}image`, input.image),
+    sameAs: check.optUrls(`${at}sameAs`, input.sameAs),
+  };
+}
+
+function personFields(check: Checker, at: string, input: Record<string, unknown>) {
+  return {
+    '@id': check.optId(`${at}@id`, input['@id']),
+    name: check.text(`${at}name`, input.name),
+    url: check.optUrl(`${at}url`, input.url),
+    description: check.optText(`${at}description`, input.description),
+    image: check.optUrls(`${at}image`, input.image),
+    sameAs: check.optUrls(`${at}sameAs`, input.sameAs),
+  };
+}
+
 /** organization describes a company or group: required `name` and `url`. */
 export function organization(input: OrganizationInput): OrganizationNode {
   const check: Checker = start('Organization', input);
   return prune({
     '@context': SCHEMA_ORG,
     '@type': 'Organization',
-    '@id': check.optId('@id', input['@id']),
-    name: check.text('name', input.name),
-    url: check.url('url', input.url),
-    alternateName: check.optText('alternateName', input.alternateName),
-    description: check.optText('description', input.description),
-    logo: check.optUrl('logo', input.logo),
-    image: check.optUrls('image', input.image),
-    sameAs: check.optUrls('sameAs', input.sameAs),
+    ...organizationFields(check, '', input as unknown as Record<string, unknown>),
   }) as OrganizationNode;
 }
 
@@ -113,12 +137,7 @@ export function person(input: PersonInput): PersonNode {
   return prune({
     '@context': SCHEMA_ORG,
     '@type': 'Person',
-    '@id': check.optId('@id', input['@id']),
-    name: check.text('name', input.name),
-    url: check.optUrl('url', input.url),
-    description: check.optText('description', input.description),
-    image: check.optUrls('image', input.image),
-    sameAs: check.optUrls('sameAs', input.sameAs),
+    ...personFields(check, '', input as unknown as Record<string, unknown>),
   }) as PersonNode;
 }
 

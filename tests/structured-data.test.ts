@@ -375,6 +375,36 @@ describe('article and blogPosting', () => {
   });
 });
 
+describe('embedded parties', () => {
+  const base = { headline: 'Post', url: 'https://example.com/post/' };
+  const handWritten = (party: Record<string, unknown>) =>
+    ({ '@context': SCHEMA_ORG, ...party }) as unknown as ReturnType<typeof person>;
+
+  it('refuses a hand-written author with no name or a relative url, naming the field', () => {
+    const run = () =>
+      blogPosting({ ...base, author: [person({ name: 'Ok' }), handWritten({ '@type': 'Person', name: '', url: '/about' })] });
+    expect(run).toThrow(StructuredDataError);
+    expect(run).toThrow(/BlogPosting\.author\[1\]\.name/);
+  });
+
+  it('refuses a hand-written publisher without a url and a translator with a bad @id', () => {
+    expect(() => blogPosting({ ...base, publisher: handWritten({ '@type': 'Organization', name: 'Example' }) as never })).toThrow(
+      /publisher\.url/,
+    );
+    expect(() => blogPosting({ ...base, translator: handWritten({ '@type': 'Person', name: 'T', '@id': 'not an iri' }) })).toThrow(
+      /translator\.@id/,
+    );
+  });
+
+  it('keeps a valid hand-written party, drops its @context and keeps extra keys', () => {
+    const out = blogPosting({
+      ...base,
+      author: handWritten({ '@type': 'Person', name: 'Ada', url: 'https://example.com/ada', jobTitle: 'Engineer' }),
+    });
+    expect(out.author).toStrictEqual({ '@type': 'Person', name: 'Ada', url: 'https://example.com/ada', jobTitle: 'Engineer' });
+  });
+});
+
 describe('dates', () => {
   const at = (datePublished: unknown) => article(loose({ headline: 'X', url: 'https://example.com/x', datePublished }));
 
