@@ -10,6 +10,53 @@ committed: the commit log already holds that.
 
 ## Unreleased
 
+### Added
+
+- `useSession()` returns `loginPath`, the sign-in path the `SessionProvider` was given.
+- `GlassModal` takes `labelledBy` and `describedBy`, the ids of your own elements that name and describe the dialog.
+
+### Changed
+
+- **Breaking**: **Make sure your backend's `/me`, or your `mapMe`, returns a principal with a string `principal_id`.** `me()` now throws an `ApiError` with status 200, naming the endpoint, for a successful answer that is not a principal, where it reported a signed-in person.
+- **Breaking**: **Read a failed organization switch from `useOrgSwitcher().state.error` instead of catching `select()`.** `select()` no longer rejects; the failure lands in `state.error` and shows through `renderError`.
+- **Breaking**: **Fix any hand-written author, publisher or translator the structured data builders now refuse.** `blogPosting` and the other builders check an embedded party as they check their own fields: an empty name, a relative URL or an organization without `url` throws `StructuredDataError`, and the message names the field, such as `author[1].name`.
+- Recovering an expired session runs the silent `prompt=none` check once, then the interactive sign-in once, then stops and sets `useSession().error`. It could loop when `/me` succeeded and another call answered 401. `createReauth`'s `recoverSession` returns what it did (`'silent'`, `'login'`, `'skipped'` or `'exhausted'`), `Reauth` gains `clearStaleRecheck`, and the values it keeps in `sessionStorage` are timestamps instead of `'1'`.
+- `ConsoleSidebar` opens search with Cmd-K on Apple platforms and Ctrl-K elsewhere, and not when a field already handled the key. On a Mac, Ctrl-K stays with text fields, where it deletes to the end of the line. Without `searchHint`, the hint reads `Ctrl K` off Apple platforms.
+- `AccountMenu` under a `SessionProvider` sends one organization switch at a time and shows the spinner while it runs. Without `switchingOrgId` the menu tracks the switch itself; pass it to keep control. `onSwitchOrg` may return a promise.
+- The toaster's region no longer carries `aria-live`. Each toast is announced by its own `status` or `alert` role, so no screen reader reads a toast twice.
+- `GlassIconButton` with `pressed={false}` carries `aria-pressed="false"` and is announced as a toggle that is off. Without `pressed` it stays a plain button.
+
+### Fixed
+
+- Front-channel logout always leaves the page, also when the logout answer is empty, is not an object, or has a `front_channel_uris` that is not a list.
+- A CSRF cookie that is not valid percent-encoding no longer stops state-changing requests; its raw value is sent.
+- A 401 on switching organization no longer also bounces to the sign-in page when the client has an `onUnauthorized` handler; the handler decides where to go.
+- After the browser restores a page from its back/forward cache, sign-in redirects work again without a reload.
+- A browser that blocks `sessionStorage` no longer leaves `useSessionGate` loading or reports an error for a signed-in person. The silent check is skipped and sign-in goes straight to the interactive login. The gate always settles, and logs a failed check with `console.error`.
+- Overlapping `refresh()` calls apply only the newest `/me` answer, and a 401 in the middle of a session is not undone by a `/me` answer already in flight. A provider with a gate below it sends one `/me` request on mount instead of two.
+- `useSessionGate`'s `loginURL` follows the `SessionProvider`'s `loginPath` unless the gate's own `loginPath` option is set. It used `/login` whatever the provider was given.
+- A second press on Confirm no longer confirms the next queued `confirm()` request. Each request opens as its own dialog with focus on its first control. A dialog without a title is announced by its question; with a title, the question is its description.
+- Dragging from a field out onto the backdrop, for example while selecting text, no longer closes a modal or drawer. A click that starts and ends on the backdrop still closes it.
+- A modal or drawer with a custom `header` is announced with a name: its `title` when one is passed, otherwise the header's content.
+- Tab and Shift+Tab no longer leave a dialog from a radio group, and Tab moves on from an editable region to the next control.
+- Shift+Tab moves back between the controls of a popover. It closes the popover only from the first control, and focus then lands on the trigger.
+- A segmented control or tab strip whose value matches none of its items can still be reached with Tab.
+- The Enter that commits, or the Escape that cancels, an input method composition no longer moves to a palette row, chooses a select option or closes a dialog.
+- Re-rendering the page while the palette is open no longer moves the highlight back to the first row, and the palette's empty line is announced by screen readers instead of sitting in the list as a row that is not an option.
+- A select keeps its highlight on the same option when the list changes while it is open, and Space on the select button chooses the highlighted option, as Enter does. In the search field Space still types.
+- A `baseUrl` ending in a slash no longer puts `//` into the footer's links.
+- `GlassTooltip` wrapping a single element points that element's `aria-describedby` at the tip, and Escape hides the tip until the pointer or focus leaves and comes back.
+- With `openKey`, a server-rendered `ConsoleSidebar` hydrates without a mismatch and shows the parents the reader left open.
+- In the collapsed sidebar, a link is announced by its label instead of its first letter, and the brand button that expands the rail by the expand label.
+- Server rendering with React 18 no longer logs a `useLayoutEffect` warning for `GlassToaster`, `GlassModal`, `GlassPopover` and `GlassSelect`.
+
+### Security
+
+- **Breaking**: **Add `X-CSRF-Token` yourself to a state-changing request for another origin that needs it.** `createApiClient` now adds the token from the CSRF cookie only to requests for the page's own origin, so the token no longer reaches other sites.
+- The redirect after switching organization and the targets of front-channel logout are followed only when they resolve to an `http:` or `https:` address, on any origin. Any other target falls back to the default return path or `/`.
+- Telemetry removes a user name and password from the URLs it records, as it already removed the query string and fragment.
+- Telemetry moves to OpenTelemetry 2.8: `@opentelemetry/resources` and `@opentelemetry/sdk-trace-web` 2.8.0, the exporter and the fetch and XHR instrumentations 0.219.0, and the document-load instrumentation 0.64.0. Their `@opentelemetry/core` 2.8 is past [GHSA-8988-4f7v-96qf](https://github.com/advisories/GHSA-8988-4f7v-96qf), unbounded memory allocation in W3C Baggage propagation.
+
 ## v2.3.0 - 2026-11-06
 
 ### Added
