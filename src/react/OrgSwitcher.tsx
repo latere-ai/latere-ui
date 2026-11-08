@@ -33,6 +33,16 @@ export function useOrgSwitcher(deps: OrgSwitcherDeps): OrgSwitcherState {
       if (mounted.current && generation === request.current) setLoading(false);
     }
   }, []);
+  // A switch the host rejects lands in `error`, where `renderError` shows it,
+  // instead of surfacing as an unhandled rejection from a click handler.
+  const switchTo = useCallback(async (orgID: string) => {
+    setError(null);
+    try {
+      await depsRef.current.switchOrg(orgID);
+    } catch (error) {
+      if (mounted.current) setError(error);
+    }
+  }, []);
   useEffect(() => {
     mounted.current = true;
     if (depsRef.current.eager) void refresh();
@@ -42,7 +52,7 @@ export function useOrgSwitcher(deps: OrgSwitcherDeps): OrgSwitcherState {
   const label = deps.personalLabel ?? 'Personal';
   return {
     items: orgSwitcherItems(list, current, label), currentLabel: orgSwitcherLabel(list, current, label), loading, error,
-    refresh, select: id => depsRef.current.switchOrg(id), selectPersonal: () => depsRef.current.switchOrg(''),
+    refresh, select: switchTo, selectPersonal: () => switchTo(''),
   };
 }
 

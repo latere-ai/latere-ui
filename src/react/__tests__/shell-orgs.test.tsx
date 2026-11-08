@@ -48,4 +48,29 @@ describe('React organization state', () => {
     expect(view.container.firstElementChild?.getAttribute('data-loading')).toBe('true');
     fireEvent.click(screen.getByText('Pick Studio')); expect(select).toHaveBeenCalledWith('a'); expect(screen.getByText('offline')).toBeTruthy();
   });
+
+  it('surfaces a rejected switch through state.error and renderError', async () => {
+    const unhandled = vi.fn();
+    process.on('unhandledRejection', unhandled);
+    const failure = new Error('switch failed');
+    const renderError = vi.fn((error: unknown) => <p role="alert">{(error as Error).message}</p>);
+    function Fixture() {
+      const state = useOrgSwitcher({
+        getOrgs: async () => orgs,
+        getCurrentOrgID: () => '',
+        switchOrg: () => Promise.reject(failure),
+        eager: true,
+      });
+      return <OrgSwitcher state={state} renderError={renderError} />;
+    }
+    try {
+      render(<Fixture />);
+      const button = await screen.findByRole('menuitem', { name: 'Studio' });
+      await act(async () => { fireEvent.click(button); await new Promise(r => setTimeout(r, 10)); });
+      expect(screen.getByRole('alert').textContent).toBe('switch failed');
+      expect(unhandled).not.toHaveBeenCalled();
+    } finally {
+      process.off('unhandledRejection', unhandled);
+    }
+  });
 });
