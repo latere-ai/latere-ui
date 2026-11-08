@@ -1,13 +1,14 @@
-// SPA-side helper that drives an RFC 6749 OIDC front-channel logout: fetches
-// the logout endpoint, renders a hidden iframe for each front_channel_uris
-// entry so each RP's session cookie clears in-place, waits up to a per-iframe
-// timeout so a dead RP cannot block the user's logout, then navigates to the
-// final post_logout_redirect.
+// SPA-side helper that drives an OpenID Connect Front-Channel Logout 1.0 flow:
+// fetches the logout endpoint, renders a hidden iframe for each
+// front_channel_uris entry so each RP can end its own session, waits up to a
+// per-iframe timeout so a dead RP cannot block the user's logout, then
+// navigates to the final redirect (web addresses only).
 //
 // The marketing site renders this flow server-side from its logout-notify
 // handler; SPAs that want client-side control over the orchestration use
 // runFrontChannelLogout() instead.
 
+import { webTarget } from './target';
 import type { ApiClient } from './types';
 
 const hasWindow = () => typeof window !== 'undefined';
@@ -28,7 +29,10 @@ export interface FrontChannelLogoutOptions {
   logoutEndpoint?: string;
   /** Per-iframe load timeout. Default `2000` ms. */
   iframeTimeoutMs?: number;
-  /** Final redirect override. Falls back to `post_logout_redirect`, then `app_url`. */
+  /**
+   * Final redirect override. Falls back to `post_logout_redirect`, then
+   * `app_url`, then `/`. Only `http:` and `https:` targets are followed.
+   */
   finalRedirect?: string;
 }
 
@@ -36,8 +40,10 @@ export interface FrontChannelLogoutOptions {
  * Run a front-channel logout flow. Resolves once the navigation has been
  * scheduled (or, in SSR / non-browser contexts, immediately as a no-op).
  *
- * Iframes are appended with `sandbox="allow-same-origin"` so the embedded
- * RP can clear its own cookie. Each iframe is given `iframeTimeoutMs` to
+ * Iframes are appended with `sandbox="allow-same-origin"`, without
+ * `allow-scripts`, so only a cookie the RP's response clears by header takes
+ * effect; a browser that blocks third-party cookies does not send the RP's
+ * cookie at all. Each iframe is given `iframeTimeoutMs` to
  * fire `load`; whichever comes first (load or timeout) counts as done. We
  * never wait for all iframes serially — a dead RP must not block the user.
  */
@@ -45,24 +51,41 @@ export async function runFrontChannelLogout(opts: FrontChannelLogoutOptions): Pr
   if (!hasWindow()) return;
   const { client, logoutEndpoint = '/api/logout', iframeTimeoutMs = 2000 } = opts;
 
-  let resp: FrontChannelLogoutResponse;
+  let resp: FrontChannelLogoutResponse = {};
   try {
-    resp = await client.api<FrontChannelLogoutResponse>('GET', logoutEndpoint, undefined, {
+    const answer = await client.api<unknown>('GET', logoutEndpoint, undefined, {
       allowUnauthenticated: true,
     });
+    // A 204, an empty body or a text answer carries nothing to act on.
+    if (answer && typeof answer === 'object') resp = answer as FrontChannelLogoutResponse;
   } catch {
     // If the logout endpoint itself fails, fall back to the simple navigate
     // path: there's nothing to iframe.
-    resp = {};
   }
 
-  const uris = resp.front_channel_uris ?? [];
-  if (uris.length > 0) {
-    await Promise.allSettled(uris.map((u) => loadIframe(u, iframeTimeoutMs)));
+  try {
+    const uris = Array.isArray(resp.front_channel_uris)
+      ? resp.front_channel_uris.filter((u): u is string => typeof u === 'string')
+      : [];
+    if (uris.length > 0) {
+      await Promise.allSettled(uris.map((u) => loadIframe(u, iframeTimeoutMs)));
+    }
+  } finally {
+    // Signing out always leaves the page, whatever the notifications did.
+    window.location.href = firstWebTarget(
+      [opts.finalRedirect, resp.post_logout_redirect, resp.app_url],
+      '/',
+    );
   }
+}
 
-  const target = opts.finalRedirect || resp.post_logout_redirect || resp.app_url || '/';
-  window.location.href = target;
+// The first candidate that is a web address, else the fallback.
+function firstWebTarget(candidates: unknown[], fallback: string): string {
+  for (const c of candidates) {
+    const t = webTarget(c, '');
+    if (t) return t;
+  }
+  return fallback;
 }
 
 function loadIframe(src: string, timeoutMs: number): Promise<void> {

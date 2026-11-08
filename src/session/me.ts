@@ -7,6 +7,7 @@
 // SSR-safe: navigation helpers (`login`, `logout`, switch flows) are no-ops
 // when `window` is undefined.
 
+import { webTarget } from './target';
 import { ApiError, type ApiClient, type OrgEntry, type Principal } from './types';
 
 const hasWindow = () => typeof window !== 'undefined';
@@ -90,7 +91,7 @@ export async function switchOrg(
   try {
     const res = await client.api<{ redirect?: string }>('POST', endpoint, { org_id: orgID });
     if (mode === 'login-bounce') bounce();
-    else window.location.href = res?.redirect || defaultReturnTo;
+    else window.location.href = webTarget(res?.redirect, defaultReturnTo);
   } catch {
     bounce();
   }

@@ -143,3 +143,72 @@ describe('runFrontChannelLogout()', () => {
     expect(document.querySelectorAll('iframe').length).toBe(0);
   });
 });
+
+describe('runFrontChannelLogout() navigation target', () => {
+  const unsafe = ['java', 'script:void(0)'].join('');
+
+  function rawFetch(status: number, body: string) {
+    return vi.fn(async () => ({
+      ok: status >= 200 && status < 300,
+      status,
+      statusText: 'x',
+      text: async () => body,
+    }) as Response);
+  }
+
+  it('does not navigate to a post_logout_redirect that is not an http(s) address', async () => {
+    vi.stubGlobal('fetch', mockFetch([[200, { post_logout_redirect: unsafe }]]));
+    await runFrontChannelLogout({ client: createApiClient() });
+    expect(hrefSpy).toHaveBeenCalledTimes(1);
+    expect(hrefSpy).toHaveBeenCalledWith('/');
+  });
+
+  it('falls through to app_url when post_logout_redirect is unsafe', async () => {
+    vi.stubGlobal(
+      'fetch',
+      mockFetch([[200, { post_logout_redirect: unsafe, app_url: 'https://app.example/' }]]),
+    );
+    await runFrontChannelLogout({ client: createApiClient() });
+    expect(hrefSpy).toHaveBeenCalledWith('https://app.example/');
+  });
+
+  it('follows an http(s) redirect on another origin', async () => {
+    vi.stubGlobal('fetch', mockFetch([[200, { post_logout_redirect: 'https://idp.example/bye' }]]));
+    await runFrontChannelLogout({ client: createApiClient() });
+    expect(hrefSpy).toHaveBeenCalledWith('https://idp.example/bye');
+  });
+
+  it('navigates to / when /api/logout answers 204 with an empty body', async () => {
+    vi.stubGlobal('fetch', rawFetch(204, ''));
+    await runFrontChannelLogout({ client: createApiClient() });
+    expect(hrefSpy).toHaveBeenCalledWith('/');
+  });
+
+  it('navigates when front_channel_uris is a string instead of a list', async () => {
+    vi.stubGlobal(
+      'fetch',
+      mockFetch([[200, { post_logout_redirect: '/bye', front_channel_uris: 'https://a.example/' }]]),
+    );
+    await runFrontChannelLogout({ client: createApiClient() });
+    expect(hrefSpy).toHaveBeenCalledWith('/bye');
+  });
+
+  it('loads only the string entries of front_channel_uris and still navigates', async () => {
+    vi.stubGlobal(
+      'fetch',
+      mockFetch([[200, { post_logout_redirect: '/bye', front_channel_uris: [7, null, 'https://a.example/n'] }]]),
+    );
+    const appended: string[] = [];
+    const observer = new MutationObserver((records) => {
+      for (const r of records) r.addedNodes.forEach((n) => {
+        if (n instanceof HTMLIFrameElement) appended.push(n.src);
+      });
+    });
+    observer.observe(document.body, { childList: true });
+    await runFrontChannelLogout({ client: createApiClient() });
+    await Promise.resolve();
+    observer.disconnect();
+    expect(appended).toEqual(['https://a.example/n']);
+    expect(hrefSpy).toHaveBeenCalledWith('/bye');
+  });
+});

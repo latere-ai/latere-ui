@@ -204,3 +204,21 @@ describe('Principal shape', () => {
     expect(admin.role === 'platform_admin').toBe(true);
   });
 });
+
+describe('switchOrg() redirect target', () => {
+  it('does not follow a redirect that is not an http(s) address', async () => {
+    vi.stubGlobal('fetch', mockFetch([[200, { redirect: ['java', 'script:void(0)'].join('') }]]));
+    await switchOrg(createApiClient(), 'org-2', { defaultReturnTo: '/home' });
+    expect(hrefSpy).toHaveBeenCalledTimes(1);
+    expect(hrefSpy).toHaveBeenCalledWith('/home');
+  });
+
+  it('follows an http(s) redirect on another origin and a relative one', async () => {
+    vi.stubGlobal('fetch', mockFetch([[200, { redirect: 'https://other.example/x' }]]));
+    await switchOrg(createApiClient(), 'org-2');
+    expect(hrefSpy).toHaveBeenLastCalledWith('https://other.example/x');
+    vi.stubGlobal('fetch', mockFetch([[200, { redirect: '/orgs/2' }]]));
+    await switchOrg(createApiClient(), 'org-2');
+    expect(hrefSpy).toHaveBeenLastCalledWith('/orgs/2');
+  });
+});
