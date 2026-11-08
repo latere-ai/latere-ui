@@ -1,5 +1,5 @@
 ---
-title: latere-ui v1.20: Liquid Glass v2 (five-tier material ladder, ink accent, capsule geometry)
+title: "latere-ui v1.20: Liquid Glass v2 (five-tier material ladder, ink accent, capsule geometry)"
 status: complete
 depends_on:
   - specs/liquid-glass-v1.10.md

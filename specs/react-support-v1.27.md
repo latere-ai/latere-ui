@@ -1,5 +1,5 @@
 ---
-title: latere-ui v1.27: dual framework support (React bindings alongside Vue)
+title: "latere-ui v1.27: dual framework support (React bindings alongside Vue)"
 status: complete
 depends_on:
   - specs/auth-client-v1.8.md

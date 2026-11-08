@@ -1,5 +1,5 @@
 ---
-title: latere-ui v1.10: Liquid Glass design system (material tokens + component library)
+title: "latere-ui v1.10: Liquid Glass design system (material tokens + component library)"
 status: complete
 depends_on:
   - specs/console-shell-v1.9.md

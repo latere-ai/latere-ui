@@ -1,5 +1,5 @@
 ---
-title: latere-ui v1.28: SiteFooter for React consumers
+title: "latere-ui v1.28: SiteFooter for React consumers"
 status: complete
 depends_on:
   - specs/react-support-v1.27.md

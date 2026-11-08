@@ -1,5 +1,5 @@
 ---
-title: latere-ui v1.9: shared console shell (ConsoleSidebar) + docs renderer (DocsLayout)
+title: "latere-ui v1.9: shared console shell (ConsoleSidebar) + docs renderer (DocsLayout)"
 status: complete
 depends_on:
   - specs/auth-client-v1.8.md

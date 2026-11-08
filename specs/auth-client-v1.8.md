@@ -1,5 +1,5 @@
 ---
-title: latere-ui v1.8: shared auth client (vanilla async core + OrgSwitcher + front-channel logout)
+title: "latere-ui v1.8: shared auth client (vanilla async core + OrgSwitcher + front-channel logout)"
 status: complete
 depends_on: []
 affects:
