@@ -185,7 +185,7 @@ bun run test
 bun run typecheck
 ```
 
-The unit suite covers the components, the framework-free modules and the stylesheets' contrast. Browser fixtures exercise actual layout and generate the visual references shown here. [Contributing](CONTRIBUTING.md) covers the browser setup, screenshot comparison, and how an intended visual change is reviewed.
+The unit suite covers the components, the framework-free modules and the ink palette's contrast. Browser fixtures exercise actual layout, check badge and tooltip contrast, and generate the visual references shown here. [Contributing](CONTRIBUTING.md) covers the browser setup, screenshot comparison, and how an intended visual change is reviewed.
 
 ## License
 
