@@ -330,6 +330,15 @@ const md = createMarkdown(MarkdownIt, {
 const html = md.render(stripFirstHeading(source));
 ```
 
+`createMarkdown` passes raw HTML in the markdown source through to the page,
+and `DocsLayout` inserts `articleHtml` as markup. The markdown source must
+therefore be trusted: your own repository's docs, not text from users, a CMS,
+or outside contributors. For a source that is not trusted, turn raw HTML off:
+
+```ts
+const md = createMarkdown(MarkdownIt, { options: { html: false } });
+```
+
 ## Liquid Glass
 
 The shared Apple-style glass design system: a **material** (translucent, blurred,

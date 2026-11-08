@@ -21,7 +21,11 @@ type MarkdownItOptions = Partial<MarkdownIt['options']>;
 import { headingSlugSource, slugify } from './tocCore';
 
 export interface MarkdownConfig {
-  /** markdown-it options, merged over the defaults (html+linkify on). */
+  /**
+   * markdown-it options, merged over the defaults (`html` and `linkify` on).
+   * With `html` on, raw HTML in the source reaches the page as markup, so the
+   * source must be trusted; pass `{ html: false }` for one that is not.
+   */
   options?: MarkdownItOptions;
   /**
    * Rewrite a link href at render time, e.g. `./output.md` → `/docs/output`.
