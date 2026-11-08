@@ -50,6 +50,17 @@ describe('createApiClient()', () => {
     expect(headersOf(fetchMock, 2)['X-CSRF-Token']).toBeUndefined();
   });
 
+  it('still sends the request when the CSRF cookie is not valid percent-encoding', async () => {
+    document.cookie = 'app.csrf=%E0%A4%A';
+    const fetchMock = respond(200, '{}');
+    vi.stubGlobal('fetch', fetchMock);
+    const client = createApiClient({ csrfCookie: 'app.csrf' });
+    expect(client.csrfToken()).toBe('%E0%A4%A');
+    await client.api('POST', '/v1/things', {});
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(headersOf(fetchMock)['X-CSRF-Token']).toBe('%E0%A4%A');
+  });
+
   it('sends no CSRF header when the cookie is absent or no cookie name is configured', async () => {
     const fetchMock = respond(200, '');
     vi.stubGlobal('fetch', fetchMock);

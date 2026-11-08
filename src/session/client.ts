@@ -19,7 +19,14 @@ export function createApiClient(options: ApiClientOptions = {}): ApiClient {
     const m = document.cookie.match(
       new RegExp('(?:^|;\\s*)' + escapeRegExp(csrfCookie) + '=([^;]+)'),
     );
-    return m ? decodeURIComponent(m[1]) : '';
+    if (!m) return '';
+    try {
+      return decodeURIComponent(m[1]);
+    } catch {
+      // A value that is not valid percent-encoding is sent as it is; the
+      // server decides whether it matches, and the request is not blocked.
+      return m[1];
+    }
   }
 
   const client: ApiClient = {
