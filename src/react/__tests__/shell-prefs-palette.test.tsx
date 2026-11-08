@@ -71,3 +71,15 @@ describe('React ConsolePalette', () => {
     fireEvent.keyDown(document, { key: 'Escape' }); expect(onClose).toHaveBeenCalledTimes(2); trigger.remove();
   });
 });
+
+describe('ConsolePalette input method composition', () => {
+  it('does not navigate on the Enter that commits a composition', () => {
+    const onNavigate = vi.fn();
+    render(<ConsolePalette open model={model} onNavigate={onNavigate} />);
+    const input = document.querySelector<HTMLInputElement>('.lu-cp-input')!;
+    fireEvent.keyDown(input, { key: 'Enter', isComposing: true, keyCode: 229 });
+    expect(onNavigate).not.toHaveBeenCalled();
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(onNavigate).toHaveBeenCalledOnce();
+  });
+});

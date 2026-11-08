@@ -199,3 +199,22 @@ describe('focus trap tab stops', () => {
     } finally { view.done(); }
   });
 });
+
+describe('focus trap input method composition', () => {
+  it('leaves the Escape that cancels a composition to the field', () => {
+    const container = document.createElement('div');
+    container.innerHTML = '<input aria-label="Name">';
+    document.body.append(container);
+    let closed = 0;
+    const trap = activateFocusTrap(() => container, () => { closed += 1; });
+    try {
+      const input = container.querySelector('input')!;
+      input.focus();
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', isComposing: true, bubbles: true, cancelable: true }));
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', keyCode: 229, bubbles: true, cancelable: true }));
+      expect(closed).toBe(0);
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+      expect(closed).toBe(1);
+    } finally { trap.dispose(); container.remove(); }
+  });
+});

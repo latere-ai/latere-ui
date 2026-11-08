@@ -245,3 +245,17 @@ describe('GlassSelect inside a modal (react)', () => {
     expect(onClose).toHaveBeenCalled();
   });
 });
+
+describe('GlassSelect input method composition', () => {
+  it('does not choose an option with the Enter that commits a composition in the search field', () => {
+    const onChange = vi.fn();
+    const options = Array.from({ length: SELECT_SEARCH_THRESHOLD + 2 }, (_, i) => ({ value: `v${i}`, label: `北京 ${i}` }));
+    const view = render(<GlassSelect value="" options={options} onChange={onChange} />);
+    fireEvent.click(view.getAllByRole('combobox')[0]);
+    const field = document.querySelector<HTMLInputElement>('.lu-select-search')!;
+    fireEvent.keyDown(field, { key: 'Enter', isComposing: true, keyCode: 229 });
+    expect(onChange).not.toHaveBeenCalled();
+    fireEvent.keyDown(field, { key: 'Enter' });
+    expect(onChange).toHaveBeenCalledOnce();
+  });
+});

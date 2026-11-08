@@ -1,3 +1,5 @@
+import { isComposingKey } from './composition';
+
 // DOM-only overlay ownership. Only the most recently opened trap handles
 // keyboard events, so nested dialogs close one at a time.
 // A disclosure's summary takes focus too; without it, Tab from the summary
@@ -67,6 +69,8 @@ export function activateFocusTrap(
 
   function onKeydown(event: KeyboardEvent) {
     if (traps.at(-1) !== trap) return;
+    // The Escape that cancels an input method composition belongs to the field.
+    if (isComposingKey(event)) return;
     // An open control inside the trap, such as a select's menu, marks itself
     // with data-lu-owns-escape and handles Escape at its target: the key
     // clears or closes that control and leaves the dialog open. An open

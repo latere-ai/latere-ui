@@ -4,6 +4,7 @@ import type { ConsoleNavModel, NavItem } from '../console/nav';
 import { consoleIcon } from '../console/icons';
 import { filterPalette, paletteEntries, type ConsolePaletteItem, type ConsolePaletteSearch } from '../console/palette';
 import { ConsoleIcon } from './ConsoleIcon';
+import { isComposingKey } from '../glass/composition';
 import { useFocusTrap } from './internal';
 import '../styles/components/console-palette.css';
 
@@ -36,6 +37,7 @@ export function ConsolePalette({ open, model, placeholder = 'Jump to…', emptyL
   }, [open, results, selected]);
   function choose(item: NavItem) { onNavigate?.(item); onClose?.(); }
   function onKeydown(event: KeyboardEvent<HTMLInputElement>) {
+    if (isComposingKey(event.nativeEvent)) return;
     if (event.key === 'ArrowDown') {
       event.preventDefault(); setSelected(value => Math.max(0, Math.min(value + 1, results.length - 1)));
     } else if (event.key === 'ArrowUp') {

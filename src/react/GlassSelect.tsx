@@ -10,6 +10,7 @@ import {
   useEffect, useId, useLayoutEffect, useMemo, useRef, useState,
   type FocusEvent, type KeyboardEvent, type MouseEvent,
 } from 'react';
+import { isComposingKey } from '../glass/composition';
 import type { SelectOption } from '../glass/types';
 import {
   SELECT_MENU_GAP, SELECT_MENU_VIEWPORT_GUTTER, filterSelectOptions, initialVisibleOption, isSelectSearchable,
@@ -146,7 +147,7 @@ export function GlassSelect({
   // One handler for the trigger and the search field: either may hold focus
   // while the menu is open.
   function onKey(e: KeyboardEvent<HTMLElement>) {
-    if (disabled) return;
+    if (disabled || isComposingKey(e.nativeEvent)) return;
     if (!open) {
       if (e.key === 'Enter' || e.key === 'ArrowDown' || e.key === ' ') {
         e.preventDefault();
