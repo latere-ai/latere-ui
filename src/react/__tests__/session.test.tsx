@@ -21,8 +21,8 @@ let hrefSpy: ReturnType<typeof vi.fn>;
 function stubLocation(pathname = '/', search = '') {
   hrefSpy = vi.fn();
   const set = hrefSpy as unknown as (v: string) => void;
-  const loc = { pathname, search, href: '' } as unknown as Location;
-  Object.defineProperty(loc, 'href', { get: () => '', set });
+  const loc = { pathname, search, href: '', origin: 'http://localhost' } as unknown as Location;
+  Object.defineProperty(loc, 'href', { get: () => 'http://localhost/', set });
   Object.defineProperty(window, 'location', { value: loc, configurable: true, writable: true });
 }
 

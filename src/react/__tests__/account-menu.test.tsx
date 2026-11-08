@@ -231,8 +231,8 @@ describe('AccountMenu under SessionProvider', () => {
   }
 
   beforeEach(() => {
-    const loc = { pathname: '/', search: '', href: '' } as unknown as Location;
-    Object.defineProperty(loc, 'href', { get: () => '', set: vi.fn() });
+    const loc = { pathname: '/', search: '', href: '', origin: 'http://localhost' } as unknown as Location;
+    Object.defineProperty(loc, 'href', { get: () => 'http://localhost/', set: vi.fn() });
     Object.defineProperty(window, 'location', { value: loc, configurable: true, writable: true });
   });
   afterEach(() => {
@@ -253,7 +253,7 @@ describe('AccountMenu under SessionProvider', () => {
   it('falls back to the ambient logout when onLogout is omitted', async () => {
     vi.stubGlobal('fetch', mockFetch([[200, base]]));
     const hrefSpy = vi.fn();
-    Object.defineProperty(window.location, 'href', { set: hrefSpy, get: () => '' });
+    Object.defineProperty(window.location, 'href', { set: hrefSpy, get: () => 'http://localhost/' });
     const { container } = render(
       <SessionProvider logoutPath="/sign-out">
         <AccountMenu />
