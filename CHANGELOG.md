@@ -55,7 +55,7 @@ committed: the commit log already holds that.
 - **Breaking**: **Add `X-CSRF-Token` yourself to a state-changing request for another origin that needs it.** `createApiClient` now adds the token from the CSRF cookie only to requests for the page's own origin, so the token no longer reaches other sites.
 - The redirect after switching organization and the targets of front-channel logout are followed only when they resolve to an `http:` or `https:` address, on any origin. Any other target falls back to the default return path or `/`.
 - Telemetry removes a user name and password from the URLs it records, as it already removed the query string and fragment.
-- Telemetry moves to OpenTelemetry 2.8: `@opentelemetry/resources` and `@opentelemetry/sdk-trace-web` 2.8.0, the exporter and the fetch and XHR instrumentations 0.219.0, and the document-load instrumentation 0.64.0. Their `@opentelemetry/core` 2.8 is past [GHSA-8988-4f7v-96qf](https://github.com/advisories/GHSA-8988-4f7v-96qf), unbounded memory allocation in W3C Baggage propagation.
+- Telemetry moves to OpenTelemetry 2.8: `@opentelemetry/resources` and `@opentelemetry/sdk-trace-web` 2.8.0, the exporter and the fetch and XHR instrumentations 0.219.0, and the document-load instrumentation 0.64.0. Their `@opentelemetry/core` 2.8 is past [GHSA-8988-4f7v-96qf](https://github.com/advisories/GHSA-8988-4f7v-96qf), unbounded memory allocation in W3C Baggage propagation. The same change moves the development dependency `source-map-js` to 1.2.2, which never reaches your application.
 
 ## v2.3.0 - 2026-11-06
 
