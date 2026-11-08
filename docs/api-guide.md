@@ -586,8 +586,9 @@ A principal carries `principal_id`, `email`, `org_id` (empty for the personal
 context), and `orgs`, and optionally `name`, `display_name`, `avatar_url`,
 `initials`, `org_name`, `role`, and `auth_url`. A backend with another shape
 passes `mapMe` to translate it. `createApiClient({ csrfCookie })` echoes the
-named cookie in `X-CSRF-Token` on every state-changing request; omit
-`csrfCookie` when your backend does not use double-submit CSRF protection.
+named cookie in `X-CSRF-Token` on every same-origin state-changing request,
+and never on a request to another origin; omit `csrfCookie` when your backend
+does not use double-submit CSRF protection.
 
 Wrap the application in `SessionProvider` once. It resolves the principal on
 mount, owns the global 401 handler, and exposes org switching and sign-out;

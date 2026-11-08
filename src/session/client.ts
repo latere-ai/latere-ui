@@ -1,11 +1,12 @@
-// Tiny fetch wrapper shared by every Latere SPA. Same-origin, JSON in/out,
-// threads CSRF on state-changing requests, normalizes errors into `ApiError`,
-// and exposes a single global 401 seam (`onUnauthorized`) so an expired
-// session is handled uniformly. Ported from the per-app clients it replaces,
-// with the CSRF cookie name made configurable.
+// Tiny fetch wrapper shared by every Latere SPA. JSON in/out, cookies sent to
+// the page's own origin only, CSRF threaded on state-changing requests to that
+// origin, errors normalized into `ApiError`, and a single global 401 seam
+// (`onUnauthorized`) so an expired session is handled uniformly. The CSRF
+// cookie name is configurable.
 //
 // The session cookie is HTTP-only — we never read it. The CSRF cookie (the
-// double-submit pattern) is readable by JS and echoed in `X-CSRF-Token`.
+// double-submit pattern) is readable by JS and echoed in `X-CSRF-Token` on
+// same-origin requests.
 
 import { ApiError, type ApiClient, type ApiClientOptions, type RequestOptions } from './types';
 
@@ -40,7 +41,7 @@ export function createApiClient(options: ApiClientOptions = {}): ApiClient {
         headers['Content-Type'] = 'application/json';
         payload = JSON.stringify(body);
       }
-      if (csrfCookie && method !== 'GET' && method !== 'HEAD') {
+      if (csrfCookie && method !== 'GET' && method !== 'HEAD' && isSameOrigin(path)) {
         const tok = csrfToken();
         if (tok) headers['X-CSRF-Token'] = tok;
       }
@@ -51,7 +52,7 @@ export function createApiClient(options: ApiClientOptions = {}): ApiClient {
     // Content-Type boundary itself, so we must not set it here.
     async apiUpload<T = unknown>(path: string, form: FormData, opts?: RequestOptions) {
       const headers: Record<string, string> = { Accept: 'application/json' };
-      if (csrfCookie) {
+      if (csrfCookie && isSameOrigin(path)) {
         const tok = csrfToken();
         if (tok) headers['X-CSRF-Token'] = tok;
       }
@@ -110,6 +111,17 @@ function errorMessage(res: Response, data: unknown): string {
     if (typeof obj.message === 'string' && obj.message) return obj.message;
   }
   return res.statusText;
+}
+
+// The CSRF token belongs to this page's origin only. A request URL that
+// resolves anywhere else, or that does not parse, never carries it.
+function isSameOrigin(path: string): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    return new URL(path, window.location.href).origin === window.location.origin;
+  } catch {
+    return false;
+  }
 }
 
 function escapeRegExp(s: string): string {

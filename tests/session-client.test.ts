@@ -61,6 +61,21 @@ describe('createApiClient()', () => {
     expect(headersOf(fetchMock)['X-CSRF-Token']).toBe('%E0%A4%A');
   });
 
+  it('attaches the CSRF token only to requests for the page origin', async () => {
+    document.cookie = 'app.csrf=tok';
+    const fetchMock = respond(200, '{}');
+    vi.stubGlobal('fetch', fetchMock);
+    const client = createApiClient({ csrfCookie: 'app.csrf' });
+    await client.api('POST', 'https://other.example/collect', {});
+    await client.api('POST', `${window.location.origin}/v1/things`, {});
+    await client.apiUpload('https://other.example/upload', new FormData());
+    await client.apiUpload(`${window.location.origin}/v1/files`, new FormData());
+    expect(headersOf(fetchMock, 0)['X-CSRF-Token']).toBeUndefined();
+    expect(headersOf(fetchMock, 1)['X-CSRF-Token']).toBe('tok');
+    expect(headersOf(fetchMock, 2)['X-CSRF-Token']).toBeUndefined();
+    expect(headersOf(fetchMock, 3)['X-CSRF-Token']).toBe('tok');
+  });
+
   it('sends no CSRF header when the cookie is absent or no cookie name is configured', async () => {
     const fetchMock = respond(200, '');
     vi.stubGlobal('fetch', fetchMock);
