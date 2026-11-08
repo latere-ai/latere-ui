@@ -23,19 +23,28 @@ export interface MeOptions<Raw = Principal> {
  * Fetch the current principal. Returns `null` on 401 / 404 (the two responses
  * that mean "logged out, but the endpoint is healthy"); throws `ApiError` for
  * any other non-2xx response so callers can surface the underlying problem.
+ * Also throws an `ApiError` (status 200) when the answer, after `mapMe`, is not
+ * an object with a string `principal_id`.
  */
 export async function me<Raw = Principal>(
   client: ApiClient,
   opts: MeOptions<Raw> = {},
 ): Promise<Principal | null> {
   const { endpoint = '/api/me', mapMe = (raw: Raw) => raw as unknown as Principal } = opts;
+  let principal: Principal;
   try {
     const raw = await client.api<Raw>('GET', endpoint, undefined, { allowUnauthenticated: true });
-    return mapMe(raw);
+    principal = mapMe(raw);
   } catch (e) {
     if (e instanceof ApiError && (e.status === 401 || e.status === 404)) return null;
     throw e;
   }
+  // A 2xx answer that is not a principal (an app shell served for a missing
+  // API route, say) must not read as a signed-in visitor.
+  if (!principal || typeof principal !== 'object' || typeof principal.principal_id !== 'string') {
+    throw new ApiError(200, principal, `${endpoint} answered without a principal`);
+  }
+  return principal;
 }
 
 export interface OrgsOptions {

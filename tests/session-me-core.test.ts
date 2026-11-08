@@ -6,6 +6,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createApiClient } from '../src/session/client';
+import { ApiError } from '../src/session/types';
 import {
   login,
   logout,
@@ -220,5 +221,24 @@ describe('switchOrg() redirect target', () => {
     vi.stubGlobal('fetch', mockFetch([[200, { redirect: '/orgs/2' }]]));
     await switchOrg(createApiClient(), 'org-2');
     expect(hrefSpy).toHaveBeenLastCalledWith('/orgs/2');
+  });
+});
+
+describe('me() answer shape', () => {
+  it('throws an ApiError when a 2xx answer is not a principal', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      text: async () => '<!doctype html><html><body>app shell</body></html>',
+    }) as Response));
+    const err = await me(createApiClient()).catch((e: unknown) => e);
+    expect(err).toBeInstanceOf(ApiError);
+    expect((err as ApiError).message).toContain('/api/me');
+  });
+
+  it('throws when the mapped value has no string principal_id', async () => {
+    vi.stubGlobal('fetch', mockFetch([[200, { sub: 'x' }]]));
+    await expect(me(createApiClient(), { mapMe: () => ({}) as Principal })).rejects.toBeInstanceOf(ApiError);
   });
 });
