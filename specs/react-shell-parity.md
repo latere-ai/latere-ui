@@ -17,6 +17,8 @@ dispatched_task_id: null
 
 # React shell and account parity
 
+> Since v2.0.0 latere-ui is React only. This spec records work done while the package also had a Vue adapter. The Vue files it names were removed in v2.0.0 and remain on the v1.x tags; the React adapter and the framework-free modules it describes are current.
+
 ## Scope and verification
 
 Add React ConsolePalette, DocsLayout, AccountPrefs, ProductSwitcher and OrgSwitcher with equivalent Vue DOM and shared styles. Preserve controlled inputs, render slots/callbacks, router integrations, placement, filtering, keyboard selection and responsive behavior. Restore optional product switcher integration in React ConsoleSidebar.

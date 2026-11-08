@@ -29,6 +29,8 @@ dispatched_task_id: null
 
 # latere-ui v1.10: Liquid Glass Design System
 
+> Historical: this is the v1.10 design, written for the Vue adapter, and v1.20 reshaped its tiers (see the Liquid Glass v2 spec). Since v2.0.0 latere-ui is React only; the Vue components, `useGlass`, `useFocusTrap` and `concentricRadius` were removed and remain on the v1.x tags. What is current: the `Glass*` components in `src/react/`, the material in `src/styles/glass.css`, and the framework-free modules in `src/glass/`.
+
 ## Overview
 
 Apple's Liquid Glass is a **material**: translucent layers that refract and
@@ -225,7 +227,7 @@ change, purely the surface.
 
 ## Outcome (2026-07-05)
 
-Built in latere-ui v1.10.0 on main (committed, not yet pushed/tagged).
+Built and released as latere-ui v1.10.0.
 
 - **Material** (`src/styles/glass.css`): Regular tiers (thin/regular/thick) + Clear variant (`.lu-glass-clear` + `.lu-glass-dim`), three optical layers in `--glass-edge`, vibrancy (saturate + brightness), concentric radius token + `concentricRadius()`. A11y baked into the token contract: `prefers-reduced-transparency`, `prefers-contrast: more` (Increase Contrast → near-opaque 4.5:1), `@supports not (backdrop-filter)`.
 - **Composables/services** (`src/glass/`): `useGlass`, `useFocusTrap`, `message()`, `confirm()`, shared value types.
@@ -235,4 +237,4 @@ Built in latere-ui v1.10.0 on main (committed, not yet pushed/tagged).
 
 Diverged from plan: glass tokens live canonically in `glass.css` (not `tokens.css`) so apps with their own token system (which skip `tokens.css`) still get them. Extended `GlassMenu`/`GlassSelect`/`GlassDrawer`/`GlassTable` shipped in the same pass rather than a follow-up.
 
-Remaining: push + tag `v1.10.0` (release gate); per-product adoption (Cella is the reference, in progress).
+Remaining: none in this library. Each product adopts on its own schedule.

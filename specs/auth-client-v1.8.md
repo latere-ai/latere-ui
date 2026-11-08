@@ -23,6 +23,8 @@ dispatched_task_id: null
 
 # latere-ui v1.8: Shared Auth Client
 
+> Historical: this is the v1.8 design, written for the Vue adapter. Since v2.0.0 latere-ui is React only; `createSessionStore`, the Pinia store, the Vue `useSession` and `OrgSwitcher.vue` were removed and remain on the v1.x tags. What is current: the framework-free core (`src/session/me.ts`, `client.ts`, `frontChannel.ts`, `reauth.ts`), `SessionProvider`, `useSession` and `useSessionGate` in `src/react/session.tsx`, and `OrgSwitcher` with `useOrgSwitcher` in `src/react/OrgSwitcher.tsx`.
+
 ## Overview
 
 `latere-ui` already provides the Vue session client used by six of the eight Latere consumer frontends (the product consoles plus the marketing site). This spec adds the framework-agnostic vanilla async core (so Wails / vanilla harnesses can use it), a headless `OrgSwitcher` primitive + `OrgSwitcher.vue` adapter, an SPA `runFrontChannelLogout()` helper, and renames the CSRF cookie to `__Host-latere-csrf`. Existing Vue exports (`createSessionStore`, `useSession`, `useSessionGate`, `AccountMenu`) are preserved and reimplemented atop the new vanilla primitives so the existing consumer call sites do not change.

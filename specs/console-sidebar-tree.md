@@ -27,6 +27,8 @@ dispatched_task_id: null
 
 # Console sidebar tree, compact head and foot rows
 
+> Since v2.0.0 latere-ui is React only. This spec records work done while the package also had a Vue adapter. The Vue files it names were removed in v2.0.0 and remain on the v1.x tags; the React adapter and the framework-free modules it describes are current.
+
 ## Purpose
 
 A console whose sections have several screens each shows those screens as a

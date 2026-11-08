@@ -17,6 +17,8 @@ dispatched_task_id: null
 
 # Product style figures
 
+> Since v2.0.0 latere-ui is React only. This spec records work done while the package also had a Vue adapter. The Vue files it names were removed in v2.0.0 and remain on the v1.x tags; the React adapter and the framework-free modules it describes are current.
+
 ## Overview
 
 Render the actual shared components under every product preset and commit dedicated visual baselines so future changes cannot silently erase their differences.

@@ -15,6 +15,8 @@ dispatched_task_id: null
 
 # Product style presets
 
+> Since v2.0.0 latere-ui is React only. This spec records work done while the package also had a Vue adapter. The Vue files it names were removed in v2.0.0 and remain on the v1.x tags; the React adapter and the framework-free modules it describes are current.
+
 ## Overview
 
 Offer three usable appearances for existing Vue and React components: Replichai's reading UI, Wallfacer's dense operator UI and Origo's repository UI. Their typography, geometry, opaque materials and interaction states must be visible in the components themselves.

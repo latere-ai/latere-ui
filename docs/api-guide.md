@@ -1031,7 +1031,7 @@ signatures are the compatibility surface. A breaking change to any of them
 comes with a note in this guide's migration paragraphs, as the v1.10 to v1.20
 Liquid Glass change did.
 
-Version 2 is React only: the package root resolves to the React entry, and a Vue application stays on a v1.x tag. The [changelog](../CHANGELOG.md#unreleased) lists what version 2 removed. State bindings are React values, hooks and callbacks. The appearance matrix renders every component at desktop and mobile sizes in light and dark themes; see the [visual reference](visual-reference.md).
+Version 2 is React only: the package root resolves to the React entry, and a Vue application stays on a v1.x tag. The [changelog](../CHANGELOG.md#v200---2026-10-08) lists what version 2 removed. State bindings are React values, hooks and callbacks. The appearance matrix renders every component at desktop and mobile sizes in light and dark themes; see the [visual reference](visual-reference.md).
 
 ### Compact layout defaults
 

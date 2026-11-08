@@ -7,19 +7,14 @@ Design specs for the shared React and framework-agnostic UI, auth, and session c
 | Spec | Status | Deliverable |
 |---|---|---|
 | [Shared auth client](auth-client-v1.8.md) | Complete | v1.8: vanilla async core, OrgSwitcher, runFrontChannelLogout |
-| [Console shell](console-shell-v1.9.md) | Complete | Shared ConsoleSidebar and DocsLayout shipped in v1.9.0; per-product migrations pending |
+| [Console shell](console-shell-v1.9.md) | Complete | Shared ConsoleSidebar and DocsLayout, shipped in v1.9.0 |
 | [Liquid Glass design system](liquid-glass-v1.10.md) | Complete | Material tokens and a reusable component library (sidebar, button, modal, alert, message, field); products adopt by setting canvas tokens and importing Glass* components |
 | [Liquid Glass v2](liquid-glass-v2-v1.20.md) | Complete | Five-tier material ladder, capsule geometry and radii ladder, ink-only accent, layered floating-glass shadows; the shell adopts the floating-capsule rail; released as v1.20.0 |
-| [React support](react-support-v1.27.md) | Validated | React bindings for the Glass primitives, console shell and session client, from `latere-ui/react` |
-| [React site footer](react-site-footer-v1.28.md) | Validated | SiteFooter and LatereLogoMark for React consumers |
+| [React support](react-support-v1.27.md) | Complete | React bindings for the Glass primitives, console shell and session client, from `latere-ui/react` |
+| [React site footer](react-site-footer-v1.28.md) | Complete | SiteFooter and LatereLogoMark for React consumers |
 | [Browser telemetry](browser-telemetry.md) | Complete | `latere-ui/telemetry`, one lazy browser telemetry entry paired with otel.TelemetryProxy |
 | [Structured data](structured-data.md) | Complete | `latere-ui/structured-data`, schema.org JSON-LD builders and an escaped script serializer for public pages |
 | [Select search](select-search.md) | Complete | GlassSelect search by typing above SELECT_SEARCH_THRESHOLD options, shared in src/glass |
-
-## Dependencies
-
-- **Upstream**: the platform-wide auth unification design, tracked outside this repo. The auth backend additions land first; the library work lands in parallel and is independent of backend deploy.
-- **Downstream**: each consuming product's own migration plan references these specs when bumping `latere-ui` to v1.8.0 and renaming CSRF cookies.
 
 ## Conventions
 
@@ -60,4 +55,4 @@ Design specs for the shared React and framework-agnostic UI, auth, and session c
 | [Footer navigation groups](footer-navigation-groups.md) | Complete | Applications, Research, and Platform in both footer adapters and all designs |
 | [Footer columns and preference menus](footer-columns.md) | Complete | Lead block and link columns, theme and language menus on fixed menu primitives, the platform's ink mark |
 | [One control shape, the flat capsule](capsule-controls.md) | Complete | Capsule buttons in flat fill, hairline and bare treatments; `--lu-button-radius` apart from `--lu-control-radius` |
-| [One footer on every Latere site](one-footer.md) | Testing | One footer shape, `lu-footer` classes, lockup and preference wiring as the only site inputs, the Gallery under Applications |
+| [One footer on every Latere site](one-footer.md) | Complete | One footer shape, `lu-footer` classes, lockup and preference wiring as the only site inputs, the Gallery under Applications |

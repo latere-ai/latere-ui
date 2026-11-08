@@ -34,6 +34,8 @@ dispatched_task_id: null
 
 # Footer columns, native preference menus, and the platform ink mark
 
+> Since v2.0.0 latere-ui is React only. This spec records work done while the package also had a Vue adapter. The Vue files it names were removed in v2.0.0 and remain on the v1.x tags; the React adapter and the framework-free modules it describes are current.
+
 ## Overview
 
 The full footer read as one dense line: bold gray group labels, product names
@@ -74,10 +76,10 @@ The groups come from the shared model in `footerNavigation.ts`:
 
 | Column | Groups |
 | --- | --- |
-| 1 | Applications (the chat, as Latere), then Research (ReplicHAI) |
+| 1 | Applications (Latere Chat, the Gallery), then Research (ReplicHAI) |
 | 2 | Platform (Latere Platform, Identity) |
-| 3 | Company (About, Why Latere, Blog, Open Source, Contact) |
-| 4 | Legal (Trust Center, Privacy, Terms, Impressum) |
+| 3 | Company (About, Products, Why Latere, Blog, Open Source, Contact) |
+| 4 | Legal (Trust Center, Privacy, Terms, Data Processing Agreement, Impressum) |
 
 Identity moves into Platform: one sign-in across the products is part of the
 ground the platform provides. The Community column is gone; the social glyphs
@@ -89,7 +91,7 @@ Each group is `role="group"` named by its heading, the columns are one `nav`
 named "Footer", and headings are `h2` without ids, so no table of contents
 that scans the article picks them up.
 
-The compact layout keeps its single wrapped strip. Its Platform group now
+The compact layout kept its single wrapped strip when this spec was written; v2.0.0 removed it for the one footer. Its Platform group now
 holds Identity as well, which leaves the rendered order unchanged, and its
 controls become the same two menu buttons, opening upward from the right.
 
@@ -232,7 +234,5 @@ pass. Locally, on a platform without committed references, every browser check
 that does not compare against a reference passes, and the paired Vue/React
 capture is pixel-equal for every sheet, appearance, theme and width, the
 footer, compact footer and preferences sheets included. The committed
-references of the footer, compact footer and preferences sheets predate the
-redesign; they need recording again through the visual workflow's
-`record_goldens` input, and a review, before the visual check passes on the
-recorded platforms.
+references of the footer sheets were recorded again afterwards, and the one
+footer spec records the current set.

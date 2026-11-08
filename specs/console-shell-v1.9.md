@@ -24,9 +24,11 @@ dispatched_task_id: null
 
 > **Status: built in latere-ui v1.9.0.** Both phases shipped in-library with
 > tests (125 passing) and typecheck clean; the per-product migrations (rollout
-> steps 2–5) remain. See the Outcome section for what diverged from this plan.
+> steps 2–5) happen in each product's own repository. See the Outcome section for what diverged from this plan.
 
 # latere-ui v1.9: Shared Console Shell + Docs Renderer
+
+> Historical: this is the v1.9 design, written for the Vue adapter. Since v2.0.0 latere-ui is React only; the Vue components, `createCollapse` and `createToc` were removed and remain on the v1.x tags. What is current: `ConsoleSidebar` and `DocsLayout` in `src/react/`, the headless nav model in `src/console/nav.ts`, the docs model in `src/docs/model.ts`, the table of contents core `createTocCore` in `src/docs/tocCore.ts`, and `createMarkdown` in `src/docs/markdown.ts`.
 
 ## Overview
 
@@ -395,7 +397,7 @@ Decisions that diverged from the plan:
 
 Still open / deferred:
 
-- Per-product migrations (rollout steps 2–5) are not done, this is library-only.
+- Per-product migrations (rollout steps 2–5) are outside this library.
 - **Lectio** never migrated: the hosted service was retired on 2026-10-03, and `brandTheme` no longer
   accepts `lectio`.
 - **Wallfacer** replaced the shared sidebar with its own rail, and since 2026-10-05, when it left the

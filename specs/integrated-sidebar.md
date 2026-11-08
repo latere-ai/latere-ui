@@ -16,6 +16,8 @@ dispatched_task_id: null
 
 # Integrated console sidebar
 
+> Since v2.0.0 latere-ui is React only. This spec records work done while the package also had a Vue adapter. The Vue files it names were removed in v2.0.0 and remain on the v1.x tags; the React adapter and the framework-free modules it describes are current.
+
 ## Purpose
 
 The default console sidebar belongs to the window. Its detached rounded rim,

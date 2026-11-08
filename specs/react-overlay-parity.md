@@ -16,6 +16,8 @@ dispatched_task_id: null
 
 # React overlay and service parity
 
+> Since v2.0.0 latere-ui is React only. This spec records work done while the package also had a Vue adapter. The Vue files it names were removed in v2.0.0 and remain on the v1.x tags; the React adapter and the framework-free modules it describes are current.
+
 ## Scope and verification
 
 Add React GlassPopover, GlassTooltip, GlassMenu, GlassDrawer, GlassToaster and GlassConfirmHost using the existing focus trap and equivalent Vue DOM. Share extracted CSS. Mirror controlled open/close APIs and preserve placement, viewport constraints, disabled states and focus restoration.

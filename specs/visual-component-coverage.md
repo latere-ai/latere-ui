@@ -16,6 +16,8 @@ dispatched_task_id: null
 
 # Component and glass effect reference coverage
 
+> Since v2.0.0 latere-ui is React only. This spec records work done while the package also had a Vue adapter. The Vue files it names were removed in v2.0.0 and remain on the v1.x tags; the React adapter and the framework-free modules it describes are current.
+
 ## Overview
 
 Provide inspectable reference sheets for every Vue and React UI component and every glass material/effect. Use real rendered components and representative public variants, rather than mockups.

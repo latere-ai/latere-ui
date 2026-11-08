@@ -212,7 +212,7 @@ consumer adds nothing. They are pinned exactly to one release set: the
 `@opentelemetry/sdk-trace-web` and `@opentelemetry/resources` to an exact
 stable version, and any other version beside them installs and bundles a
 second SDK. Packages outside the telemetry subpath never import them, so a
-Vue or React host that does not call `startTelemetry` ships none of it.
+React host that does not call `startTelemetry` ships none of it.
 
 ## Migration of the existing copies
 

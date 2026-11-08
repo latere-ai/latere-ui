@@ -15,6 +15,8 @@ dispatched_task_id: null
 
 # React basic component parity
 
+> Since v2.0.0 latere-ui is React only. This spec records work done while the package also had a Vue adapter. The Vue files it names were removed in v2.0.0 and remain on the v1.x tags; the React adapter and the framework-free modules it describes are current.
+
 ## Scope and verification
 
 Export GlassSurface and add GlassIconButton, GlassSwitch, GlassRadio, GlassTabs, GlassProgress and GlassSkeleton to the React entrypoint. Match Vue markup and behavior while following controlled React value/onChange conventions. Radio uses value for selection and optionValue for the option identity. Forward native surface attributes so optical effects work in React. Extract scoped component styles into shared sheets without changing rendering. React runtime imports must not pull in Vue.

@@ -18,6 +18,8 @@ dispatched_task_id: null
 
 # Repeatable browser visual regression tests
 
+> Since v2.0.0 latere-ui is React only. This spec records work done while the package also had a Vue adapter. The Vue files it names were removed in v2.0.0 and remain on the v1.x tags; the React adapter and the framework-free modules it describes are current.
+
 ## Overview
 
 Contributors need reviewed images of the real components and a failing test when their appearance changes. Add a local Vite gallery and Playwright screenshot comparisons against committed PNGs. Keep unit tests separate from browser tests.

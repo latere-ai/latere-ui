@@ -30,6 +30,8 @@ dispatched_task_id: null
 
 # latere-ui v1.20: Liquid Glass v2
 
+> Historical: this is the v1.20 design, written for the Vue adapter. Since v2.0.0 latere-ui is React only; the Vue components and `useGlass` were removed and remain on the v1.x tags. The material ladder, tokens and capsule geometry it describes are current, in `src/styles/glass.css`, `tokens.css` and the `Glass*` components in `src/react/`.
+
 ## Overview
 
 v1.10 shipped a Liquid Glass *dialect*: three Regular tiers + a Clear variant, a
@@ -268,5 +270,4 @@ Diverged from plan: none material. Tooltip moved to `smoke` (not `thick`) so its
 reduced-transparency fallback keeps dark-fill/light-ink contrast, recorded in
 the component pass.
 
-Remaining: push + tag `v1.20.0`; then adopt in `latere-ai` (second handoff,
-tracked separately).
+Released as latere-ui v1.20.0. Each product adopts on its own schedule.

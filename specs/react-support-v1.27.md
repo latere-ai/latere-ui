@@ -1,6 +1,6 @@
 ---
 title: latere-ui v1.27: dual framework support (React bindings alongside Vue)
-status: validated
+status: complete
 depends_on:
   - specs/auth-client-v1.8.md
   - specs/console-shell-v1.9.md
@@ -22,6 +22,8 @@ dispatched_task_id: null
 ---
 
 # latere-ui v1.27: dual framework support
+
+> Historical: this is the v1.27 design, which added React beside Vue. Since v2.0.0 latere-ui is React only; the Vue components were removed and remain on the v1.x tags, so the "dual framework" parts below no longer apply. The React components, the shared component CSS in `src/styles/components/` and the session bindings it introduced are current.
 
 ## Overview
 

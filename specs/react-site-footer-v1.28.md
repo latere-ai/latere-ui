@@ -1,6 +1,6 @@
 ---
 title: latere-ui v1.28: SiteFooter for React consumers
-status: validated
+status: complete
 depends_on:
   - specs/react-support-v1.27.md
 affects:
@@ -19,6 +19,8 @@ dispatched_task_id: null
 ---
 
 # latere-ui v1.28: SiteFooter for React
+
+> Historical: this is the v1.28 design, which ported the Vue footer. Since v2.0.0 the footer is one shape on every site, with no `compact` or `messages` props and no product switcher; see the one footer spec. The `SiteFooter` and `LatereLogoMark` components in `src/react/` are current.
 
 ## Overview
 

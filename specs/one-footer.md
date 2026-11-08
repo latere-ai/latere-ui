@@ -1,6 +1,6 @@
 ---
 title: One footer on every Latere site
-status: testing
+status: complete
 depends_on:
   - specs/footer-columns.md
 affects:
@@ -65,5 +65,5 @@ into it without anyone meaning them to.
 
 ## Outcome
 
-Built for v2.0.0. Status `testing` until the footer's reference images are
-recorded by the UI verification workflow on its macOS 15 runner.
+Built for v2.0.0. The footer's reference images are recorded for macOS 15 and
+the browser checks listed above pass.

@@ -19,6 +19,8 @@ dispatched_task_id: null
 
 # Complete component visual matrix
 
+> Since v2.0.0 latere-ui is React only. This spec records work done while the package also had a Vue adapter. The Vue files it names were removed in v2.0.0 and remain on the v1.x tags; the React adapter and the framework-free modules it describes are current.
+
 ## Scope and verification
 
 Every public visual component must exist in Vue and React and have light/dark desktop/mobile renders for default glass, Replichai, Wallfacer and Origo. Fixed identities and headless components are included; optical effects retain their intended appearance but receive both adapter and viewport coverage. Enforce exported-component parity and complete combinations rather than maintaining selective mobile allowlists.
