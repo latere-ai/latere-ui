@@ -117,7 +117,7 @@ for (const layout of ['desktop', 'mobile']) {
       const show = page.getByRole('button', { name: 'Show notifications' });
       await show.click();
       const region = page.getByRole('region', { name: 'Notifications' });
-      await expect(region).toHaveAttribute('aria-live', 'polite');
+      await expect(region).not.toHaveAttribute('aria-live');
       await expect(region.getByRole('status')).toHaveCount(3);
       await expect(region.getByRole('alert')).toHaveCount(1);
       if (layout === 'mobile') await expect.poll(() => show.evaluate(element => element.matches(':hover'))).toBe(false);

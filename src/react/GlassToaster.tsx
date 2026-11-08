@@ -50,7 +50,7 @@ export function GlassToaster() {
   const remove = useCallback((id: number) => setEntries(previous => previous.filter(entry => entry.toast.id !== id)), []);
   if (typeof document === 'undefined') return null;
   return createPortal(
-    <div className="lu-toaster" role="region" aria-label="Notifications" aria-live="polite">
+    <div className="lu-toaster" role="region" aria-label="Notifications">
       {entries.map(entry => <ToastRow key={entry.toast.id} entry={entry} onExited={remove} />)}
     </div>,
     document.body,

@@ -143,7 +143,9 @@ describe('shared imperative hosts', () => {
       message.warning('Warning', { duration: 0 });
       message.error('Error', { duration: 0 });
     });
-    expect(w.getByRole('region').getAttribute('aria-live')).toBe('polite');
+    // Each toast is its own live region; a live container around them would
+    // have some screen readers announce a toast twice.
+    expect(w.getByRole('region').hasAttribute('aria-live')).toBe(false);
     expect(w.getAllByRole('status')).toHaveLength(3);
     expect(w.getByRole('alert').textContent).toBe('Error');
     expect(w.getByRole('alert').getAttribute('style')).toContain('--state-error');
