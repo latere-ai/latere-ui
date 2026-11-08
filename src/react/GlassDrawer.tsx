@@ -1,6 +1,6 @@
 import { useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-import { useFocusTrap } from './internal';
+import { useFocusTrap, useScrimDismiss } from './internal';
 import '../styles/components/glass-drawer.css';
 
 export interface GlassDrawerProps {
@@ -27,12 +27,10 @@ export function GlassDrawer({
   const panel = useRef<HTMLElement>(null);
   const id = useId();
   useFocusTrap(open, panel, onClose);
+  const scrimHandlers = useScrimDismiss(closeOnScrim, () => onClose?.());
   if (!open || typeof document === 'undefined') return null;
   return createPortal(
-    <div
-      className="lu-drawer-scrim"
-      onClick={event => { if (event.target === event.currentTarget && closeOnScrim) onClose?.(); }}
-    >
+    <div className="lu-drawer-scrim" {...scrimHandlers}>
       <aside
         ref={panel}
         className={`lu-drawer lu-glass-thick lu-drawer--${side}`}

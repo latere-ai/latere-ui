@@ -63,3 +63,24 @@ it.each([
   expect(document.activeElement).toBe(document.querySelector('[role="dialog"]'));
   view.unmount();
 });
+
+it.each([
+  ['GlassModal', (onClose: () => void) => <GlassModal open title="Rename" onClose={onClose}><input aria-label="Name" /></GlassModal>],
+  ['GlassDrawer', (onClose: () => void) => <GlassDrawer open title="Rename" onClose={onClose}><input aria-label="Name" /></GlassDrawer>],
+] as const)('%s stays open when a press starts in the panel and ends on the scrim', (_, element) => {
+  const onClose = vi.fn();
+  render(element(onClose));
+  const input = document.querySelector<HTMLInputElement>('input')!;
+  const scrim = document.querySelector<HTMLElement>('.lu-modal-scrim, .lu-drawer-scrim')!;
+  // Selecting a field's text by dragging past the panel edge: mousedown on
+  // the input, mouseup on the scrim, and the click on their common ancestor.
+  fireEvent.mouseDown(input);
+  fireEvent.mouseUp(scrim);
+  fireEvent.click(scrim);
+  expect(onClose).not.toHaveBeenCalled();
+  // The next press that starts and ends on the scrim still closes it.
+  fireEvent.mouseDown(scrim);
+  fireEvent.mouseUp(scrim);
+  fireEvent.click(scrim);
+  expect(onClose).toHaveBeenCalledOnce();
+});

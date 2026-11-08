@@ -2,10 +2,10 @@
 // <body> over a scrim. Traps focus, closes on Escape / scrim click, restores
 // focus on close, and is labeled for assistive tech. Controlled through
 // `open` and `onClose`. Requires `import 'latere-ui/glass'`.
-import { useId, useRef, type MouseEvent, type ReactNode } from 'react';
+import { useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import '../styles/components/glass-modal.css';
-import { cx, useFocusTrap } from './internal';
+import { cx, useFocusTrap, useScrimDismiss } from './internal';
 import { useCssTransition } from './useCssTransition';
 
 export interface GlassModalProps {
@@ -57,14 +57,12 @@ export function GlassModal({
   }
   useFocusTrap(open, panel, close);
 
-  function onScrim(e: MouseEvent<HTMLDivElement>) {
-    if (e.target === e.currentTarget && closeOnScrim) close();
-  }
+  const scrimHandlers = useScrimDismiss(closeOnScrim, close);
 
   if (!present || typeof document === 'undefined') return null;
 
   return createPortal(
-    <div ref={scrim} className={cx('lu-modal-scrim', `lu-modal-scrim--${layer}`)} onClick={onScrim}>
+    <div ref={scrim} className={cx('lu-modal-scrim', `lu-modal-scrim--${layer}`)} {...scrimHandlers}>
       <div
         ref={panel}
         className="lu-modal lu-glass-thick"

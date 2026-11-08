@@ -1,5 +1,5 @@
 // Shared plumbing for the React components.
-import { useEffect, useRef, type RefObject } from 'react';
+import { useEffect, useRef, type MouseEvent as ReactMouseEvent, type RefObject } from 'react';
 import { activateFocusTrap } from '../glass/focusTrap';
 
 /** Join truthy class parts, in argument order. */
@@ -56,4 +56,24 @@ export function useFocusTrap(
     trap.focus();
     return trap.dispose;
   }, [active, container]);
+}
+
+/**
+ * Click-on-scrim dismissal for a dialog. A browser fires the click for a
+ * press that starts in the panel and ends over the scrim on the scrim itself,
+ * which would close the dialog under someone selecting text. The handlers
+ * close only when the press did not start inside the panel.
+ */
+export function useScrimDismiss(enabled: boolean, close: () => void) {
+  const pressedInside = useRef(false);
+  return {
+    onMouseDown(event: ReactMouseEvent<HTMLElement>) {
+      pressedInside.current = event.target !== event.currentTarget;
+    },
+    onClick(event: ReactMouseEvent<HTMLElement>) {
+      const inside = pressedInside.current;
+      pressedInside.current = false;
+      if (event.target === event.currentTarget && enabled && !inside) close();
+    },
+  };
 }
