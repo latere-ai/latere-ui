@@ -309,7 +309,7 @@ describe('useSessionGate', () => {
     expect(pending).toHaveLength(1);
     expect(result.current.ready).toBe(false);
 
-    // The check started for the first path is cancelled by the path change;
+    // The check started for the first path is canceled by the path change;
     // only the second path's check strips the marker.
     await act(async () => { pending[0](unauthorized); });
     await waitFor(() => expect(result.current.ready).toBe(true));
