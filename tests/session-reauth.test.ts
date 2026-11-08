@@ -74,3 +74,35 @@ describe('createReauth() with sessionStorage unavailable', () => {
     expect(() => reauth.clearRecheck()).not.toThrow();
   });
 });
+
+describe('createReauth() recovery steps', () => {
+  it('runs the silent check, then one interactive login, then reports exhausted', () => {
+    const steps: string[] = [];
+    for (let page = 0; page < 3; page++) {
+      // Each loop is a fresh page load: new reauth, same sessionStorage.
+      steps.push(createReauth().recoverSession('/a'));
+    }
+    expect(steps).toEqual(['silent', 'login', 'exhausted']);
+    expect(hrefSpy).toHaveBeenCalledTimes(2);
+    expect(String(hrefSpy.mock.calls[0][0])).toContain('prompt=none');
+    expect(String(hrefSpy.mock.calls[1][0])).not.toContain('prompt=none');
+  });
+
+  it('skips recovery under graceful mode and while a navigation is under way', () => {
+    expect(createReauth({ mode: 'graceful' }).recoverSession()).toBe('skipped');
+    const reauth = createReauth();
+    expect(reauth.recoverSession()).toBe('silent');
+    expect(reauth.recoverSession()).toBe('skipped');
+  });
+
+  it('keeps recent flags and clears stale ones', () => {
+    const reauth = createReauth();
+    sessionStorage.setItem('latere.sso_checked.session', String(Date.now()));
+    sessionStorage.setItem('latere.sso_login.session', '1');
+    reauth.clearStaleRecheck();
+    expect(sessionStorage.getItem('latere.sso_checked.session')).not.toBeNull();
+    expect(sessionStorage.getItem('latere.sso_login.session')).toBeNull();
+    reauth.clearRecheck();
+    expect(sessionStorage.getItem('latere.sso_checked.session')).toBeNull();
+  });
+});

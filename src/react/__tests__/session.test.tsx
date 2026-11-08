@@ -9,6 +9,20 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Principal } from '../../session/types';
 import { SessionProvider, useSession, useSessionGate } from '../session';
 
+function routeFetch(routes: Record<string, () => [number, unknown]>) {
+  return vi.fn(async (path: string) => {
+    const route = routes[path];
+    if (!route) throw new Error(`unexpected request ${path}`);
+    const [status, body] = route();
+    return {
+      ok: status >= 200 && status < 300,
+      status,
+      statusText: 'x',
+      text: async () => JSON.stringify(body),
+    } as Response;
+  });
+}
+
 const PRINCIPAL: Principal = {
   principal_id: 'p1',
   email: 'a@b.c',
@@ -255,7 +269,7 @@ describe('useSessionGate', () => {
     await waitFor(() => expect(result.current.ready).toBe(true));
     expect(hrefSpy).toHaveBeenCalledTimes(1);
     expect(hrefSpy.mock.calls[0][0]).toContain('/login?prompt=none&return_to=');
-    expect(sessionStorage.getItem('latere.sso_checked.auth')).toBe('1');
+    expect(Number(sessionStorage.getItem('latere.sso_checked.auth'))).toBeGreaterThan(0);
     expect(result.current.showAuthGate).toBe(true);
     unmount();
 
@@ -382,5 +396,46 @@ describe('SessionProvider with sessionStorage unavailable', () => {
     const { result } = renderHook(() => useSessionGate({ path: '/overview' }), { wrapper: wrapper() });
     await waitFor(() => expect(result.current.ready).toBe(true));
     expect(logged).toHaveBeenCalledWith('useSessionGate: the session check failed', expect.any(Error));
+  });
+});
+
+describe('SessionProvider re-check when /me succeeds but another call answers 401', () => {
+  it('runs the silent check once, then one sign-in, then reports the lost session', async () => {
+    vi.stubGlobal(
+      'fetch',
+      routeFetch({ '/api/me': () => [200, PRINCIPAL], '/v1/jobs': () => [401, { error: 'unauthorized' }] }),
+    );
+    const load = async () => {
+      const view = renderHook(() => useSession(), { wrapper: wrapper() });
+      await waitFor(() => expect(view.result.current.principal).not.toBeNull());
+      await act(async () => {
+        await view.result.current.client.api('GET', '/v1/jobs').catch(() => {});
+      });
+      return view;
+    };
+
+    (await load()).unmount();
+    expect(hrefSpy).toHaveBeenCalledTimes(1);
+    expect(String(hrefSpy.mock.calls[0][0])).toContain('prompt=none');
+
+    // The silent check returned to the page, which loads again.
+    (await load()).unmount();
+    expect(hrefSpy).toHaveBeenCalledTimes(2);
+    expect(String(hrefSpy.mock.calls[1][0])).not.toContain('prompt=none');
+
+    // The sign-in returned too and the call still answers 401: stop.
+    const third = await load();
+    expect(hrefSpy).toHaveBeenCalledTimes(2);
+    expect(third.result.current.error).toBe(
+      'Your session could not be restored. Reload the page or sign in again.',
+    );
+  });
+
+  it('allows a new silent check after a /me success once the flags are older than a minute', async () => {
+    sessionStorage.setItem('latere.sso_checked.session', String(Date.now() - 120_000));
+    vi.stubGlobal('fetch', mockFetch([[200, PRINCIPAL]]));
+    const { result } = renderHook(() => useSession(), { wrapper: wrapper() });
+    await waitFor(() => expect(result.current.principal).not.toBeNull());
+    expect(sessionStorage.getItem('latere.sso_checked.session')).toBeNull();
   });
 });

@@ -628,7 +628,11 @@ share one client with code outside React.
 A protected view calls `useSessionGate()`. It resolves the session on entry;
 when nobody is signed in, it navigates once to `/login?prompt=none` so a
 session the person already has with the identity provider carries over
-without a prompt. A `sessionStorage` flag keeps the check from looping. When
+without a prompt. Timestamped `sessionStorage` flags keep the check from
+looping, even when `/me` answers signed in and another request answers 401:
+the silent check runs once, a second 401 right after it starts one interactive
+sign-in, and a third stops and sets `error` on `useSession()`. A browser that
+blocks `sessionStorage` skips the silent check. When
 the check comes back signed out, `showAuthGate` becomes true and the view
 renders its own sign-in prompt linking to `loginURL`; `ready` is true once the
 check has settled. The gate is router-agnostic: pass your router's current

@@ -88,6 +88,10 @@ export interface SessionContextValue {
   switchOrg: (orgId: string) => Promise<void>;
 }
 
+// Shown through `error` when the silent check and the interactive sign-in
+// were both used up and a request still answers 401.
+const SESSION_LOST = 'Your session could not be restored. Reload the page or sign in again.';
+
 const SessionContext = createContext<SessionContextValue | null>(null);
 
 /**
@@ -156,7 +160,7 @@ export function SessionProvider<Raw = Principal>({
       setPrincipal(p);
       if (p) {
         setError(null);
-        reauth.clearRecheck();
+        reauth.clearStaleRecheck();
       }
     } catch (e) {
       if (!mountedRef.current) return;
@@ -190,7 +194,7 @@ export function SessionProvider<Raw = Principal>({
     setPrincipal(null);
     // No argument: recoverSession defaults to the page the user is on. The
     // failing request's URL is not a destination a user can be returned to.
-    reauth.recoverSession();
+    if (reauth.recoverSession() === 'exhausted') setError(SESSION_LOST);
   }, [reauth]);
 
   // Global 401 seam: an authenticated request failing mid-session runs the
