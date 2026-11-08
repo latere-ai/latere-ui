@@ -302,17 +302,16 @@ describe('useSessionGate', () => {
       ({ path }) => useSessionGate({ path, stripSsoChecked: strip }),
       { wrapper: wrapper(), initialProps: { path: '/first' } },
     );
-    await waitFor(() => expect(pending).toHaveLength(2));
+    // The provider's bootstrap and the gate's check share one request.
+    await waitFor(() => expect(pending).toHaveLength(1));
     rerender({ path: '/second' });
-    await waitFor(() => expect(pending).toHaveLength(3));
-
-    // The provider's bootstrap and the check started for the first path
-    // settle after the path changed, while the second path's check is open.
-    await act(async () => { pending[0](unauthorized); pending[1](unauthorized); });
-    expect(strip).not.toHaveBeenCalled();
+    await act(async () => { await Promise.resolve(); });
+    expect(pending).toHaveLength(1);
     expect(result.current.ready).toBe(false);
 
-    await act(async () => { pending[2](unauthorized); });
+    // The check started for the first path is cancelled by the path change;
+    // only the second path's check strips the marker.
+    await act(async () => { pending[0](unauthorized); });
     await waitFor(() => expect(result.current.ready).toBe(true));
     expect(strip).toHaveBeenCalledExactlyOnceWith('/second?tab=files');
     expect(result.current.showAuthGate).toBe(true);
@@ -437,5 +436,101 @@ describe('SessionProvider re-check when /me succeeds but another call answers 40
     const { result } = renderHook(() => useSession(), { wrapper: wrapper() });
     await waitFor(() => expect(result.current.principal).not.toBeNull());
     expect(sessionStorage.getItem('latere.sso_checked.session')).toBeNull();
+  });
+});
+
+describe('SessionProvider /me request ordering', () => {
+  const answer = (status: number, body: unknown) =>
+    ({ ok: status < 400, status, statusText: 'x', text: async () => JSON.stringify(body) }) as Response;
+
+  function pendingFetch() {
+    const pending: Array<(r: Response) => void> = [];
+    const fetchMock = vi.fn(() => new Promise<Response>((resolve) => { pending.push(resolve); }));
+    vi.stubGlobal('fetch', fetchMock);
+    return pending;
+  }
+
+  it('keeps the answer of the latest refresh() when an earlier one arrives last', async () => {
+    const pending = pendingFetch();
+    const { result } = renderHook(() => useSession(), { wrapper: wrapper() });
+    await waitFor(() => expect(pending).toHaveLength(1));
+    await act(async () => { pending[0](answer(200, PRINCIPAL)); });
+    await waitFor(() => expect(result.current.principal?.principal_id).toBe('p1'));
+
+    let first!: Promise<void>;
+    let second!: Promise<void>;
+    act(() => { first = result.current.refresh(); });
+    act(() => { second = result.current.refresh(); });
+    await waitFor(() => expect(pending).toHaveLength(3));
+    // The later request sees the ended session; the earlier one, answered
+    // afterwards, still carries the old account.
+    await act(async () => { pending[2](answer(401, {})); await second; });
+    await act(async () => { pending[1](answer(200, PRINCIPAL)); await first; });
+
+    expect(result.current.principal).toBeNull();
+  });
+
+  it('resolves an older refresh() only after the newest request has settled', async () => {
+    const pending = pendingFetch();
+    const { result } = renderHook(() => useSession(), { wrapper: wrapper() });
+    await waitFor(() => expect(pending).toHaveLength(1));
+    await act(async () => { pending[0](answer(401, {})); });
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    let firstDone = false;
+    let first!: Promise<void>;
+    let second!: Promise<void>;
+    act(() => { first = result.current.refresh().then(() => { firstDone = true; }); });
+    act(() => { second = result.current.refresh(); });
+    await act(async () => { pending[1](answer(200, PRINCIPAL)); await Promise.resolve(); });
+    expect(result.current.principal).toBeNull();
+    expect(firstDone).toBe(false);
+    await act(async () => { pending[2](answer(200, { ...PRINCIPAL, principal_id: 'p2' })); await first; await second; });
+    expect(result.current.principal?.principal_id).toBe('p2');
+  });
+
+  it('does not let a /me answer in flight restore a principal after a mid-session 401', async () => {
+    const pending = pendingFetch();
+    const { result } = renderHook(() => useSession(), {
+      wrapper: wrapper({ expiredSessionMode: 'graceful' }),
+    });
+    await waitFor(() => expect(pending).toHaveLength(1));
+    await act(async () => { pending[0](answer(200, PRINCIPAL)); });
+    await waitFor(() => expect(result.current.principal).not.toBeNull());
+
+    let refreshed!: Promise<void>;
+    act(() => { refreshed = result.current.refresh(); });
+    await waitFor(() => expect(pending).toHaveLength(2));
+    let call!: Promise<unknown>;
+    act(() => { call = result.current.client.api('GET', '/v1/jobs').catch(() => {}); });
+    await act(async () => { pending[2](answer(401, {})); await call; });
+    expect(result.current.principal).toBeNull();
+
+    await act(async () => { pending[1](answer(200, PRINCIPAL)); await refreshed; });
+    expect(result.current.principal).toBeNull();
+  });
+
+  it('settles loading when a 401 arrives while the first /me is still open', async () => {
+    const pending = pendingFetch();
+    const { result } = renderHook(() => useSession(), {
+      wrapper: wrapper({ expiredSessionMode: 'graceful' }),
+    });
+    await waitFor(() => expect(pending).toHaveLength(1));
+    let call!: Promise<unknown>;
+    act(() => { call = result.current.client.api('GET', '/v1/jobs').catch(() => {}); });
+    await act(async () => { pending[1](answer(401, {})); await call; });
+    expect(result.current.loading).toBe(false);
+    await act(async () => { pending[0](answer(200, PRINCIPAL)); });
+    expect(result.current.principal).toBeNull();
+  });
+
+  it('sends one /me request for the provider and a gate below it', async () => {
+    const pending = pendingFetch();
+    const { result } = renderHook(() => useSessionGate({ path: '/overview' }), { wrapper: wrapper() });
+    await waitFor(() => expect(pending).toHaveLength(1));
+    await act(async () => { pending[0](answer(200, PRINCIPAL)); });
+    await waitFor(() => expect(result.current.ready).toBe(true));
+    expect(pending).toHaveLength(1);
+    expect(result.current.showAuthGate).toBe(false);
   });
 });

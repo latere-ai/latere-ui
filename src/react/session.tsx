@@ -65,7 +65,11 @@ export interface SessionContextValue {
   loading: boolean;
   /** Message from the last failed `refresh()` (a non-401/404 error). */
   error: string | null;
-  /** Re-resolve `/me`. Idempotent — safe to call repeatedly. */
+  /**
+   * Re-resolve `/me`. Safe to call repeatedly and from several places: only
+   * the newest request's answer is applied, and each call resolves once the
+   * newest request has settled.
+   */
   refresh: () => Promise<void>;
   /**
    * Component route-gate entry point (used by `useSessionGate`): resolve the
@@ -80,9 +84,12 @@ export interface SessionContextValue {
   requireSession: (returnTo?: string) => void;
   /** Interactive login redirect, preserving intent. */
   login: (returnTo?: string) => void;
-  /** Clear the local session and navigate to `logoutPath`. */
+  /**
+   * Clear the re-check flags and navigate to `logoutPath`. The principal stays
+   * in state until the page unloads.
+   */
   logout: () => void;
-  /** RFC 6749-style front-channel logout: notify each RP iframe, then navigate. */
+  /** OpenID Connect front-channel logout: notify each RP in a frame, then navigate. */
   frontChannelLogout: (opts?: Omit<FrontChannelLogoutOptions, 'client'>) => Promise<void>;
   /** Switch the active org (`''` = personal) and follow the server round-trip. */
   switchOrg: (orgId: string) => Promise<void>;
@@ -96,7 +103,7 @@ const SessionContext = createContext<SessionContextValue | null>(null);
 
 /**
  * Owns the session state machine (loading → authenticated/anonymous) over the
- * framework-free core. Resolves `/me` once on mount. Wrap the app (or the console shell) in this once; `useSession()`
+ * framework-free core. Resolves `/me` on mount. Wrap the app (or the console shell) in this once; `useSession()`
  * and `useSessionGate()` read from it via context.
  */
 export function SessionProvider<Raw = Principal>({
@@ -147,39 +154,69 @@ export function SessionProvider<Raw = Principal>({
   const mapMeRef = useRef(mapMe);
   mapMeRef.current = mapMe;
 
-  const fetchMe = useCallback(async () => {
-    if (!hasWindow()) {
-      loadedRef.current = true;
-      setLoaded(true);
-      return;
-    }
-    try {
-      const p = await coreMe<Raw>(client, { endpoint: meEndpoint, mapMe: mapMeRef.current });
-      principalRef.current = p;
-      if (!mountedRef.current) return;
-      setPrincipal(p);
-      if (p) {
-        setError(null);
-        reauth.clearStaleRecheck();
+  // Each `/me` request takes the next generation; only the newest one applies
+  // its answer. `handleExpired` takes a generation too, which drops whatever
+  // is in flight. `latestRef` is the newest request's promise, shared by
+  // every caller that has to wait for the session to resolve.
+  const generationRef = useRef(0);
+  const latestRef = useRef<Promise<void> | null>(null);
+
+  const fetchMe = useCallback((): Promise<void> => {
+    const generation = ++generationRef.current;
+    const run = (async () => {
+      if (!hasWindow()) {
+        loadedRef.current = true;
+        setLoaded(true);
+        return;
       }
-    } catch (e) {
-      if (!mountedRef.current) return;
-      setError((e as Error).message);
-    } finally {
-      loadedRef.current = true;
-      if (mountedRef.current) setLoaded(true);
-    }
+      try {
+        const p = await coreMe<Raw>(client, { endpoint: meEndpoint, mapMe: mapMeRef.current });
+        // A newer request or an expiry has taken over; this answer is stale.
+        if (generation !== generationRef.current) {
+          await latestRef.current;
+          return;
+        }
+        principalRef.current = p;
+        if (!mountedRef.current) return;
+        setPrincipal(p);
+        if (p) {
+          setError(null);
+          reauth.clearStaleRecheck();
+        }
+      } catch (e) {
+        if (generation !== generationRef.current) {
+          await latestRef.current;
+          return;
+        }
+        if (!mountedRef.current) return;
+        setError((e as Error).message);
+      } finally {
+        if (generation === generationRef.current) {
+          loadedRef.current = true;
+          if (mountedRef.current) setLoaded(true);
+        }
+      }
+    })();
+    latestRef.current = run;
+    void run.then(() => {
+      if (latestRef.current === run) latestRef.current = null;
+    });
+    return run;
   }, [client, meEndpoint, reauth]);
+
+  // The request in flight, or a new one: the mount-time bootstrap and the
+  // route gate share one `/me` request instead of each sending their own.
+  const bootstrap = useCallback(() => latestRef.current ?? fetchMe(), [fetchMe]);
 
   const ensureSession = useCallback(
     async (returnTo: string): Promise<boolean> => {
-      if (!loadedRef.current) await fetchMe();
+      if (!loadedRef.current) await bootstrap();
       if (principalRef.current) return true;
       // Silent-only: the caller's showAuthGate renders the prompt on bounce-back.
       reauth.attemptSilentReauth(returnTo);
       return false;
     },
-    [fetchMe, reauth],
+    [bootstrap, reauth],
   );
 
   const requireSession = useCallback(
@@ -190,8 +227,13 @@ export function SessionProvider<Raw = Principal>({
   );
 
   const handleExpired = useCallback(() => {
+    // The session ended: an answer still in flight describes the old one.
+    generationRef.current++;
+    latestRef.current = null;
     principalRef.current = null;
+    loadedRef.current = true;
     setPrincipal(null);
+    setLoaded(true);
     // No argument: recoverSession defaults to the page the user is on. The
     // failing request's URL is not a destination a user can be returned to.
     if (reauth.recoverSession() === 'exhausted') setError(SESSION_LOST);
@@ -238,7 +280,7 @@ export function SessionProvider<Raw = Principal>({
 
   // Bootstrap: resolve `/me` once, mirroring the store's mount-time fetch.
   useEffect(() => {
-    void fetchMe();
+    void bootstrap();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally once per provider instance.
   }, []);
 
