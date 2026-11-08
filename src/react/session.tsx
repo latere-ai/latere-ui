@@ -59,6 +59,8 @@ export interface SessionProviderProps<Raw = Principal> {
 export interface SessionContextValue {
   /** The shared API client — reuse it for app-specific calls. */
   client: ApiClient;
+  /** The provider's server login entry point; `useSessionGate` links to it by default. */
+  loginPath: string;
   /** The resolved principal, or `null` when logged out. */
   principal: Principal | null;
   /** True until the first `/me` resolution settles. */
@@ -290,6 +292,7 @@ export function SessionProvider<Raw = Principal>({
       principal,
       loading: !loaded,
       error,
+      loginPath,
       refresh: fetchMe,
       ensureSession,
       requireSession,
@@ -303,6 +306,7 @@ export function SessionProvider<Raw = Principal>({
       principal,
       loaded,
       error,
+      loginPath,
       fetchMe,
       ensureSession,
       requireSession,
@@ -342,7 +346,7 @@ export interface UseSessionGateOptions {
   path?: string;
   /** Full path including query, for `return_to`. Defaults to `path`. */
   fullPath?: string;
-  /** Server login entry point. Default `'/login'`. */
+  /** Server login entry point. Default: the `SessionProvider`'s `loginPath`. */
   loginPath?: string;
   /**
    * Strip the `sso_checked` marker from the URL after a silent round-trip
@@ -380,8 +384,8 @@ function defaultStripSsoChecked(path: string): void {
  * and a `stripSsoChecked` that navigates with the router.
  */
 export function useSessionGate(opts: UseSessionGateOptions = {}): UseSessionGate {
-  const { principal, loading, ensureSession } = useSession();
-  const loginPath = opts.loginPath ?? '/login';
+  const { principal, loading, ensureSession, loginPath: providerLoginPath } = useSession();
+  const loginPath = opts.loginPath ?? providerLoginPath;
   const path = opts.path ?? currentPath();
   const fullPath = opts.fullPath ?? path;
   const stripSsoChecked = opts.stripSsoChecked ?? defaultStripSsoChecked;

@@ -534,3 +534,25 @@ describe('SessionProvider /me request ordering', () => {
     expect(result.current.showAuthGate).toBe(false);
   });
 });
+
+describe('useSessionGate login path', () => {
+  it('builds loginURL from the SessionProvider loginPath', async () => {
+    sessionStorage.setItem('latere.sso_checked.session', '1');
+    vi.stubGlobal('fetch', mockFetch([[401, {}]]));
+    const { result } = renderHook(() => useSessionGate({ path: '/billing' }), {
+      wrapper: wrapper({ loginPath: '/auth/login' }),
+    });
+    await waitFor(() => expect(result.current.ready).toBe(true));
+    expect(result.current.loginURL).toBe('/auth/login?return_to=%2Fbilling');
+  });
+
+  it('prefers the loginPath option over the provider', async () => {
+    sessionStorage.setItem('latere.sso_checked.session', '1');
+    vi.stubGlobal('fetch', mockFetch([[401, {}]]));
+    const { result } = renderHook(() => useSessionGate({ path: '/billing', loginPath: '/sso' }), {
+      wrapper: wrapper({ loginPath: '/auth/login' }),
+    });
+    await waitFor(() => expect(result.current.ready).toBe(true));
+    expect(result.current.loginURL).toBe('/sso?return_to=%2Fbilling');
+  });
+});
