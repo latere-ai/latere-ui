@@ -378,6 +378,9 @@ export function ConsoleSidebar({
         'data-nav-id': item.id,
         'data-audience': item.audience,
         title: collapsed ? audienceTitle(item, label) : disabled ? 'Not yet available' : undefined,
+        // The collapsed rail shows an icon or the label's first letter, which
+        // would otherwise be the row's whole name.
+        'aria-label': collapsed ? audienceTitle(item, label) : undefined,
         'aria-current': rowActive(item) ? 'page' : undefined,
         onClick: (e: ReactMouseEvent) => onRowClick(item, e),
       },
@@ -491,6 +494,7 @@ export function ConsoleSidebar({
                 ...brandProps,
                 className: 'lu-cs-brand',
                 title: collapsed ? expandLabel : undefined,
+                'aria-label': brandAsButton ? expandLabel : undefined,
                 onClick: onBrandClick,
               },
               <span

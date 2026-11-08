@@ -292,3 +292,26 @@ describe('<ConsoleSidebar /> (react)', () => {
     expect(container.querySelector('.lu-cs-item')).toBeNull();
   });
 });
+
+describe('ConsoleSidebar collapsed names', () => {
+  it('names a collapsed row without an icon by its label, not its first letter', () => {
+    const { getByRole } = render(<ConsoleSidebar model={{ groups: [{ items: [
+      { id: 'keys', label: 'Keys', to: '/keys' },
+      { id: 'fleet', label: 'Fleet', to: '/fleet', value: '3' },
+    ] }] }} collapsed />);
+    expect(getByRole('link', { name: 'Keys' }).textContent).toBe('K');
+    expect(getByRole('link', { name: 'Fleet 3' })).toBeTruthy();
+  });
+
+  it('names the collapsed brand button by what it does', () => {
+    const { container } = render(<ConsoleSidebar model={model} collapsed expandOnBrandClick expandLabel="Open the sidebar" brandName="Lux" />);
+    const brand = container.querySelector('.lu-cs-brand')!;
+    expect(brand.tagName).toBe('BUTTON');
+    expect(brand.getAttribute('aria-label')).toBe('Open the sidebar');
+  });
+
+  it('leaves expanded rows named by their content', () => {
+    const { container } = render(<ConsoleSidebar model={model} />);
+    expect(container.querySelector('.lu-cs-item[aria-label]')).toBeNull();
+  });
+});
