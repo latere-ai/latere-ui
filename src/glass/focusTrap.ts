@@ -2,7 +2,7 @@
 // keyboard events, so nested dialogs close one at a time.
 // A disclosure's summary takes focus too; without it, Tab from the summary
 // jumps back to the first control and skips everything after it.
-const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),textarea:not([disabled]),select:not([disabled]),details>summary:first-of-type,[tabindex]:not([tabindex="-1"])';
+const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),textarea:not([disabled]),select:not([disabled]),details>summary:first-of-type,[tabindex]:not([tabindex="-1"]),[contenteditable]:not([contenteditable="false"])';
 
 interface Trap {
   container: () => HTMLElement | null | undefined;
@@ -16,6 +16,35 @@ function focusable(container: HTMLElement): HTMLElement[] {
     (element) => !element.matches(':disabled') && Number(element.getAttribute('tabindex') ?? 0) >= 0
       && (element.offsetParent !== null || element === document.activeElement),
   );
+}
+
+// A browser treats a radio group as one tab stop: its checked radio, or with
+// none checked the first on the way in and the last on the way out. The trap
+// wraps at the first and last stop, so each group counts once, as the radio
+// that stands for it.
+function radioGroup(radio: HTMLInputElement, items: HTMLElement[]): HTMLInputElement[] {
+  return items.filter((item): item is HTMLInputElement =>
+    item instanceof HTMLInputElement && item.type === 'radio' && item.name === radio.name && item.form === radio.form);
+}
+
+function isRadioInGroup(element: HTMLElement): element is HTMLInputElement {
+  return element instanceof HTMLInputElement && element.type === 'radio' && element.name !== '';
+}
+
+function tabStops(items: HTMLElement[]): HTMLElement[] {
+  return items.filter((item) => {
+    if (!isRadioInGroup(item)) return true;
+    const group = radioGroup(item, items);
+    const checked = group.find((radio) => radio.checked);
+    return checked ? item === checked : item === group[0];
+  });
+}
+
+// The stop that `element` belongs to: itself, or for a radio its group's stop.
+function stopOf(element: HTMLElement, stops: HTMLElement[], items: HTMLElement[]): HTMLElement {
+  if (!isRadioInGroup(element)) return element;
+  const group = radioGroup(element, items);
+  return stops.find((stop) => group.includes(stop as HTMLInputElement)) ?? element;
 }
 
 export function activateFocusTrap(
@@ -57,19 +86,20 @@ export function activateFocusTrap(
     const element = container();
     if (!element) return;
     const items = focusable(element);
+    const stops = tabStops(items);
     const active = document.activeElement as HTMLElement | null;
     if (items.length === 0) {
       event.preventDefault();
       trap.focus();
     } else if (!active || !items.includes(active)) {
       event.preventDefault();
-      (event.shiftKey ? items[items.length - 1] : items[0]).focus();
-    } else if (event.shiftKey && active === items[0]) {
+      (event.shiftKey ? stops[stops.length - 1] : stops[0]).focus();
+    } else if (event.shiftKey && stopOf(active, stops, items) === stops[0]) {
       event.preventDefault();
-      items[items.length - 1].focus();
-    } else if (!event.shiftKey && active === items[items.length - 1]) {
+      stops[stops.length - 1].focus();
+    } else if (!event.shiftKey && stopOf(active, stops, items) === stops[stops.length - 1]) {
       event.preventDefault();
-      items[0].focus();
+      stops[0].focus();
     }
   }
   document.addEventListener('keydown', onKeydown, true);

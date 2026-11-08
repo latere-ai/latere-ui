@@ -137,3 +137,65 @@ describe('focus trap', () => {
     } finally { trap.dispose(); container.remove(); }
   });
 });
+
+describe('focus trap tab stops', () => {
+  function dialog(html: string) {
+    const container = document.createElement('div');
+    container.innerHTML = html;
+    document.body.append(container);
+    const trap = activateFocusTrap(() => container);
+    return { container, done() { trap.dispose(); container.remove(); } };
+  }
+  function tab(shiftKey = false) {
+    const event = new KeyboardEvent('keydown', { key: 'Tab', shiftKey, bubbles: true, cancelable: true });
+    document.activeElement!.dispatchEvent(event);
+    return event;
+  }
+
+  it('wraps Shift+Tab from the checked radio of a group that opens the dialog', () => {
+    const view = dialog('<input type="radio" name="plan" value="free"><input type="radio" name="plan" value="pro" checked><button class="save">Save</button>');
+    try {
+      view.container.querySelector<HTMLInputElement>('[value="pro"]')!.focus();
+      expect(tab(true).defaultPrevented).toBe(true);
+      expect(document.activeElement).toBe(view.container.querySelector('.save'));
+    } finally { view.done(); }
+  });
+
+  it('wraps Tab from the checked radio of a group that ends the dialog', () => {
+    const view = dialog('<button class="first">Cancel</button><input type="radio" name="size" value="s" checked><input type="radio" name="size" value="m">');
+    try {
+      view.container.querySelector<HTMLInputElement>('[value="s"]')!.focus();
+      expect(tab().defaultPrevented).toBe(true);
+      expect(document.activeElement).toBe(view.container.querySelector('.first'));
+    } finally { view.done(); }
+  });
+
+  it('wraps from a group with no checked radio on its first radio, and from any radio of the group', () => {
+    const view = dialog('<input type="radio" name="a" value="1"><input type="radio" name="a" value="2"><button class="last">Go</button>');
+    try {
+      const second = view.container.querySelector<HTMLInputElement>('[value="2"]')!;
+      second.focus();
+      expect(tab(true).defaultPrevented).toBe(true);
+      expect(document.activeElement).toBe(view.container.querySelector('.last'));
+    } finally { view.done(); }
+  });
+
+  it('lets Tab go on between radios of different groups', () => {
+    const view = dialog('<input type="radio" name="a" checked><input type="radio" name="b" checked><button>Go</button>');
+    try {
+      view.container.querySelector<HTMLInputElement>('[name="a"]')!.focus();
+      expect(tab().defaultPrevented).toBe(false);
+    } finally { view.done(); }
+  });
+
+  it('lets Tab go on from an editor to the next control', () => {
+    const view = dialog('<input aria-label="Title"><div class="editor" contenteditable="true" aria-label="Body"></div><button>Send</button>');
+    try {
+      const editor = view.container.querySelector<HTMLElement>('.editor')!;
+      editor.focus();
+      expect(document.activeElement).toBe(editor);
+      expect(tab().defaultPrevented).toBe(false);
+      expect(document.activeElement).toBe(editor);
+    } finally { view.done(); }
+  });
+});
