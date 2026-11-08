@@ -1,4 +1,6 @@
-import { useLayoutEffect, useRef, useState, type RefObject } from 'react';
+import { useRef, useState, type RefObject } from 'react';
+
+import { useIsomorphicLayoutEffect } from './internal';
 
 /**
  * CSS enter/leave classes (`<name>-enter-from`, `-enter-active`, `-enter-to`
@@ -8,7 +10,7 @@ import { useLayoutEffect, useRef, useState, type RefObject } from 'react';
 export function useCssTransition(open: boolean, name: string, root: RefObject<HTMLElement | null>, appear = false): boolean {
   const [present, setPresent] = useState(open);
   const previous = useRef(appear ? false : open);
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     if (previous.current === open) return;
     previous.current = open;
     const element = root.current;

@@ -7,7 +7,7 @@
 // select, or above it where only that side has the room.
 // `value` + `onChange` replace v-model. Requires `import 'latere-ui/glass'`.
 import {
-  useEffect, useId, useLayoutEffect, useMemo, useRef, useState,
+  useEffect, useId, useMemo, useRef, useState,
   type FocusEvent, type KeyboardEvent, type MouseEvent,
 } from 'react';
 import { isComposingKey } from '../glass/composition';
@@ -17,7 +17,7 @@ import {
   isTypeToSearchKey, nextVisibleOption, selectLabelRuns,
 } from '../glass/selectSearch';
 import '../styles/components/glass-select.css';
-import { cx, useClickOutside } from './internal';
+import { cx, useClickOutside, useIsomorphicLayoutEffect } from './internal';
 import { layerAttributes, scrollIntoList, useAnchoredLayer } from './useAnchoredLayer';
 
 export interface GlassSelectProps {
@@ -78,7 +78,7 @@ export function GlassSelect({
   );
 
   // Hold a searchable menu at its widest measured width.
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const menu = panel.current;
     if (!open || !search || !menu) return;
     const width = menu.getBoundingClientRect().width;

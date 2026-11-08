@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { toastStore, getServerToasts, dismissToast, type MessageTone, type ToastItem } from '../glass/messageCore';
 import '../styles/components/glass-toaster.css';
+import { useIsomorphicLayoutEffect } from './internal';
 import { useCssTransition } from './useCssTransition';
 
 const TONE_VAR: Record<MessageTone, string> = {
@@ -38,7 +39,7 @@ function ToastRow({ entry, onExited }: { entry: ToastEntry; onExited: (id: numbe
 export function GlassToaster() {
   const toasts = useSyncExternalStore(toastStore.subscribe, toastStore.getSnapshot, getServerToasts);
   const [entries, setEntries] = useState<ToastEntry[]>(() => toasts.map(toast => ({ toast, active: true, appear: false })));
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     setEntries(previous => {
       const ids = new Set(toasts.map(toast => toast.id));
       const retained = previous.map(entry => ({ ...entry, active: ids.has(entry.toast.id) }));

@@ -16,8 +16,9 @@
 // It follows its control as the page, a dialog or any other scroller moves
 // it, and closes through `onHidden` once the control has scrolled out of
 // sight.
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type RefObject } from 'react';
+import { useCallback, useEffect, useRef, useState, type RefObject } from 'react';
 import { anchoredPlacement, type AnchoredAlign, type AnchoredSide } from '../glass/anchoredPlacement';
+import { useIsomorphicLayoutEffect } from './internal';
 
 /**
  * The attributes a panel is rendered with while open. They are spread rather
@@ -146,7 +147,7 @@ export function useAnchoredLayer(
     setPlaced(spot.side);
   }, [anchor, panel, side, align, gap, gutter]);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const el = panel.current;
     if (!open || !el) return;
     // A [popover] is display:none until shown, so it is raised before it is measured.
