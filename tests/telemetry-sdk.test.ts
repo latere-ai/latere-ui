@@ -247,6 +247,16 @@ describe('redactUrl', () => {
     expect(redactUrl('https://app.example/a#x?y')).toBe('https://app.example/a');
     expect(redactUrl('https://app.example/a')).toBe('https://app.example/a');
   });
+
+  it('removes a user name and password from the authority', () => {
+    expect(redactUrl('https://deploy:hunter2@api.example.com/v1/items?x=1')).toBe('https://api.example.com/v1/items');
+    expect(redactUrl('https://deploy@api.example.com/v1')).toBe('https://api.example.com/v1');
+  });
+
+  it('keeps an @ in the path and leaves a value that is not a URL alone', () => {
+    expect(redactUrl('https://app.example/@user/page')).toBe('https://app.example/@user/page');
+    expect(redactUrl('/users/a@b.c')).toBe('/users/a@b.c');
+  });
 });
 
 describe('RedactingSpanProcessor', () => {

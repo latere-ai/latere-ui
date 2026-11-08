@@ -135,17 +135,30 @@ export function flushOnHide(flush: () => Promise<void>): void {
 }
 
 /**
- * redactUrl cuts the query string and fragment from a URL. Tokens, codes and
- * search terms travel there, and the path is all a performance query needs.
+ * redactUrl cuts the query string and fragment from a URL, and the user name
+ * and password from its authority. Tokens, codes and search terms travel in
+ * the query, credentials in `user:password@host`, and the path is all a
+ * performance query needs.
  */
 export function redactUrl(value: string): string {
   const cut = value.search(/[?#]/);
-  return cut === -1 ? value : value.slice(0, cut);
+  const withoutQuery = cut === -1 ? value : value.slice(0, cut);
+  if (!withoutQuery.includes('@')) return withoutQuery;
+  try {
+    const url = new URL(withoutQuery);
+    if (url.username === '' && url.password === '') return withoutQuery;
+    url.username = '';
+    url.password = '';
+    return url.href;
+  } catch {
+    // A value that is not an absolute URL has no authority part to clean.
+    return withoutQuery;
+  }
 }
 
 /**
- * RedactingSpanProcessor cuts query strings and fragments from URL
- * attributes as each span ends, before the batch processor queues it.
+ * RedactingSpanProcessor redacts URL attributes (see redactUrl) as each span
+ * ends, before the batch processor queues it.
  */
 export class RedactingSpanProcessor implements SpanProcessor {
   constructor(private readonly next: SpanProcessor) {}
