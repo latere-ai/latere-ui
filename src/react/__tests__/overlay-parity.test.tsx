@@ -64,6 +64,22 @@ describe('React anchored overlays', () => {
     expect(w.container.firstElementChild?.className).toBe('lu-tip-wrap');
   });
 
+  it('ties the tooltip to its control and hides it on Escape', () => {
+    const w = render(<GlassTooltip text="Description"><button aria-describedby="hint">Trigger</button></GlassTooltip>);
+    const tip = w.getByRole('tooltip');
+    const trigger = w.getByRole('button');
+    expect(trigger.getAttribute('aria-describedby')).toBe(`hint ${tip.id}`);
+    const wrap = w.container.firstElementChild!;
+    expect(wrap.hasAttribute('data-dismissed')).toBe(false);
+    fireEvent.keyDown(trigger, { key: 'Escape' });
+    expect(wrap.hasAttribute('data-dismissed')).toBe(true);
+    fireEvent.mouseLeave(wrap);
+    expect(wrap.hasAttribute('data-dismissed')).toBe(false);
+    fireEvent.keyDown(trigger, { key: 'Escape' });
+    fireEvent.blur(trigger);
+    expect(wrap.hasAttribute('data-dismissed')).toBe(false);
+  });
+
   it('renders default tooltip and optional menu callback safely', () => {
     const w = render(<><GlassTooltip text="Tip">Trigger</GlassTooltip><GlassMenu items={[{ value: 'x', label: 'Action' }]} /></>);
     expect(w.getByRole('tooltip').className).toContain('lu-tip--top');

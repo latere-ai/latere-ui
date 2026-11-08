@@ -26,6 +26,11 @@
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+/* Escape hides the tip while the pointer or focus is still on the control. */
+.lu-tip-wrap[data-dismissed] .lu-tip {
+  opacity: 0;
+  transform: translateX(-50%) translateY(2px);
+}
 @media (prefers-reduced-transparency: reduce) {
   .lu-tip {
     background: var(--text, #0a0a0a);
