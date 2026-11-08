@@ -1,5 +1,5 @@
 // Headless docs model: the grouped-document information architecture every
-// product's in-app docs already reinvent — categories of pages, a flattened
+// product's in-app docs already reinvent: categories of pages, a flattened
 // order for prev/next, and a flat search index for the command palette.
 //
 // Shape mirrors the model proven in production (e.g. the document-intelligence

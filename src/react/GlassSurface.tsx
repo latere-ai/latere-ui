@@ -31,7 +31,7 @@ export type GlassSurfaceProps<T extends ElementType = 'div'> = {
   as?: T;
   /** Material depth. thin = controls, regular = panels/chrome, thick = overlays. */
   tier?: GlassTier;
-  /** Lift the specular highlight on hover — for clickable surfaces. */
+  /** Lift the specular highlight on hover: for clickable surfaces. */
   interactive?: boolean;
   className?: string;
   children?: ReactNode;

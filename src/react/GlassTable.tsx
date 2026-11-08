@@ -10,7 +10,7 @@ export interface GlassTableProps {
   rows: Record<string, unknown>[];
   /** Key to use for the row's React key; falls back to the row index. */
   rowKey?: string;
-  /** Per-column cell renderers, keyed by column key — the `cell-<key>` slots. */
+  /** Per-column cell renderers, keyed by column key: the `cell-<key>` slots. */
   cells?: Record<string, (ctx: { row: Record<string, unknown>; value: unknown }) => ReactNode>;
 }
 

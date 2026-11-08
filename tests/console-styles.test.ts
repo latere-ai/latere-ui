@@ -28,7 +28,7 @@ describe('console.css', () => {
   it('centers the collapsed account trigger under the brand mark', () => {
     // Regression guard: AccountMenu's sidebar variant (.lu-am-up) forces
     // width:100% on the wrapper, so the foot's justify-content:center never
-    // applied — the intrinsically-sized trigger left-aligned inside the
+    // applied: the intrinsically-sized trigger left-aligned inside the
     // full-width wrapper (avatar sat ~5px off the rail center in drive).
     expect(css).toMatch(/\[data-collapsed="true"\] \.lu-cs-foot \.lu-am \{[^}]*width:\s*auto/);
   });

@@ -60,7 +60,7 @@ export function slugify(text: string, used?: Set<string>): string {
  * slugifies. It is the token-level equivalent of `element.textContent`, which
  * is what `scan()` slugifies from the DOM: one id scheme, two representations
  * of the same text. `inline.content` is the raw markdown source and must not
- * be used — it carries link URLs, image paths, and markup characters that the
+ * be used: it carries link URLs, image paths, and markup characters that the
  * reader never sees.
  *
  * Images are skipped explicitly: markdown-it puts a heading image's alt text

@@ -46,7 +46,7 @@ export { PlatformLogoMark } from './PlatformLogoMark';
 export { translator, en, zh, de } from '../i18n/footer';
 export type { Locale, Messages, Theme, LocaleOption } from '../i18n/footer';
 
-// Account menu — reuses the headless types/defaults from components/accountMenu.ts.
+// Account menu: reuses the headless types/defaults from components/accountMenu.ts.
 export { AccountMenu, type AccountMenuProps } from './AccountMenu';
 export { identityLine, identityParts } from '../components/accountMenu';
 export type { AccountMenuLabels, AccountMenuLabelOverrides, AccountMenuItem, AccountRoleLabels, AccountMenuSubline } from '../components/accountMenu';

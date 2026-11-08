@@ -24,7 +24,7 @@ const model: ConsoleNavModel = {
 };
 
 // Stands in for a real router's `Link`: forwards `to` as `data-rl` (so tests
-// can assert on it) and spreads everything else onto the anchor — className,
+// can assert on it) and spreads everything else onto the anchor: className,
 // title, onClick, children, the way react-router's `Link` does. React has no
 // automatic attribute fallthrough onto a child component's root element, so a
 // router-link stub must forward these explicitly.

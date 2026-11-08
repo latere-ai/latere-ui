@@ -27,12 +27,12 @@ export interface GlassModalProps {
   /** Id of the element that describes the dialog. */
   describedBy?: string;
   /**
-   * Custom header — the `header` slot; defaults to the titled <h2>. With a
+   * Custom header: the `header` slot; defaults to the titled <h2>. With a
    * `title` too, the title is the dialog's accessible name; alone, the header's
    * content is.
    */
   header?: ReactNode;
-  /** Footer content — the `footer` slot (receives `close`). */
+  /** Footer content: the `footer` slot (receives `close`). */
   footer?: ReactNode | ((close: () => void) => ReactNode);
   children?: ReactNode;
   /** Called when the modal asks to close (Escape, scrim, footer `close`). */

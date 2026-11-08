@@ -1,11 +1,11 @@
-// Liquid Glass v2 runtime — the "native v2" progressive enhancement.
+// Liquid Glass v2 runtime: the "native v2" progressive enhancement.
 //
 // Two effects layered on top of the CSS glass materials (`latere-ui/glass`):
-//   1. Refraction — a per-element SVG displacement map appended to the
+//   1. Refraction: a per-element SVG displacement map appended to the
 //      backdrop-filter chain, so the background visibly bends at the rounded
 //      edges like real glass. Chromium only (feature-detected); every other
 //      engine keeps the frosted blur from the CSS materials.
-//   2. Specular sheen — a soft light spot that follows the cursor across large
+//   2. Specular sheen: a soft light spot that follows the cursor across large
 //      glass panels and fades out on leave.
 //
 // Progressive + accessible: honors `prefers-reduced-motion` (no sheen) and
@@ -31,7 +31,7 @@ let defs: SVGSVGElement | null = null;
 // filters whose element has left the document: without this, each SPA
 // navigation re-created glass chrome and appended fresh <filter> nodes (each
 // holding a canvas-rendered data-URL feImage) while the old ones stayed in the
-// shared defs forever — unbounded DOM/memory growth over a browsing session.
+// shared defs forever: unbounded DOM/memory growth over a browsing session.
 interface Refraction {
   filter: SVGFilterElement;
   original: string;
@@ -215,7 +215,7 @@ export function refract(el: LGElement): void {
 
 /** Attach a cursor-following specular sheen to one glass panel. OPT-IN: the
  *  element must carry `data-lg-sheen` (a value other than "off"). Without it the
- *  panel gets no sheen — a big radial highlight chasing the cursor across a
+ *  panel gets no sheen: a big radial highlight chasing the cursor across a
  *  footer or menu reads as a stray blob, not glass. */
 export function sheen(el: LGElement): void {
   if (typeof window === 'undefined' || typeof document === 'undefined') return;
@@ -283,7 +283,7 @@ export function sheen(el: LGElement): void {
 
 /**
  * Scan a subtree (default: the whole document) and enhance every qualifying
- * glass surface with refraction and/or sheen. Idempotent per element — safe to
+ * glass surface with refraction and/or sheen. Idempotent per element; safe to
  * call again after the DOM changes (e.g. on route change). SSR-safe no-op.
  */
 export function initLiquidGlass(root?: Document | HTMLElement): void {

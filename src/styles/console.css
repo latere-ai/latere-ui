@@ -18,7 +18,7 @@ html { overscroll-behavior: none; }
 .lu-cs {
     /* The rail is a grid/flex item that would otherwise paint UNDER the main
      * column (later in DOM). Give it a stacking context above main so the
-     * account dropdown — which overlaps the main area when collapsed — overlays
+     * account dropdown, which overlaps the main area when collapsed, overlays
      * the page instead of bleeding the page content through it. */
     position: relative;
     z-index: 30;
@@ -103,7 +103,7 @@ html { overscroll-behavior: none; }
     color: var(--text, #0a0a0a);
 }
 .lu-cs-brand-mark > * { display: block; }
-/* When a brandColor box is set, the mark sits on color — render its mark white
+/* When a brandColor box is set, the mark sits on color: render its mark white
  * via currentColor (works for stroke- and fill-based marks alike). */
 .lu-cs-brand-mark--colored { color: #fff; }
 .lu-cs-brand-text {

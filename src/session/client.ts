@@ -4,7 +4,7 @@
 // (`onUnauthorized`) so an expired session is handled uniformly. The CSRF
 // cookie name is configurable.
 //
-// The session cookie is HTTP-only — we never read it. The CSRF cookie (the
+// The session cookie is HTTP-only: we never read it. The CSRF cookie (the
 // double-submit pattern) is readable by JS and echoed in `X-CSRF-Token` on
 // same-origin requests.
 

@@ -2,8 +2,8 @@
 // NOT depend on markdown-it: the host injects its own constructor (like the
 // routerLink injection pattern), so docs-free consumers pay nothing and every
 // consumer pins one markdown-it version. The shared value here is the heading
-// id scheme — it uses the SAME slugify as the TOC primitive, so heading anchors
-// and the on-this-page TOC always agree — plus opt-in link rewriting.
+// id scheme: it uses the SAME slugify as the TOC primitive, so heading anchors
+// and the on-this-page TOC always agree, plus opt-in link rewriting.
 //
 // App-specific concerns (mermaid fences, light/dark image rewriting,
 // `[[diagram:name]]` mounts) stay in each app, applied via DocsLayout's

@@ -35,7 +35,7 @@ export interface Reauth {
    */
   recoverSession(returnTo?: string): RecoverResult;
   /**
-   * Silent prompt=none once and nothing more — for component gates that render
+   * Silent prompt=none once and nothing more: for component gates that render
    * their own sign-in prompt on the bounce-back. No-op under `graceful`.
    */
   attemptSilentReauth(returnTo?: string): void;

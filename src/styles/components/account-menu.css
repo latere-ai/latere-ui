@@ -164,7 +164,7 @@
    * always occludes the content behind it. This menu hosts dense 13px text and
    * commonly renders inside a glass nav/sidebar whose own backdrop-filter
    * neutralizes this panel's blur (a nested backdrop-filter samples the
-   * ancestor's buffer, empty below the bar, not the page) — a translucent fill
+   * ancestor's buffer, empty below the bar, not the page): a translucent fill
    * alone would then let sharp page text bleed through. The solid base makes
    * legibility independent of whether the blur resolves. */
   background:

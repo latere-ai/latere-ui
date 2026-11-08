@@ -1,6 +1,6 @@
 // Overlay layering: a confirm raised while a content modal is open must
 // paint above it, and toasts above everything. Both portaled scrims carry
-// z-index 1000 historically, so DOM order decided — the earlier-mounted
+// z-index 1000 historically, so DOM order decided: the earlier-mounted
 // confirm host lost and was fully occluded (drive's share-dialog revoke).
 // The confirm host's scrim class is checked in
 // src/react/__tests__/overlay-parity.test.tsx.

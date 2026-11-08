@@ -15,7 +15,7 @@ describe('liquid glass runtime', () => {
   });
 
   it('never auto-attaches sheen to a wide panel (opt-in only)', () => {
-    // A wide glass panel with NO data-lg-sheen must stay bare — the cursor-
+    // A wide glass panel with NO data-lg-sheen must stay bare: the cursor-
     // following highlight used to smear across every footer / card as a stray blob.
     document.body.innerHTML =
       '<div id="w" style="backdrop-filter: blur(24px); border-radius: 22px; width:600px; height:220px"></div>';

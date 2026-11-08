@@ -45,7 +45,7 @@ export interface FrontChannelLogoutOptions {
  * effect; a browser that blocks third-party cookies does not send the RP's
  * cookie at all. Each iframe is given `iframeTimeoutMs` to
  * fire `load`; whichever comes first (load or timeout) counts as done. We
- * never wait for all iframes serially — a dead RP must not block the user.
+ * never wait for all iframes serially: a dead RP must not block the user.
  */
 export async function runFrontChannelLogout(opts: FrontChannelLogoutOptions): Promise<void> {
   if (!hasWindow()) return;
@@ -97,7 +97,7 @@ function loadIframe(src: string, timeoutMs: number): Promise<void> {
       try {
         iframe.remove();
       } catch {
-        // ignore — happens if the DOM is already tearing down.
+        // ignore: happens if the DOM is already tearing down.
       }
       resolve();
     };

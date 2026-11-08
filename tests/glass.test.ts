@@ -26,8 +26,8 @@ describe('glass.css material tokens', () => {
 
   it('keeps the overlay (thick) tier near-opaque so it occludes busy content', () => {
     // Thick is the overlay tier (dropdowns, palettes, modals, drawers, footers)
-    // that floats over arbitrary content. We composite blur only — no SVG
-    // lensing — so the fill must occlude, not reveal. A regression below ~0.9
+    // that floats over arbitrary content. We composite blur only (no SVG
+    // lensing), so the fill must occlude, not reveal. A regression below ~0.9
     // lets sharp text/graphics read straight through (the v1.20.0 bleed bug).
     const light = css.slice(css.indexOf(':root {'), css.indexOf('[data-theme="dark"] {'));
     const dark = css.slice(css.indexOf('[data-theme="dark"] {'));
@@ -111,7 +111,7 @@ describe('glass.css material tokens', () => {
   it('zeroes the blur/saturate tokens in every fallback so hand-rolled backdrop-filters degrade too', () => {
     // A consumer that writes `backdrop-filter: blur(var(--glass-blur))` on its
     // own selector (not a .lu-glass* class) must also lose the blur under each
-    // fallback — otherwise the filter stays active behind an opaque fill.
+    // fallback: otherwise the filter stays active behind an opaque fill.
     for (const anchor of [
       'prefers-reduced-transparency',
       'prefers-contrast',

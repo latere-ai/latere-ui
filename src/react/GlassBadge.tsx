@@ -17,7 +17,7 @@ const TONE_VAR: Record<string, string> = {
 
 export interface GlassBadgeProps {
   tone?: GlassBadgeTone;
-  /** Filled pill instead of glass — for high-emphasis status. */
+  /** Filled pill instead of glass: for high-emphasis status. */
   solid?: boolean;
   /** Show a leading status dot. */
   dot?: boolean;

@@ -1,6 +1,6 @@
 /* Fallback design tokens for apps that do not define their own. The shared
  * chrome (footer, console, docs) and the Glass* material consume the subset
- * below. Apps with an existing token system should skip importing this file —
+ * below. Apps with an existing token system should skip importing this file:
  * the Glass* material tokens live in glass.css so they still get those.
  *
  * v2 (Latere Design System): neutral ink on paper. The accent IS the ink;

@@ -57,7 +57,7 @@ export interface SessionProviderProps<Raw = Principal> {
 }
 
 export interface SessionContextValue {
-  /** The shared API client — reuse it for app-specific calls. */
+  /** The shared API client: reuse it for app-specific calls. */
   client: ApiClient;
   /** The provider's server login entry point; `useSessionGate` links to it by default. */
   loginPath: string;
@@ -76,7 +76,7 @@ export interface SessionContextValue {
   /**
    * Component route-gate entry point (used by `useSessionGate`): resolve the
    * session; if absent, kick off the one-time silent re-check and resolve
-   * `false`. Never loops — the caller renders its own sign-in prompt.
+   * `false`. Never loops: the caller renders its own sign-in prompt.
    */
   ensureSession: (returnTo: string) => Promise<boolean>;
   /**

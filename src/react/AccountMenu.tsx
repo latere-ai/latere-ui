@@ -205,7 +205,7 @@ export function AccountMenu({
         </span>
         <span className="lu-am-id">
           <span className="lu-am-id-name">{principal ? name : t.signIn}</span>
-          {/* Sub-label (role badge + org / Individual) only when signed in —
+          {/* Sub-label (role badge + org / Individual) only when signed in:
               the logged-out "Sign in" trigger stays a single line. */}
           {principal && subline === 'text' && (
             <span className="lu-am-id-line">{identityLine(principal, t)}</span>
@@ -294,7 +294,7 @@ export function AccountMenu({
                 </div>
               )}
 
-              {/* Organizations — only when the principal actually has memberships, so
+              {/* Organizations: only when the principal actually has memberships, so
                   a degraded /api/me (orgs fetch failed) doesn't show a lonely Personal. */}
               {orgs.length > 0 && (
                 <div className="lu-am-section">

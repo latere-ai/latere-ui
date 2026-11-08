@@ -82,7 +82,7 @@ export function GlassPopover({
   useClickOutside(root, open, () => change(false));
   // Whether Shift+Tab from `target` would leave the panel: no tab stop in the
   // panel comes before it. A browser then moves one stop back from the
-  // trigger, so the key is cancelled and focus is put on the trigger.
+  // trigger, so the key is canceled and focus is put on the trigger.
   function leavesPanelBackward(target: Element | null): boolean {
     const stops = Array.from(panel.current?.querySelectorAll<HTMLElement>(TAB_STOPS) ?? []).filter((stop) => stop.tabIndex >= 0);
     return !stops.some((stop) => stop !== target && !!(stop.compareDocumentPosition(target as Node) & Node.DOCUMENT_POSITION_FOLLOWING));

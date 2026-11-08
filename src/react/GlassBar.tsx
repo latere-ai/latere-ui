@@ -8,7 +8,7 @@ import { cx } from './internal';
 export interface GlassBarProps {
   /** Render as a <header> instead of a <div>. */
   header?: boolean;
-  /** position: sticky; top: 0 — pins the bar while content scrolls under it. */
+  /** position: sticky; top: 0, which pins the bar while content scrolls under it. */
   sticky?: boolean;
   children?: ReactNode;
 }

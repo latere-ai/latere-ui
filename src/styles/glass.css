@@ -1,4 +1,4 @@
-/* Liquid Glass v2 material — shared foundation for every Latere product surface.
+/* Liquid Glass v2 material: shared foundation for every Latere product surface.
  * Opt-in entrypoint: `import 'latere-ui/glass'`.
  *
  * Modeled on Apple's Liquid Glass (macOS Tahoe / HIG "Materials"). Glass is a
@@ -17,14 +17,14 @@
  *   · ultrathin → hover targets, chips, badges, search fields
  *   · thin      → nav rows, pills, segmented tracks, bars
  *   · regular   → cards, panels, the sidebar slab
- *   · thick     → modals, popovers, palettes — anything over busy content
+ *   · thick     → modals, popovers, palettes: anything over busy content
  *   · smoke     → inverse emphasis (ink glass)
  *
  * Contract for adopters:
  *   1. Set a subtly gradient `--canvas` behind glass so it has something to
  *      refract; a frosted layer over a flat fill reads as dead gray.
  *   2. Glass is chrome, never content. Do NOT put a glass layer over live
- *      xterm / noVNC / video — `backdrop-filter` there tanks perf + legibility.
+ *      xterm / noVNC / video: `backdrop-filter` there tanks perf + legibility.
  *   3. Concentric corners: a nested control's radius = parent radius − padding.
  *      Use `--glass-radius` on the outer surface and shrink inward.
  *   4. The accent IS the ink. Products no longer set a chromatic `--accent`;
@@ -48,7 +48,7 @@
     --lu-z-confirm: 1200;
     --lu-z-toast:   1300;
 
-    /* Illumination — translucent fills per tier (light = white glass). */
+    /* Illumination: translucent fills per tier (light = white glass). */
     --glass-bg-ultrathin: rgba(255, 255, 255, 0.28);
     --glass-bg-thin:      rgba(255, 255, 255, 0.38);
     --glass-bg:           rgba(255, 255, 255, 0.42);  /* regular */
@@ -61,7 +61,7 @@
     /* Smoked ink glass: near-solid on purpose, for inverse emphasis. */
     --glass-smoke:        rgba(10, 10, 10, 0.68);
     --glass-smoke-strong: rgba(10, 10, 10, 0.82);
-    /* Label color on smoke capsules — NEVER hardcode white; dark flips it. */
+    /* Label color on smoke capsules: NEVER hardcode white; dark flips it. */
     --glass-smoke-ink:    #fafafa;
     --glass-smoke-border: rgba(255, 255, 255, 0.15);
     /* Inverse fills need their own rim: the white-glass highlight draws an
