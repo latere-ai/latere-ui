@@ -98,7 +98,7 @@ export function SiteFooter({
   // The company site's links: a relative `to` through the host's router, or
   // an absolute href under `baseUrl`.
   const Link: any = routerLink ?? 'a';
-  const to = (path: string) => (routerLink ? { to: path } : { href: baseUrl + path });
+  const to = (path: string) => (routerLink ? { to: path } : { href: baseUrl.replace(/\/$/, '') + path });
 
   const themeMenu = onThemeChange !== undefined;
   const localeMenu = onLocaleChange !== undefined && locales.length > 1;

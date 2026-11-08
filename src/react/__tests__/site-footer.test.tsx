@@ -273,3 +273,13 @@ describe('the footer social row', () => {
     expect(src).toContain('FOOTER_SOCIALS');
   });
 });
+
+it('builds company links without a double slash when baseUrl ends in a slash', () => {
+  render(<SiteFooter theme="auto" locale="en" baseUrl="https://latere.ai/" />);
+  const hrefs = [...document.querySelectorAll<HTMLAnchorElement>('a.lu-footer-link, a.lu-footer-home')]
+    .map(a => a.getAttribute('href') ?? '')
+    .filter(href => href.startsWith('https://latere.ai'));
+  expect(hrefs.length).toBeGreaterThan(0);
+  expect(hrefs.filter(href => href.includes('.ai//'))).toEqual([]);
+  expect(hrefs).toContain('https://latere.ai/');
+});
