@@ -21,6 +21,10 @@ export interface GlassModalProps {
    * never occluded by it.
    */
   layer?: 'modal' | 'confirm';
+  /** Id of the element that names the dialog, when neither `title` nor `header` does. */
+  labelledBy?: string;
+  /** Id of the element that describes the dialog. */
+  describedBy?: string;
   /** Custom header — the `header` slot; defaults to the titled <h2>. */
   header?: ReactNode;
   /** Footer content — the `footer` slot (receives `close`). */
@@ -36,6 +40,8 @@ export function GlassModal({
   closeOnScrim = true,
   width = '30rem',
   layer = 'modal',
+  labelledBy,
+  describedBy,
   header,
   footer,
   children,
@@ -64,7 +70,8 @@ export function GlassModal({
         className="lu-modal lu-glass-thick"
         role="dialog"
         aria-modal="true"
-        aria-labelledby={title ? `${id}-title` : undefined}
+        aria-labelledby={labelledBy ?? (title ? `${id}-title` : undefined)}
+        aria-describedby={describedBy}
         style={{ maxWidth: width }}
       >
         {(title || header) && (

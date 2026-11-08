@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { act, fireEvent, render, cleanup, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, cleanup, screen, waitFor } from '@testing-library/react';
 import { renderToString } from 'react-dom/server';
 import { confirmStore } from '../../glass/confirmCore';
 import { GlassPopover, GlassTooltip, GlassMenu, GlassDrawer, GlassToaster, GlassConfirmHost, message, confirm, resolveConfirm } from '../overlays';
@@ -157,5 +157,51 @@ describe('shared imperative hosts', () => {
     fireEvent.keyDown(document, { key: 'Escape' });
     await expect(third).resolves.toBe(false);
     await waitFor(() => expect(w.queryByRole('dialog')).toBeNull());
+  });
+});
+
+describe('GlassConfirmHost requests', () => {
+  const settled = <T,>(promise: Promise<T>) =>
+    Promise.race([promise.then(value => ({ value })), new Promise(resolve => setTimeout(() => resolve('pending'), 0))]);
+
+  it('names the dialog with the question when no title is given', () => {
+    render(<GlassConfirmHost />);
+    act(() => { void confirm({ message: 'Delete this workspace?', danger: true }); });
+    expect(screen.queryByRole('dialog', { name: 'Delete this workspace?' })).not.toBeNull();
+  });
+
+  it('describes a titled dialog with the question', () => {
+    render(<GlassConfirmHost />);
+    act(() => { void confirm({ title: 'Delete', message: 'Delete this workspace?' }); });
+    expect(screen.queryByRole('dialog', { name: 'Delete', description: 'Delete this workspace?' })).not.toBeNull();
+  });
+
+  it('does not confirm the next queued request when Confirm is pressed twice', async () => {
+    render(<GlassConfirmHost />);
+    let first!: Promise<boolean>;
+    let second!: Promise<boolean>;
+    act(() => {
+      first = confirm({ message: 'Delete draft A?', confirmText: 'Delete', danger: true });
+      second = confirm({ message: 'Delete the whole workspace?', confirmText: 'Delete', danger: true });
+    });
+    const button = document.querySelector<HTMLButtonElement>('.lu-btn-danger')!;
+    fireEvent.click(button);
+    fireEvent.click(button);
+    await expect(first).resolves.toBe(true);
+    expect(await settled(second)).toBe('pending');
+  });
+
+  it('starts focus on the first control of each queued request', () => {
+    render(<GlassConfirmHost />);
+    act(() => {
+      void confirm({ message: 'First?' });
+      void confirm({ message: 'Second?' });
+    });
+    const initial = document.activeElement?.textContent;
+    const confirmButton = document.querySelector<HTMLButtonElement>('.lu-btn-primary')!;
+    confirmButton.focus();
+    fireEvent.click(confirmButton);
+    expect(document.querySelector('.lu-confirm-msg')?.textContent).toBe('Second?');
+    expect(document.activeElement?.textContent).toBe(initial);
   });
 });
