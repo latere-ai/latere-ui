@@ -41,7 +41,11 @@ export interface AccountMenuProps {
   placement?: Placement;
   /** When set, shows an "Open dashboard" row that calls `onNavigate`. */
   dashboardPath?: string | null;
-  /** Org id currently being switched to (`''` = Personal); drives the spinner + dims others. */
+  /**
+   * Org id currently being switched to (`''` = Personal); drives the spinner + dims others.
+   * Omit it and the menu tracks the switch itself while `onSwitchOrg` (or the
+   * provider) returns a promise, ignoring picks until that settles.
+   */
   switchingOrgId?: string | null;
   /** When true, render nothing while logged out (instead of a Sign-in CTA). */
   signedInOnly?: boolean;
@@ -50,7 +54,7 @@ export interface AccountMenuProps {
   /** Per-app custom rows (e.g. Admin Panel), rendered in the menu's own style. */
   extraItems?: AccountMenuItem[];
   /** Called when a membership/Personal row is picked. Omit to use the ambient provider's `switchOrg`. */
-  onSwitchOrg?: (orgId: string) => void;
+  onSwitchOrg?: (orgId: string) => void | Promise<unknown>;
   /** Called for the dashboard row and `to`-style extra items. */
   onNavigate?: (path: string) => void;
   /** Called on the Sign-in action. Omit to use the ambient provider's `login`. */
@@ -77,7 +81,7 @@ export function AccountMenu({
   principal: principalProp,
   placement = 'top-end',
   dashboardPath = null,
-  switchingOrgId = null,
+  switchingOrgId,
   signedInOnly = false,
   labels,
   extraItems = [],
@@ -95,7 +99,7 @@ export function AccountMenu({
   const login = onLogin ?? (session ? () => session.login() : undefined);
   const logout = onLogout ?? (session ? () => session.logout() : undefined);
   const switchOrg =
-    onSwitchOrg ?? (session ? (orgId: string) => void session.switchOrg(orgId) : undefined);
+    onSwitchOrg ?? (session ? (orgId: string) => session.switchOrg(orgId) : undefined);
 
   const t: AccountMenuLabels = {
     ...DEFAULT_ACCOUNT_MENU_LABELS,
@@ -113,6 +117,11 @@ export function AccountMenu({
   // initials while `avatar_url` still equals it; a new address is tried again.
   const [failedAvatarUrl, setFailedAvatarUrl] = useState('');
   const root = useRef<HTMLDivElement>(null);
+  // The switch this menu started, used when the host does not pass `switchingOrgId`.
+  // The ref guards two picks inside one render; the state drives the spinner.
+  const pendingRef = useRef<string | null>(null);
+  const [pendingOrgId, setPendingOrgId] = useState<string | null>(null);
+  const switching = switchingOrgId !== undefined ? switchingOrgId : pendingOrgId;
   useClickOutside(root, open, () => setOpen(false));
 
   function onTrigger() {
@@ -142,12 +151,20 @@ export function AccountMenu({
   const opensUp = placement === 'bottom-start';
 
   function rowOpacity(id: string): number {
-    return switchingOrgId !== null && switchingOrgId !== id ? 0.5 : 1;
+    return switching !== null && switching !== id ? 0.5 : 1;
   }
 
   function pickOrg(id: string) {
-    if (id === activeOrgId || switchingOrgId !== null) return;
-    switchOrg?.(id);
+    if (id === activeOrgId || switching !== null || pendingRef.current !== null) return;
+    const result = switchOrg?.(id);
+    if (switchingOrgId !== undefined || !result || typeof result.then !== 'function') return;
+    pendingRef.current = id;
+    setPendingOrgId(id);
+    // A rejection stays visible to the host: finally() passes it on.
+    void result.finally(() => {
+      pendingRef.current = null;
+      setPendingOrgId(null);
+    });
   }
   function goto(path: string) {
     setOpen(false);
@@ -310,7 +327,7 @@ export function AccountMenu({
                         <path d="M5 12l5 5L20 6" />
                       </svg>
                     ) : (
-                      switchingOrgId === '' && <span className="lu-am-spin">…</span>
+                      switching === '' && <span className="lu-am-spin">…</span>
                     )}
                   </button>
 
@@ -347,7 +364,7 @@ export function AccountMenu({
                           <path d="M5 12l5 5L20 6" />
                         </svg>
                       ) : (
-                        switchingOrgId === o.id && <span className="lu-am-spin">…</span>
+                        switching === o.id && <span className="lu-am-spin">…</span>
                       )}
                     </button>
                   ))}

@@ -2,7 +2,7 @@
 // descriptor, and the optional SessionProvider integration (principal, login,
 // logout and switchOrg fall back to the ambient provider when the matching
 // prop is omitted).
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { Principal } from '../../session/types';
@@ -276,5 +276,62 @@ describe('AccountMenu under SessionProvider', () => {
     // must still win over the now-resolved ambient principal.
     await new Promise((r) => setTimeout(r, 0));
     expect(container.querySelector('.lu-am')).toBeNull();
+  });
+});
+
+describe('AccountMenu org switch in flight', () => {
+  const withOrgs: Principal = {
+    ...base,
+    orgs: [
+      { id: 'o1', name: 'One', slug: 'one' },
+      { id: 'o2', name: 'Two', slug: 'two' },
+    ],
+  };
+  const answer = (status: number, body: unknown) =>
+    ({ ok: status < 400, status, statusText: 'x', text: async () => JSON.stringify(body) }) as Response;
+
+  beforeEach(() => {
+    const loc = { pathname: '/', search: '', href: '', origin: 'http://localhost' } as unknown as Location;
+    Object.defineProperty(loc, 'href', { get: () => 'http://localhost/', set: vi.fn() });
+    Object.defineProperty(window, 'location', { value: loc, configurable: true, writable: true });
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+  });
+
+  it('sends one switch-org request when two org rows are picked in a row', async () => {
+    const posts: Array<(r: Response) => void> = [];
+    vi.stubGlobal('fetch', vi.fn((path: string) => {
+      if (path === '/api/me') return Promise.resolve(answer(200, withOrgs));
+      return new Promise<Response>((resolve) => { posts.push(resolve); });
+    }));
+    const { container } = render(<SessionProvider><AccountMenu /></SessionProvider>);
+    await waitFor(() => expect(container.querySelector('.lu-am-trigger')!.textContent).toContain('Ada Lovelace'));
+    fireEvent.click(container.querySelector('.lu-am-trigger')!);
+    const rows = Array.from(container.querySelectorAll<HTMLElement>('.lu-am-org'));
+    fireEvent.click(rows[1]);
+    fireEvent.click(rows[2]);
+    expect(posts).toHaveLength(1);
+    expect(rows[1].querySelector('.lu-am-spin')).not.toBeNull();
+    expect(rows[2].style.opacity).toBe('0.5');
+
+    // Once the switch settles, a later pick goes through.
+    await act(async () => { posts[0](answer(200, { redirect: '/o1' })); });
+    await waitFor(() => expect(rows[1].querySelector('.lu-am-spin')).toBeNull());
+    fireEvent.click(rows[2]);
+    expect(posts).toHaveLength(2);
+  });
+
+  it('leaves control to switchingOrgId when the host passes it', () => {
+    const onSwitchOrg = vi.fn(() => new Promise<void>(() => {}));
+    const { container } = render(
+      <AccountMenu principal={withOrgs} switchingOrgId={null} onSwitchOrg={onSwitchOrg} />,
+    );
+    fireEvent.click(container.querySelector('.lu-am-trigger')!);
+    const rows = container.querySelectorAll('.lu-am-org');
+    fireEvent.click(rows[1]);
+    fireEvent.click(rows[2]);
+    expect(onSwitchOrg).toHaveBeenCalledTimes(2);
   });
 });
