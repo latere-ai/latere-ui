@@ -17,6 +17,8 @@ committed: the commit log already holds that.
 
 ### Changed
 
+- Built with Go 1.27.4, which fixes GO-2026-6859.
+
 - **Breaking**: **Make sure your backend's `/me`, or your `mapMe`, returns a principal with a string `principal_id`.** `me()` now throws an `ApiError` with status 200, naming the endpoint, for a successful answer that is not a principal, where it reported a signed-in person.
 - **Breaking**: **Read a failed organization switch from `useOrgSwitcher().state.error` instead of catching `select()`.** `select()` no longer rejects; the failure lands in `state.error` and shows through `renderError`.
 - **Breaking**: **Fix any hand-written author, publisher or translator the structured data builders now refuse.** `blogPosting` and the other builders check an embedded party as they check their own fields: an empty name, a relative URL or an organization without `url` throws `StructuredDataError`, and the message names the field, such as `author[1].name`.
