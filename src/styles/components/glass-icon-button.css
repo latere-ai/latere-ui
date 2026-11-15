@@ -1,4 +1,4 @@
-/* GlassIconButton: shared by the Vue and React adapters. An icon-only button
+/* GlassIconButton: the React component. An icon-only button
  * in the secondary treatment of GlassButton: a hairline outline, no fill, no
  * backdrop blur or shadow. It is round by default, from the same
  * `--lu-button-radius` as GlassButton, and square by the control heights:
