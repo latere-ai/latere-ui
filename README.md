@@ -13,7 +13,7 @@ Build forms, navigation, dialogs, consoles and documentation pages in default gl
 
 ## Status
 
-Version 2 is current and is React only, for React 18 and 19. The package is not on a registry: you install a release tag from git, and your application compiles the `.tsx`, `.ts` and `.css` source with its own toolchain. A Vue application stays on a v1.x tag, such as `github:latere-ai/latere-ui#v1.32.2`; the [changelog](CHANGELOG.md) lists what v2 removed and how a React application moves to it. These docs and figures track `main`; changes not yet in a release are under Unreleased in the changelog.
+Version 2 is current and is React only, for React 18 and 19. The package is not on a registry: you install a release tag from git, and your application compiles the `.tsx`, `.ts` and `.css` source with its own toolchain. The [changelog](CHANGELOG.md) lists what v2 removed and how a React application moves to it. These docs and figures track `main`; changes not yet in a release are under Unreleased in the changelog.
 
 The materials, controls, overlays, console shell and documentation layout are product-neutral. A few parts are Latere's own and are published for Latere's products: the site footer carries Latere's product lineup and links, the logo marks and the favicon helper are Latere's, and the session helpers expect a backend that serves the [session contract](docs/api-guide.md#session) Latere's backends serve, under paths you can rename.
 
